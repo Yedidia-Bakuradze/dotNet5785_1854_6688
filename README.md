@@ -2,4 +2,3 @@
 # dotNet5785_332461854_214736688
 A 2nd year Mini Project in Windows Systems course, includeing a volentiring managment system.
 # Bro world 
-# Hello Batata 
