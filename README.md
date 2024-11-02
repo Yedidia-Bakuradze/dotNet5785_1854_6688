@@ -1,5 +1,5 @@
-### Hello There this is Yedidia's message
-# dotNet5785_332461854_214736688
-A 2nd year Mini Project in Windows Systems course, includeing a volentiring managment system.
-# Bro world 
-# Hello Batata 
+### Mini Project in Windows Systems
+
+# Stage 0 - Project init
+On this stage we have installed Git and initialized our first (But not really...) GitHub repository
+in order to achieve our goal and work together properly.
