@@ -9,12 +9,20 @@ internal static class Config
     internal static int NextCallId { get => nextCallId++; }
 
 
+    //Id generator for the Assignment model
+    internal const int startAssignmentId = 0;
+    private static int nextAssignmentId = startAssignmentId;
+    internal static int NextAssignmentId { get => nextAssignmentId++; }
+
     //RiskRange handler
     internal static TimeSpan RiskRange { get; set; } = TimeSpan.Zero;
+    internal static DateTime Clock { get; set; } = DateTime.Now;
 
-    internal static void Reset()
+    internal static void reset()
     {
+        nextAssignmentId = startAssignmentId;
         nextCallId = startCallId;
         RiskRange = TimeSpan.Zero;
+        Clock = DateTime.Now;
     }
 }
