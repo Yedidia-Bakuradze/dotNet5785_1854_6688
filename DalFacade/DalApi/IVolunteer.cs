@@ -1,5 +1,5 @@
 ﻿namespace DalApi;
 
-internal interface IVolunteer
+public interface IVolunteer
 {
 }
