@@ -1,12 +1,12 @@
 ﻿namespace DO;
 /// <summary>
-///             
+///  Volunteer entity           
 /// </summary>
-/// <param name="id"></param>
+/// <param name="id">unique ID</param>
 /// <param name="Role"></param>
-/// <param name="fullName"></param>
-/// <param name="phoneNumber"></param>
-/// <param name="email"></param>
+/// <param name="fullName">Volunteer full name </param>
+/// <param name="phoneNumber">Volunteer phone number</param>
+/// <param name="email">Volunteer email</param>
 /// <param name="maxDistancToCall"></param>
 /// <param name="TypeOfRange"></param>
 /// <param name="active"></param>
