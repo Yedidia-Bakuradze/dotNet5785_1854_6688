@@ -18,7 +18,7 @@ internal static class Config
     internal static TimeSpan RiskRange { get; set; } = TimeSpan.Zero;
     internal static DateTime Clock { get; set; } = DateTime.Now;
 
-    internal static void reset()
+    internal static void Reset()
     {
         s_nextAssignmentId = StartAssignmentId;
         s_nextCallId = StartCallId;
