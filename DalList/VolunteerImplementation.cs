@@ -6,33 +6,85 @@ using System.Collections.Generic;
 
 public class VolunteerImplementation : IVolunteer
 {
-    public void Create(Volunteer item)
+    /// <summary>
+    /// Adds a new object to the database (The list version)
+    /// </summary>
+    /// <param name="newVolunteer">The requested object to add</param>
+    /// <exception cref="Exception">Throws an exception if the object already exists in the database</exception>
+    public void Create(Volunteer newVolunteer)
     {
-        throw new NotImplementedException();
+        //Since the id is automatically generated, there is not need for checking whether volunteer with such id value exists
+        if(DalList.Volunteers.Any((volunteer) => volunteer.Id == newVolunteer.Id))
+        {
+            throw new Exception($"Volunteer object with id {newVolunteer.Id} already exists");
+        }
+        else
+        {
+            DalList.Volunteers.Add(newVolunteer);
+            //TODO: return item.Id; In the documentation it been written to return the new value of the id
+        }
     }
 
+    /// <summary>
+    /// Accepts an id value and deletes the related volunteer with the same id value
+    /// If such an volunteer with the proper id hasn't been found - the method will throw and exception and would print out the proper message
+    /// </summary>
+    /// <param name="id">The requested volunteer's id value</param>
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        Volunteer result = DalList.Volunteers.Find((volunteer) => volunteer.Id == id)
+            ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
+        DalList.Volunteers.Remove(result);
     }
 
+    /// <summary>
+    /// Deletes all the volunteer in the database
+    /// </summary>
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DalList.Volunteers.Clear();
     }
 
+    /// <summary>
+    /// Returns a reference to an individual volunteer object which contains the requested id value
+    /// If such an volunteer with the proper id hasn't been found - the method will throw and exception and would print out the proper message
+    /// </summary>
+    /// <param name="id">Requested id value for the volunteer</param>
+    /// <returns></returns>
     public Volunteer? Read(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Volunteer res = DalList.Volunteers.Find((volunteer) => volunteer.Id == id)
+                ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
+            return res;
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine(error.Message);
+            return null;
+        }
     }
 
+    /// <summary>
+    /// Returns a copy of all the volunteers in the database
+    /// </summary>
+    /// <returns>A copied list of all the volunteers in the database</returns>
     public List<Volunteer> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Volunteer>(DalList.Volunteers);
     }
 
-    public void Update(Volunteer item)
+    /// <summary>
+    /// Accepts a new volunteer which would replace the old volunteer with the same id value
+    /// If such an volunteer with the proper id hasn't been found - the method will throw and exception and would print out the proper message
+    /// </summary>
+    /// <param name="newVolunteer">The new volunteer record</param>
+    public void Update(Volunteer newVolunteer)
     {
-        throw new NotImplementedException();
+        Volunteer? res = Read(newVolunteer.Id) ??
+            throw new Exception($"Object of type Volunteer with id of {newVolunteer.Id} hasn't been found");
+        Delete(res.Id);
+        DalList.Volunteers.Add(newVolunteer);
     }
 }
