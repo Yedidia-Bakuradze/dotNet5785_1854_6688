@@ -310,7 +310,24 @@ static public class Initialization
     }
     private static void createCalls()
     {
-
+        for (int i = 0;i < 100;i++)
+        {
+            DateTime start = DateTime.Now.AddDays(s_rand.Next(-365, -5));
+            Call newCall = new Call
+            {
+                Id = i,
+                Type = CallTypes.FoodDelivery,
+                //I didn’t understand what this is or what I need to put here, so I didn’t fill anything in. I’ll ask my teacher in the next lecture.
+                //FullAddressCall,
+                //Latitude,
+                //Longitude,
+                OpeningTime = start,
+                Description = "Description",
+                DeadLine = start.AddDays(s_rand.Next(1, 31))
+            };
+            if (s_dalCall?.Read(newCall.Id) == null)
+                s_dalCall?.Create(newCall);
+        }
     }
     private static void createVolunteers()
     {
