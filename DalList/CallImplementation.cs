@@ -7,8 +7,11 @@ public class CallImplementation : ICall
     // Creates a new Call item
     public void Create(Call item)
     {
+        //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
         int id = Config.NextCallId;
         DalList.Calls.Add(item with { Id = id });
+        //TODO: return id; In the documentation it been written to return the new value of the id
+    
     }
 
     // Deletes a Call item by its id
@@ -16,8 +19,9 @@ public class CallImplementation : ICall
     {
         try
         {
+            //If the item does not exist, an exception will be thrown
             Call result = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
-            DalList.Calls.Remove(result);
+            DalList.Calls.Remove(result);//If the item exists, it will be removed
         }
         catch (Exception errorMsg)
         {
@@ -36,6 +40,7 @@ public class CallImplementation : ICall
     {
         try
         {
+            // If the item does not exist, an exception will be thrown
             Call res = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
             return res;
         }
@@ -57,9 +62,10 @@ public class CallImplementation : ICall
     {
         try
         {
+            //  If the item does not exist, an exception will be thrown
             Call result = DalList.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
-            Delete(result.Id);
-            DalList.Calls.Add(item);
+            Delete(result.Id);//If the item exists, it will be removed
+            DalList.Calls.Add(item);//The updated item will be added
         }
         catch (Exception errorMsg)
         {
