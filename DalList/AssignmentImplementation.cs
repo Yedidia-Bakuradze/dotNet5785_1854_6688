@@ -13,15 +13,10 @@ public class AssignmentImplementation : IAssignment
     public void Create(Assignment item)
     {
         int id = Config.NextAssignmentId;
-        Assignment newItem = new Assignment() {
+        Assignment newItem = item with {
             Id = id,
-            Called = item.Called,
-            VolunteerId = item.VolunteerId,
-            TimeOfStarting = item.TimeOfStarting,
-            TimeOfEnding = item.TimeOfEnding,
-            TypeOfEnding  = item.TypeOfEnding,
         };
-
+        
         if (DalList.Assignments.Any((a) => a.Id == id))
         {
             throw new Exception("Object already exists");
@@ -31,10 +26,8 @@ public class AssignmentImplementation : IAssignment
         }
         
     }
-
     public void Delete(int id)
     {
-        throw new NotImplementedException();
     }
 
     public void DeleteAll()
