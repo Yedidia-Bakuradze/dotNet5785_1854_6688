@@ -235,7 +235,23 @@ static public class Initialization
     }
     private static void createCalls()
     {
-    
+        for (int i = 0;i < 100;i++)
+        {
+            Call newCall = new Call
+            {
+                Id = i,
+                Type = CallTypes.FoodDelivery,
+                //I didn’t understand what this is or what I need to put here, so I didn’t fill anything in. I’ll ask my teacher in the next lecture.
+                //FullAddressCall,
+                //Latitude,
+                //Longitude,
+                OpeningTime = s_dalConfig.Clock.AddMinutes(s_rand.Next(0, 100)),
+                Description = "Description",
+                DeadLine = s_dalConfig.Clock.AddMinutes(s_rand.Next(100, 1000))
+            };
+            if (s_dalCall?.Read(newCall.Id) == null)
+                s_dalCall?.Create(newCall);
+        }
     }
     private static void createVolunteers()
     {
