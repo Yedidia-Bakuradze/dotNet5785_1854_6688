@@ -7,9 +7,9 @@ using DO;
 
 static public class Initialization
 {
-    private static IAssignment? s_dalAssignment ;
-    private static ICall? s_dalCall ;
-    private static IVolunteer? s_dalVolunteer ;
+    private static IAssignment? s_dalAssignment;
+    private static ICall? s_dalCall;
+    private static IVolunteer? s_dalVolunteer;
     private static IConfig? s_dalConfig;
 
     private static readonly Random s_rand = new();
@@ -225,47 +225,121 @@ static public class Initialization
     "P@ssw0rd!@#6", "Qwerty!@#78", "A1b2C3!@#9", "Zxcvbn!@#01", "Pass!@#2345",
     "Secure!@#678", "MyP@ss!@#90", "Admin!@#123", "User!@#4567", "Login!@#890"
 };
+    static double[] latitudes = new double[100] {
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
+    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
+    32.1093, 31.2520, 32.7940, 31.0461, 32.7940
+};
+    static double[] longitudes = new double[100] {
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
+    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
+    34.8555, 34.7818, 34.9896, 34.8516, 34.9896
+};
 
-    private static void createAssignments()
+    /// <summary>
+    /// Creates Assignment's instances for the db
+    /// </summary>
+    /// <exception cref="Exception">Throws an exception if the calls database hasn't been generated</exception>
+    private static void CreateAssignments()
     {
-        for (int i = 0; i < 100;i++) {
-            
-        }
+        //Gets the list of all the calls from the db
+        List<Call> listOfCalls = s_dalCall?.ReadAll()
+             ?? throw new Exception("List of Calls hasn't been generated yet");
+        //Creates for each member a 
+        for (int i = 0; i < 100; i++) {
+            {
+                Call currentCall = listOfCalls[i];
 
+                //Calculates the delta time between the opening and closing time of the call    
+                TimeSpan delta = (TimeSpan)(currentCall.DeadLine! - currentCall.OpeningTime);
+
+                //Sets the start and end date based on the delta time that has been calculated   
+                DateTime start = s_dalConfig!.Clock.AddDays(delta.Days);
+                DateTime end = start.AddDays(s_rand.Next(0, 31));
+
+                //Creates the assignment object - the id is generated in the CRUD's create method so there is no need to provide one here 
+                Assignment newAssignment = new()
+                {
+                    Called = currentCall.Id,
+                    VolunteerId = ids[i],
+                    TimeOfStarting = start,
+                    TimeOfEnding = end,
+                    TypeOfEnding =
+                    (end > currentCall.DeadLine) ? TypeOfEnding.CancellationExpired
+                    : (i < 15) ? TypeOfEnding.SelfCanceled
+                    : (i < 30) ? TypeOfEnding.AdminCanceled
+                    : TypeOfEnding.Treated
+                };
+            }
+
+        }
     }
     private static void createCalls()
     {
-    
+
     }
     private static void createVolunteers()
     {
-        for (int i = 0; i < 100;i++)
+        for (int i = 0; i < 100; i++)
         {
             Volunteer newVolunteer = new Volunteer
             {
                 Id = ids[i],// Valid check digit
-                Role = (i ==0 )? Roles.Admin : Roles.Volunteer,
+                Role = (i == 0) ? Roles.Admin : Roles.Volunteer,
                 FullName = names[i],
                 PhoneNumber = phoneNumbers[i],//Starts with 0, 10 digit long
                 Email = emails[i],
                 MaxDistanceToCall = s_rand.Next(30),
                 TypeOfRange =
-                (i%3 !=0)
+                (i % 3 != 0)
                 ? TypeOfRange.AirDistance
-                :(i%5 != 0)
+                : (i % 5 != 0)
                 ? TypeOfRange.walkingDistance
                 : TypeOfRange.drivingDistance,
-                Active = (i%3 != 0 || i%2 !=0)? true : false,
+                Active = (i % 3 != 0 || i % 2 != 0 || i == 0) ? true : false,
                 Password = passwords[i],
                 FullCurrentAddress = addresses[i],
                 Latitude = null,
                 Longitude = null
             };
-            if(s_dalVolunteer?.Read(newVolunteer.Id) == null)
+            if (s_dalVolunteer?.Read(newVolunteer.Id) == null)
                 s_dalVolunteer?.Create(newVolunteer);
         }
 
     }
-    
-}
 
+}
