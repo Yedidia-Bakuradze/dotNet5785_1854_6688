@@ -308,7 +308,10 @@ static public class Initialization
 
         }
     }
-    private static void createCalls()
+    /// <summary>
+    /// Creates new dummy Call instances for the database
+    /// </summary>
+    private static void CreateCalls()
     {
         for (int i = 0;i < 100;i++)
         {
@@ -329,7 +332,10 @@ static public class Initialization
                 s_dalCall?.Create(newCall);
         }
     }
-    private static void createVolunteers()
+    /// <summary>
+    /// Creates new dummy Volunteer instances for the database
+    /// </summary>
+    private static void CreateVolunteers()
     {
         for (int i = 0; i < 100; i++)
         {
