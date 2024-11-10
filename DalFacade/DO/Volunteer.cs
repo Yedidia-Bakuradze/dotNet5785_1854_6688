@@ -30,5 +30,5 @@ public record Volunteer
     double? Longitude = null
 )
 {
-    public Volunteer() : this(0, Roles.Undefined, "","","",0, TypeOfRange.Undefined,false) { }
+    public Volunteer() : this(0, Roles.Undefined, "","","",0, TypeOfRange.AirDistance,false) { }
 };
