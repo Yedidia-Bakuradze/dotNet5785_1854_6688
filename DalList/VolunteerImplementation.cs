@@ -14,13 +14,13 @@ public class VolunteerImplementation : IVolunteer
     public void Create(Volunteer newVolunteer)
     {
         //Since the id is automatically generated, there is not need for checking whether volunteer with such id value exists
-        if(DalList.Volunteers.Any((volunteer) => volunteer.Id == newVolunteer.Id))
+        if(DataSource.Volunteers.Any((volunteer) => volunteer.Id == newVolunteer.Id))
         {
             throw new Exception($"Volunteer object with id {newVolunteer.Id} already exists");
         }
         else
         {
-            DalList.Volunteers.Add(newVolunteer);
+            DataSource.Volunteers.Add(newVolunteer);
             //TODO: return item.Id; In the documentation it been written to return the new value of the id
         }
     }
@@ -32,9 +32,9 @@ public class VolunteerImplementation : IVolunteer
     /// <param name="id">The requested volunteer's id value</param>
     public void Delete(int id)
     {
-        Volunteer result = DalList.Volunteers.Find((volunteer) => volunteer.Id == id)
+        Volunteer result = DataSource.Volunteers.Find((volunteer) => volunteer.Id == id)
             ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
-        DalList.Volunteers.Remove(result);
+        DataSource.Volunteers.Remove(result);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     public void DeleteAll()
     {
-        DalList.Volunteers.Clear();
+        DataSource.Volunteers.Clear();
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class VolunteerImplementation : IVolunteer
     {
         try
         {
-            Volunteer res = DalList.Volunteers.Find((volunteer) => volunteer.Id == id)
+            Volunteer res = DataSource.Volunteers.Find((volunteer) => volunteer.Id == id)
                 ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
             return res;
         }
@@ -72,7 +72,7 @@ public class VolunteerImplementation : IVolunteer
     /// <returns>A copied list of all the volunteers in the database</returns>
     public List<Volunteer> ReadAll()
     {
-        return new List<Volunteer>(DalList.Volunteers);
+        return new List<Volunteer>(DataSource.Volunteers);
     }
 
     /// <summary>
@@ -85,6 +85,6 @@ public class VolunteerImplementation : IVolunteer
         Volunteer? res = Read(newVolunteer.Id) ??
             throw new Exception($"Object of type Volunteer with id of {newVolunteer.Id} hasn't been found");
         Delete(res.Id);
-        DalList.Volunteers.Add(newVolunteer);
+        DataSource.Volunteers.Add(newVolunteer);
     }
 }

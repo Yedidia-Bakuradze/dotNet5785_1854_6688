@@ -16,7 +16,7 @@ public class AssignmentImplementation : IAssignment
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
         int id = Config.NextAssignmentId;
-        DalList.Assignments.Add(item with { Id = id});
+        DataSource.Assignments.Add(item with { Id = id});
         //TODO: return id; In the documentation it been written to return the new value of the id
     }
 
@@ -27,9 +27,9 @@ public class AssignmentImplementation : IAssignment
     /// <param name="id">The requested assignment's id value</param>
     public void Delete(int id)
     {
-        Assignment result = DalList.Assignments.Find((assignment) => assignment.Id == id)
+        Assignment result = DataSource.Assignments.Find((assignment) => assignment.Id == id)
             ?? throw new Exception($"Object of type Assignment with id of {id} hasn't been found");
-        DalList.Assignments.Remove(result);
+        DataSource.Assignments.Remove(result);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     public void DeleteAll()
     {
-        DalList.Assignments.Clear();
+        DataSource.Assignments.Clear();
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class AssignmentImplementation : IAssignment
     {
         try
         {
-            Assignment res = DalList.Assignments.Find((assignment) => assignment.Id == id)
+            Assignment res = DataSource.Assignments.Find((assignment) => assignment.Id == id)
                 ?? throw new Exception($"Object of type Assignment with id of {id} hasn't been found");
             return res;
         }
@@ -67,7 +67,7 @@ public class AssignmentImplementation : IAssignment
     /// <returns>A copied list of all the assignments in the database</returns>
     public List<Assignment> ReadAll()
     {
-        return new List<Assignment>(DalList.Assignments);
+        return new List<Assignment>(DataSource.Assignments);
     }
 
     /// <summary>
@@ -80,6 +80,6 @@ public class AssignmentImplementation : IAssignment
         Assignment? res = Read(item.Id) ??
             throw new Exception($"Object of type Assignment with id of {item.Id} hasn't been found");
         Delete(res.Id);
-        DalList.Assignments.Add(item);
+        DataSource.Assignments.Add(item);
     }
 }

@@ -5,7 +5,7 @@ namespace Dal;
 /// <summary>
 /// List containing list of all types 
 /// </summary>
-internal static class DalList
+internal static class DataSource
 {
     internal static List<DO.Assignment> Assignments { get;}= new(); 
     internal static List<DO.Call> Calls {get;}= new();

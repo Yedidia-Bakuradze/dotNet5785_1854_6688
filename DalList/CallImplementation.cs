@@ -12,7 +12,7 @@ public class CallImplementation : ICall
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
         int id = Config.NextCallId;
-        DalList.Calls.Add(item with { Id = id });
+        DataSource.Calls.Add(item with { Id = id });
         //TODO: return id; In the documentation it been written to return the new value of the id
 
     }
@@ -26,8 +26,8 @@ public class CallImplementation : ICall
         try
         {
             //If the item does not exist, an exception will be thrown
-            Call result = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
-            DalList.Calls.Remove(result);//If the item exists, it will be removed
+            Call result = DataSource.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
+            DataSource.Calls.Remove(result);//If the item exists, it will be removed
         }
         catch (Exception errorMsg)
         {
@@ -40,7 +40,7 @@ public class CallImplementation : ICall
     /// </summary>
     public void DeleteAll()
     {
-        DalList.Calls.Clear();
+        DataSource.Calls.Clear();
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ public class CallImplementation : ICall
         try
         {
             // If the item does not exist, an exception will be thrown
-            Call res = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
+            Call res = DataSource.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
             return res;
         }
         catch (Exception errorMsg)
@@ -69,7 +69,7 @@ public class CallImplementation : ICall
     /// <returns>A list of all Call items.</returns>
     public List<Call> ReadAll()
     {
-        return new List<Call>(DalList.Calls);
+        return new List<Call>(DataSource.Calls);
     }
 
 
@@ -82,9 +82,9 @@ public class CallImplementation : ICall
         try
         {
             //  If the item does not exist, an exception will be thrown
-            Call result = DalList.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
+            Call result = DataSource.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
             Delete(result.Id);//If the item exists, it will be removed
-            DalList.Calls.Add(item);//The updated item will be added
+            DataSource.Calls.Add(item);//The updated item will be added
         }
         catch (Exception errorMsg)
         {
