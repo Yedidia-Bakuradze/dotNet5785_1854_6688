@@ -23,16 +23,9 @@ public class CallImplementation : ICall
     /// <param name="id">The id of the Call item to delete.</param>
     public void Delete(int id)
     {
-        try
-        {
             //If the item does not exist, an exception will be thrown
             Call result = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
             DalList.Calls.Remove(result);//If the item exists, it will be removed
-        }
-        catch (Exception errorMsg)
-        {
-            Console.WriteLine(errorMsg.Message);
-        }
     }
 
     /// <summary>
@@ -79,17 +72,10 @@ public class CallImplementation : ICall
     /// <param name="item">The Call item to update.</param>
     public void Update(Call item)
     {
-        try
-        {
             //  If the item does not exist, an exception will be thrown
             Call result = DalList.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
             Delete(result.Id);//If the item exists, it will be removed
             DalList.Calls.Add(item);//The updated item will be added
-        }
-        catch (Exception errorMsg)
-        {
-            Console.WriteLine(errorMsg.Message);
-        }
     }
 }
 
