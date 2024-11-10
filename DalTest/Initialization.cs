@@ -237,6 +237,7 @@ static public class Initialization
     {
         for (int i = 0;i < 100;i++)
         {
+            DateTime start = DateTime.Now.AddDays(s_rand.Next(-365, -5));
             Call newCall = new Call
             {
                 Id = i,
@@ -245,9 +246,9 @@ static public class Initialization
                 //FullAddressCall,
                 //Latitude,
                 //Longitude,
-                OpeningTime = s_dalConfig.Clock.AddMinutes(s_rand.Next(0, 100)),
+                OpeningTime = start,
                 Description = "Description",
-                DeadLine = s_dalConfig.Clock.AddMinutes(s_rand.Next(100, 1000))
+                DeadLine = start.AddDays(s_rand.Next(1, 31))
             };
             if (s_dalCall?.Read(newCall.Id) == null)
                 s_dalCall?.Create(newCall);
