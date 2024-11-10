@@ -2,8 +2,6 @@
 namespace Dal;
 using DalApi;
 using DO;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
 
 public class AssignmentImplementation : IAssignment
 {
