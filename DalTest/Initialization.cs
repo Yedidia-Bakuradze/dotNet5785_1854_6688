@@ -321,7 +321,7 @@ static public class Initialization
             {
                 Id = i,
                 Type = CallTypes.FoodDelivery,
-                //I didn’t understand what this is or what I need to put here, so I didn’t fill anything in. I’ll ask my teacher in the next lecture.
+                //I didn’t understand what this is or what I need to put here, so I put random values here. I’ll ask my teacher in the next lecture.
                 //FullAddressCall,
                 //Latitude,
                 //Longitude,
