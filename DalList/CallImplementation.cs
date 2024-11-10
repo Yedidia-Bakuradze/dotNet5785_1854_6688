@@ -4,17 +4,23 @@ using DalApi;
 using DO;
 public class CallImplementation : ICall
 {
-    // Creates a new Call item
+    /// <summary>
+    /// Creates a new Call item.
+    /// </summary>
+    /// <param name="item">The Call item to create.</param>
     public void Create(Call item)
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
         int id = Config.NextCallId;
         DalList.Calls.Add(item with { Id = id });
         //TODO: return id; In the documentation it been written to return the new value of the id
-    
+
     }
 
-    // Deletes a Call item by its id
+    /// <summary>
+    /// Deletes a Call item by its id.
+    /// </summary>
+    /// <param name="id">The id of the Call item to delete.</param>
     public void Delete(int id)
     {
         try
@@ -29,13 +35,19 @@ public class CallImplementation : ICall
         }
     }
 
-    // Deletes all Call items
+    /// <summary>
+    /// Deletes all Call items.
+    /// </summary>
     public void DeleteAll()
     {
         DalList.Calls.Clear();
     }
 
-    // Reads a Call item by its id
+    /// <summary>
+    /// Reads a Call item by its id.
+    /// </summary>
+    /// <param name="id">The id of the Call item to read.</param>
+    /// <returns>The Call item with the specified id, or null if it does not exist.</returns>
     public Call? Read(int id)
     {
         try
@@ -51,13 +63,20 @@ public class CallImplementation : ICall
         }
     }
 
-    // Reads all Call items
+    /// <summary>
+    /// Reads all Call items.
+    /// </summary>
+    /// <returns>A list of all Call items.</returns>
     public List<Call> ReadAll()
     {
         return new List<Call>(DalList.Calls);
     }
 
-    // Updates a Call item
+
+    /// <summary>
+    /// Updates a Call item.
+    /// </summary>
+    /// <param name="item">The Call item to update.</param>
     public void Update(Call item)
     {
         try
