@@ -2,33 +2,33 @@
 /// <summary>
 ///  Volunteer entity           
 /// </summary>
-/// <param name="id">unique ID</param>
+/// <param name="Id">unique ID</param>
 /// <param name="Role"></param>
-/// <param name="fullName">Volunteer full name </param>
-/// <param name="phoneNumber">Volunteer phone number</param>
-/// <param name="email">Volunteer email</param>
-/// <param name="maxDistancToCall"></param>
+/// <param name="FullName">Volunteer full name </param>
+/// <param name="PhoneNumber">Volunteer phone number</param>
+/// <param name="Email">Volunteer email</param>
+/// <param name="MaxDistancToCall"></param>
 /// <param name="TypeOfRange"></param>
-/// <param name="active"></param>
-/// <param name="password"></param>
-/// <param name="fullCurrentAdress"></param>
-/// <param name="latitude"></param>
-/// <param name="longtitude"></param>
+/// <param name="Active"></param>
+/// <param name="Password"></param>
+/// <param name="FullCurrentAdress"></param>
+/// <param name="Latitude"></param>
+/// <param name="Longitude"></param>
 public record Volunteer
 (
-int id,// Valid check digit
-Roles Role,
-string fullName,
-string phoneNumber,//Starts with 0, 10 digit long
-string email,
-double? maxDistancToCall,
-typeOfRange TypeOfRange,
-bool active,
-string? password = null,
-string? fullCurrentAdress = null,
-double? latitude = null,
-double? longtitude = null
+    int Id,// Valid check digit
+    Roles Role,
+    string FullName,
+    string PhoneNumber,//Starts with 0, 10 digit long
+    string Email,
+    double? MaxDistanceToCall,
+    TypeOfRange TypeOfRange,
+    bool Active,
+    string? Password = null,
+    string? FullCurrentAddress = null,
+    double? Latitude = null,
+    double? Longitude = null
 )
 {
-    public Volunteer() : this(0, Roles.Undefind, "","","",0, typeOfRange.Undefind,false) { }
+    public Volunteer() : this(0, Roles.Undefined, "","","",0, TypeOfRange.Undefined,false) { }
 };

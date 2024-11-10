@@ -1,6 +1,6 @@
 ﻿namespace DO;
 
-public enum Roles  { Admin,Volunteer,Undefind };
-public enum typeOfRange { AirDistance, walkingDistance, drivingDistance, Undefind };
-public enum typeOfEnding { Treated,SelfCanceld,AdminCanceld,CancellationExpired, Undefind };
+public enum Roles  { Admin,Volunteer,Undefined };
+public enum TypeOfRange { AirDistance, walkingDistance, drivingDistance, Undefined };
+public enum TypeOfEnding { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 public enum CallTypes {Undefined,FoodPreparation,FoodDelivery}

@@ -16,7 +16,7 @@ public record Assignment
     int VolunteerId,
     DateTime TimeOfStarting,
     DateTime? TimeOfEnding = null,
-    typeOfEnding? TypeOfEnding = null
+    TypeOfEnding? TypeOfEnding = null
 )
 {
     public Assignment() : this(0,0,0,DateTime.Now) { }
