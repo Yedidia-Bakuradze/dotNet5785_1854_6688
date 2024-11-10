@@ -24,8 +24,8 @@ public class CallImplementation : ICall
     public void Delete(int id)
     {
             //If the item does not exist, an exception will be thrown
-            Call result = DalList.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
-            DalList.Calls.Remove(result);//If the item exists, it will be removed
+            Call result = DataSource.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
+            DataSource.Calls.Remove(result);//If the item exists, it will be removed
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class CallImplementation : ICall
             //  If the item does not exist, an exception will be thrown
             Call result = DataSource.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
             Delete(result.Id);//If the item exists, it will be removed
-            DalList.Calls.Add(item);//The updated item will be added
+            DataSource.Calls.Add(item);//The updated item will be added
     }
 }
 
