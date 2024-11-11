@@ -129,6 +129,32 @@ namespace DalTest
             {
                 case ClassType.Assignment:
                     {
+                        //TODO: Callid for the assignment
+
+                        Console.WriteLine("What is the id of the volunteer:");
+                        int volunteerid = int.Parse(Console.ReadLine() ?? "");
+
+                        Console.WriteLine("What is the time of starting:");
+                        DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
+
+                        Console.WriteLine("What is the time of ending ");
+                        DateTime end = DateTime.Parse(Console.ReadLine() ?? "");
+
+                        Console.WriteLine("What is the couse of ending:");
+                        string input = Console.ReadLine() ?? "";
+                        bool isValid = Enum.TryParse(input, out TypeOfEnding typeOfEnding);
+                        Assignment newAsignment = new Assignment
+                        {
+                            VolunteerId = volunteerid,
+                            TimeOfStarting = start,
+                            TimeOfEnding = end,
+                            TypeOfEnding = typeOfEnding,
+                        };
+                        if (s_dalAssignment.Read(newAsignment.Id) == null)
+                        {
+                            s_dalAssignment.Create(newAsignment);
+                        }
+
                     }
                     break;
                 case ClassType.Call:
@@ -158,7 +184,6 @@ namespace DalTest
 
                         Call newcall = new Call
                         {
-                            Id = id1,
                             Type = callType,
                             FullAddressCall = address,
                             Latitude = latitude,
@@ -168,6 +193,10 @@ namespace DalTest
                             DeadLine = deadLine
 
                         };
+                        if (s_dalCall.Read(newcall.Id) == null)
+                        {
+                            s_dalCall.Create(newcall);
+                        }
                         break;
                     }
                 case ClassType.Volunteer:
