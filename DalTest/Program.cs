@@ -95,7 +95,7 @@ namespace DalTest
                                 CreateDbAction(classId);
                                 break;
                             case ClassSubMenuEnum.Read:
-                                //TODO: ReadDbAction(classId);
+                                ReadDbAction(classId);
                                 break;
                             case ClassSubMenuEnum.ReadAll:
                                 //TODO: ReadAllDbAction(classId);
@@ -121,7 +121,70 @@ namespace DalTest
                 }
             }
         }
-        
+
+        /// <summary>
+        /// This method requests the id value from the user, locates the instance if existed and prints its values
+        /// </summary>
+        /// <param name="classType">The type of instance which is requested, either Assignment, Call or Volunteer</param>
+        private static void ReadDbAction(ClassType classType)
+        {
+            bool requestedPreformed = false;
+            do
+            {
+                try
+                {
+                    //Get The instance id
+                    Console.Write($"Please enter the id for object of type {classType}: ");
+                    bool isValid = Int32.TryParse(Console.ReadLine(), out int id);
+                    while (!isValid)
+                    {
+                        Console.WriteLine("Please choose a valid number for the id.");
+                        Console.Write($"Please enter the id for object of type {classType}: ");
+                        isValid = Int32.TryParse(Console.ReadLine(), out id);
+                    }
+                    
+                    //Locate the instance based on its type and id
+                    switch (classType)
+                    {
+                        case ClassType.Assignment:
+                            {
+                                Assignment result = s_dalAssignment?.Read(id)!
+                                    ?? throw new Exception($"The Assignment instance with id of {id} hasn't been found");
+                                Console.WriteLine(result);
+                                break;
+                            }
+
+                        case ClassType.Call:
+                            {
+                                Call result = s_dalCall?.Read(id)!
+                                    ?? throw new Exception($"The Call instance with id of {id} hasn't been found");
+                                Console.WriteLine(result);
+                                break;
+                            }
+                        case ClassType.Volunteer:
+                            {
+                                Volunteer result = s_dalVolunteer?.Read(id)!
+                                    ?? throw new Exception($"The Volunteer instance with id of {id} hasn't been found");
+                                Console.WriteLine(result);
+                                break;
+                            }
+                        default:
+                            throw new Exception($"Internal Error: Class Type is {classType}. Is not a Assignment, Call or Volunteer");
+                    }
+                    
+                    //If no exception has been thrown, the operation succussed.
+                    requestedPreformed = true;
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine(error.Message);
+                    Console.Beep();
+                    Console.WriteLine("Press Enter to continue ... ");
+                    Console.ReadKey();
+                }
+            } while (!requestedPreformed);
+        }
+
         private static void CreateDbAction(ClassType classId)
         {
             //Getting data for the new instance
