@@ -16,7 +16,7 @@ namespace DalTest
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
         public enum ConfigSubMenuEnum { FirstRun, Exit,AddMinute ,AddHour,AddMonth , AddYear, ShowCureentClock,SetValue,ShowValue,Reset }
-        public enum ClassType { Assignment, Call, Volunteer 
+        public enum ClassType { Assignment, Call, Volunteer } 
         public enum ConfigVarieble {FirstRun,RiskRange,Clock }
         static void Main(string[] args)
         {
@@ -58,7 +58,7 @@ namespace DalTest
                                 ShowDbData();
                                 break;
                             case MainMenuEnum.ShowConfigMenu:
-                                ConfigSubMenu(s_dalConfig.RiskRange);
+                                ConfigSubMenu();
                                 break;
                             case MainMenuEnum.ResetSysAndDb:
                                 ResetDbAndSystem();
@@ -285,9 +285,9 @@ namespace DalTest
                             TimeOfEnding = end,
                             TypeOfEnding = typeOfEnding,
                         };
-                        if (s_dalAssignment.Read(newAsignment.Id) == null)
+                        if (s_dalAssignment?.Read(newAsignment.Id) == null)
                         {
-                            s_dalAssignment.Create(newAsignment);
+                            s_dalAssignment?.Create(newAsignment);
                         }
                     }
                     break;
@@ -332,7 +332,7 @@ namespace DalTest
                             Description = description,
                             DeadLine = deadLine
                         };
-                        if (s_dalCall.Read(newcall.Id) == null)
+                        if (s_dalCall?.Read(newcall.Id) == null)
                         {
                             s_dalCall.Create(newcall);
                         }
