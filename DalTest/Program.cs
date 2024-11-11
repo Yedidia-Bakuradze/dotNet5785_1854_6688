@@ -56,10 +56,10 @@ namespace DalTest
                                 ShowDbData();
                                 break;
                             case MainMenuEnum.ShowConfigMenu:
-                                ConfigSubMenu();
+                                //ConfigSubMenu();
                                 break;
                             case MainMenuEnum.ResetSysAndDb:
-                                ResetDbAndSystem();
+                                //ResetDbAndSystem();
                                 break;
                             default:
                                 Console.WriteLine("Invalid operation!");
@@ -81,10 +81,89 @@ namespace DalTest
         }
 
         /// <summary>
+        /// Prints the data of all the entities in the database
+        /// </summary>
+        private static void ShowDbData()
+        {
+            try
+            {
+                List<Assignment> listOfAssignments = s_dalAssignment?.ReadAll() ?? throw new Exception("Error: The list of Assignment instances is null");
+                List<Call> listOfCalls = s_dalCall?.ReadAll() ?? throw new Exception("Error: The list of Call instances is null");
+                List<Volunteer> listOfVolunteers = s_dalVolunteer?.ReadAll() ?? throw new Exception("Error: The list of Volunteer instances is null");
+
+                Console.WriteLine("Assignment Entities: ");
+                Console.Beep();
+                foreach(Assignment assignment in listOfAssignments)
+                {
+                    Console.WriteLine($@"
+                    ---------------------------------------------------------------
+                    
+                        Assignment ID: {assignment.Id}
+                        Related Call ID: {assignment.Called}
+                        Related Volunteer ID: {assignment.VolunteerId}
+                        Start Time: {assignment.TimeOfStarting}
+                        Finish Time: {assignment.TimeOfEnding}
+                        Closed Call Type: {assignment.TypeOfEnding} 
+
+                    ---------------------------------------------------------------
+                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                    ");
+
+                }
+
+                foreach(Call call in listOfCalls)
+                {
+                    Console.WriteLine($@"
+                    ---------------------------------------------------------------
+                    
+                        Call ID: {call.Id}
+                        Request Address: {call.FullAddressCall}
+                        Request Address Latitude: {call.Latitude}
+                        Request Address Longitude: {call.Longitude}
+                        Call Description: {call.Description}
+                        The Call Has Been Opened Since: {call.OpeningTime}
+                        The Call Would Be Expired At: {call.DeadLine}
+
+                    ---------------------------------------------------------------
+                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                    ");
+                }
+
+                foreach(Volunteer volunteer  in listOfVolunteers)
+                {
+                    Console.WriteLine($@"
+                    ---------------------------------------------------------------
+                    
+                        Volunteer ID: {volunteer.Id}
+                        Volunteer Role: {volunteer.Role}
+                        Full Name: {volunteer.FullName}
+                        Email Address: {volunteer.Email}
+                        Max Distance From The Call: {volunteer.MaxDistanceToCall}
+                        Type Of Distance Range: {volunteer.TypeOfRange}
+                        Active: {volunteer.Active}
+                        Password: {volunteer.Password}
+                        Living Address: {volunteer.FullCurrentAddress}
+                        Living Address Latitude: {volunteer.Latitude}
+                        Living Address Longitude: {volunteer.Longitude}
+
+                    ---------------------------------------------------------------
+                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                    ");
+                }
+            }catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
+        }
+
+        /// <summary>
         /// Displays the submenu for a specific class and handles user input.
         /// </summary>
-        /// <param name="classId">The class type for the submenu.</param>
-        private static void ShowSubMenu(ClassType classId)
+        /// <param name="classType">The class type for the submenu.</param>
+        private static void ShowSubMenu(ClassType classType)
         {
             ClassSubMenuEnum operation = ClassSubMenuEnum.FirstRun;
             while (operation == ClassSubMenuEnum.Exit)
@@ -101,10 +180,10 @@ namespace DalTest
                                 Console.WriteLine("Logging out of the submenu ...");
                                 break;
                             case ClassSubMenuEnum.Create:
-                                CreateDbAction(classId);
+                                CreateDbAction(classType);
                                 break;
                             case ClassSubMenuEnum.Read:
-                                ReadDbAction(classId);
+                                ReadDbAction(classType);
                                 break;
                             case ClassSubMenuEnum.ReadAll:
                                 //TODO: ReadAllDbAction(classId);
@@ -199,11 +278,11 @@ namespace DalTest
         /// <summary>
         /// Performs the create action for a specific class.
         /// </summary>
-        /// <param name="classId">The class type for the create action.</param>
-        private static void CreateDbAction(ClassType classId)
+        /// <param name="classType">The class type for the create action.</param>
+        private static void CreateDbAction(ClassType classType)
         {
             //Getting data for the new instance
-            switch (classId)
+            switch (classType)
             {
                 case ClassType.Assignment:
                     {
