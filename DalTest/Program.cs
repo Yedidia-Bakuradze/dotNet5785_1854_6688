@@ -134,9 +134,6 @@ namespace DalTest
                 case ClassType.Call:
                     {
 
-                        Console.WriteLine("Enter the id of the Call:");
-                        int id1 = int.Parse(Console.ReadLine() ?? "");
-
                         Console.WriteLine("What is the call type:");
                         string input = Console.ReadLine() ?? "";
                         bool isValid = Enum.TryParse(input, out CallTypes callType);
