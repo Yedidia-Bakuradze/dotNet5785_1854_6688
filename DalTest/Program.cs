@@ -128,9 +128,48 @@ namespace DalTest
             switch (classId)
             {
                 case ClassType.Assignment:
-                    
+
+
                     break;
                 case ClassType.Call:
+                    Console.WriteLine("Enter the id of the Call:");
+                    int id1 = int.Parse(Console.ReadLine());
+
+                    Console.WriteLine("What is the call type:");
+                    string input = Console.ReadLine();
+                    CallTypes callTypes = Enum.TryParse(input, out callTypes);
+
+                    Console.WriteLine("What is the adrees");
+                    string adress = Console.ReadLine();
+
+                    Console.WriteLine("what is the latitude of the adress:");
+                    double latitude = double.Parse(Console.ReadLine()); 
+
+                    Console.WriteLine("what is the longitude of the adress:");
+                    double longitude = double.Parse(Console.ReadLine());
+
+                    Console.WriteLine("what time as the call start:");
+                    DateTime start = DateTime.Parse(Console.ReadLine());
+
+                    Console.WriteLine("Please add description to the call:");
+                    string description = Console.ReadLine();
+
+                    Console.WriteLine("What is the Deadlin for the call:");
+                    DateTime deadLine = DateTime.Parse(Console.ReadLine());
+
+                    Call newcall = new Call 
+                    {
+                        Id = id1,
+                        Type = callTypes,
+                        FullAddressCall = adress,
+                        Latitude =latitude,
+                        Longitude = longitude,
+                        OpeningTime =start,
+                        Description = description,
+                        DeadLine = deadLine
+
+                    };
+
                     break;
                 case ClassType.Volunteer:
                     Console.WriteLine("Enter the volunteer id:");
