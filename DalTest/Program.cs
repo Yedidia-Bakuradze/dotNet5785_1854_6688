@@ -1,8 +1,6 @@
 ﻿using Dal;
 using DalApi;
 using DO;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
 
 namespace DalTest
 {
@@ -334,7 +332,7 @@ namespace DalTest
                         };
                         if (s_dalCall?.Read(newcall.Id) == null)
                         {
-                            s_dalCall.Create(newcall);
+                            s_dalCall?.Create(newcall);
                         }
                         break;
                     }
