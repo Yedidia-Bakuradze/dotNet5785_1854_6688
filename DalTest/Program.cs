@@ -1,5 +1,6 @@
 ﻿using Dal;
 using DalApi;
+using DO;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 
@@ -127,10 +128,60 @@ namespace DalTest
             switch (classId)
             {
                 case ClassType.Assignment:
+                    
                     break;
                 case ClassType.Call:
                     break;
                 case ClassType.Volunteer:
+                    Console.WriteLine("Enter the volunteer id:");
+                    int id = int.Parse(Console.ReadLine());
+
+                    Console.WriteLine("Enter the volunteer full name:");
+                    string name = Console.ReadLine();
+
+                    Console.WriteLine("Enter the Role of the Volunteer Admin/Volunteer:");
+                    string input = Console.ReadLine();
+                    Roles role = Enum.TryParse(input, out Roles);
+
+                    Console.WriteLine("Enter the Volunteer phone number:");
+                    string phonenumber = Console.ReadLine();
+
+                    Console.WriteLine("Enter the Volunteer email:");
+                    string email = Console.ReadLine();
+
+                    Console.WriteLine("What is the max distance to call the volunteer:");
+                    double maxDistance = double.Parse(Console.ReadLine());
+
+                    Console.WriteLine("The volunteer is active ?");
+                    bool active = bool.Parse(Console.ReadLine());
+
+                    Console.WriteLine("Put your password:");
+                    string password = Console.ReadLine();
+
+                    Console.WriteLine("Put full your current adrees:");
+                    string adress = Console.ReadLine();
+
+                    string input1= Console.ReadLine();
+                    TypeOfRange typeOfRange = Enum.TryParse(input1 , out TypeOfRange typeOfRange1);
+
+                    Volunteer newVolunteer = new Volunteer
+                    {
+                        Id = id,
+                        FullName = name,
+                        Role = role,
+                        PhoneNumber = phonenumber,
+                        Email = email,
+                        MaxDistanceToCall = maxDistance,
+                        Active = active,
+                        Password = password,
+                        FullCurrentAddress = adress,
+                        TypeOfRange = typeOfRange,
+                    };
+                    if(s_dalVolunteer?.Read(newVolunteer.Id) == null)
+                    {
+                        s_dalVolunteer?.Create(newVolunteer);
+                    }
+
                     break;
             }
 
