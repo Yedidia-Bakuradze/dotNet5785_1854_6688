@@ -133,8 +133,7 @@ namespace DalTest
                     break;
                 case ClassType.Call:
                     Console.WriteLine("Enter the id of the Call:");
-                    int id1 = int.Parse(Console.ReadLine());
-
+                    int id1 = wdljdsasdd
                     Console.WriteLine("What is the call type:");
                     string input = Console.ReadLine();
                     CallTypes callTypes = Enum.TryParse(input, out callTypes);
