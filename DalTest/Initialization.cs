@@ -4,6 +4,9 @@ namespace DalTest;
 using Dal;
 using DalApi;
 using DO;
+using System;
+using System.Data;
+using System.Reflection.Metadata.Ecma335;
 
 static public class Initialization
 {
@@ -59,110 +62,187 @@ static public class Initialization
     "tyler.bryant@example.com", "rachel.alexander@example.com", "aaron.russell@example.com", "catherine.griffin@example.com", "henry.diaz@example.com",
     "julie.hayes@example.com", "adam.myers@example.com", "victoria.ford@example.com", "nathan.hamilton@example.com", "megan.graham@example.com"
 };
-    static string[] addresses = new string[] {
-"123 Main St, Springfield, IL 62701",
-"456 Elm St, Denver, CO 80202",
-"789 Maple Ave, Austin, TX 73301",
-"101 Oak St, Seattle, WA 98101",
-"202 Pine St, Boston, MA 02108",
-"303 Cedar St, Miami, FL 33101",
-"404 Birch St, San Francisco, CA 94101",
-"505 Walnut St, Chicago, IL 60601",
-"606 Chestnut St, Dallas, TX 75201",
-"707 Ash St, Atlanta, GA 30301",
-"808 Poplar St, Portland, OR 97201",
-"909 Willow St, Phoenix, AZ 85001",
-"1010 Spruce St, Philadelphia, PA 19101",
-"1111 Fir St, Minneapolis, MN 55401",
-"1212 Redwood St, San Diego, CA 92101",
-"1313 Cypress St, Houston, TX 77001",
-"1414 Palm St, Las Vegas, NV 89101",
-"1515 Magnolia St, Orlando, FL 32801",
-"1616 Sycamore St, New York, NY 10001",
-"1717 Dogwood St, Los Angeles, CA 90001",
-"1818 Hickory St, San Antonio, TX 78201",
-"1919 Juniper St, San Jose, CA 95101",
-"2020 Laurel St, Columbus, OH 43201",
-"2121 Linden St, Charlotte, NC 28201",
-"2222 Olive St, Indianapolis, IN 46201",
-"2323 Palm St, Jacksonville, FL 32201",
-"2424 Pine St, Fort Worth, TX 76101",
-"2525 Maple St, Detroit, MI 48201",
-"2626 Oak St, Memphis, TN 38101",
-"2727 Cedar St, Baltimore, MD 21201",
-"2828 Birch St, Milwaukee, WI 53201",
-"2929 Walnut St, Albuquerque, NM 87101",
-"3030 Chestnut St, Tucson, AZ 85701",
-"3131 Ash St, Fresno, CA 93701",
-"3232 Poplar St, Sacramento, CA 94203",
-"3333 Willow St, Kansas City, MO 64101",
-"3434 Spruce St, Mesa, AZ 85201",
-"3535 Fir St, Omaha, NE 68101",
-"3636 Redwood St, Colorado Springs, CO 80901",
-"3737 Cypress St, Raleigh, NC 27601",
-"3838 Palm St, Miami, FL 33101",
-"3939 Magnolia St, Long Beach, CA 90801",
-"4040 Sycamore St, Virginia Beach, VA 23450",
-"4141 Dogwood St, Oakland, CA 94601",
-"4242 Hickory St, Minneapolis, MN 55401",
-"4343 Juniper St, Tulsa, OK 74101",
-"4444 Laurel St, Tampa, FL 33601",
-"4545 Linden St, Arlington, TX 76001",
-"4646 Olive St, New Orleans, LA 70112",
-"4747 Palm St, Wichita, KS 67201",
-"4848 Pine St, Cleveland, OH 44101",
-"4949 Maple St, Bakersfield, CA 93301",
-"5050 Oak St, Aurora, CO 80010",
-"5151 Cedar St, Anaheim, CA 92801",
-"5252 Birch St, Honolulu, HI 96801",
-"5353 Walnut St, Santa Ana, CA 92701",
-"5454 Chestnut St, Riverside, CA 92501",
-"5555 Ash St, Corpus Christi, TX 78401",
-"5656 Poplar St, Lexington, KY 40502",
-"5757 Willow St, Stockton, CA 95201",
-"5858 Spruce St, St. Louis, MO 63101",
-"5959 Fir St, Cincinnati, OH 45201",
-"6060 Redwood St, Pittsburgh, PA 15201",
-"6161 Cypress St, Anchorage, AK 99501",
-"6262 Palm St, Henderson, NV 89002",
-"6363 Magnolia St, Greensboro, NC 27401",
-"6464 Sycamore St, Plano, TX 75023",
-"6565 Dogwood St, Lincoln, NE 68501",
-"6666 Hickory St, Buffalo, NY 14201",
-"6767 Juniper St, Fort Wayne, IN 46801",
-"6868 Laurel St, Jersey City, NJ 07302",
-"6969 Linden St, Chula Vista, CA 91910",
-"7070 Olive St, Norfolk, VA 23501",
-"7171 Palm St, Orlando, FL 32801",
-"7272 Pine St, St. Petersburg, FL 33701",
-"7373 Maple St, Laredo, TX 78040",
-"7474 Oak St, Madison, WI 53701",
-"7575 Cedar St, Durham, NC 27701",
-"7676 Birch St, Lubbock, TX 79401",
-"7777 Walnut St, Winston-Salem, NC 27101",
-"7878 Chestnut St, Garland, TX 75040",
-"7979 Ash St, Glendale, AZ 85301",
-"8080 Poplar St, Hialeah, FL 33010",
-"8181 Willow St, Reno, NV 89501",
-"8282 Spruce St, Baton Rouge, LA 70801",
-"8383 Fir St, Irvine, CA 92602",
-"8484 Redwood St, Chesapeake, VA 23320",
-"8585 Cypress St, Scottsdale, AZ 85250",
-"8686 Palm St, North Las Vegas, NV 89030",
-"8787 Magnolia St, Fremont, CA 94536",
-"8888 Sycamore St, Gilbert, AZ 85233",
-"8989 Dogwood St, San Bernardino, CA 92401",
-"9090 Hickory St, Boise, ID 83701",
-"9191 Juniper St, Birmingham, AL 35201",
-"9292 Laurel St, Rochester, NY 14602",
-"9393 Linden St, Richmond, VA 23218",
-"9494 Olive St, Spokane, WA 99201",
-"9595 Palm St, Des Moines, IA 50301",
-"9696 Pine St, Modesto, CA 95350",
-"9797 Maple St, Fayetteville, NC 28301",
-"9898 Oak St, Tacoma, WA 98401",
-"9999 Cedar St, Oxnard, CA 93030"
-};
+    static string[] addresses = [
+        "1 Rothschild Blvd, Tel Aviv",
+        "2 Herzl St, Tel Aviv",
+        "3 Dizengoff St, Tel Aviv",
+        "4 Ibn Gabirol St, Tel Aviv",
+        "5 Allenby St, Tel Aviv",
+        "6 King George St, Tel Aviv",
+        "7 Ben Yehuda St, Tel Aviv",
+        "8 Jabotinsky St, Tel Aviv",
+        "9 Arlozorov St, Tel Aviv",
+        "10 Bograshov St, Tel Aviv",
+        "11 Frishman St, Tel Aviv",
+        "12 Gordon St, Tel Aviv",
+        "13 Hayarkon St, Tel Aviv",
+        "14 Basel St, Tel Aviv",
+        "15 Yehuda Halevi St, Tel Aviv",
+        "16 Nahalat Binyamin St, Tel Aviv",
+        "17 Lilienblum St, Tel Aviv",
+        "18 Montefiore St, Tel Aviv",
+        "19 Shabazi St, Tel Aviv",
+        "20 Florentin St, Tel Aviv",
+        "21 Levinsky St, Tel Aviv",
+        "22 Menachem Begin Rd, Tel Aviv",
+        "23 Kaplan St, Tel Aviv",
+        "24 Hahashmonaim St, Tel Aviv",
+        "25 Carlebach St, Tel Aviv",
+        "26 Yigal Alon St, Tel Aviv",
+        "27 HaMasger St, Tel Aviv",
+        "28 Derech Hashalom, Tel Aviv",
+        "29 Namir Rd, Tel Aviv",
+        "30 Weizmann St, Tel Aviv",
+        "31 Shaul Hamelech Blvd, Tel Aviv",
+        "32 Yehuda Maccabi St, Tel Aviv",
+        "33 Pinkas St, Tel Aviv",
+        "34 Nordau Blvd, Tel Aviv",
+        "35 Ben Gurion Blvd, Tel Aviv",
+        "36 Dizengoff Square, Tel Aviv",
+        "37 Rabin Square, Tel Aviv",
+        "38 Haneviim St, Jerusalem",
+        "39 Jaffa St, Jerusalem",
+        "40 King David St, Jerusalem",
+        "41 Agron St, Jerusalem",
+        "42 Ben Yehuda St, Jerusalem",
+        "43 Hillel St, Jerusalem",
+        "44 Shlomzion Hamalka St, Jerusalem",
+        "45 Keren Hayesod St, Jerusalem",
+        "46 Emek Refaim St, Jerusalem",
+        "47 Derech Hebron, Jerusalem",
+        "48 Derech Beit Lehem, Jerusalem",
+        "49 HaPalmach St, Jerusalem",
+        "50 Gaza St, Jerusalem",
+        "51 HaNasi St, Jerusalem",
+        "52 HaRav Kook St, Jerusalem",
+        "53 HaNeviim St, Jerusalem",
+        "54 HaTzvi St, Jerusalem",
+        "55 HaRav Herzog St, Jerusalem",
+        "56 HaRav Shmuel Baruch St, Jerusalem",
+        "57 HaRav Uziel St, Jerusalem",
+        "58 HaRav Kook St, Jerusalem"
+    ];
+    static double[] longitude = new[]
+    {
+        34.768982,
+        34.7697593,
+        34.7814586,
+        34.7820896,
+        34.76603619999999,
+        34.7718028,
+        34.7680766,
+        34.8040512,
+        34.7726748,
+        34.7686239,
+        34.7690543,
+        34.7696267,
+        34.7644323,
+        34.7769711,
+        34.7694594,
+        34.7700182,
+        34.7695263,
+        34.7709599,
+        34.7645904,
+        34.7688602,
+        34.769547,
+        34.829074,
+        34.7867818,
+        34.7755696,
+        34.7829257,
+        34.7918923,
+        34.7856299,
+        34.80091110000001,
+        34.7940383,
+        34.789916,
+        34.7891321,
+        34.7897246,
+        34.7878395,
+        34.7764528,
+        34.7733411,
+        34.777208,
+        34.7806198,
+        35.2237081,
+        35.2199263,
+        35.2225549,
+        35.2217815,
+        35.2144516,
+        35.2210645,
+        35.2225216,
+        35.222138,
+        35.2181137,
+        35.2256433,
+        35.2225398,
+        35.2086231,
+        35.2123937,
+        35.2147285,
+        35.2208625,
+        35.2183468,
+        35.21371,
+        35.2049358,
+        35.207501,
+        35.1862849,
+        35.2208625,
+    };
+    static double[] latitude = new[] {
+        32.0631703,
+32.0633922,
+32.0734225,
+32.0717615,
+32.0735939,
+32.0704183,
+32.073845,
+32.0826326,
+32.0876283,
+32.0774401,
+32.0800026,
+32.0824454,
+32.0693901,
+32.0900797,
+32.0614968,
+32.0678115,
+32.0621853,
+32.0648623,
+32.0620528,
+32.0561926,
+32.0596808,
+32.092415,
+32.0740448,
+32.0713059,
+32.0682887,
+32.05538,
+32.0641254,
+32.0702864,
+32.081776,
+32.0845697,
+32.0774985,
+32.0937031,
+32.0911246,
+32.0922064,
+32.0848172,
+32.0746924,
+32.0804846,
+31.7840593,
+31.7818041,
+31.772227,
+31.7776993,
+31.7809509,
+31.7795006,
+31.7589424,
+31.7720844,
+31.7625537,
+31.7647235,
+31.7613369,
+31.7648161,
+31.771597,
+31.7706183,
+31.7836425,
+31.7842721,
+31.768319,
+31.76713269999999,
+31.786309,
+31.7682148,
+31.7836425,
+    };
     static int[] ids = new int[] {
     123456789, 234567890, 345678901, 456789012, 567890123,
     678901234, 789012345, 890123456, 901234567, 112345678,
@@ -226,50 +306,31 @@ static public class Initialization
     "P@ssw0rd!@#6", "Qwerty!@#78", "A1b2C3!@#9", "Zxcvbn!@#01", "Pass!@#2345",
     "Secure!@#678", "MyP@ss!@#90", "Admin!@#123", "User!@#4567", "Login!@#890"
 };
-    static double[] latitudes = new double[] {
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940,
-    32.0853, 31.7683, 32.7940, 31.0461, 32.7940,
-    32.1093, 31.2520, 32.7940, 31.0461, 32.7940
-};
-    static double[] longitudes = new double[] {
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896,
-    34.7818, 35.2137, 34.9896, 34.8516, 34.9896,
-    34.8555, 34.7818, 34.9896, 34.8516, 34.9896
-};
+    static string[] descriptions = new string[] {
+        "Request for food delivery",
+        "Inquiry about volunteering opportunities",
+        "Donation of food items",
+        "Request for emergency food assistance",
+        "Follow-up on previous food request",
+        "Information about food distribution schedule",
+        "Request for special dietary needs",
+        "Report of missing food delivery",
+        "Request for additional food supplies",
+        "Feedback on food quality and service",
+    };
+
+    //The calls:
+    //0-19 : No assignment
+    //20-29: Expired
+    //30-99: Regular
+
+    //The Volunteers:
+    //0-19 : No calls been taken
+    //20-29: Took 2 Calls
+    //30-69: Took 5 Calls
+    //70-99: Took 7 Calls
+
+    //Order of initialization: Volunteers >> Calls >> Assignments
 
     /// <summary>
     /// Creates Assignment's instances for the db
@@ -277,16 +338,44 @@ static public class Initialization
     /// <exception cref="Exception">Throws an exception if the calls database hasn't been generated</exception>
     private static void CreateAssignments()
     {
-        //Gets the list of all the calls from the db
+        //Gets dbs
         List<Call> listOfCalls = s_dalCall?.ReadAll()
              ?? throw new Exception("List of Calls hasn't been generated yet");
-        //Creates for each member a 
-        for (int i = 0; i < 100; i++) {
-            {
-                Call currentCall = listOfCalls[i];
+        List<Volunteer> listOfVolunteers = s_dalVolunteer?.ReadAll()
+            ?? throw new Exception("List of Volunteers hasn't been generated yet");
 
+
+        Volunteer currentVolunteer;
+        List<Call> callsPerVolunteer = new List<Call>(); 
+        Call randomCall;
+        int countOfCalls;
+        
+        //For each volunteer we would assign couple of calls to him
+        for (int i = 20; i < 100; i++) {
+
+            currentVolunteer = listOfVolunteers[i];
+            callsPerVolunteer.Clear();
+            countOfCalls = (i < 30)
+                            ? 2 : (i < 70)
+                            ? 5 : 7;
+            
+            //Adds couple of calls that will be under his name in the assignment field
+            while(callsPerVolunteer.Count != countOfCalls)
+            {
+                do
+                {
+                    randomCall = listOfCalls[s_rand.Next(20,listOfCalls.Count-1)];
+                } while (callsPerVolunteer.Any((i) => i == randomCall));
+                callsPerVolunteer.Add(randomCall);
+            }
+
+            //For each call that we would assign to the volunteer - we will create an Assignment instacne with the if of the call and the volunteer
+            foreach(Call currentCall in callsPerVolunteer)
+            {
                 //Calculates the delta time between the opening and closing time of the call    
-                TimeSpan delta = (TimeSpan)(currentCall.DeadLine! - currentCall.OpeningTime);
+                TimeSpan delta = (currentCall.DeadLine != null)
+                    ? (TimeSpan) (currentCall.DeadLine - currentCall.OpeningTime)
+                    : s_dalConfig!.Clock.AddDays(31) - currentCall.OpeningTime;
 
                 //Sets the start and end date based on the delta time that has been calculated   
                 DateTime start = s_dalConfig!.Clock.AddDays(delta.Days);
@@ -296,17 +385,17 @@ static public class Initialization
                 Assignment newAssignment = new()
                 {
                     Called = currentCall.Id,
-                    VolunteerId = ids[i],
+                    VolunteerId = currentVolunteer.Id,
                     TimeOfStarting = start,
                     TimeOfEnding = end,
                     TypeOfEnding =
-                    (end > currentCall.DeadLine) ? TypeOfEnding.CancellationExpired
+                    (end > currentCall.DeadLine)
+                    ? TypeOfEnding.CancellationExpired
                     : (i < 15) ? TypeOfEnding.SelfCanceled
                     : (i < 30) ? TypeOfEnding.AdminCanceled
                     : TypeOfEnding.Treated
                 };
             }
-
         }
     }
     /// <summary>
@@ -316,19 +405,28 @@ static public class Initialization
     {
         for (int i = 0;i < 100;i++)
         {
-            DateTime start = DateTime.Now.AddDays(s_rand.Next(-365, -5));
+            DateTime start = s_dalConfig!.Clock.AddDays(s_rand.Next(-365, -5));
+            int deltaDays = (s_dalConfig!.Clock - start).Days;
+            int position = s_rand.Next(0, addresses.Length-1);
+            DateTime end = (i < 30 && i >= 20)
+                ? start.AddDays(s_rand.Next(1, deltaDays)) // Expired
+                : start.AddDays(s_rand.Next(deltaDays, 31)); // Still open
+
+            //New call instance
             Call newCall = new Call
             {
-                Id = i,
-                Type = CallTypes.FoodDelivery,
-                //I didn’t understand what this is or what I need to put here, so I put random values here. I’ll ask my teacher in the next lecture.
-                //FullAddressCall,
-                //Latitude,
-                //Longitude,
+                Id = -1, //A dummy id, it would be replaced with a proper id in the CRUD method
+                Type = (s_rand.Next(0,1) == 0)
+                        ? CallTypes.FoodDelivery
+                        : CallTypes.FoodPreparation,
+                FullAddressCall = addresses[position],
+                Latitude = latitude[position],
+                Longitude = longitude[position],
                 OpeningTime = start,
-                Description = "Description",
-                DeadLine = start.AddDays(s_rand.Next(1, 31))
+                Description = descriptions[i%10],
+                DeadLine = end
             };
+
             if (s_dalCall?.Read(newCall.Id) == null)
                 s_dalCall?.Create(newCall);
         }
@@ -342,23 +440,23 @@ static public class Initialization
         {
             Volunteer newVolunteer = new Volunteer
             {
-                Id = ids[i],// Valid check digit
-                Role = (i == 0) ? Roles.Admin : Roles.Volunteer,
+                Id = ids[i],
+                Role = (i == 0)
+                ? Roles.Admin
+                : Roles.Volunteer,
+                
                 FullName = names[i],
-                PhoneNumber = phoneNumbers[i],//Starts with 0, 10 digit long
+                PhoneNumber = phoneNumbers[i],
                 Email = emails[i],
                 MaxDistanceToCall = s_rand.Next(30),
-                TypeOfRange =
-                (i % 3 != 0)
-                ? TypeOfRange.AirDistance
-                : (i % 5 != 0)
-                ? TypeOfRange.walkingDistance
-                : TypeOfRange.drivingDistance,
-                Active = (i % 3 != 0 || i % 2 != 0 || i == 0) ? true : false,
+                TypeOfRange = TypeOfRange.AirDistance,
+                Active = (i % 2 == 0 || i == 0)
+                    ? true
+                    : false,
                 Password = passwords[i],
-                FullCurrentAddress = addresses[i],
-                Latitude = null,
-                Longitude = null
+                FullCurrentAddress = addresses[i % 58],
+                Latitude = latitude[i % 58],
+                Longitude = longitude[i % 58]
             };
             if (s_dalVolunteer?.Read(newVolunteer.Id) == null)
                 s_dalVolunteer?.Create(newVolunteer);
