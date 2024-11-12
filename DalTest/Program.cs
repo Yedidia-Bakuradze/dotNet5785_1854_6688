@@ -13,7 +13,7 @@ namespace DalTest
 
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
-        public enum ConfigSubMenuEnum { FirstRun, Exit,AddMinute ,AddHour,AddMonth , AddYear, ShowCureentClock,SetValue,ShowValue,Reset }
+        public enum ConfigSubMenuEnum { FirstRun, Exit,AddMinute ,AddHour,AddMonth , AddYear, ShowCurrentClock,SetValue,ShowValue,Reset }
         public enum ClassType { Assignment, Call, Volunteer };
         public enum ConfigVariable { FirstRun,RiskRange,Clock }
         static void Main(string[] args)
@@ -31,15 +31,31 @@ namespace DalTest
             {
                 try
                 {
-                    Console.Write("Please choose an option: ");
+                    Console.WriteLine(@"
+---------------------------------------------------
+
+Please choose an option -
+- 1 To Exit
+- 2 To Open The Assignment Menu
+- 3 To Open The Call Menu
+- 4 To Open The Volunteer Menu
+- 5 To Initialize The Database
+- 6 To Print All The Data From The Database
+- 7 To Open The Configuration Menu
+- 8 To Reset The System and The Database's Records
+
+---------------------------------------------------
+                    ");
+                    Console.Write(">>> ");
                     string input = Console.ReadLine() ?? "";
+                    
                     if (Enum.TryParse(input, out operation))
                     {
                         switch (operation)
                         {
                             case MainMenuEnum.Exit:
                                 Console.WriteLine("Leaving the lobby ... ");
-                                return;
+                                break;
                             case MainMenuEnum.ShowAssignmentMenu:
                                 ShowSubMenu(ClassType.Assignment);
                                 break;
@@ -62,13 +78,14 @@ namespace DalTest
                                 ResetDbAndSystem();
                                 break;
                             default:
-                                Console.WriteLine("Invalid operation!");
+                                Console.WriteLine($"{input} Is Not a Valid Operation For The Main Menu, Please Try Again!");
+                                Console.Beep();
                                 break;
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"{input} is not a valid operation! Please choose a valid operation.");
+                        Console.WriteLine($"{input} Is Not a Valid Operation For The Main Menu, Please Try Again!");
                     }
 
                 }
@@ -98,8 +115,8 @@ namespace DalTest
         /// </summary>
         private static void ConfigSubMenu()
         {
-            ConfigSubMenuEnum configSubMenu = ConfigSubMenuEnum.FirstRun;
-            while (configSubMenu != ConfigSubMenuEnum.Exit)
+            ConfigSubMenuEnum operation = ConfigSubMenuEnum.FirstRun;
+            while (operation != ConfigSubMenuEnum.Exit)
             {
                 try
                 {
@@ -107,89 +124,107 @@ namespace DalTest
                     string input = Console.ReadLine() ?? "";
 
                     // Parse the user input to the enum, representing the chosen configuration option
-                    if (Enum.TryParse(input, out configSubMenu))
+                    if (Enum.TryParse(input, out operation))
                     {
-                        switch (configSubMenu)
+                        switch (operation)
                         {
                             case ConfigSubMenuEnum.Exit:
-                                // Exits the configuration submenu
-                                Console.WriteLine("Leaving the lobby ... ");
-                                return;
+                                {
+                                    // Exits the configuration sub-menu
+                                    Console.WriteLine("Leaving the lobby ... ");
+                                    break;
+                                }
                             case ConfigSubMenuEnum.AddMinute:
-                                // Adds one minute to the current clock setting
-                                s_dalConfig?.Clock.AddMinutes(1);
-                                break;
+                                {
+                                    // Adds one minute to the current clock setting
+                                    s_dalConfig?.Clock.AddMinutes(1);
+                                    break;
+                                }
                             case ConfigSubMenuEnum.AddHour:
-                                // Adds one hour to the current clock setting
-                                s_dalConfig?.Clock.AddHours(1);
-                                break;
+                                {
+                                    // Adds one hour to the current clock setting
+                                    s_dalConfig?.Clock.AddHours(1);
+                                    break;
+                                }
                             case ConfigSubMenuEnum.AddMonth:
-                                // Adds one month to the current clock setting
-                                s_dalConfig?.Clock.AddMonths(1);
-                                break;
+                                {
+                                    // Adds one month to the current clock setting
+                                    s_dalConfig?.Clock.AddMonths(1);
+                                    break;
+                                }
                             case ConfigSubMenuEnum.AddYear:
-                                // Adds one year to the current clock setting
-                                s_dalConfig?.Clock.AddYears(1);
-                                break;
-                            case ConfigSubMenuEnum.ShowCureentClock:
-                                // Displays the current clock setting
-                                Console.WriteLine(s_dalConfig?.Clock);
-                                break;
+                                {
+                                    // Adds one year to the current clock setting
+                                    s_dalConfig?.Clock.AddYears(1);
+                                    break;
+                                }
+                            case ConfigSubMenuEnum.ShowCurrentClock:
+                                {
+                                    // Displays the current clock setting
+                                    Console.WriteLine(s_dalConfig?.Clock);
+                                    break;
+                                }
                             case ConfigSubMenuEnum.SetValue:
-                                // Allows user to set a new value for either RiskRange or Clock
-                                ConfigVariable configVarieble = ConfigVariable.FirstRun;
-                                Console.WriteLine("What variable do you want to change (RiskRange/Clock)?");
-                                string input1 = Console.ReadLine() ?? "";
-                                Enum.TryParse(input1, out configVarieble);
-
-                                switch (configVarieble)
                                 {
-                                    case ConfigVariable.RiskRange:
-                                        // Sets a new value for RiskRange
-                                        Console.WriteLine("Enter the new value: ");
-                                        TimeSpan timeSpan = TimeSpan.Parse(Console.ReadLine() ?? "");
-                                        s_dalConfig!.RiskRange = timeSpan;
-                                        break;
-                                    case ConfigVariable.Clock:
-                                        // Sets a new value for Clock
-                                        Console.WriteLine("Enter the new value: ");
-                                        DateTime clock = DateTime.Parse(Console.ReadLine() ?? "");
-                                        s_dalConfig!.Clock = clock;
-                                        break;
-                                    default:
-                                        Console.WriteLine("Invalid value");
-                                        break;
+                                    // Allows user to set a new value for either RiskRange or Clock
+                                    ConfigVariable configVariable = ConfigVariable.FirstRun;
+                                    Console.WriteLine("What variable do you want to change (RiskRange/Clock)?");
+                                    string input1 = Console.ReadLine() ?? "";
+                                    Enum.TryParse(input1, out configVariable);
+
+                                    switch (configVariable)
+                                    {
+                                        case ConfigVariable.RiskRange:
+                                            // Sets a new value for RiskRange
+                                            Console.WriteLine("Enter the new value: ");
+                                            TimeSpan timeSpan = TimeSpan.Parse(Console.ReadLine() ?? "");
+                                            s_dalConfig!.RiskRange = timeSpan;
+                                            break;
+                                        case ConfigVariable.Clock:
+                                            // Sets a new value for Clock
+                                            Console.WriteLine("Enter the new value: ");
+                                            DateTime clock = DateTime.Parse(Console.ReadLine() ?? "");
+                                            s_dalConfig!.Clock = clock;
+                                            break;
+                                        default:
+                                            Console.WriteLine("Invalid value");
+                                            break;
+                                    }
+                                    break;
                                 }
-                                break;
                             case ConfigSubMenuEnum.ShowValue:
-                                // Displays the current value for either RiskRange or Clock
-                                ConfigVariable configVarieble1 = ConfigVariable.FirstRun;
-                                Console.WriteLine("What variable do you want to view (RiskRange/Clock)?");
-                                string input2 = Console.ReadLine() ?? "";
-                                Enum.TryParse(input2, out configVarieble1);
-
-                                switch (configVarieble1)
                                 {
-                                    case ConfigVariable.RiskRange:
-                                        // Shows the current RiskRange value
-                                        Console.WriteLine(s_dalConfig?.RiskRange);
-                                        break;
-                                    case ConfigVariable.Clock:
-                                        // Shows the current Clock value
-                                        Console.WriteLine(s_dalConfig?.Clock);
-                                        break;
-                                    default:
-                                        Console.WriteLine("Invalid value");
-                                        break;
+                                    // Displays the current value for either RiskRange or Clock
+                                    ConfigVariable configVariable = ConfigVariable.FirstRun;
+                                    Console.WriteLine("What variable do you want to view (RiskRange/Clock)?");
+                                    string input2 = Console.ReadLine() ?? "";
+                                    Enum.TryParse(input2, out configVariable);
+
+                                    switch (configVariable)
+                                    {
+                                        case ConfigVariable.RiskRange:
+                                            // Shows the current RiskRange value
+                                            Console.WriteLine(s_dalConfig?.RiskRange);
+                                            break;
+                                        case ConfigVariable.Clock:
+                                            // Shows the current Clock value
+                                            Console.WriteLine(s_dalConfig?.Clock);
+                                            break;
+                                        default:
+                                            Console.WriteLine("Invalid value");
+                                            break;
+                                    }
+                                    break;
                                 }
-                                break;
                             case ConfigSubMenuEnum.Reset:
                                 // Resets all settings to their default values
                                 s_dalConfig?.Reset();
                                 break;
                             default:
-                                Console.WriteLine("Invalid operation!");
-                                break;
+                                {
+                                    Console.WriteLine("Invalid operation!");
+                                    break;
+                                }
                         }
                     }
                     else
@@ -239,7 +274,9 @@ namespace DalTest
 
                 }
 
-                foreach(Call call in listOfCalls)
+                Console.WriteLine("\nCall Entities: ");
+                Console.Beep();
+                foreach (Call call in listOfCalls)
                 {
                     Console.WriteLine($@"
                     ---------------------------------------------------------------
@@ -257,8 +294,10 @@ namespace DalTest
 
                     ");
                 }
-
-                foreach(Volunteer volunteer  in listOfVolunteers)
+                
+                Console.WriteLine("\nVolunteer Entities: ");
+                Console.Beep();
+                foreach (Volunteer volunteer  in listOfVolunteers)
                 {
                     Console.WriteLine($@"
                     ---------------------------------------------------------------
@@ -280,7 +319,9 @@ namespace DalTest
 
                     ");
                 }
-            }catch(Exception error)
+            
+            }
+            catch(Exception error)
             {
                 Console.WriteLine(error.Message);
             }
@@ -310,10 +351,10 @@ namespace DalTest
                                 CreateDbAction(classType);
                                 break;
                             case ClassSubMenuEnum.Read:
-                                ReadDbAction(classType);
+                                ReadDbEntity(classType);
                                 break;
                             case ClassSubMenuEnum.ReadAll:
-                                //TODO: ReadAllDbAction(classId);
+                                ReadAllRecordsOfType(classType);
                                 break;
                             case ClassSubMenuEnum.Update:
                                 //TODO: UpdateDbAction(classId);
@@ -339,10 +380,111 @@ namespace DalTest
         }
 
         /// <summary>
+        /// Given a Class Type value, this method will print all the records associated with the data type in the database
+        /// </summary>
+        /// <param name="classType">The data type requested from the database to be shown</param>
+        private static void ReadAllRecordsOfType(ClassType classType)
+        {
+            try
+            { 
+                switch (classType)
+                {
+                    case ClassType.Assignment:
+                        {
+                            List<Assignment> listOfAssignments = s_dalAssignment?.ReadAll() ?? throw new Exception("The Assignments in Database Are Not Available");
+                            Console.WriteLine("Assignment Entities: ");
+                            Console.Beep();
+                            foreach (Assignment assignment in listOfAssignments)
+                            {
+                                Console.WriteLine($@"
+    ---------------------------------------------------------------
+                    
+        Assignment ID: {assignment.Id}
+        Related Call ID: {assignment.Called}
+        Related Volunteer ID: {assignment.VolunteerId}
+        Start Time: {assignment.TimeOfStarting}
+        Finish Time: {assignment.TimeOfEnding}
+        Closed Call Type: {assignment.TypeOfEnding} 
+
+    ---------------------------------------------------------------
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                                ");
+
+                            }
+                            break;
+                        }
+                    case ClassType.Call:
+                        {
+                            List<Call> listOfCalls = s_dalCall?.ReadAll() ?? throw new Exception("The Calls in Database Are Not Available!");
+                            Console.WriteLine("\nCall Entities: ");
+                            foreach (Call call in listOfCalls)
+                            {
+                                Console.WriteLine($@"
+    ---------------------------------------------------------------
+                    
+        Call ID: {call.Id}
+        Request Address: {call.FullAddressCall}
+        Request Address Latitude: {call.Latitude}
+        Request Address Longitude: {call.Longitude}
+        Call Description: {call.Description}
+        The Call Has Been Opened Since: {call.OpeningTime}
+        The Call Would Be Expired At: {call.DeadLine}
+
+    ---------------------------------------------------------------
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                                ");
+                            }
+                            break;
+                        }
+                    case ClassType.Volunteer:
+                        {
+                            List<Volunteer> listOfVolunteers = s_dalVolunteer?.ReadAll() ?? throw new Exception("Error: The list of Volunteer instances is null");
+                            Console.WriteLine("\nVolunteer Entities: ");
+                            Console.Beep();
+                            foreach (Volunteer volunteer in listOfVolunteers)
+                            {
+                                Console.WriteLine($@"
+    ---------------------------------------------------------------
+                    
+        Volunteer ID: {volunteer.Id}
+        Volunteer Role: {volunteer.Role}
+        Full Name: {volunteer.FullName}
+        Email Address: {volunteer.Email}
+        Max Distance From The Call: {volunteer.MaxDistanceToCall}
+        Type Of Distance Range: {volunteer.TypeOfRange}
+        Active: {volunteer.Active}
+        Password: {volunteer.Password}
+        Living Address: {volunteer.FullCurrentAddress}
+        Living Address Latitude: {volunteer.Latitude}
+        Living Address Longitude: {volunteer.Longitude}
+
+    ---------------------------------------------------------------
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                                ");
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            throw new Exception($"{classType} is not a valid class type");
+                        }
+                }
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
+
+        }
+
+        /// <summary>
         /// This method requests the id value from the user, locates the instance if existed and prints its values
         /// </summary>
         /// <param name="classType">The type of instance which is requested, either Assignment, Call or Volunteer</param>
-        private static void ReadDbAction(ClassType classType)
+        private static void ReadDbEntity(ClassType classType)
         {
             bool requestedPreformed = false;
             do
