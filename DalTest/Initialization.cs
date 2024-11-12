@@ -429,28 +429,37 @@ static public class Initialization
     {
         for (int i = 0; i < 100; i++)
         {
-
+            Console.WriteLine($"Volunteer Number {i+1} has been created!");
             Volunteer newVolunteer = new Volunteer
             {
-                Id = s_rand.Next(0, ids.Count-1),
+                Id = (ids.Count != 1) ? ids[s_rand.Next(0, ids.Count-1)]
+                   :(ids.Count!=0) ?ids[0]
+                : s_rand.Next(400000000, 200000000),
                 Role = (i == 0) ? Roles.Admin : Roles.Volunteer,
                 
                 FullName = names[i],
                 PhoneNumber = phoneNumbers[i],
                 Email = emails[i],
-                MaxDistanceToCall = s_rand.Next(30),
+                MaxDistanceToCall = s_rand.Next(1,30),
                 TypeOfRange = TypeOfRange.AirDistance,
                 Active = (i == 76)
                     ? false
                     : true,
-                Password = passwords[i],
-                FullCurrentAddress = addresses[i % addresses.Length],
-                Latitude = latitude[i % latitude.Length],
-                Longitude = longitude[i % longitude.Length]
+                Password = passwords[i % (passwords.Length-1)],
+                FullCurrentAddress = addresses[i % (addresses.Length-1)],
+                Latitude = latitude[i % (latitude.Length-1)],
+                Longitude = longitude[i % (longitude.Length-1)]
             };
-            ids.Remove(newVolunteer.Id);
-            if (s_dalVolunteer?.Read(newVolunteer.Id) == null)
+            if(ids.Count != 0) { 
+                ids.Remove(newVolunteer.Id);
+            }
+            try
+            {
                 s_dalVolunteer?.Create(newVolunteer);
+            }catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
         }
 
     }
@@ -477,7 +486,7 @@ static public class Initialization
         s_dalAssignment.DeleteAll(); 
         s_dalCall.DeleteAll(); 
         s_dalVolunteer.DeleteAll(); 
-        Console.WriteLine("Initializing Students list ...");
+        Console.WriteLine("Initializing Db list ...");
 
         //Initialization the db
         CreateVolunteers();

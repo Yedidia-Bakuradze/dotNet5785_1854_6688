@@ -108,11 +108,25 @@ Please choose an option -
         private static void ShowSubMenu(ClassType classType)
         {
             ClassSubMenuEnum operation = ClassSubMenuEnum.FirstRun;
-            while (operation == ClassSubMenuEnum.Exit)
+            while (operation != ClassSubMenuEnum.Exit)
             {
                 try
                 {
-                    Console.Write(@"Please Choose The Operation That You Would Like To Use: ");
+                    Console.WriteLine($@"
+---------------------------------------------------------
+Welcome To The {classType} Entity Management Window
+Please Choose The Operation That You Would Like To Use:
+    * 1 Exit - Exit to the Main Hub
+    * 2 Create - Create a new {classType} entity
+    * 3 Read - Read an individual {classType} entity 
+    * 4 ReadAll - Read all {classType} entities in the database
+    * 5 Update - Update an individual's {classType} entity field 
+    * 6 Delete - Delete an individual {classType} entity
+    * 7 DeleteAll - Delete all {classType} entities in the database
+---------------------------------------------------------
+
+");
+                    Console.Write(">>> ");
                     string input = Console.ReadLine() ?? "";
                     if (Enum.TryParse(input, out operation))
                     {
@@ -120,7 +134,7 @@ Please choose an option -
                         switch (operation)
                         {
                             case ClassSubMenuEnum.Exit:
-                                Console.WriteLine("Logging out of the submenu ...");
+                                Console.WriteLine("Logging out of the Sub-Menu ...");
                                 break;
                             case ClassSubMenuEnum.Create:
                                 CreateDbEntity(classType);
@@ -546,7 +560,7 @@ Please choose an option -
                         //TODO: Callid for the assignment, i dont understood that and i will ask my teacher in the next lecture
 
                         // Prompt for the id of the volunteer
-                        Console.WriteLine("What is the id of the volunteer:");
+                        Console.WriteLine("What is the id of the assignment:");
                         int volunteerid = int.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the time of starting
