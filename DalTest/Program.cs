@@ -138,7 +138,7 @@ Please choose an option -
                                 DeleteEntityById(classType);
                                 break;
                             case ClassSubMenuEnum.DeleteAll:
-                                //TODO: DeleteAllDbAction(classId);
+                                DeleteAllDbAction(classType);
                                 break;
                         }
                     }
@@ -154,9 +154,46 @@ Please choose an option -
         }
 
         /// <summary>
+        /// This method removes all the records in the database of a given type
+        /// </summary>
+        /// <param name="classType">The entity type which is requested to be cleared</param>
+        private static void DeleteAllDbAction(ClassType classType)
+        {
+            try
+            {
+                switch (classType)
+                {
+                    case ClassType.Assignment:
+                        {
+                            s_dalAssignment?.DeleteAll();
+                            break;
+                        }
+                    case ClassType.Call:
+                        {
+                            s_dalCall?.DeleteAll();
+                            break;
+                        }
+                    case ClassType.Volunteer:
+                        {
+                            s_dalVolunteer?.DeleteAll();
+                            break;
+                        }
+                    default:
+                        {
+                            throw new Exception($"Internal Error: {classType} is not allowed");
+                        }
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
+        }
+
+        /// <summary>
         /// This method requests from the user an id in order to delete the entity with the same id of a given entity type
         /// </summary>
-        /// <param name="classType"></param>
+        /// <param name="classType">Entity type to be removed</param>
         private static void DeleteEntityById(ClassType classType)
         {
             string input;
@@ -654,7 +691,7 @@ Please choose an option -
         /// <summary>
         /// Updates an entity of a given type and a given id value
         /// </summary>
-        /// <param name="classType"></param>
+        /// <param name="classType">Individual entity type which is requested to be updated</param>
         private static void UpdateDbAction(ClassType classType)
         {
             string input;
