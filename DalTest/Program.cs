@@ -15,7 +15,9 @@ namespace DalTest
 
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
-        public enum ClassType { Assignment, Call, Volunteer };
+        public enum ConfigSubMenuEnum { FirstRun, Exit,AddMinute ,AddHour,AddMonth , AddYear, ShowCureentClock,SetValue,ShowValue,Reset }
+        public enum ClassType { Assignment, Call, Volunteer 
+        public enum ConfigVarieble {FirstRun,RiskRange,Clock }
         static void Main(string[] args)
         {
             MainMenu();
@@ -56,7 +58,7 @@ namespace DalTest
                                 ShowDbData();
                                 break;
                             case MainMenuEnum.ShowConfigMenu:
-                                //ConfigSubMenu();
+                                ConfigSubMenu(s_dalConfig.RiskRange);
                                 break;
                             case MainMenuEnum.ResetSysAndDb:
                                 //ResetDbAndSystem();
@@ -79,6 +81,121 @@ namespace DalTest
 
             }
         }
+        /// <summary>
+        /// Provides a submenu for configuring application settings. Users can adjust time parameters, view or change specific configurations,
+        /// and reset all settings. The function loops until the "Exit" option is selected.
+        /// i used chatgpt for the comments here.
+        /// </summary>
+        private static void ConfigSubMenu()
+        {
+            ConfigSubMenuEnum configSubMenu = ConfigSubMenuEnum.FirstRun;
+            while (configSubMenu != ConfigSubMenuEnum.Exit)
+            {
+                try
+                {
+                    Console.Write("Please choose an option: ");
+                    string input = Console.ReadLine() ?? "";
+
+                    // Parse the user input to the enum, representing the chosen configuration option
+                    if (Enum.TryParse(input, out configSubMenu))
+                    {
+                        switch (configSubMenu)
+                        {
+                            case ConfigSubMenuEnum.Exit:
+                                // Exits the configuration submenu
+                                Console.WriteLine("Leaving the lobby ... ");
+                                return;
+                            case ConfigSubMenuEnum.AddMinute:
+                                // Adds one minute to the current clock setting
+                                s_dalConfig?.Clock.AddMinutes(1);
+                                break;
+                            case ConfigSubMenuEnum.AddHour:
+                                // Adds one hour to the current clock setting
+                                s_dalConfig?.Clock.AddHours(1);
+                                break;
+                            case ConfigSubMenuEnum.AddMonth:
+                                // Adds one month to the current clock setting
+                                s_dalConfig?.Clock.AddMonths(1);
+                                break;
+                            case ConfigSubMenuEnum.AddYear:
+                                // Adds one year to the current clock setting
+                                s_dalConfig?.Clock.AddYears(1);
+                                break;
+                            case ConfigSubMenuEnum.ShowCureentClock:
+                                // Displays the current clock setting
+                                Console.WriteLine(s_dalConfig?.Clock);
+                                break;
+                            case ConfigSubMenuEnum.SetValue:
+                                // Allows user to set a new value for either RiskRange or Clock
+                                ConfigVarieble configVarieble = ConfigVarieble.FirstRun;
+                                Console.WriteLine("What variable do you want to change (RiskRange/Clock)?");
+                                string input1 = Console.ReadLine() ?? "";
+                                Enum.TryParse(input1, out configVarieble);
+
+                                switch (configVarieble)
+                                {
+                                    case ConfigVarieble.RiskRange:
+                                        // Sets a new value for RiskRange
+                                        Console.WriteLine("Enter the new value: ");
+                                        TimeSpan timeSpan = TimeSpan.Parse(Console.ReadLine() ?? "");
+                                        s_dalConfig!.RiskRange = timeSpan;
+                                        break;
+                                    case ConfigVarieble.Clock:
+                                        // Sets a new value for Clock
+                                        Console.WriteLine("Enter the new value: ");
+                                        DateTime clock = DateTime.Parse(Console.ReadLine() ?? "");
+                                        s_dalConfig!.Clock = clock;
+                                        break;
+                                    default:
+                                        Console.WriteLine("Invalid value");
+                                        break;
+                                }
+                                break;
+                            case ConfigSubMenuEnum.ShowValue:
+                                // Displays the current value for either RiskRange or Clock
+                                ConfigVarieble configVarieble1 = ConfigVarieble.FirstRun;
+                                Console.WriteLine("What variable do you want to view (RiskRange/Clock)?");
+                                string input2 = Console.ReadLine() ?? "";
+                                Enum.TryParse(input2, out configVarieble1);
+
+                                switch (configVarieble1)
+                                {
+                                    case ConfigVarieble.RiskRange:
+                                        // Shows the current RiskRange value
+                                        Console.WriteLine(s_dalConfig?.RiskRange);
+                                        break;
+                                    case ConfigVarieble.Clock:
+                                        // Shows the current Clock value
+                                        Console.WriteLine(s_dalConfig?.Clock);
+                                        break;
+                                    default:
+                                        Console.WriteLine("Invalid value");
+                                        break;
+                                }
+                                break;
+                            case ConfigSubMenuEnum.Reset:
+                                // Resets all settings to their default values
+                                s_dalConfig?.Reset();
+                                break;
+                            default:
+                                Console.WriteLine("Invalid operation!");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{input} is not a valid operation! Please choose a valid operation.");
+                    }
+
+                }
+                catch (Exception error)
+                {
+                    // Handles any unexpected exceptions during the execution of submenu options
+                    Console.WriteLine(error.Message);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Prints the data of all the entities in the database
