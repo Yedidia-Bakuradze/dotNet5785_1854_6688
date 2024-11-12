@@ -1,6 +1,7 @@
 ﻿using Dal;
 using DalApi;
 using DO;
+using System.Data;
 using System.Runtime.CompilerServices;
 using static DalTest.Program;
 
@@ -131,7 +132,7 @@ Please choose an option -
                                 ReadAllEntitiesByType(classType);
                                 break;
                             case ClassSubMenuEnum.Update:
-                                //TODO: UpdateDbAction(classId);
+                                UpdateDbAction(classType);
                                 break;
                             case ClassSubMenuEnum.Delete:
                                 //TODO: DeleteDbAction(classId);
@@ -600,14 +601,338 @@ Please choose an option -
             }
         }
 
+        private static void UpdateDbAction(ClassType classType)
+        {
+            string input;
+            int id;
+            bool isValid;
+            do
+            {
+                input = Console.ReadLine() ?? "";
+                Console.Write($"Enter the ID of object of type of {classType}: ");
+                isValid = Int32.TryParse(input, out id);
+
+                if (!isValid)
+                    Console.WriteLine($"The Value {input} is not a valid number, Please try again");
+            } while (!isValid);
+
+            try
+            {
+                switch (classType)
+                {
+                    case ClassType.Assignment:
+                        {
+                            Assignment result = s_dalAssignment?.Read(id) ?? 
+                                throw new Exception($"Assignment Object Failed: The Assignment with ID of {id} hasn't been found");
+                            int Called = result.Called ;
+                            int VolunteerId = result.VolunteerId ;
+                            DateTime TimeOfStarting = result.TimeOfStarting;
+                            DateTime? TimeOfEnding = result.TimeOfEnding ;
+                            TypeOfEnding? TypeOfEnding = result.TypeOfEnding;
+
+                            Console.WriteLine(@$"
+---------------------------------------
+Assignment Object
+ID: {result.Id}
+CallId: {result.Called}
+VolunteerId: {result.VolunteerId}
+---------------------------------------
+
+");
+
+                            //Request for a new TimeOfStarting value 
+                            do
+                            {
+                                Console.WriteLine("Enter new Time Of Starting Value in the following format: dd/mm/yyyy hh:mm:ss");
+                                Console.Write(">>> ");
+                                
+                                input = Console.ReadLine() ?? "";
+                                isValid = DateTime.TryParse(input, out TimeOfStarting);
+                                
+                                if(!isValid)
+                                    Console.WriteLine($"The value: {input} is not valid!");
+                            } while (!isValid);
+
+                            //Request for a new TimeOfEnding value
+                            do
+                            {
+                                Console.WriteLine("Enter new Time Of Ending Value in the following format: dd/mm/yyyy hh:mm:ss");
+                                Console.Write(">>> ");
+                                input = Console.ReadLine() ?? "";
+                                
+                                if(input == "")
+                                {
+                                    isValid = true;
+                                    TimeOfEnding = null;
+                                }
+                                else
+                                {
+
+                                    DateTime temp;
+                                    isValid = DateTime.TryParse(input, out temp);
+                                    if (!isValid)
+                                    {
+                                        Console.WriteLine($"The value: {input} is not valid!");
+                                    }
+                                    else
+                                    {
+                                        TimeOfEnding = temp;
+                                    }
+                                }
+                            } while (!isValid);
+
+                            //Request for a new TypeOfEnding value
+                            do
+                            {
+                                
+                                Console.WriteLine($"Select new Type Of Ending value from the following list ({DO.TypeOfEnding.CancellationExpired},{DO.TypeOfEnding.AdminCanceled},{DO.TypeOfEnding.Treated},{DO.TypeOfEnding.SelfCanceled})");
+                                Console.Write(">>> ");
+                                input = Console.ReadLine() ?? "";
+                                if (input == "")
+                                {
+                                    isValid = true;
+                                    TimeOfEnding = null;
+                                }
+                                else
+                                {
+
+                                    DO.TypeOfEnding temp;
+                                    isValid = Enum.TryParse(input, out temp);
+                                    if (!isValid)
+                                    {
+                                        Console.WriteLine($"The value: {input} is not valid!");
+                                    }
+                                    else
+                                    {
+                                        TypeOfEnding = temp;
+                                    }
+                                }
+                            } while (!isValid);
+
+                            Console.Write(@$"
+----------------------------------------
+Assignment Object Update - Old Version
+Assignment ID: {result.Id}          --->
+Call ID: {result.Called}                   --->
+Volunteer ID: {result.VolunteerId}         --->
+Time Of Starting: {result.TimeOfStarting}  --->
+Time Of Ending: {result.TimeOfEnding }     --->
+Type Of Ending: {result.TypeOfEnding}      --->
+----------------------------------------
+
+");
+                            Console.Write(@$"
+----------------------------------------
+Assignment Object Update - New Version
+Assignment ID: {result.Id}          
+Call ID: {Called}                   
+Volunteer ID: {VolunteerId}         
+Time Of Starting: {TimeOfStarting}  
+Time Of Ending: {TimeOfEnding}     
+Type Of Ending: {TypeOfEnding}     
+----------------------------------------
+
+");
+                            Console.WriteLine();
+
+                            Assignment newAssignment = new Assignment()
+                            {
+                                Id = result.Id,
+                                Called  = Called ,
+                                VolunteerId  = VolunteerId ,
+                                TimeOfStarting = TimeOfStarting,
+                                TimeOfEnding = TimeOfEnding,
+                                TypeOfEnding = TypeOfEnding,
+                            };
+                            s_dalAssignment.Update(newAssignment);
+                            
+                            break;
+                        }
+                    case ClassType.Call:
+                    {
+                            Call result = s_dalCall?.Read(id) ??
+                                    throw new Exception($"Call Object Failed: The Assignment with ID of {id} hasn't been found");
+                            CallTypes Type = result.Type;
+                            string FullAddressCall = result.FullAddressCall;
+                            double Latitude = result.Latitude;
+                            double Longitude = result.Longitude;
+                            DateTime OpeningTime = result.OpeningTime;
+                            string? Description = result.Description;
+                            DateTime? DeadLine = result.DeadLine;
+
+                            Console.WriteLine(@$"
+---------------------------------------
+Assignment Object
+ID: {result.Id}
+---------------------------------------
+
+");
+
+                            //Request for a new Type Of Call value 
+                            do
+                            {
+                                Console.WriteLine($"Enter new Type Of Call from these options ({DO.CallTypes.FoodPreparation},{DO.CallTypes.FoodDelivery})");
+                                Console.Write(">>> ");
+
+                                input = Console.ReadLine() ?? "";
+                                isValid = Enum.TryParse(input, out Type);
+
+                                if (!isValid)
+                                    Console.WriteLine($"The value: {input} is not valid!");
+                            } while (!isValid);
+
+                            //Request for a new call full address value 
+                            do
+                            {
+                                Console.WriteLine($"Enter new Call Full Address");
+                                Console.Write(">>> ");
+
+                                input = Console.ReadLine() ?? "";
+
+                                if (input == "")
+                                    Console.WriteLine($"The value: `{input}` is not valid!");
+                                //TODO: Need to add the option to check if the address is valid
+                                //TOOD: Need to add the option to find the latitude and logitude of the new loaction
+                            } while (input == "");
+
+                            //Request for a new Latitude value 
+                            do
+                            {
+                                Console.WriteLine($"Enter new Call Full Address's Latitude value");
+                                Console.Write(">>> ");
+
+                                input = Console.ReadLine() ?? "";
+                                isValid = double.TryParse(input, out Latitude);
+                                if (!isValid)
+                                    Console.WriteLine($"The value: {input} is not valid!");
+                            } while (!isValid);
+
+                            //Request for a new Longitude value 
+                            do
+                            {
+                                Console.WriteLine($"Enter new Call Full Address's Longitude value");
+                                Console.Write(">>> ");
+
+                                input = Console.ReadLine() ?? "";
+                                isValid = double.TryParse(input, out Longitude);
+                                if (!isValid)
+                                    Console.WriteLine($"The value: {input} is not valid!");
+                            } while (!isValid);
+
+                            //Request for a new Opening Time value
+                            do
+                            {
+                                Console.WriteLine($"Enter new Opening Time value in the following formatting (DD/MM/YYYY HH:MM:SS)");
+                                Console.Write(">>> ");
+
+                                isValid = DateTime.TryParse(input, out OpeningTime);
+                                if (!isValid)
+                                {
+                                    Console.WriteLine($"The value: {input} is not valid!");
+                                }
+                            } while (!isValid);
+
+                            //Request for a new description value
+                            {
+                                Console.WriteLine($"Enter a new description for the call");
+                                Console.Write(">>> ");
+                                input = Console.ReadLine() ?? "";
+                            }
+
+                            //Request for a new Dead Line Time value
+                            do
+                            {
+
+                                Console.WriteLine($"Enter a new Dead Line value in the next format (DD/MM/YYYY HH:MM:SS)");
+                                Console.Write(">>> ");
+                                input = Console.ReadLine() ?? "";
+                                if (input == "")
+                                {
+                                    isValid = true;
+                                    DeadLine = null;
+                                }
+                                else
+                                {
+                                    DateTime temp;
+                                    isValid = Enum.TryParse(input, out temp);
+                                    if (!isValid)
+                                    {
+                                        Console.WriteLine($"The value: {input} is not valid!");
+                                    }
+                                    else
+                                    {
+                                        DeadLine = temp;
+                                    }
+                                }
+                            } while (!isValid);
+
+                            Console.Write(@$"
+-----------------------------------------------
+Call Object Update - Old Version
+Call ID: {result.Id}                        -->
+Type : {result.Type}                        -->
+FullAddressCall : {result.FullAddressCall}  -->
+Latitude : {result.Latitude}                -->
+Longitude : {result.Longitude}              -->
+OpeningTime : {result.OpeningTime}          -->
+Description : {result.Description}          -->
+DeadLine : {result.DeadLine}                -->
+-----------------------------------------------
+
+");
+                            Console.Write(@$"
+-----------------------------------------------
+Volunteer Object Update - New Version
+Call ID: {result.Id}   
+Type : {Type}
+FullAddressCall : {FullAddressCall}
+Latitude : {Latitude}
+Longitude : {Longitude}
+OpeningTime : {OpeningTime}
+Description : {Description}
+DeadLine : {DeadLine}
+-----------------------------------------------
+
+");
+                            Console.WriteLine();
+
+                            Call newCall = new Call()
+                            {
+                                Id = result.Id,
+                                Type = Type,
+                                FullAddressCall = FullAddressCall,
+                                Latitude = Latitude,
+                                Longitude = Longitude,
+                                OpeningTime = OpeningTime,
+                                Description = Description,
+                                DeadLine = DeadLine,
+                            };
+                            s_dalCall?.Update(newCall);
+                            break;
+                    }
+                    case ClassType.Volunteer:
+                    {
+                            break;
+                    }
+                default:
+                    {
+                        throw new Exception($"Internal Error: {classType} is not allowed");
+                    }
+                }
+            }catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
+        }
+
+
+
+
 
         /// <summary>
         /// This method initializes the database, filling it with pre-made dummy data 
         /// </summary>
         private static void DbInit() => DalTest.Initialization.Do(s_dalAssignment, s_dalCall, s_dalVolunteer, s_dalConfig);
-
-
-
 
 
 
