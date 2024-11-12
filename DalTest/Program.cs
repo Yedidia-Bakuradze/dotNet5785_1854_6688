@@ -1,6 +1,8 @@
 ﻿using Dal;
 using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
+using static DalTest.Program;
 
 namespace DalTest
 {
@@ -54,7 +56,7 @@ Please choose an option -
                         switch (operation)
                         {
                             case MainMenuEnum.Exit:
-                                Console.WriteLine("Leaving the lobby ... ");
+                                Console.WriteLine("Leaving The Main Hub ... ");
                                 break;
                             case MainMenuEnum.ShowAssignmentMenu:
                                 ShowSubMenu(ClassType.Assignment);
@@ -69,7 +71,7 @@ Please choose an option -
                                 DbInit();
                                 break;
                             case MainMenuEnum.ShowAllDbData:
-                                ShowDbData();
+                                ReadAllEntitiesByDb();
                                 break;
                             case MainMenuEnum.ShowConfigMenu:
                                 ConfigSubMenu();
@@ -78,8 +80,8 @@ Please choose an option -
                                 ResetDbAndSystem();
                                 break;
                             default:
-                                Console.WriteLine($"{input} Is Not a Valid Operation For The Main Menu, Please Try Again!");
                                 Console.Beep();
+                                Console.WriteLine($"{input} Is Not a Valid Operation For The Main Menu, Please Try Again!");
                                 break;
                         }
                     }
@@ -97,6 +99,60 @@ Please choose an option -
             }
         }
 
+
+        /// <summary>
+        /// Displays the submenu for a specific class and handles user input.
+        /// </summary>
+        /// <param name="classType">The class type for the submenu.</param>
+        private static void ShowSubMenu(ClassType classType)
+        {
+            ClassSubMenuEnum operation = ClassSubMenuEnum.FirstRun;
+            while (operation == ClassSubMenuEnum.Exit)
+            {
+                try
+                {
+                    Console.Write(@"Please Choose The Operation That You Would Like To Use: ");
+                    string input = Console.ReadLine() ?? "";
+                    if (Enum.TryParse(input, out operation))
+                    {
+
+                        switch (operation)
+                        {
+                            case ClassSubMenuEnum.Exit:
+                                Console.WriteLine("Logging out of the submenu ...");
+                                break;
+                            case ClassSubMenuEnum.Create:
+                                CreateDbEntity(classType);
+                                break;
+                            case ClassSubMenuEnum.Read:
+                                ReadSingleDbEntity(classType);
+                                break;
+                            case ClassSubMenuEnum.ReadAll:
+                                ReadAllEntitiesByType(classType);
+                                break;
+                            case ClassSubMenuEnum.Update:
+                                //TODO: UpdateDbAction(classId);
+                                break;
+                            case ClassSubMenuEnum.Delete:
+                                //TODO: DeleteDbAction(classId);
+                                break;
+                            case ClassSubMenuEnum.DeleteAll:
+                                //TODO: DeleteAllDbAction(classId);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid operation has been captured: {input}");
+                    }
+                }catch(Exception error)
+                {
+                    Console.WriteLine(error.Message);
+                }
+            }
+        }
+
+
         /// <summary>
         /// This method when call resets the system including the database records
         /// </summary>
@@ -107,11 +163,12 @@ Please choose an option -
             s_dalVolunteer?.DeleteAll();
             s_dalConfig?.Reset();
         }
+        
 
         /// <summary>
         /// Provides a submenu for configuring application settings. Users can adjust time parameters, view or change specific configurations,
         /// and reset all settings. The function loops until the "Exit" option is selected.
-        /// i used chatgpt for the comments here.
+        /// i used Chat GPT for the comments here.
         /// </summary>
         private static void ConfigSubMenu()
         {
@@ -120,7 +177,25 @@ Please choose an option -
             {
                 try
                 {
-                    Console.Write("Please choose an option: ");
+                    Console.Write(@"
+---------------------------------------------------------------------------------
+
+    Please choose an option:
+
+    Exit             - To Exit The Sub Menu
+    AddMinute        - To Add Minutes To System Clock
+    AddHour          - To Add Hours To System Clock
+    AddMonth         - To Add Months To System Clock
+    AddYear          - To Add Years To System Clock
+    ShowCurrentClock - To Show Current Time
+    SetValue         - To Set a Value to System Variables (RisRange, Clock)
+    ShowValue        - To Display System Variables Values (RisRange, Clock)
+    Reset            - To Reset System Variables Values (RisRange, Clock)
+
+---------------------------------------------------------------------------------
+
+");
+                    Console.Write(">>> ");
                     string input = Console.ReadLine() ?? "";
 
                     // Parse the user input to the enum, representing the chosen configuration option
@@ -167,11 +242,7 @@ Please choose an option -
                             case ConfigSubMenuEnum.SetValue:
                                 {
                                     // Allows user to set a new value for either RiskRange or Clock
-                                    ConfigVariable configVariable = ConfigVariable.FirstRun;
-                                    Console.WriteLine("What variable do you want to change (RiskRange/Clock)?");
-                                    string input1 = Console.ReadLine() ?? "";
-                                    Enum.TryParse(input1, out configVariable);
-
+                                    ConfigVariable configVariable = GetUsersConfigVariableChoice();
                                     switch (configVariable)
                                     {
                                         case ConfigVariable.RiskRange:
@@ -187,18 +258,15 @@ Please choose an option -
                                             s_dalConfig!.Clock = clock;
                                             break;
                                         default:
-                                            Console.WriteLine("Invalid value");
-                                            break;
+                                            {
+                                                throw new Exception($"Invalid configVariable: {configVariable} ");
+                                            }
                                     }
                                     break;
                                 }
                             case ConfigSubMenuEnum.ShowValue:
                                 {
-                                    // Displays the current value for either RiskRange or Clock
-                                    ConfigVariable configVariable = ConfigVariable.FirstRun;
-                                    Console.WriteLine("What variable do you want to view (RiskRange/Clock)?");
-                                    string input2 = Console.ReadLine() ?? "";
-                                    Enum.TryParse(input2, out configVariable);
+                                    ConfigVariable configVariable = GetUsersConfigVariableChoice();
 
                                     switch (configVariable)
                                     {
@@ -211,19 +279,21 @@ Please choose an option -
                                             Console.WriteLine(s_dalConfig?.Clock);
                                             break;
                                         default:
-                                            Console.WriteLine("Invalid value");
-                                            break;
+                                            {
+                                                throw new Exception($"Invalid configVariable: {configVariable} ");
+                                            }
                                     }
                                     break;
                                 }
                             case ConfigSubMenuEnum.Reset:
-                                // Resets all settings to their default values
-                                s_dalConfig?.Reset();
-                                break;
+                                {
+                                    // Resets all settings to their default values
+                                    s_dalConfig?.Reset();
+                                    break;
+                                }
                             default:
                                 {
-                                    Console.WriteLine("Invalid operation!");
-                                    break;
+                                    throw new Exception($"Forbidden Operation: The {operation} operation is not allowed!");
                                 }
                         }
                     }
@@ -243,147 +313,10 @@ Please choose an option -
 
 
         /// <summary>
-        /// Prints the data of all the entities in the database
-        /// </summary>
-        private static void ShowDbData()
-        {
-            try
-            {
-                List<Assignment> listOfAssignments = s_dalAssignment?.ReadAll() ?? throw new Exception("Error: The list of Assignment instances is null");
-                List<Call> listOfCalls = s_dalCall?.ReadAll() ?? throw new Exception("Error: The list of Call instances is null");
-                List<Volunteer> listOfVolunteers = s_dalVolunteer?.ReadAll() ?? throw new Exception("Error: The list of Volunteer instances is null");
-
-                Console.WriteLine("Assignment Entities: ");
-                Console.Beep();
-                foreach(Assignment assignment in listOfAssignments)
-                {
-                    Console.WriteLine($@"
-                    ---------------------------------------------------------------
-                    
-                        Assignment ID: {assignment.Id}
-                        Related Call ID: {assignment.Called}
-                        Related Volunteer ID: {assignment.VolunteerId}
-                        Start Time: {assignment.TimeOfStarting}
-                        Finish Time: {assignment.TimeOfEnding}
-                        Closed Call Type: {assignment.TypeOfEnding} 
-
-                    ---------------------------------------------------------------
-                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                    ");
-
-                }
-
-                Console.WriteLine("\nCall Entities: ");
-                Console.Beep();
-                foreach (Call call in listOfCalls)
-                {
-                    Console.WriteLine($@"
-                    ---------------------------------------------------------------
-                    
-                        Call ID: {call.Id}
-                        Request Address: {call.FullAddressCall}
-                        Request Address Latitude: {call.Latitude}
-                        Request Address Longitude: {call.Longitude}
-                        Call Description: {call.Description}
-                        The Call Has Been Opened Since: {call.OpeningTime}
-                        The Call Would Be Expired At: {call.DeadLine}
-
-                    ---------------------------------------------------------------
-                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                    ");
-                }
-                
-                Console.WriteLine("\nVolunteer Entities: ");
-                Console.Beep();
-                foreach (Volunteer volunteer  in listOfVolunteers)
-                {
-                    Console.WriteLine($@"
-                    ---------------------------------------------------------------
-                    
-                        Volunteer ID: {volunteer.Id}
-                        Volunteer Role: {volunteer.Role}
-                        Full Name: {volunteer.FullName}
-                        Email Address: {volunteer.Email}
-                        Max Distance From The Call: {volunteer.MaxDistanceToCall}
-                        Type Of Distance Range: {volunteer.TypeOfRange}
-                        Active: {volunteer.Active}
-                        Password: {volunteer.Password}
-                        Living Address: {volunteer.FullCurrentAddress}
-                        Living Address Latitude: {volunteer.Latitude}
-                        Living Address Longitude: {volunteer.Longitude}
-
-                    ---------------------------------------------------------------
-                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                    ");
-                }
-            
-            }
-            catch(Exception error)
-            {
-                Console.WriteLine(error.Message);
-            }
-        }
-
-        /// <summary>
-        /// Displays the submenu for a specific class and handles user input.
-        /// </summary>
-        /// <param name="classType">The class type for the submenu.</param>
-        private static void ShowSubMenu(ClassType classType)
-        {
-            ClassSubMenuEnum operation = ClassSubMenuEnum.FirstRun;
-            while (operation == ClassSubMenuEnum.Exit)
-            {
-                Console.Write(@"Please Choose The Operation That You Would Like To Use: ");
-                string input = Console.ReadLine() ?? "";
-                if (Enum.TryParse(input, out operation))
-                {
-                    try
-                    {
-                        switch (operation)
-                        {
-                            case ClassSubMenuEnum.Exit:
-                                Console.WriteLine("Logging out of the submenu ...");
-                                break;
-                            case ClassSubMenuEnum.Create:
-                                CreateDbAction(classType);
-                                break;
-                            case ClassSubMenuEnum.Read:
-                                ReadDbEntity(classType);
-                                break;
-                            case ClassSubMenuEnum.ReadAll:
-                                ReadAllRecordsOfType(classType);
-                                break;
-                            case ClassSubMenuEnum.Update:
-                                //TODO: UpdateDbAction(classId);
-                                break;
-                            case ClassSubMenuEnum.Delete:
-                                //TODO: DeleteDbAction(classId);
-                                break;
-                            case ClassSubMenuEnum.DeleteAll:
-                                //TODO: DeleteAllDbAction(classId);
-                                break;
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        Console.WriteLine(error.Message);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operation has been captured: {input}");
-                }
-            }
-        }
-
-        /// <summary>
         /// Given a Class Type value, this method will print all the records associated with the data type in the database
         /// </summary>
         /// <param name="classType">The data type requested from the database to be shown</param>
-        private static void ReadAllRecordsOfType(ClassType classType)
+        private static void ReadAllEntitiesByType(ClassType classType)
         {
             try
             { 
@@ -391,27 +324,12 @@ Please choose an option -
                 {
                     case ClassType.Assignment:
                         {
-                            List<Assignment> listOfAssignments = s_dalAssignment?.ReadAll() ?? throw new Exception("The Assignments in Database Are Not Available");
+                            List<Assignment> listOfAssignments = s_dalAssignment?.ReadAll()
+                                ?? throw new Exception("The Assignments in Database Are Not Available");
                             Console.WriteLine("Assignment Entities: ");
                             Console.Beep();
                             foreach (Assignment assignment in listOfAssignments)
-                            {
-                                Console.WriteLine($@"
-    ---------------------------------------------------------------
-                    
-        Assignment ID: {assignment.Id}
-        Related Call ID: {assignment.Called}
-        Related Volunteer ID: {assignment.VolunteerId}
-        Start Time: {assignment.TimeOfStarting}
-        Finish Time: {assignment.TimeOfEnding}
-        Closed Call Type: {assignment.TypeOfEnding} 
-
-    ---------------------------------------------------------------
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                                ");
-
-                            }
+                                PrintAssignmentEntity(assignment);
                             break;
                         }
                     case ClassType.Call:
@@ -419,23 +337,7 @@ Please choose an option -
                             List<Call> listOfCalls = s_dalCall?.ReadAll() ?? throw new Exception("The Calls in Database Are Not Available!");
                             Console.WriteLine("\nCall Entities: ");
                             foreach (Call call in listOfCalls)
-                            {
-                                Console.WriteLine($@"
-    ---------------------------------------------------------------
-                    
-        Call ID: {call.Id}
-        Request Address: {call.FullAddressCall}
-        Request Address Latitude: {call.Latitude}
-        Request Address Longitude: {call.Longitude}
-        Call Description: {call.Description}
-        The Call Has Been Opened Since: {call.OpeningTime}
-        The Call Would Be Expired At: {call.DeadLine}
-
-    ---------------------------------------------------------------
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                                ");
-                            }
+                                PrintCallEntity(call);
                             break;
                         }
                     case ClassType.Volunteer:
@@ -444,32 +346,12 @@ Please choose an option -
                             Console.WriteLine("\nVolunteer Entities: ");
                             Console.Beep();
                             foreach (Volunteer volunteer in listOfVolunteers)
-                            {
-                                Console.WriteLine($@"
-    ---------------------------------------------------------------
-                    
-        Volunteer ID: {volunteer.Id}
-        Volunteer Role: {volunteer.Role}
-        Full Name: {volunteer.FullName}
-        Email Address: {volunteer.Email}
-        Max Distance From The Call: {volunteer.MaxDistanceToCall}
-        Type Of Distance Range: {volunteer.TypeOfRange}
-        Active: {volunteer.Active}
-        Password: {volunteer.Password}
-        Living Address: {volunteer.FullCurrentAddress}
-        Living Address Latitude: {volunteer.Latitude}
-        Living Address Longitude: {volunteer.Longitude}
-
-    ---------------------------------------------------------------
-    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-                                ");
-                            }
+                                PrintVolunteerEntity(volunteer);
                             break;
                         }
                     default:
                         {
-                            throw new Exception($"{classType} is not a valid class type");
+                            throw new Exception($"Internal Error: {classType} Is Not a Valid Class Type");
                         }
                 }
             }
@@ -480,67 +362,85 @@ Please choose an option -
 
         }
 
+
+        /// <summary>
+        /// Prints the data of all the entities in the database
+        /// </summary>
+        private static void ReadAllEntitiesByDb()
+        {
+            ReadAllEntitiesByType(ClassType.Assignment);
+            ReadAllEntitiesByType(ClassType.Call);
+            ReadAllEntitiesByType(ClassType.Volunteer);
+        }
+        
+
         /// <summary>
         /// This method requests the id value from the user, locates the instance if existed and prints its values
         /// </summary>
         /// <param name="classType">The type of instance which is requested, either Assignment, Call or Volunteer</param>
-        private static void ReadDbEntity(ClassType classType)
+        private static void ReadSingleDbEntity(ClassType classType)
         {
-            bool requestedPreformed = false;
+            bool requestCompleted = false;
+            int requestedObjectId;
+            bool isValid;
             do
             {
                 try
                 {
-                    //Get The instance id
-                    Console.Write($"Please enter the id for object of type {classType}: ");
-                    bool isValid = Int32.TryParse(Console.ReadLine(), out int id);
-                    while (!isValid)
+                    //Get Entity ID
+                    do
                     {
-                        Console.WriteLine("Please choose a valid number for the id.");
-                        Console.Write($"Please enter the id for object of type {classType}: ");
-                        isValid = Int32.TryParse(Console.ReadLine(), out id);
-                    }
-                    
-                    //Locate the instance based on its type and id
+                        isValid = !Int32.TryParse(Console.ReadLine(), out requestedObjectId);
+                        if (!isValid)
+                        {
+                            Console.WriteLine("Invalid Input Value! Please Enter Only Natural Numbers");
+                        }
+                        Console.WriteLine($"Enter Id Value For Object Of Type {classType}");
+                        Console.Write(">>> ");
+
+                    } while (!isValid);
+
+                    //Fetch Object By ID and Print Out Its Fields
                     switch (classType)
                     {
                         case ClassType.Assignment:
                             {
-                                Assignment result = s_dalAssignment?.Read(id)!
-                                    ?? throw new Exception($"The Assignment instance with id of {id} hasn't been found");
-                                Console.WriteLine(result);
+                                Assignment result = s_dalAssignment?.Read(requestedObjectId)!
+                                    ?? throw new Exception($"The Assignment instance with id of {requestedObjectId} hasn't been found");
+                                PrintAssignmentEntity(result);
                                 break;
                             }
-
                         case ClassType.Call:
                             {
-                                Call result = s_dalCall?.Read(id)!
-                                    ?? throw new Exception($"The Call instance with id of {id} hasn't been found");
-                                Console.WriteLine(result);
+                                Call result = s_dalCall?.Read(requestedObjectId)!
+                                    ?? throw new Exception($"The Call instance with id of {requestedObjectId} hasn't been found");
+                                PrintCallEntity(result);
                                 break;
                             }
                         case ClassType.Volunteer:
                             {
-                                Volunteer result = s_dalVolunteer?.Read(id)!
-                                    ?? throw new Exception($"The Volunteer instance with id of {id} hasn't been found");
-                                Console.WriteLine(result);
+                                Volunteer result = s_dalVolunteer?.Read(requestedObjectId)!
+                                    ?? throw new Exception($"The Volunteer instance with id of {requestedObjectId} hasn't been found");
+                                PrintVolunteerEntity(result);
                                 break;
                             }
                         default:
-                            throw new Exception($"Internal Error: Class Type is {classType}. Is not a Assignment, Call or Volunteer");
+                            {
+                                throw new Exception($"Internal Error: Class Type is {classType}. Is not a Assignment, Call or Volunteer");
+                            }
                     }
-                    
-                    //If no exception has been thrown, the operation succussed.
-                    requestedPreformed = true;
+
+                    // Operation Has Been Done Successfully
+                    requestCompleted = true;
                 }
                 catch (Exception error)
                 {
                     Console.WriteLine(error.Message);
                     Console.Beep();
-                    Console.WriteLine("Press Enter to continue ... ");
+                    Console.WriteLine("Press Enter to Continue ... ");
                     Console.ReadKey();
                 }
-            } while (!requestedPreformed);
+            } while (!requestCompleted);
         }
 
 
@@ -548,7 +448,7 @@ Please choose an option -
         /// Performs the create action for a specific class.
         /// </summary>
         /// <param name="classType">The class type for the create action.</param>
-        private static void CreateDbAction(ClassType classType)
+        private static void CreateDbEntity(ClassType classType)
         {
             //Getting data for the new instance
             switch (classType)
@@ -700,7 +600,110 @@ Please choose an option -
             }
         }
 
+
+        /// <summary>
+        /// This method initializes the database, filling it with pre-made dummy data 
+        /// </summary>
         private static void DbInit() => DalTest.Initialization.Do(s_dalAssignment, s_dalCall, s_dalVolunteer, s_dalConfig);
 
+
+
+
+
+
+
+        /// <summary>
+        /// Help Method: Requests from the user to choose a ConfigVariable value and returns it
+        /// </summary>
+        /// <returns>The selected ConfigVariable value</returns>
+        private static ConfigVariable GetUsersConfigVariableChoice()
+        {
+            bool isValidInput;
+            string input;
+            ConfigVariable configVariable;
+            do
+            {
+                Console.WriteLine("Choose a Variable To View (RiskRange / Clock)");
+                Console.Write(">>>");
+                input = Console.ReadLine() ?? "";
+                isValidInput = Enum.TryParse(input, out configVariable);
+                if (!isValidInput)
+                    Console.WriteLine($"Invalid Input Value! {input} Isn't Either RiskRange or Clock");
+
+            } while (!isValidInput);
+            return configVariable;
+        }
+
+        /// <summary>
+        /// Given a single Assignment entity, the method will print all its fields
+        /// </summary>
+        /// <param name="assignment">The object requested to be printed</param>
+        private static void PrintAssignmentEntity(Assignment assignment)
+        {
+            Console.WriteLine($@"
+            ---------------------------------------------------------------
+                    
+                Assignment ID: {assignment.Id}
+                Related Call ID: {assignment.Called}
+                Related Volunteer ID: {assignment.VolunteerId}
+                Start Time: {assignment.TimeOfStarting}
+                Finish Time: {assignment.TimeOfEnding}
+                Closed Call Type: {assignment.TypeOfEnding} 
+
+            ---------------------------------------------------------------
+            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            ");
+        }
+
+        /// <summary>
+        /// Given a single Call entity, the method will print all its fields
+        /// </summary>
+        /// <param name="call">The object requested to be printed</param>
+        private static void PrintCallEntity(Call call)
+        {
+            Console.WriteLine($@"
+            ---------------------------------------------------------------
+                    
+                Call ID: {call.Id}
+                Request Address: {call.FullAddressCall}
+                Request Address Latitude: {call.Latitude}
+                Request Address Longitude: {call.Longitude}
+                Call Description: {call.Description}
+                The Call Has Been Opened Since: {call.OpeningTime}
+                The Call Would Be Expired At: {call.DeadLine}
+
+            ---------------------------------------------------------------
+            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            ");
+        }
+        
+        /// <summary>
+        /// Given a single Volunteer entity, the method will print all its fields
+        /// </summary>
+        /// <param name="volunteer">The object requested to be printed</param>
+        private static void PrintVolunteerEntity(Volunteer volunteer)
+        {
+            Console.WriteLine($@"
+            ---------------------------------------------------------------
+                    
+                Volunteer ID: {volunteer.Id}
+                Volunteer Role: {volunteer.Role}
+                Full Name: {volunteer.FullName}
+                Email Address: {volunteer.Email}
+                Max Distance From The Call: {volunteer.MaxDistanceToCall}
+                Type Of Distance Range: {volunteer.TypeOfRange}
+                Active: {volunteer.Active}
+                Password: {volunteer.Password}
+                Living Address: {volunteer.FullCurrentAddress}
+                Living Address Latitude: {volunteer.Latitude}
+                Living Address Longitude: {volunteer.Longitude}
+
+            ---------------------------------------------------------------
+            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            ");
+        }
     }
 }
