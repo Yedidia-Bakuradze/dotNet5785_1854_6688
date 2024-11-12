@@ -1,8 +1,6 @@
 ﻿using Dal;
 using DalApi;
 using DO;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
 
 namespace DalTest
 {
@@ -428,9 +426,9 @@ namespace DalTest
                             TimeOfEnding = end,
                             TypeOfEnding = typeOfEnding,
                         };
-                        if (s_dalAssignment.Read(newAsignment.Id) == null)
+                        if (s_dalAssignment?.Read(newAsignment.Id) == null)
                         {
-                            s_dalAssignment.Create(newAsignment);
+                            s_dalAssignment?.Create(newAsignment);
                         }
                     }
                     break;
@@ -475,9 +473,9 @@ namespace DalTest
                             Description = description,
                             DeadLine = deadLine
                         };
-                        if (s_dalCall.Read(newcall.Id) == null)
+                        if (s_dalCall?.Read(newcall.Id) == null)
                         {
-                            s_dalCall.Create(newcall);
+                            s_dalCall?.Create(newcall);
                         }
                         break;
                     }
