@@ -135,7 +135,7 @@ Please choose an option -
                                 UpdateDbAction(classType);
                                 break;
                             case ClassSubMenuEnum.Delete:
-                                //TODO: DeleteDbAction(classId);
+                                DeleteEntityById(classType);
                                 break;
                             case ClassSubMenuEnum.DeleteAll:
                                 //TODO: DeleteAllDbAction(classId);
@@ -150,6 +150,56 @@ Please choose an option -
                 {
                     Console.WriteLine(error.Message);
                 }
+            }
+        }
+
+        /// <summary>
+        /// This method requests from the user an id in order to delete the entity with the same id of a given entity type
+        /// </summary>
+        /// <param name="classType"></param>
+        private static void DeleteEntityById(ClassType classType)
+        {
+            string input;
+            int id;
+            bool isValid;
+            do
+            {
+                input = Console.ReadLine() ?? "";
+                Console.Write($"Enter the ID of object of type of {classType}: ");
+                isValid = Int32.TryParse(input, out id);
+
+                if (!isValid)
+                    Console.WriteLine($"The Value {input} is not a valid number, Please try again");
+            } while (!isValid);
+
+            try
+            {
+                switch (classType)
+                {
+                    case ClassType.Assignment:
+                        {
+                            s_dalAssignment?.Delete(id);
+                            break;
+                        }
+                    case ClassType.Call:
+                        {
+                            s_dalCall?.Delete(id);
+                            break;
+                        }
+                    case ClassType.Volunteer:
+                        {
+                            s_dalVolunteer?.Delete(id);
+                            break;
+                        }
+                    default:
+                        {
+                            throw new Exception($"Internal Error: {classType} is not allowed");
+                        }
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
             }
         }
 
