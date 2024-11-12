@@ -243,7 +243,7 @@ static public class Initialization
 31.7682148,
 31.7836425,
     };
-    static int[] ids = new int[] {
+    static List<int> ids = new List<int>{
     123456789, 234567890, 345678901, 456789012, 567890123,
     678901234, 789012345, 890123456, 901234567, 112345678,
     223456789, 334567890, 445678901, 556789012, 667890123,
@@ -344,57 +344,50 @@ static public class Initialization
         List<Volunteer> listOfVolunteers = s_dalVolunteer?.ReadAll()
             ?? throw new Exception("List of Volunteers hasn't been generated yet");
 
-
         Volunteer currentVolunteer;
-        List<Call> callsPerVolunteer = new List<Call>(); 
-        Call randomCall;
-        int countOfCalls;
+        Call currentCall;
         
         //For each volunteer we would assign couple of calls to him
         for (int i = 20; i < 100; i++) {
 
             currentVolunteer = listOfVolunteers[i];
-            callsPerVolunteer.Clear();
-            countOfCalls = (i < 30)
-                            ? 2 : (i < 70)
-                            ? 5 : 7;
+            currentCall = listOfCalls[i];
             
-            //Adds couple of calls that will be under his name in the assignment field
-            while(callsPerVolunteer.Count != countOfCalls)
+            //Calculates the delta time between the opening and closing time of the call    
+            TimeSpan delta = (currentCall.DeadLine != null)
+                ? (TimeSpan) (currentCall.DeadLine - currentCall.OpeningTime)
+                : s_dalConfig!.Clock.AddDays(31) - currentCall.OpeningTime;
+
+            //Sets the start and end date based on the delta time that has been calculated   
+            DateTime start = currentCall.OpeningTime.AddDays(s_rand.Next(0,delta.Days));
+
+            //Calculates the delta time between the selected start time and the closing time of the call
+            delta = (currentCall.DeadLine != null)
+                ? (TimeSpan)(currentCall.DeadLine - start)
+                : s_dalConfig!.Clock.AddDays(31) - start;
+
+            DateTime end = start.AddDays(s_rand.Next(0, delta.Days));
+
+            //Creates the assignment object - the id is generated in the CRUD's create method so there is no need to provide one here 
+            Assignment newAssignment = new()
             {
-                do
-                {
-                    randomCall = listOfCalls[s_rand.Next(20,listOfCalls.Count-1)];
-                } while (callsPerVolunteer.Any((i) => i == randomCall));
-                callsPerVolunteer.Add(randomCall);
-            }
-
-            //For each call that we would assign to the volunteer - we will create an Assignment instacne with the if of the call and the volunteer
-            foreach(Call currentCall in callsPerVolunteer)
+                Called = currentCall.Id,
+                VolunteerId = currentVolunteer.Id,
+                TimeOfStarting = start,
+                TimeOfEnding = end,
+                TypeOfEnding =
+                (end > currentCall.DeadLine)
+                ? TypeOfEnding.CancellationExpired
+                : (i < 15) ? TypeOfEnding.SelfCanceled
+                : (i < 30) ? TypeOfEnding.AdminCanceled
+                : TypeOfEnding.Treated
+            };
+            try
             {
-                //Calculates the delta time between the opening and closing time of the call    
-                TimeSpan delta = (currentCall.DeadLine != null)
-                    ? (TimeSpan) (currentCall.DeadLine - currentCall.OpeningTime)
-                    : s_dalConfig!.Clock.AddDays(31) - currentCall.OpeningTime;
-
-                //Sets the start and end date based on the delta time that has been calculated   
-                DateTime start = s_dalConfig!.Clock.AddDays(delta.Days);
-                DateTime end = start.AddDays(s_rand.Next(0, 31));
-
-                //Creates the assignment object - the id is generated in the CRUD's create method so there is no need to provide one here 
-                Assignment newAssignment = new()
-                {
-                    Called = currentCall.Id,
-                    VolunteerId = currentVolunteer.Id,
-                    TimeOfStarting = start,
-                    TimeOfEnding = end,
-                    TypeOfEnding =
-                    (end > currentCall.DeadLine)
-                    ? TypeOfEnding.CancellationExpired
-                    : (i < 15) ? TypeOfEnding.SelfCanceled
-                    : (i < 30) ? TypeOfEnding.AdminCanceled
-                    : TypeOfEnding.Treated
-                };
+                s_dalAssignment?.Create(newAssignment);
+            }catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
             }
         }
     }
@@ -405,7 +398,7 @@ static public class Initialization
     {
         for (int i = 0;i < 100;i++)
         {
-            DateTime start = s_dalConfig!.Clock.AddDays(s_rand.Next(-365, -5));
+            DateTime start = s_dalConfig!.Clock.AddDays(s_rand.Next(-31, -5));
             int deltaDays = (s_dalConfig!.Clock - start).Days;
             int position = s_rand.Next(0, addresses.Length-1);
             DateTime end = (i < 30 && i >= 20)
@@ -416,9 +409,7 @@ static public class Initialization
             Call newCall = new Call
             {
                 Id = -1, //A dummy id, it would be replaced with a proper id in the CRUD method
-                Type = (s_rand.Next(0,1) == 0)
-                        ? CallTypes.FoodDelivery
-                        : CallTypes.FoodPreparation,
+                Type = (s_rand.Next(0,1) == 0) ? CallTypes.FoodDelivery : CallTypes.FoodPreparation,
                 FullAddressCall = addresses[position],
                 Latitude = latitude[position],
                 Longitude = longitude[position],
@@ -438,26 +429,26 @@ static public class Initialization
     {
         for (int i = 0; i < 100; i++)
         {
+
             Volunteer newVolunteer = new Volunteer
             {
-                Id = ids[i],
-                Role = (i == 0)
-                ? Roles.Admin
-                : Roles.Volunteer,
+                Id = s_rand.Next(0, ids.Count-1),
+                Role = (i == 0) ? Roles.Admin : Roles.Volunteer,
                 
                 FullName = names[i],
                 PhoneNumber = phoneNumbers[i],
                 Email = emails[i],
                 MaxDistanceToCall = s_rand.Next(30),
                 TypeOfRange = TypeOfRange.AirDistance,
-                Active = (i % 2 == 0 || i == 0)
-                    ? true
-                    : false,
+                Active = (i == 76)
+                    ? false
+                    : true,
                 Password = passwords[i],
-                FullCurrentAddress = addresses[i % 58],
-                Latitude = latitude[i % 58],
-                Longitude = longitude[i % 58]
+                FullCurrentAddress = addresses[i % addresses.Length],
+                Latitude = latitude[i % latitude.Length],
+                Longitude = longitude[i % longitude.Length]
             };
+            ids.Remove(newVolunteer.Id);
             if (s_dalVolunteer?.Read(newVolunteer.Id) == null)
                 s_dalVolunteer?.Create(newVolunteer);
         }

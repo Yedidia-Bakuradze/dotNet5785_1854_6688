@@ -803,7 +803,7 @@ VolunteerId: {result.VolunteerId}
                             Console.Write(@$"
 ----------------------------------------
 Assignment Object Update - Old Version
-Assignment ID: {result.Id}          --->
+Assignment ID: {result.Id}                 --->
 Call ID: {result.Called}                   --->
 Volunteer ID: {result.VolunteerId}         --->
 Time Of Starting: {result.TimeOfStarting}  --->
