@@ -59,7 +59,7 @@ namespace DalTest
                                 ConfigSubMenu();
                                 break;
                             case MainMenuEnum.ResetSysAndDb:
-                                //ResetDbAndSystem();
+                                ResetDbAndSystem();
                                 break;
                             default:
                                 Console.WriteLine("Invalid operation!");
@@ -79,6 +79,18 @@ namespace DalTest
 
             }
         }
+
+        /// <summary>
+        /// This method when call resets the system including the database records
+        /// </summary>
+        private static void ResetDbAndSystem()
+        {
+            s_dalAssignment?.DeleteAll();
+            s_dalCall?.DeleteAll();
+            s_dalVolunteer?.DeleteAll();
+            s_dalConfig?.Reset();
+        }
+
         /// <summary>
         /// Provides a submenu for configuring application settings. Users can adjust time parameters, view or change specific configurations,
         /// and reset all settings. The function loops until the "Exit" option is selected.
