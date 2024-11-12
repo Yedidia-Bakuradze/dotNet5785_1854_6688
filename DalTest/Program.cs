@@ -601,6 +601,10 @@ Please choose an option -
             }
         }
 
+        /// <summary>
+        /// Updates an entity of a given type and a given id value
+        /// </summary>
+        /// <param name="classType"></param>
         private static void UpdateDbAction(ClassType classType)
         {
             string input;
@@ -762,7 +766,7 @@ Type Of Ending: {TypeOfEnding}
 
                             Console.WriteLine(@$"
 ---------------------------------------
-Assignment Object
+Call Object
 ID: {result.Id}
 ---------------------------------------
 
@@ -794,6 +798,7 @@ ID: {result.Id}
                                 //TODO: Need to add the option to check if the address is valid
                                 //TOOD: Need to add the option to find the latitude and logitude of the new loaction
                             } while (input == "");
+                            FullAddressCall = input;
 
                             //Request for a new Latitude value 
                             do
@@ -912,9 +917,148 @@ DeadLine : {DeadLine}
                     }
                     case ClassType.Volunteer:
                     {
+                            Volunteer result = s_dalVolunteer?.Read(id) ??
+                                        throw new Exception($"Volunteer Object Failed: The Assignment with ID of {id} hasn't been found");
+                            int Id = result.Id;
+                            Roles Role = result.Role;
+                            string FullName = result.FullName;
+                            string PhoneNumber = result.PhoneNumber;
+                            string Email = result.Email;
+                            double? MaxDistanceToCall = result.MaxDistanceToCall;
+                            TypeOfRange TypeOfRange=result.TypeOfRange;
+                            bool Active= result.Active;
+                            string? Password = result.Password;
+                            string? FullCurrentAddress = result.FullCurrentAddress;
+                            double? Latitude = result.Latitude;
+                            double? Longitude = result.Longitude;
+
+
+
+                            Console.WriteLine(@$"
+---------------------------------------
+Volunteer Object
+ID: {result.Id}
+---------------------------------------
+
+");
+
+                            //Request for a new Role value for the volunteer
+                            Console.WriteLine($"Enter new Role value for the role ({DO.Roles.Admin},{DO.Roles.Volunteer})");
+                            Console.Write(">>> ");
+                            Enum.TryParse(input, out Role);
+
+                            //Request for a new call full address value 
+                            Console.WriteLine($"Enter new Full Name");
+                            Console.Write(">>> ");
+                            FullName = Console.ReadLine() ?? "";
+
+                            //Request for a new Phone Number value 
+                            Console.WriteLine($"Enter new Phone Number");
+                            Console.Write(">>> ");
+                            PhoneNumber = Console.ReadLine() ?? "";
+
+                            //Request for a new Email Address value 
+                            Console.WriteLine($"Enter new Email address");
+                            Console.Write(">>> ");
+                            Email = Console.ReadLine() ?? "";
+
+                            //Request for a new Max Distance value To Answer a Call 
+                            Console.WriteLine($"Enter new Max Distance to answer a Call");
+                            Console.Write(">>> ");
+                            double tmp;
+                            double.TryParse(Console.ReadLine(), out tmp);
+                            MaxDistanceToCall = tmp;
+
+                            //Request for a new Type of Range value 
+                            Console.WriteLine($"Enter a new Type Of Range from the following list: ({DO.TypeOfRange.walkingDistance},{DO.TypeOfRange.drivingDistance},{DO.TypeOfRange.AirDistance})");
+                            Console.Write(">>> ");
+                            Enum.TryParse<TypeOfRange>(Console.ReadLine(), out TypeOfRange);
+
+                            //Request for a new Phone Number value 
+                            Console.WriteLine($"Enter a new Is Active value");
+                            Console.Write(">>> ");
+                            bool.TryParse(Console.ReadLine(), out Active);
+
+                            //Request for a new Phone Number value 
+                            Console.WriteLine($"Enter a new Password");
+                            Console.Write(">>> ");
+                            Password = Console.ReadLine();
+
+                            //Request for a new Current Address value 
+                            Console.WriteLine($"Enter a new Full Current Address value");
+                            Console.Write(">>> ");
+                            FullCurrentAddress = Console.ReadLine();
+
+                            //Request for a new Longitude value 
+                            Console.WriteLine($"Enter a new Longitude value");
+                            Console.Write(">>> ");
+                            double.TryParse(Console.ReadLine(), out tmp);
+                            Longitude = tmp;
+
+                            //Request for a new Latitude value 
+                            Console.WriteLine($"Enter a new Latitude value");
+                            Console.Write(">>> ");
+                            double.TryParse(Console.ReadLine(), out tmp);
+                            Latitude = tmp;
+
+                            //Summery
+                            Console.Write(@$"
+-----------------------------------------------
+Volunteer Object Update - Old Version
+Volunteer ID : {result.Id}
+Role : {result.Role}
+Full Name : {result.FullName}
+Phone Number : {result.PhoneNumber}
+Email : {result.Email}
+Max Distance To Call : {result.MaxDistanceToCall}
+Type Of Range : {result.TypeOfRange}
+Active : {result.Active}
+Password : {result.Password}
+Full Current Address : {result.FullCurrentAddress}
+Latitude : {result.Latitude}
+Longitude : {result.Longitude}
+-----------------------------------------------
+
+");
+                            Console.Write(@$"
+-----------------------------------------------
+Volunteer Object Update - New Version
+Volunteer ID : {result.Id}
+Role : {Role}
+Full Name : {FullName}
+Phone Number : {PhoneNumber}
+Email : {Email}
+Max Distance To Call : {MaxDistanceToCall}
+Type Of Range : {TypeOfRange}
+Active : {Active}
+Password : {Password}
+Full Current Address : {FullCurrentAddress}
+Latitude : {Latitude}
+Longitude : {Longitude}
+-----------------------------------------------
+
+");
+                            Console.WriteLine();
+
+                            Volunteer newVolunteer = new Volunteer()
+                            {
+                                Id = result.Id,
+                                Role = Role,
+                                FullName = FullName,
+                                PhoneNumber = PhoneNumber,
+                                Email = Email,
+                                MaxDistanceToCall = MaxDistanceToCall,
+                                TypeOfRange = TypeOfRange,
+                                Active = Active,
+                                Password = Password,
+                                FullCurrentAddress = FullCurrentAddress,
+                                Latitude = Latitude,
+                                Longitude = Longitude
+                            };
+                            s_dalVolunteer?.Update(newVolunteer);
                             break;
                     }
-                default:
+                    default:
                     {
                         throw new Exception($"Internal Error: {classType} is not allowed");
                     }
