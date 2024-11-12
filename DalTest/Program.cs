@@ -16,8 +16,8 @@ namespace DalTest
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
         public enum ConfigSubMenuEnum { FirstRun, Exit,AddMinute ,AddHour,AddMonth , AddYear, ShowCureentClock,SetValue,ShowValue,Reset }
-        public enum ClassType { Assignment, Call, Volunteer 
-        public enum ConfigVarieble {FirstRun,RiskRange,Clock }
+        public enum ClassType { Assignment, Call, Volunteer };
+        public enum ConfigVariable { FirstRun,RiskRange,Clock }
         static void Main(string[] args)
         {
             MainMenu();
@@ -58,7 +58,7 @@ namespace DalTest
                                 ShowDbData();
                                 break;
                             case MainMenuEnum.ShowConfigMenu:
-                                ConfigSubMenu(s_dalConfig.RiskRange);
+                                ConfigSubMenu();
                                 break;
                             case MainMenuEnum.ResetSysAndDb:
                                 //ResetDbAndSystem();
@@ -127,20 +127,20 @@ namespace DalTest
                                 break;
                             case ConfigSubMenuEnum.SetValue:
                                 // Allows user to set a new value for either RiskRange or Clock
-                                ConfigVarieble configVarieble = ConfigVarieble.FirstRun;
+                                ConfigVariable configVarieble = ConfigVariable.FirstRun;
                                 Console.WriteLine("What variable do you want to change (RiskRange/Clock)?");
                                 string input1 = Console.ReadLine() ?? "";
                                 Enum.TryParse(input1, out configVarieble);
 
                                 switch (configVarieble)
                                 {
-                                    case ConfigVarieble.RiskRange:
+                                    case ConfigVariable.RiskRange:
                                         // Sets a new value for RiskRange
                                         Console.WriteLine("Enter the new value: ");
                                         TimeSpan timeSpan = TimeSpan.Parse(Console.ReadLine() ?? "");
                                         s_dalConfig!.RiskRange = timeSpan;
                                         break;
-                                    case ConfigVarieble.Clock:
+                                    case ConfigVariable.Clock:
                                         // Sets a new value for Clock
                                         Console.WriteLine("Enter the new value: ");
                                         DateTime clock = DateTime.Parse(Console.ReadLine() ?? "");
@@ -153,18 +153,18 @@ namespace DalTest
                                 break;
                             case ConfigSubMenuEnum.ShowValue:
                                 // Displays the current value for either RiskRange or Clock
-                                ConfigVarieble configVarieble1 = ConfigVarieble.FirstRun;
+                                ConfigVariable configVarieble1 = ConfigVariable.FirstRun;
                                 Console.WriteLine("What variable do you want to view (RiskRange/Clock)?");
                                 string input2 = Console.ReadLine() ?? "";
                                 Enum.TryParse(input2, out configVarieble1);
 
                                 switch (configVarieble1)
                                 {
-                                    case ConfigVarieble.RiskRange:
+                                    case ConfigVariable.RiskRange:
                                         // Shows the current RiskRange value
                                         Console.WriteLine(s_dalConfig?.RiskRange);
                                         break;
-                                    case ConfigVarieble.Clock:
+                                    case ConfigVariable.Clock:
                                         // Shows the current Clock value
                                         Console.WriteLine(s_dalConfig?.Clock);
                                         break;
