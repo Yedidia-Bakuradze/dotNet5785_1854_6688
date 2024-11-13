@@ -557,69 +557,71 @@ Please Choose The Operation That You Would Like To Use:
             {
                 case ClassType.Assignment:
                     {
-                        //TODO: Callid for the assignment, i dont understood that and i will ask my teacher in the next lecture
+                        //TODO: Not enough data is requested from the user
 
                         // Prompt for the id of the volunteer
-                        Console.WriteLine("What is the id of the assignment:");
-                        int volunteerid = int.Parse(Console.ReadLine() ?? "");
+                        Console.Write("Associated Volunteer ID: ");
+                        int volunteerId = int.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the time of starting
-                        Console.WriteLine("What is the time of starting:");
+                        Console.Write("Time Of Starting: ");
                         DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the time of ending
-                        Console.WriteLine("What is the time of ending ");
-                        DateTime end = DateTime.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine("Time Of Ending (Optional): ");
+                        DateTime? end = DateTime.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the cause of ending
-                        Console.WriteLine("What is the cause of ending:");
+                        Console.Write("Cause Of ending (Optional): ");
                         string input = Console.ReadLine() ?? "";
-                        bool isValid = Enum.TryParse(input, out TypeOfEnding typeOfEnding);
-                        Assignment newAsignment = new Assignment
+                        Enum.TryParse(input, out TypeOfEnding typeOfEnding);
+                        
+                        Assignment newAssignment = new Assignment
                         {
-                            VolunteerId = volunteerid,
+                            VolunteerId = volunteerId,
                             TimeOfStarting = start,
                             TimeOfEnding = end,
                             TypeOfEnding = typeOfEnding,
                         };
-                        if (s_dalAssignment?.Read(newAsignment.Id) == null)
+                        if (s_dalAssignment?.Read(newAssignment.Id) == null)
                         {
-                            s_dalAssignment?.Create(newAsignment);
+                            s_dalAssignment?.Create(newAssignment);
                         }
                     }
                     break;
                 case ClassType.Call:
                     {
                         // Prompt for the call type
-                        Console.WriteLine("What is the call type:");
+                        Console.Write("Type Of Call: ");
                         string input = Console.ReadLine() ?? "";
-                        bool isValid = Enum.TryParse(input, out CallTypes callType);
+                        Enum.TryParse(input, out CallTypes callType);
 
                         // Prompt for the address
-                        Console.WriteLine("What is the address");
+                        Console.Write("Address Of the Call: ");
                         string address = Console.ReadLine() ?? "";
 
                         // Prompt for the latitude of the address
-                        Console.WriteLine("What is the latitude of the address:");
+                        Console.Write("Address's Latitude: ");
                         double latitude = double.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the longitude of the address
-                        Console.WriteLine("What is the longitude of the address:");
+                        Console.Write("Address's Longitude: ");
                         double longitude = double.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the time the call starts
-                        Console.WriteLine("What time does the call start:");
+                        Console.Write("Call's Start Time: ");
                         DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
 
-                        // Prompt for the description of the call
-                        Console.WriteLine("Please add a description to the call:");
-                        string description = Console.ReadLine() ?? "";
-
                         // Prompt for the deadline of the call
-                        Console.WriteLine("What is the deadline for the call:");
-                        DateTime deadLine = DateTime.Parse(Console.ReadLine() ?? "");
+                        Console.Write("Call's End Time (Optional): ");
+                        DateTime? deadLine = DateTime.Parse(Console.ReadLine() ?? "");
 
-                        Call newcall = new Call
+                        // Prompt for the description of the call
+                        Console.Write("Call's Description (Optional): ");
+                        string? description = Console.ReadLine();
+
+
+                        Call newCall = new Call
                         {
                             Type = callType,
                             FullAddressCall = address,
@@ -629,37 +631,37 @@ Please Choose The Operation That You Would Like To Use:
                             Description = description,
                             DeadLine = deadLine
                         };
-                        if (s_dalCall?.Read(newcall.Id) == null)
+                        if (s_dalCall?.Read(newCall.Id) == null)
                         {
-                            s_dalCall?.Create(newcall);
+                            s_dalCall?.Create(newCall);
                         }
                         break;
                     }
                 case ClassType.Volunteer:
                     {
                         // Prompt for the volunteer id
-                        Console.WriteLine("Enter the volunteer id:");
+                        Console.Write("Volunteer ID: ");
                         int id = int.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the volunteer full name
-                        Console.WriteLine("Enter the volunteer full name:");
+                        Console.Write("Volunteer Full Name: ");
                         string name = Console.ReadLine() ?? "";
 
                         // Prompt for the role of the volunteer
-                        Console.WriteLine("Enter the Role of the Volunteer (Admin/Volunteer):");
+                        Console.Write("Volunteer's Access Role (Admin/Volunteer): ");
                         string input = Console.ReadLine() ?? "";
-                        bool isValid = Enum.TryParse(input, out Roles role);
+                        Enum.TryParse(input, out Roles role);
 
                         // Prompt for the volunteer phone number
-                        Console.WriteLine("Enter the Volunteer phone number:");
+                        Console.Write("Volunteer's Phone Number: ");
                         string phoneNumber = Console.ReadLine() ?? "";
 
                         // Prompt for the volunteer email
-                        Console.WriteLine("Enter the Volunteer email:");
+                        Console.Write("Volunteer's Email Address: ");
                         string email = Console.ReadLine() ?? "";
 
                         // Prompt for the max distance to call the volunteer
-                        Console.WriteLine("What is the max distance to call the volunteer:");
+                        Console.Write("Volunteer's Max Distance To Take a Call: ");
                         double maxDistance = double.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the volunteer's active status
@@ -667,17 +669,17 @@ Please Choose The Operation That You Would Like To Use:
                         bool active = bool.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the volunteer's password
-                        Console.WriteLine("Enter the volunteer's password:");
-                        string password = Console.ReadLine() ?? "";
+                        Console.WriteLine("Volunteer's Password (Optional): ");
+                        string? password = Console.ReadLine();
 
                         // Prompt for the volunteer's full current address
-                        Console.WriteLine("Enter the volunteer's full current address:");
-                        string address = Console.ReadLine() ?? "";
+                        Console.Write("Volunteer's Full Address (Optional): ");
+                        string? address = Console.ReadLine();
 
                         // Prompt for the type of range
-                        Console.WriteLine("Enter the type of range (e.g., Local, Regional, National):");
+                        Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
                         string input1 = Console.ReadLine() ?? "";
-                        isValid = Enum.TryParse(input1, out TypeOfRange typeOfRange);
+                        Enum.TryParse(input1, out TypeOfRange typeOfRange);
 
                         Volunteer newVolunteer = new Volunteer
                         {
