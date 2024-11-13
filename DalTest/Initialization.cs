@@ -350,6 +350,7 @@ static public class Initialization
         //For each volunteer we would assign couple of calls to him
         for (int i = 20; i < 100; i++) {
 
+            Console.WriteLine($"Assignment Number {i -20 + 1} has been created!");
             currentVolunteer = listOfVolunteers[i];
             currentCall = listOfCalls[i];
             
@@ -398,6 +399,7 @@ static public class Initialization
     {
         for (int i = 0;i < 100;i++)
         {
+            Console.WriteLine($"Call Number {i+1} has been created!");
             DateTime start = s_dalConfig!.Clock.AddDays(s_rand.Next(-31, -5));
             int deltaDays = (s_dalConfig!.Clock - start).Days;
             int position = s_rand.Next(0, addresses.Length-1);
@@ -417,9 +419,13 @@ static public class Initialization
                 Description = descriptions[i%10],
                 DeadLine = end
             };
-
-            if (s_dalCall?.Read(newCall.Id) == null)
+            try
+            {
                 s_dalCall?.Create(newCall);
+            }catch(Exception error)
+            {
+                Console.WriteLine(error.Message);
+            }
         }
     }
     /// <summary>
