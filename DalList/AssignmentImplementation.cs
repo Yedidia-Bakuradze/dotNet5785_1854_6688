@@ -15,7 +15,6 @@ public class AssignmentImplementation : IAssignment
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
         int id = Config.NextAssignmentId;
         DataSource.Assignments.Add(item with { Id = id});
-        //TODO: return id; In the documentation it been written to return the new value of the id
     }
 
     /// <summary>
