@@ -5,8 +5,8 @@ namespace Dal;
 public class ConfigImplementation : IConfig
 {
     public TimeSpan RiskRange // Inherits from IConfig
-    { 
-        get => RiskRange;
+    {
+        get => Config.RiskRange;
         set => RiskRange = value;
     }
     public DateTime Clock  // Inherits from IConfig

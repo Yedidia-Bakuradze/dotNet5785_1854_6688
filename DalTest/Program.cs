@@ -287,15 +287,15 @@ Please Choose The Operation That You Would Like To Use:
 
     Please choose an option:
 
-    Exit             - To Exit The Sub Menu
-    AddMinute        - To Add Minutes To System Clock
-    AddHour          - To Add Hours To System Clock
-    AddMonth         - To Add Months To System Clock
-    AddYear          - To Add Years To System Clock
-    ShowCurrentClock - To Show Current Time
-    SetValue         - To Set a Value to System Variables (RisRange, Clock)
-    ShowValue        - To Display System Variables Values (RisRange, Clock)
-    Reset            - To Reset System Variables Values (RisRange, Clock)
+- 1 Exit             - To Exit The Sub Menu
+- 2 AddMinute        - To Add Minutes To System Clock
+- 3 AddHour          - To Add Hours To System Clock
+- 4 AddMonth         - To Add Months To System Clock
+- 5 AddYear          - To Add Years To System Clock
+- 6 ShowCurrentClock - To Show Current Time
+- 7 SetValue         - To Set a Value to System Variables (RisRange, Clock)
+- 8 ShowValue        - To Display System Variables Values (RisRange, Clock)
+- 9 Reset            - To Reset System Variables Values (RisRange, Clock)
 
 ---------------------------------------------------------------------------------
 
@@ -679,7 +679,7 @@ Please Choose The Operation That You Would Like To Use:
                         TypeOfRange typeOfRange;
                         do
                         {
-                            Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
+                            Console.Write("Volunteer's Distance Type Of Range ( (0)e.g.,(1) Local,(2) Regional,(3) National): ");
                             string input = Console.ReadLine() ?? "";
                             isValid = Enum.TryParse(input, out typeOfRange);
                             if (!isValid)
