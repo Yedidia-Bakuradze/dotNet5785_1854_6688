@@ -1,7 +1,9 @@
 ﻿using Dal;
 using DalApi;
 using DO;
+using Microsoft.VisualBasic;
 using System.Data;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using static DalTest.Program;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -591,25 +593,30 @@ Please Choose The Operation That You Would Like To Use:
                 case ClassType.Call:
                     {
                         // Prompt for the call type
-                        Console.Write("Type Of Call: ");
-                        string input = Console.ReadLine() ?? "";
-                        Enum.TryParse(input, out CallTypes callType);
+                        bool isValid;
+                        CallTypes callType;
+                        do
+                        {
+                            Console.Write("Type Of Call (FoodPreparation,FoodDelivery): ");
+                            string input = Console.ReadLine() ?? "";
+                            isValid = Enum.TryParse(input, out callType);
+                            if (!isValid)
+                            {
+                                Console.WriteLine($"Error! Please provide a proper Type Of Call value ({CallTypes.FoodDelivery},{CallTypes.FoodPreparation})");
+                            }
+                        } while (!isValid);
 
                         // Prompt for the address
-                        Console.Write("Address Of the Call: ");
-                        string address = Console.ReadLine() ?? "";
+                        string address = RequestStringValue("Address Of the Call: ");
 
                         // Prompt for the latitude of the address
-                        Console.Write("Address's Latitude: ");
-                        double latitude = double.Parse(Console.ReadLine() ?? "");
+                        double latitude = RequestDoubleValue("Address's Latitude: ");
 
                         // Prompt for the longitude of the address
-                        Console.Write("Address's Longitude: ");
-                        double longitude = double.Parse(Console.ReadLine() ?? "");
+                        double longitude = RequestDoubleValue("Address's Longitude: ");
 
                         // Prompt for the time the call starts
-                        Console.Write("Call's Start Time: ");
-                        DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
+                        DateTime start = RequestDateTimeValue("Call's Start Time: ");
 
                         // Prompt for the description of the call
                         Console.Write("Call's Description (Optional): ");
@@ -618,7 +625,7 @@ Please Choose The Operation That You Would Like To Use:
                         // Prompt for the deadline of the call
                         Console.Write("Call's End Time (Optional): ");
                         DateTime tmp;
-                        bool isValid = DateTime.TryParse(Console.ReadLine(),out tmp);
+                        isValid = DateTime.TryParse(Console.ReadLine(),out tmp);
                         DateTime? deadLine = (isValid) ? tmp : null;
 
                         s_dalCall?.Create(new Call
@@ -636,40 +643,62 @@ Please Choose The Operation That You Would Like To Use:
                 case ClassType.Volunteer:
                     {
                         // Prompt for the volunteer id
-                        Console.Write("Volunteer ID: ");
-                        int id = int.Parse(Console.ReadLine() ?? "");
+                        int id = RequestIntValue("Volunteer ID: ");
 
                         // Prompt for the role of the volunteer
-                        Console.Write("Volunteer's Access Role (Admin/Volunteer): ");
-                        string input = Console.ReadLine() ?? "";
-                        Enum.TryParse(input, out Roles role);
+                        Roles role;
+                        bool isValid;
+                        do
+                        {
+                            Console.Write($"Volunteer's Access Role ({Roles.Admin} / {Roles.Volunteer}): ");
+                            string input = Console.ReadLine() ?? "";
+                            isValid = Enum.TryParse(input, out role);
+                            if (!isValid)
+                            {
+                                Console.WriteLine($"Error! Please provide a proper Role value ({Roles.Admin} / {Roles.Volunteer})");
+                            }
+
+                        } while (!isValid);
 
                         // Prompt for the volunteer full name
-                        Console.Write("Volunteer Full Name: ");
-                        string name = Console.ReadLine() ?? "";
+                        string name = RequestStringValue("Volunteer Full Name: ");
 
                         // Prompt for the volunteer phone number
-                        Console.Write("Volunteer's Phone Number: ");
-                        string phoneNumber = Console.ReadLine() ?? "";
+                        string phoneNumber = RequestStringValue("Volunteer's Phone Number: ");
 
                         // Prompt for the volunteer email
-                        Console.Write("Volunteer's Email Address: ");
-                        string email = Console.ReadLine() ?? "";
+                        string email = RequestStringValue("Volunteer's Email Address: ");
 
                         // Prompt for the max distance to call the volunteer
                         Console.Write("Volunteer's Max Distance To Take a Call: ");
                         double tmp;
-                        bool isValid = double.TryParse(Console.ReadLine() ,out tmp);
+                        isValid = double.TryParse(Console.ReadLine() ,out tmp);
                         double? maxDistance = (isValid) ? tmp : null;
 
                         // Prompt for the type of range
-                        Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
-                        string input1 = Console.ReadLine() ?? "";
-                        Enum.TryParse(input1, out TypeOfRange typeOfRange);
+                        TypeOfRange typeOfRange;
+                        do
+                        {
+                            Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
+                            string input = Console.ReadLine() ?? "";
+                            isValid = Enum.TryParse(input, out typeOfRange);
+                            if (!isValid)
+                            {
+                                Console.WriteLine("Error! Please provide a proper Type Of Range value");
+                            }
+                        } while (!isValid);
 
                         // Prompt for the volunteer's active status
-                        Console.WriteLine("Is the volunteer active? (true/false)");
-                        bool active = bool.Parse(Console.ReadLine() ?? "");
+                        bool active;
+                        do
+                        {
+                            Console.WriteLine("Is the volunteer active? (true/false)");
+                            isValid = bool.TryParse(Console.ReadLine() ?? "", out active);
+                            if (!isValid)
+                            {
+                                Console.WriteLine("Error! Please provide a proper boolean value");
+                            }
+                        } while (!isValid);
 
                         // Prompt for the volunteer's password
                         Console.WriteLine("Volunteer's Password (Optional): ");
@@ -1325,5 +1354,42 @@ Longitude : {Longitude}
             } while (!isValid);
             return date;
         }
+
+
+        private static double RequestDoubleValue(string msg)
+        {
+            double value;
+            string input;
+            bool isValid;
+            do
+            {
+                Console.Write(msg);
+                input = Console.ReadLine() ?? "";
+                isValid = double.TryParse(input, out value);
+                if (!isValid)
+                {
+                    Console.WriteLine($"Error! Please provide a proper double value)");
+                }
+            } while (!isValid);
+            return value;
+        }
+
+        private static string RequestStringValue(string msg)
+        {
+            string value;
+            bool isValid;
+            do
+            {
+                Console.Write(msg);
+                value = Console.ReadLine() ?? "";
+                isValid = value.Length != 0;
+                if (!isValid)
+                {
+                    Console.WriteLine($"Error! Please provide a proper string value)");
+                }
+            } while (!isValid);
+            return value;
+        }
+       
     }
 }
