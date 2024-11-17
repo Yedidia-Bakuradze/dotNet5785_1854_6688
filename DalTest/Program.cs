@@ -559,6 +559,10 @@ Please Choose The Operation That You Would Like To Use:
                     {
                         //TODO: Not enough data is requested from the user
 
+                        // Request associated CallId 
+                        Console.Write("Associated Call ID: ");
+                        int callId = int.Parse(Console.ReadLine() ?? "");
+
                         // Prompt for the id of the volunteer
                         Console.Write("Associated Volunteer ID: ");
                         int volunteerId = int.Parse(Console.ReadLine() ?? "");
@@ -568,25 +572,24 @@ Please Choose The Operation That You Would Like To Use:
                         DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
 
                         // Prompt for the time of ending
-                        Console.WriteLine("Time Of Ending (Optional): ");
-                        DateTime? end = DateTime.Parse(Console.ReadLine() ?? "");
+                        Console.Write("Time Of Ending (Optional): ");
+                        bool isValid = DateTime.TryParse(Console.ReadLine(),out DateTime tmp);
+                        DateTime? end = (isValid) ? tmp: null;
 
                         // Prompt for the cause of ending
                         Console.Write("Cause Of ending (Optional): ");
-                        string input = Console.ReadLine() ?? "";
-                        Enum.TryParse(input, out TypeOfEnding typeOfEnding);
-                        
-                        Assignment newAssignment = new Assignment
+                        isValid = Enum.TryParse(Console.ReadLine() ?? "", out TypeOfEnding tmp2);
+                        TypeOfEnding? typeOfEnding = (isValid) ? tmp2 : null;
+
+                        //Creation of the assignment entity
+                        s_dalAssignment?.Create(new Assignment
                         {
+                            Called = callId,
                             VolunteerId = volunteerId,
                             TimeOfStarting = start,
                             TimeOfEnding = end,
                             TypeOfEnding = typeOfEnding,
-                        };
-                        if (s_dalAssignment?.Read(newAssignment.Id) == null)
-                        {
-                            s_dalAssignment?.Create(newAssignment);
-                        }
+                        });
                     }
                     break;
                 case ClassType.Call:
@@ -612,16 +615,17 @@ Please Choose The Operation That You Would Like To Use:
                         Console.Write("Call's Start Time: ");
                         DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
 
-                        // Prompt for the deadline of the call
-                        Console.Write("Call's End Time (Optional): ");
-                        DateTime? deadLine = DateTime.Parse(Console.ReadLine() ?? "");
-
                         // Prompt for the description of the call
                         Console.Write("Call's Description (Optional): ");
-                        string? description = Console.ReadLine();
+                        string? description = Console.ReadLine() ?? null;
 
+                        // Prompt for the deadline of the call
+                        Console.Write("Call's End Time (Optional): ");
+                        DateTime tmp;
+                        bool isValid = DateTime.TryParse(Console.ReadLine(),out tmp);
+                        DateTime? deadLine = (isValid) ? tmp : null;
 
-                        Call newCall = new Call
+                        s_dalCall?.Create(new Call
                         {
                             Type = callType,
                             FullAddressCall = address,
@@ -630,11 +634,7 @@ Please Choose The Operation That You Would Like To Use:
                             OpeningTime = start,
                             Description = description,
                             DeadLine = deadLine
-                        };
-                        if (s_dalCall?.Read(newCall.Id) == null)
-                        {
-                            s_dalCall?.Create(newCall);
-                        }
+                        });
                         break;
                     }
                 case ClassType.Volunteer:
@@ -643,14 +643,14 @@ Please Choose The Operation That You Would Like To Use:
                         Console.Write("Volunteer ID: ");
                         int id = int.Parse(Console.ReadLine() ?? "");
 
-                        // Prompt for the volunteer full name
-                        Console.Write("Volunteer Full Name: ");
-                        string name = Console.ReadLine() ?? "";
-
                         // Prompt for the role of the volunteer
                         Console.Write("Volunteer's Access Role (Admin/Volunteer): ");
                         string input = Console.ReadLine() ?? "";
                         Enum.TryParse(input, out Roles role);
+
+                        // Prompt for the volunteer full name
+                        Console.Write("Volunteer Full Name: ");
+                        string name = Console.ReadLine() ?? "";
 
                         // Prompt for the volunteer phone number
                         Console.Write("Volunteer's Phone Number: ");
@@ -662,7 +662,14 @@ Please Choose The Operation That You Would Like To Use:
 
                         // Prompt for the max distance to call the volunteer
                         Console.Write("Volunteer's Max Distance To Take a Call: ");
-                        double maxDistance = double.Parse(Console.ReadLine() ?? "");
+                        double tmp;
+                        bool isValid = double.TryParse(Console.ReadLine() ,out tmp);
+                        double? maxDistance = (isValid) ? tmp : null;
+
+                        // Prompt for the type of range
+                        Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
+                        string input1 = Console.ReadLine() ?? "";
+                        Enum.TryParse(input1, out TypeOfRange typeOfRange);
 
                         // Prompt for the volunteer's active status
                         Console.WriteLine("Is the volunteer active? (true/false)");
@@ -670,18 +677,24 @@ Please Choose The Operation That You Would Like To Use:
 
                         // Prompt for the volunteer's password
                         Console.WriteLine("Volunteer's Password (Optional): ");
-                        string? password = Console.ReadLine();
+                        string? password = Console.ReadLine() ?? null;
 
                         // Prompt for the volunteer's full current address
                         Console.Write("Volunteer's Full Address (Optional): ");
-                        string? address = Console.ReadLine();
+                        string? address = Console.ReadLine() ?? null;
 
-                        // Prompt for the type of range
-                        Console.Write("Volunteer's Distance Type Of Range (e.g., Local, Regional, National): ");
-                        string input1 = Console.ReadLine() ?? "";
-                        Enum.TryParse(input1, out TypeOfRange typeOfRange);
+                        // Prompt for the volunteer's full current address
+                        Console.Write("Volunteer's Full Address Latitude (Optional): ");
+                        double tmp2;
+                        isValid = double.TryParse(Console.ReadLine(),out tmp2);
+                        double? lat = (isValid) ? tmp2 : null;
 
-                        Volunteer newVolunteer = new Volunteer
+                        // Prompt for the volunteer's full current address
+                        Console.Write("Volunteer's Full Address Longitude (Optional): ");
+                        isValid = double.TryParse(Console.ReadLine(), out tmp2);
+                        double? lng = (isValid) ? tmp2 : null;
+
+                        s_dalVolunteer?.Create(new Volunteer
                         {
                             Id = id,
                             FullName = name,
@@ -693,12 +706,9 @@ Please Choose The Operation That You Would Like To Use:
                             Password = password,
                             FullCurrentAddress = address,
                             TypeOfRange = typeOfRange,
-                        };
-                        if (s_dalVolunteer?.Read(newVolunteer.Id) == null)
-                        {
-                            s_dalVolunteer?.Create(newVolunteer);
-                        }
-
+                            Latitude = lat,
+                            Longitude = lng,
+                        });
                         break;
                     }
             }
