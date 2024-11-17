@@ -4,6 +4,7 @@ using DO;
 using System.Data;
 using System.Runtime.CompilerServices;
 using static DalTest.Program;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DalTest
 {
@@ -557,19 +558,14 @@ Please Choose The Operation That You Would Like To Use:
             {
                 case ClassType.Assignment:
                     {
-                        //TODO: Not enough data is requested from the user
-
-                        // Request associated CallId 
-                        Console.Write("Associated Call ID: ");
-                        int callId = int.Parse(Console.ReadLine() ?? "");
+                        // Request associated CallId
+                        int callId = RequestIntValue("Associated Call ID: ");
 
                         // Prompt for the id of the volunteer
-                        Console.Write("Associated Volunteer ID: ");
-                        int volunteerId = int.Parse(Console.ReadLine() ?? "");
+                        int volunteerId= RequestIntValue("Associated Volunteer ID: ");
 
                         // Prompt for the time of starting
-                        Console.Write("Time Of Starting: ");
-                        DateTime start = DateTime.Parse(Console.ReadLine() ?? "");
+                        DateTime start = RequestDateTimeValue("Time Of Starting: ");
 
                         // Prompt for the time of ending
                         Console.Write("Time Of Ending (Optional): ");
@@ -1286,6 +1282,48 @@ Longitude : {Longitude}
             >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
             ");
+        }
+    
+        /// <summary>
+        /// This method handles the request of int value from the user, including the null check
+        /// </summary>
+        /// <param name="msg">A display message for the user</param>
+        /// <returns>The converted int value</returns>
+        private static int RequestIntValue(string msg)
+        {
+            int id;
+            bool isValid;
+            do
+            {
+                Console.Write(msg);
+                isValid = Int32.TryParse(Console.ReadLine() ?? "", out id);
+                if (!isValid)
+                {
+                    Console.WriteLine("Error! Please enter a valid int value");
+                }
+            } while (!isValid);
+            return id;
+        }
+
+        /// <summary>
+        /// This method handles the DateTime request from the user, including the conversion of the data type and null value check
+        /// </summary>
+        /// <param name="msg">The display message for the user</param>
+        /// <returns>The converted DateTime value</returns>
+        private static DateTime RequestDateTimeValue(string msg)
+        {
+            DateTime date;
+            bool isValid;
+            do
+            {
+                Console.Write(msg);
+                isValid = DateTime.TryParse(Console.ReadLine() ?? "", out date);
+                if (!isValid)
+                {
+                    Console.WriteLine("Error! Please enter a valid DateTime value");
+                }
+            } while (!isValid);
+            return date;
         }
     }
 }
