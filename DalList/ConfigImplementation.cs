@@ -7,7 +7,7 @@ public class ConfigImplementation : IConfig
     public TimeSpan RiskRange // Inherits from IConfig
     {
         get => Config.RiskRange;
-        set => RiskRange = value;
+        set => Config.RiskRange = value;
     }
     public DateTime Clock  // Inherits from IConfig
     {
