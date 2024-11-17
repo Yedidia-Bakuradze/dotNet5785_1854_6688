@@ -495,13 +495,14 @@ Please Choose The Operation That You Would Like To Use:
                     //Get Entity ID
                     do
                     {
-                        isValid = !Int32.TryParse(Console.ReadLine(), out requestedObjectId);
+                        Console.WriteLine($"Enter Id Value For Object Of Type {classType}");
+                        Console.Write(">>> ");
+                        isValid = Int32.TryParse(Console.ReadLine(), out requestedObjectId);
                         if (!isValid)
                         {
                             Console.WriteLine("Invalid Input Value! Please Enter Only Natural Numbers");
                         }
-                        Console.WriteLine($"Enter Id Value For Object Of Type {classType}");
-                        Console.Write(">>> ");
+
 
                     } while (!isValid);
 
