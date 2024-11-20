@@ -1,7 +1,7 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
-public class CallImplementation : ICall
+internal class CallImplementation : ICall
 {
     /// <summary>
     /// Creates a new Call item.

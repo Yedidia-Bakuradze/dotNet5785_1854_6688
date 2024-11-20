@@ -2,7 +2,7 @@
 
 namespace Dal;
 
-public class ConfigImplementation : IConfig
+internal class ConfigImplementation : IConfig
 {
     public TimeSpan RiskRange // Inherits from IConfig
     {

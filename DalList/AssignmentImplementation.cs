@@ -3,7 +3,7 @@ namespace Dal;
 using DalApi;
 using DO;
 
-public class AssignmentImplementation : IAssignment
+internal class AssignmentImplementation : IAssignment
 {
     /// <summary>
     /// Adds a new object to the database (The list version)
