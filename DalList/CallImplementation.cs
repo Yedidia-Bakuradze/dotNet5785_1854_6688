@@ -58,6 +58,28 @@ internal class CallImplementation : ICall
         }
     }
 
+
+    /// <summary>
+    /// Returns a reference to an individual call  object which satisfies the past filter function
+    /// If such an call which satisfies the filter function hasn't been found - the method will throw and exception and would print out the proper message and return a null value
+    /// </summary>
+    /// <param name="filter">A condition function which the entity shall satisfy its condition</param>
+    /// <returns>Entity which satisfies the filter function or a null value if no such entity has been found</returns>
+    public Call? Read(Func<Call, bool> filter)
+    {
+        try
+        {
+            Call res = DataSource.Calls.FirstOrDefault((call) => filter(call))
+                ?? throw new Exception("Error Not Found! Call entity which satisfies the past condition hasn't been found");
+            return res;
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine(error.Message);
+            return null;
+        }
+    }
+
     /// <summary>
     /// Accepts an optional filter and returns a new enumerable stack of Call entities which satisfy the filter's condition
     /// If filter hasn't been past, the method will return an enumerable of all the calls
