@@ -339,9 +339,9 @@ static public class Initialization
     {
         //Gets dbs
         List<Call> listOfCalls = s_dal?.Call?.ReadAll().ToList()
-             ?? throw new Exception("List of Calls hasn't been generated yet");
+             ?? throw new DalUnGeneratedDependedList("List of Calls hasn't been generated yet");
         List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
-            ?? throw new Exception("List of Volunteers hasn't been generated yet");
+            ?? throw new DalUnGeneratedDependedList("List of Volunteers hasn't been generated yet");
 
         Volunteer currentVolunteer;
         Call currentCall;
@@ -491,11 +491,16 @@ static public class Initialization
         //s_dalVolunteer.DeleteAll(); // Stage 1
         s_dal.ResetDB();
         Console.WriteLine("Initializing Db list ...");
-
-        //Initialization the db
-        createVolunteers();
-        createCalls();
-        createAssignments();
+        try
+        {
+            //Initialization the db
+            createVolunteers();
+            createCalls();
+            createAssignments();
+        }catch(DalUnGeneratedDependedList error)
+        {
+            Console.WriteLine(error.Message);
+        }
     }
 
 }

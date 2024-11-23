@@ -24,8 +24,9 @@ internal class CallImplementation : ICall
     /// <param name="id">The id of the Call item to delete.</param>
     public void Delete(int id)
     {
-            //If the item does not exist, an exception will be thrown
-            Call result = DataSource.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
+        //If the item does not exist, an exception will be thrown
+        Call result = DataSource.Calls.Find((call) => call.Id == id)
+        ?? throw new DalDoesNotExistException($"Call entity with Id of {id} hasn't been found");
             DataSource.Calls.Remove(result);//If the item exists, it will be removed
     }
 
@@ -48,10 +49,10 @@ internal class CallImplementation : ICall
         {
             // If the item does not exist, an exception will be thrown
             Call res = DataSource.Calls.FirstOrDefault((call) => call.Id == id)
-                ?? throw new Exception($"no such Call with id:{id}");
+                ?? throw new DalDoesNotExistException($"Call entity with Id of {id} hasn't been found");
             return res;
         }
-        catch (Exception errorMsg)
+        catch (DalDoesNotExistException errorMsg)
         {
             Console.WriteLine(errorMsg.Message);
             return null;
@@ -70,10 +71,10 @@ internal class CallImplementation : ICall
         try
         {
             Call res = DataSource.Calls.FirstOrDefault((call) => filter(call))
-                ?? throw new Exception("Error Not Found! Call entity which satisfies the past condition hasn't been found");
+                ?? throw new DalDoesNotExistException("No Call entity which satisfies the given condition has been found");
             return res;
         }
-        catch (Exception error)
+        catch (DalDoesNotExistException error)
         {
             Console.WriteLine(error.Message);
             return null;
@@ -104,7 +105,8 @@ internal class CallImplementation : ICall
     public void Update(Call item)
     {
             //  If the item does not exist, an exception will be thrown
-            Call result = DataSource.Calls.Find((call) => call.Id == item.Id) ?? throw new Exception($"no such Call with id:{item.Id}");
+            Call result = DataSource.Calls.Find((call) => call.Id == item.Id)
+            ?? throw new DalDoesNotExistException($"Call entity with Id of {item.Id} hasn't been found");
             Delete(result.Id);//If the item exists, it will be removed
             DataSource.Calls.Add(item);//The updated item will be added
     }

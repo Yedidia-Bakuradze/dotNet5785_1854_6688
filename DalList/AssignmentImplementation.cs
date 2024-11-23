@@ -10,7 +10,6 @@ internal class AssignmentImplementation : IAssignment
     /// Adds a new object to the database (The list version)
     /// </summary>
     /// <param name="item">The requested object to add</param>
-    /// <exception cref="Exception">Throws an exception if the object already exists in the database</exception>
     public void Create(Assignment item)
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
@@ -26,7 +25,7 @@ internal class AssignmentImplementation : IAssignment
     public void Delete(int id)
     {
         Assignment result = DataSource.Assignments.Find((assignment) => assignment.Id == id)
-            ?? throw new Exception($"Object of type Assignment with id of {id} hasn't been found");
+            ?? throw new DalDoesNotExistException($"Assignment entity with Id of {id} hasn't been found");
         DataSource.Assignments.Remove(result);
     }
 
@@ -49,10 +48,11 @@ internal class AssignmentImplementation : IAssignment
         try
         {
             Assignment res = DataSource.Assignments.FirstOrDefault((assignment) => assignment.Id == id)
-                ?? throw new Exception($"Object of type Assignment with id of {id} hasn't been found");
+            ?? throw new DalDoesNotExistException($"Assignment entity with Id of {id} hasn't been found");
+
             return res;
         }
-        catch(Exception error)
+        catch(DalDoesNotExistException error)
         {
             Console.WriteLine(error.Message);
             return null;
@@ -70,10 +70,10 @@ internal class AssignmentImplementation : IAssignment
         try
         {
             Assignment res = DataSource.Assignments.FirstOrDefault((assignment) => filter(assignment))
-                ?? throw new Exception("Error Not Found! Assignment entity which satisfies the past condition hasn't been found");
+                ?? throw new DalDoesNotExistException("No Assignment entity which satisfies the given condition has been found");
             return res;
         }
-        catch(Exception error)
+        catch(DalDoesNotExistException error)
         {
             Console.WriteLine(error.Message);
             return null;
@@ -103,7 +103,7 @@ internal class AssignmentImplementation : IAssignment
     public void Update(Assignment item)
     {
         Assignment? res = Read(item.Id) ??
-            throw new Exception($"Object of type Assignment with id of {item.Id} hasn't been found");
+            throw new DalDoesNotExistException($"Assignment entity with Id of {item.Id} hasn't been found");
         Delete(res.Id);
         DataSource.Assignments.Add(item);
     }

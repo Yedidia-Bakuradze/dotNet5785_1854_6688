@@ -193,7 +193,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     default:
                         {
-                            throw new Exception($"Internal Error: {classType} is not allowed");
+                            throw new DalForbiddenOperation($"Internal Error: {classType} is not allowed");
                         }
                 }
             }
@@ -243,7 +243,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     default:
                         {
-                            throw new Exception($"Internal Error: {classType} is not allowed");
+                            throw new DalForbiddenOperation($"Internal Error: {classType} is not allowed");
                         }
                 }
             }
@@ -360,7 +360,7 @@ Please Choose The Operation That You Would Like To Use:
                                             break;
                                         default:
                                             {
-                                                throw new Exception($"Invalid configVariable: {configVariable} ");
+                                                throw new DalInValidConfigVariable($"Invalid configVariable: {configVariable} ");
                                             }
                                     }
                                     break;
@@ -381,7 +381,7 @@ Please Choose The Operation That You Would Like To Use:
                                             break;
                                         default:
                                             {
-                                                throw new Exception($"Invalid configVariable: {configVariable} ");
+                                                throw new DalInValidConfigVariable($"Invalid configVariable: {configVariable} ");
                                             }
                                     }
                                     break;
@@ -394,7 +394,7 @@ Please Choose The Operation That You Would Like To Use:
                                 }
                             default:
                                 {
-                                    throw new Exception($"Forbidden Operation: The {operation} operation is not allowed!");
+                                    throw new DalForbiddenOperation($"Forbidden Operation: The {operation} operation is not allowed!");
                                 }
                         }
                     }
@@ -426,7 +426,7 @@ Please Choose The Operation That You Would Like To Use:
                     case ClassType.Assignment:
                         {
                             IEnumerable listOfAssignments = (s_dal?.Assignment?.ReadAll()
-                                ?? throw new Exception("The Assignments in Database Are Not Available"));
+                                ?? throw new DalDoesNotExistException("The Assignments in Database Are Not Available"));
                             Console.WriteLine("Assignment Entities: ");
                             Console.Beep();
                             foreach (Assignment assignment in listOfAssignments)
@@ -435,7 +435,8 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Call:
                         {
-                            IEnumerable listOfCalls = s_dal?.Call?.ReadAll() ?? throw new Exception("The Calls in Database Are Not Available!");
+                            IEnumerable listOfCalls = s_dal?.Call?.ReadAll()
+                                ?? throw new DalDoesNotExistException("The Calls in Database Are Not Available!");
                             Console.WriteLine("\nCall Entities: ");
                             foreach (Call call in listOfCalls)
                                 printCallEntity(call);
@@ -444,16 +445,13 @@ Please Choose The Operation That You Would Like To Use:
                     case ClassType.Volunteer:
                         {
                             List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
-                                ?? throw new Exception("Error: The list of Volunteer instances is null");
+                                ?? throw new DalDoesNotExistException("The Volunteers in Database Are Not Available!");
+                            
                             Console.WriteLine("\nVolunteer Entities: ");
                             Console.Beep();
                             foreach (Volunteer volunteer in listOfVolunteers)
                                 printVolunteerEntity(volunteer);
                             break;
-                        }
-                    default:
-                        {
-                            throw new Exception($"Internal Error: {classType} Is Not a Valid Class Type");
                         }
                 }
             }
@@ -509,27 +507,23 @@ Please Choose The Operation That You Would Like To Use:
                         case ClassType.Assignment:
                             {
                                 Assignment result = s_dal?.Assignment?.Read(requestedObjectId)!
-                                    ?? throw new Exception($"The Assignment instance with id of {requestedObjectId} hasn't been found");
+                                    ?? throw new DalDoesNotExistException($"The Assignment instance with id of {requestedObjectId} hasn't been found");
                                 printAssignmentEntity(result);
                                 break;
                             }
                         case ClassType.Call:
                             {
                                 Call result = s_dal?.Call?.Read(requestedObjectId)!
-                                    ?? throw new Exception($"The Call instance with id of {requestedObjectId} hasn't been found");
+                                    ?? throw new DalDoesNotExistException($"The Call instance with id of {requestedObjectId} hasn't been found");
                                 printCallEntity(result);
                                 break;
                             }
                         case ClassType.Volunteer:
                             {
                                 Volunteer result = s_dal?.Volunteer?.Read(requestedObjectId)!
-                                    ?? throw new Exception($"The Volunteer instance with id of {requestedObjectId} hasn't been found");
+                                    ?? throw new DalDoesNotExistException($"The Volunteer instance with id of {requestedObjectId} hasn't been found");
                                 printVolunteerEntity(result);
                                 break;
-                            }
-                        default:
-                            {
-                                throw new Exception($"Internal Error: Class Type is {classType}. Is not a Assignment, Call or Volunteer");
                             }
                     }
 
@@ -763,7 +757,7 @@ Please Choose The Operation That You Would Like To Use:
                     case ClassType.Assignment:
                         {
                             Assignment result = s_dal?.Assignment?.Read(id) ?? 
-                                throw new Exception($"Assignment Object Failed: The Assignment with ID of {id} hasn't been found");
+                                throw new DalDoesNotExistException($"The Assignment instance with Id of {id} hasn't been found");
                             int Called = result.Called ;
                             int VolunteerId = result.VolunteerId ;
                             DateTime TimeOfStarting = result.TimeOfStarting;
@@ -891,7 +885,7 @@ Type Of Ending: {TypeOfEnding}
                     case ClassType.Call:
                     {
                             Call result = s_dal?.Call?.Read(id) ??
-                                    throw new Exception($"Call Object Failed: The Assignment with ID of {id} hasn't been found");
+                                    throw new DalDoesNotExistException($"The Call instance with ID of {id} hasn't been found");
                             CallTypes Type = result.Type;
                             string FullAddressCall = result.FullAddressCall;
                             double Latitude = result.Latitude;
@@ -1054,7 +1048,7 @@ DeadLine : {DeadLine}
                     case ClassType.Volunteer:
                     {
                             Volunteer result = s_dal?.Volunteer?.Read(id) ??
-                                        throw new Exception($"Volunteer Object Failed: The Assignment with ID of {id} hasn't been found");
+                                        throw new DalDoesNotExistException($"The Volunteer instance with ID of {id} hasn't been found");
                             int Id = result.Id;
                             Roles Role = result.Role;
                             string FullName = result.FullName;
@@ -1193,10 +1187,6 @@ Longitude : {Longitude}
                             };
                             s_dal?.Volunteer?.Update(newVolunteer);
                             break;
-                    }
-                    default:
-                    {
-                        throw new Exception($"Internal Error: {classType} is not allowed");
                     }
                 }
             }catch(Exception error)

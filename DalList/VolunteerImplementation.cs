@@ -17,12 +17,11 @@ internal class VolunteerImplementation : IVolunteer
         //Since the id is automatically generated, there is not need for checking whether volunteer with such id value exists
         if(DataSource.Volunteers.Any((volunteer) => volunteer.Id == newVolunteer.Id))
         {
-            throw new Exception($"Volunteer object with id {newVolunteer.Id} already exists");
+            throw new DalAlreadyExistsException($"Volunteer entity with Id of {newVolunteer.Id} already exists");
         }
         else
         {
             DataSource.Volunteers.Add(newVolunteer);
-            //TODO: return item.Id; In the documentation it been written to return the new value of the id
         }
     }
 
@@ -34,7 +33,7 @@ internal class VolunteerImplementation : IVolunteer
     public void Delete(int id)
     {
         Volunteer result = DataSource.Volunteers.Find((volunteer) => volunteer.Id == id)
-            ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
+            ?? throw new DalDoesNotExistException($"Volunteer entity with Id of {id} hasn't been found");
         DataSource.Volunteers.Remove(result);
     }
 
@@ -57,10 +56,11 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             Volunteer res = DataSource.Volunteers.FirstOrDefault((volunteer) => volunteer.Id == id)
-                ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
+            ?? throw new DalDoesNotExistException($"Volunteer entity with Id of {id} hasn't been found");
+
             return res;
         }
-        catch (Exception error)
+        catch (DalDoesNotExistException error)
         {
             Console.WriteLine(error.Message);
             return null;
@@ -78,10 +78,10 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             Volunteer res = DataSource.Volunteers.FirstOrDefault((volunteer) => filter(volunteer))
-                ?? throw new Exception("Error Not Found! Volunteer entity which satisfies the past condition hasn't been found");
+                ?? throw new DalDoesNotExistException("No Volunteer entity which satisfies the given condition has been found");
             return res;
         }
-        catch (Exception error)
+        catch (DalDoesNotExistException error)
         {
             Console.WriteLine(error.Message);
             return null;
@@ -111,8 +111,9 @@ internal class VolunteerImplementation : IVolunteer
     /// <param name="newVolunteer">The new volunteer record</param>
     public void Update(Volunteer newVolunteer)
     {
-        Volunteer? res = Read(newVolunteer.Id) ??
-            throw new Exception($"Object of type Volunteer with id of {newVolunteer.Id} hasn't been found");
+        Volunteer? res = Read(newVolunteer.Id) 
+            ?? throw new DalDoesNotExistException($"Volunteer entity with Id of {newVolunteer.Id} hasn't been found");
+
         Delete(res.Id);
         DataSource.Volunteers.Add(newVolunteer);
     }
