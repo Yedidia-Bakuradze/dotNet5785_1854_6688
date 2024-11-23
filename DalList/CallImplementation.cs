@@ -45,7 +45,8 @@ internal class CallImplementation : ICall
         try
         {
             // If the item does not exist, an exception will be thrown
-            Call res = DataSource.Calls.Find((call) => call.Id == id) ?? throw new Exception($"no such Call with id:{id}");
+            Call res = DataSource.Calls.FirstOrDefault((call) => call.Id == id)
+                ?? throw new Exception($"no such Call with id:{id}");
             return res;
         }
         catch (Exception errorMsg)

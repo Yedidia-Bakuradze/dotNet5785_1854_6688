@@ -55,7 +55,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            Volunteer res = DataSource.Volunteers.Find((volunteer) => volunteer.Id == id)
+            Volunteer res = DataSource.Volunteers.FirstOrDefault((volunteer) => volunteer.Id == id)
                 ?? throw new Exception($"Object of type Volunteer with id of {id} hasn't been found");
             return res;
         }

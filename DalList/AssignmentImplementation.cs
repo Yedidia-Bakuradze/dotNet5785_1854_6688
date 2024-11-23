@@ -47,7 +47,7 @@ internal class AssignmentImplementation : IAssignment
     {
         try
         {
-            Assignment res = DataSource.Assignments.Find((assignment) => assignment.Id == id)
+            Assignment res = DataSource.Assignments.FirstOrDefault((assignment) => assignment.Id == id)
                 ?? throw new Exception($"Object of type Assignment with id of {id} hasn't been found");
             return res;
         }

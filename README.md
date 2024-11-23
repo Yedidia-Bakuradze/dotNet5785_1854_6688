@@ -40,10 +40,6 @@ This stage lays the foundation for the data management aspects of the platform, 
 
 To get started with the project, clone the repository and follow the instructions in the respective stage documentation.
 
-
-
-
-
 ## Contributing
 
 We welcome contributions from the community. Please read our [contributing guidelines](CONTRIBUTING.md) for more information on how to get involved.
