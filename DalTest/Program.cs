@@ -1,6 +1,7 @@
 ﻿using Dal;
 using DalApi;
 using DO;
+using System.Collections;
 
 namespace DalTest
 {
@@ -424,8 +425,8 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            List<Assignment> listOfAssignments = s_dal?.Assignment?.ReadAll()
-                                ?? throw new Exception("The Assignments in Database Are Not Available");
+                            IEnumerable listOfAssignments = (s_dal?.Assignment?.ReadAll()
+                                ?? throw new Exception("The Assignments in Database Are Not Available"));
                             Console.WriteLine("Assignment Entities: ");
                             Console.Beep();
                             foreach (Assignment assignment in listOfAssignments)
@@ -434,7 +435,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Call:
                         {
-                            List<Call> listOfCalls = s_dal?.Call?.ReadAll() ?? throw new Exception("The Calls in Database Are Not Available!");
+                            IEnumerable listOfCalls = s_dal?.Call?.ReadAll() ?? throw new Exception("The Calls in Database Are Not Available!");
                             Console.WriteLine("\nCall Entities: ");
                             foreach (Call call in listOfCalls)
                                 printCallEntity(call);
@@ -442,7 +443,8 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Volunteer:
                         {
-                            List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll() ?? throw new Exception("Error: The list of Volunteer instances is null");
+                            List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
+                                ?? throw new Exception("Error: The list of Volunteer instances is null");
                             Console.WriteLine("\nVolunteer Entities: ");
                             Console.Beep();
                             foreach (Volunteer volunteer in listOfVolunteers)

@@ -3,6 +3,8 @@ namespace DalTest;
 using DalApi;
 using DO;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 static public class Initialization
 {
@@ -336,9 +338,9 @@ static public class Initialization
     private static void createAssignments()
     {
         //Gets dbs
-        List<Call> listOfCalls = s_dal?.Call?.ReadAll()
+        List<Call> listOfCalls = s_dal?.Call?.ReadAll().ToList()
              ?? throw new Exception("List of Calls hasn't been generated yet");
-        List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll()
+        List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
             ?? throw new Exception("List of Volunteers hasn't been generated yet");
 
         Volunteer currentVolunteer;

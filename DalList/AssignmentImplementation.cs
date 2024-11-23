@@ -63,9 +63,9 @@ internal class AssignmentImplementation : IAssignment
     /// Accepts an optional filter and returns a new enumerable stack of Assignment entities which satisfy the filter's condition
     /// If filter hasn't been past, the method will return an enumerable of all the assignments
     /// </summary>
-    /// <param name="filter">A filter which returns a boolean value whether the past T value satisfies the logical condition</param>
+    /// <param name="filter">A filter which returns a boolean value whether the past Assignment value satisfies the logical condition</param>
     /// <returns></returns>
-    public IEnumerable ReadAll(Func<Assignment, bool>? filter = null)
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         return filter != null
             ? from assignment in DataSource.Assignments

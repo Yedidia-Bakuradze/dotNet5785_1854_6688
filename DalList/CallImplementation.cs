@@ -62,9 +62,9 @@ internal class CallImplementation : ICall
     /// Accepts an optional filter and returns a new enumerable stack of Call entities which satisfy the filter's condition
     /// If filter hasn't been past, the method will return an enumerable of all the calls
     /// </summary>
-    /// <param name="filter">A filter which returns a boolean value whether the past T value satisfies the logical condition</param>
+    /// <param name="filter">A filter which returns a boolean value whether the past Call value satisfies the logical condition</param>
     /// <returns></returns>
-    public IEnumerable ReadAll(Func<Call, bool>? filter = null)
+    public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         return filter == null
             ? from call in DataSource.Calls
