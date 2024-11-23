@@ -10,6 +10,7 @@ The project is built using a multi-tier architecture, with each week representin
 
 - [0th Stage: Initialization](#0th-stage-initialization)
 - [1st Stage: Data Access Layer](#1st-stage-data-access-layer)
+- [2nd Stage: Enhancements and Improvements](#2nd-stage-enhancements-and-improvements)
 
 ## 0th Stage: Initialization
 
@@ -29,6 +30,16 @@ In this stage, we developed the Data Access Layer (DAL) of the project. This lay
 - **DO Entities**: Data Objects (DO) that represent the entities in the system.
 
 This stage lays the foundation for the data management aspects of the platform, ensuring that data operations are efficient and reliable.
+
+## 2nd Stage: Enhancements and Improvements
+
+In this stage, we made several enhancements and improvements to the project, including:
+
+- **New Exception Types**: Introduced new exception types for handling specific scenarios, such as items that do not exist and items that have already been added. These exceptions improve error handling and provide more informative error messages.
+- **Enumerable Collection for Database**: The database now uses the `Enumerable` collection instead of the `List` collection. This change allows the database to be used for more generic purposes and provides greater flexibility in data management.
+- **LINQ Expressions for Read and ReadAll Methods**: The `Read` and `ReadAll` methods now use LINQ expressions instead of `List` methods to retrieve content from the database. This change improves the efficiency and readability of data retrieval operations.
+
+These enhancements improve the overall functionality and maintainability of the platform, making it more robust and versatile.
 
 ## Features
 

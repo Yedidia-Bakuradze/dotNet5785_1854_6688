@@ -23,12 +23,18 @@ public class DalUnGeneratedDependedList: Exception
     public DalUnGeneratedDependedList(string? msg) : base(msg) { }
 }
 
+/// <summary>
+/// This exception is made for the main program in case that the method tries to use an enum value which is not either Volunteer, Assignment or Call
+/// </summary>
 [Serializable]
 public class DalInValidConfigVariable: Exception
 {
     public DalInValidConfigVariable(string? msg) : base(msg) { }
 }
 
+/// <summary>
+/// This exception is made for the main program in case that the method tries to reach the enum value which it can not operate on in that method
+/// </summary>
 [Serializable]
 public class DalForbiddenOperation : Exception
 {
