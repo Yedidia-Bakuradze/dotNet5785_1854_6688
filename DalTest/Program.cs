@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Collections;
+using System.Xml;
 
 namespace DalTest
 {
@@ -178,7 +179,7 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            s_dal?.Call?.DeleteAll();
+                            s_dal?.Assignment?.DeleteAll();
                             break;
                         }
                     case ClassType.Call:
@@ -188,7 +189,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Volunteer:
                         {
-                            s_dal?.Call?.DeleteAll();
+                            s_dal?.Volunteer?.DeleteAll();
                             break;
                         }
                     default:
