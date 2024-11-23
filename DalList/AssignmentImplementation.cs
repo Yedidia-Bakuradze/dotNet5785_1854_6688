@@ -2,6 +2,7 @@
 namespace Dal;
 using DalApi;
 using DO;
+using System.Collections;
 
 internal class AssignmentImplementation : IAssignment
 {
@@ -59,14 +60,20 @@ internal class AssignmentImplementation : IAssignment
     }
 
     /// <summary>
-    /// Returns a copy of all the assignments in the database
+    /// Accepts an optional filter and returns a new enumerable stack of Assignment entities which satisfy the filter's condition
+    /// If filter hasn't been past, the method will return an enumerable of all the assignments
     /// </summary>
-    /// <returns>A copied list of all the assignments in the database</returns>
-    public List<Assignment> ReadAll()
+    /// <param name="filter">A filter which returns a boolean value whether the past T value satisfies the logical condition</param>
+    /// <returns></returns>
+    public IEnumerable ReadAll(Func<Assignment, bool>? filter = null)
     {
-        return new List<Assignment>(DataSource.Assignments);
+        return filter != null
+            ? from assignment in DataSource.Assignments
+              where filter(assignment)
+              select assignment
+             : from assignment in DataSource.Assignments
+               select assignment;
     }
-
     /// <summary>
     /// Accepts a new assignment which would replace the old assignment with the same id value
     /// If such an assignment with the proper id hasn't been found - the method will throw and exception and would print out the proper message

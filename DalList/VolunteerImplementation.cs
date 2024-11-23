@@ -2,6 +2,7 @@
 namespace Dal;
 using DalApi;
 using DO;
+using System.Collections;
 using System.Collections.Generic;
 
 internal class VolunteerImplementation : IVolunteer
@@ -67,12 +68,19 @@ internal class VolunteerImplementation : IVolunteer
     }
 
     /// <summary>
-    /// Returns a copy of all the volunteers in the database
+    /// Accepts an optional filter and returns a new enumerable stack of Volunteer entities which satisfy the filter's condition
+    /// If filter hasn't been past, the method will return an enumerable of all the volunteers
     /// </summary>
-    /// <returns>A copied list of all the volunteers in the database</returns>
-    public List<Volunteer> ReadAll()
+    /// <param name="filter">A filter which returns a boolean value whether the past T value satisfies the logical condition</param>
+    /// <returns></returns>
+    public IEnumerable ReadAll(Func<Volunteer, bool>? filter = null)
     {
-        return new List<Volunteer>(DataSource.Volunteers);
+        return filter == null
+            ? from volunteer in DataSource.Volunteers
+              select volunteer
+              : from volunteer in DataSource.Volunteers
+                where filter(volunteer)
+                select volunteer;
     }
 
     /// <summary>

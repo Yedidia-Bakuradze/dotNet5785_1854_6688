@@ -1,6 +1,8 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+using System.Collections;
+
 internal class CallImplementation : ICall
 {
     /// <summary>
@@ -57,12 +59,19 @@ internal class CallImplementation : ICall
     }
 
     /// <summary>
-    /// Reads all Call items.
+    /// Accepts an optional filter and returns a new enumerable stack of Call entities which satisfy the filter's condition
+    /// If filter hasn't been past, the method will return an enumerable of all the calls
     /// </summary>
-    /// <returns>A list of all Call items.</returns>
-    public List<Call> ReadAll()
+    /// <param name="filter">A filter which returns a boolean value whether the past T value satisfies the logical condition</param>
+    /// <returns></returns>
+    public IEnumerable ReadAll(Func<Call, bool>? filter = null)
     {
-        return new List<Call>(DataSource.Calls);
+        return filter == null
+            ? from call in DataSource.Calls
+              select call
+              : from call in DataSource.Calls
+                where filter(call)
+                select call;
     }
 
 
