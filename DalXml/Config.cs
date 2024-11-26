@@ -23,17 +23,18 @@ static internal class Config
         get => XMLTools.GetAndIncreaseConfigIntVal(callFileName, "NextCallId");
         private set => XMLTools.SetConfigIntVal(callFileName, "NextCallId", value);
     }
-    // TODO: RiskRange handler
-    //internal static TimeSpan RiskRange
-    //{
-    //}
 
+    internal static TimeSpan RiskRange
+    {
+        get => XMLTools.GetConfigTimeSpan(dataConfigFileName, "RiskRange");
+        set => XMLTools.SetConfigTimeSpan(dataConfigFileName, "RiskRange",value);
+    }
 
     internal static void Reset()
     {
         NextAssignmentId = 1;
         NextCallId = 1;
         Clock = DateTime.Now;   
-        // RiskRange = TimeSpan.Zero;
+        RiskRange = TimeSpan.Zero;
     }
 }
