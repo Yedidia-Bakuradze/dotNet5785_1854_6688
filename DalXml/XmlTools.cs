@@ -1,6 +1,7 @@
 ﻿namespace Dal;
 
 using DO;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -101,6 +102,21 @@ static class XMLTools
         DateTime dt = root.ToDateTimeNullable(elemName) ?? throw new FormatException($"can't convert:  {xmlFileName}, {elemName}");
         return dt;
     }
+    
+    /// <summary>
+    /// A getter to get the Risk Range value from the XML file where its located
+    /// </summary>
+    /// <param name="xmlFileName">The XML file name where its located</param>
+    /// <param name="elementName">The XML tag name where the value is located</param>
+    /// <returns>The risk range value which is set to be in the project</returns>
+    /// <exception cref="FormatException"></exception>
+    public static TimeSpan GetConfigTimeSpan(string xmlFileName, string elementName)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
+        TimeSpan res = root.ToTimeSpanNullable(elementName)
+            ?? throw new FormatException($"can't convert:  {xmlFileName}, {elementName}");
+        return res;
+    }
     public static void SetConfigIntVal(string xmlFileName, string elemName, int elemVal)
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
@@ -111,6 +127,19 @@ static class XMLTools
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
         root.Element(elemName)?.SetValue((elemVal).ToString());
+        XMLTools.SaveListToXMLElement(root, xmlFileName);
+    }
+
+    /// <summary>
+    /// A setter for the Max Range property which takes the TimeSpan value and sets it in the related XML tag in the tree
+    /// </summary>
+    /// <param name="xmlFileName">XML file name</param>
+    /// <param name="elementName">Target XML element's name which would be modified</param>
+    /// <param name="newValue">The replacement value</param>
+    public static void SetConfigTimeSpan(string xmlFileName, string elementName, TimeSpan newValue)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
+        root.Element(elementName)?.SetValue((newValue).ToString());
         XMLTools.SaveListToXMLElement(root, xmlFileName);
     }
     #endregion
@@ -125,6 +154,18 @@ static class XMLTools
         double.TryParse((string?)element.Element(name), out var result) ? (double?)result : null;
     public static int? ToIntNullable(this XElement element, string name) =>
         int.TryParse((string?)element.Element(name), out var result) ? (int?)result : null;
+    
+    /// <summary>
+    /// A method to convert the XML file's value to a TimeSpan type of value
+    /// </summary>
+    /// <param name="element">The element which the value is located</param>
+    /// <param name="name">The name of the tag which holds the value</param>
+    /// <returns></returns>
+    public static TimeSpan? ToTimeSpanNullable(this XElement element, string name)
+        => TimeSpan.TryParse((string?)element.Element(name),out var result)
+        ? (TimeSpan?) result
+        : null;
+
     #endregion
 
 }
