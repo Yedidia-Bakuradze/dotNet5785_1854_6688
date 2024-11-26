@@ -40,7 +40,14 @@ public class DalForbiddenOperation : Exception
 {
     public DalForbiddenOperation(string? msg) : base(msg) { }
 }
-
+/// <summary>
+/// This exception is made for the main program in case that the method tries to reach the enum value which it can not operate on in that method
+/// </summary>
+[Serializable]
+public class DalXMLFileLoadCreateException : Exception
+{
+    public DalXMLFileLoadCreateException(string? msg) : base(msg) { }
+}
 
 
 
