@@ -80,7 +80,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.volunteerFileName);
 
-            Volunteer res = volunteers.Volunteers.FirstOrDefault((volunteer) => filter(volunteer))
+            Volunteer res = volunteers.FirstOrDefault((volunteer) => filter(volunteer))
                 ?? throw new DalDoesNotExistException("No Volunteer entity which satisfies the given condition has been found");
             return res;
         }
