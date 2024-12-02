@@ -11,6 +11,7 @@ The project is built using a multi-tier architecture, with each week representin
 - [0th Stage: Initialization](#0th-stage-initialization)
 - [1st Stage: Data Access Layer](#1st-stage-data-access-layer)
 - [2nd Stage: Enhancements and Improvements](#2nd-stage-enhancements-and-improvements)
+- [3rd Stage: Adding XML Data Storage](#3rd-stage-adding-xml-data-storage)
 
 ## 0th Stage: Initialization
 
