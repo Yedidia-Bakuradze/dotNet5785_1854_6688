@@ -1,8 +1,5 @@
 ﻿using DalApi;
 using DO;
-using System.Data.Common;
-using System.Globalization;
-using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace Dal;
