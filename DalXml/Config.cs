@@ -1,8 +1,11 @@
 ﻿
 namespace Dal;
-
+/// <summary>
+/// This class manages the id's and other system configuration settings via the XML file data-config.xml
+/// </summary>
 static internal class Config
 {
+    //List of XML file names for access
     internal const string dataConfigFileName = "data-config.xml";
     internal const string assignmentFileName = "assignments.xml";
     internal const string callFileName = "calls.xml";
@@ -12,7 +15,6 @@ static internal class Config
         get =>  XMLTools.GetConfigDateVal(dataConfigFileName, "Clock");
         set => XMLTools.SetConfigDateVal(dataConfigFileName, "Clock", value);
     }
-
     internal static int NextAssignmentId
     {
         get => XMLTools.GetAndIncreaseConfigIntVal(dataConfigFileName, "NextAssignmentId");
