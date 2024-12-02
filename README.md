@@ -41,6 +41,24 @@ In this stage, we made several enhancements and improvements to the project, inc
 
 These enhancements improve the overall functionality and maintainability of the platform, making it more robust and versatile.
 
+## 3rd Stage: Adding XML Data Storage
+
+### Background
+In this step, we added the capability to store data in XML format. We implemented all the necessary interfaces and properties to support XML data storage. Additionally, we updated the `DALTest` to utilize the XML storage functionality.
+
+### Implementation Details
+**XML Data Storage**: 
+   - We introduced a new class `XmlDataStorage` that implements the `IDataStorage` interface.
+   - This class handles reading from and writing to XML files, ensuring that data is correctly serialized and deserialized.
+
+**Interface Implementation**:
+   - All relevant interfaces were updated to include methods for XML data handling.
+   - The `XmlDataStorage` class provides concrete implementations for these methods.
+
+**DALTest Update**:
+   - The `DALTest` class was modified to use the `XmlDataStorage` class.
+   - This allows `DALTest` to perform its operations using XML files, ensuring that the new storage mechanism is thoroughly tested.
+
 ## Features
 
 - **Local Database Management**: Allows the user to add new entity records to the local database stored in a simple list structure.
