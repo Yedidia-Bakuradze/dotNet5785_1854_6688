@@ -2,7 +2,6 @@
 namespace Dal;
 using DalApi;
 using DO;
-using System.Collections;
 
 internal class AssignmentImplementation : IAssignment
 {
