@@ -13,7 +13,11 @@ internal class CallImplementation : ICall
     public void Create(Call newCall)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
-        calls.Add(newCall with { Id = Config.NextCallId});
+        newCall = newCall with
+        {
+            Id = Config.NextCallId
+        };
+        calls.Add(newCall);
 
         XMLTools.SaveListToXMLSerializer<Call>(calls, Config.callFileName);
     }

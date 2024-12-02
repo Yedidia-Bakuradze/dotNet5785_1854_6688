@@ -15,13 +15,13 @@ static internal class Config
 
     internal static int NextAssignmentId
     {
-        get => XMLTools.GetAndIncreaseConfigIntVal(assignmentFileName, "NextAssignmentId");
-        private set => XMLTools.SetConfigIntVal(assignmentFileName, "NextAssignmentId", value);
+        get => XMLTools.GetAndIncreaseConfigIntVal(dataConfigFileName, "NextAssignmentId");
+        private set => XMLTools.SetConfigIntVal(dataConfigFileName, "NextAssignmentId", value);
     }
     internal static int NextCallId
     {
-        get => XMLTools.GetAndIncreaseConfigIntVal(callFileName, "NextCallId");
-        private set => XMLTools.SetConfigIntVal(callFileName, "NextCallId", value);
+        get => XMLTools.GetAndIncreaseConfigIntVal(dataConfigFileName, "NextCallId");
+        private set => XMLTools.SetConfigIntVal(dataConfigFileName, "NextCallId", value);
     }
 
     internal static TimeSpan RiskRange
