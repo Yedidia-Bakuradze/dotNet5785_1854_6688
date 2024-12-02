@@ -139,14 +139,22 @@ public class AssignmentImplementation : IAssignment
     /// <returns>XML Tag which contains all the entity's values</returns>
     static XElement getXMLAssignmentValue(Assignment assignment)
     {
-        return new
-            ("Assignment",
+        List<XElement> subTags = new List<XElement>() {
                 new XElement("Id", assignment.Id),
                 new XElement("Called", assignment.Called),
                 new XElement("VolunteerId", assignment.VolunteerId),
-                new XElement("TimeOfStarting", assignment.TimeOfStarting),
-                new XElement("TimeOfEnding", assignment.TimeOfEnding.ToString() ?? ""),
-                new XElement("TypeOfEnding", assignment.TypeOfEnding.ToString() ?? "")
-            );
+                new XElement("TimeOfStarting", assignment.TimeOfStarting)
+               };
+
+        if(assignment.TimeOfEnding != null)
+        {
+            subTags.Add(new XElement("TimeOfEnding", assignment.TimeOfEnding.ToString()));
+        }
+        if(assignment.TypeOfEnding != null)
+        {
+            subTags.Add(new XElement("TypeOfEnding", assignment.TypeOfEnding.ToString()));
+        }
+
+        return new ("Assignment", subTags.ToArray());
     }
 }
