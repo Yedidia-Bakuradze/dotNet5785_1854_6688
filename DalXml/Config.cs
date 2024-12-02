@@ -3,10 +3,10 @@ namespace Dal;
 
 static internal class Config
 {
-    internal const string dataConfigFileName = "data-config";
-    internal const string assignmentFileName = "assignments";
-    internal const string callFileName = "calls";
-    internal const string volunteerFileName = "volunteers";
+    internal const string dataConfigFileName = "data-config.xml";
+    internal const string assignmentFileName = "assignments.xml";
+    internal const string callFileName = "calls.xml";
+    internal const string volunteerFileName = "volunteers.xml";
 
     internal static DateTime Clock { 
         get =>  XMLTools.GetConfigDateVal(dataConfigFileName, "Clock");

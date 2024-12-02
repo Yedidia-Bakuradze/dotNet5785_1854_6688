@@ -18,7 +18,7 @@ public class AssignmentImplementation : IAssignment
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
         XElement newAssigment = getXMLAssignmentValue(newAssignment with { Id = Config.NextAssignmentId});
         data.Add(newAssigment);
-        data.Save(Config.assignmentFileName);
+        XMLTools.SaveListToXMLElement(data, Config.assignmentFileName);
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class AssignmentImplementation : IAssignment
             ?? throw new DalDoesNotExistException($"Assingment with ID of: {id} doesn't exist");
 
         removeTag.Remove();
-        data.Save(Config.assignmentFileName);
+        XMLTools.SaveListToXMLElement(data, Config.assignmentFileName);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class AssignmentImplementation : IAssignment
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
         data.RemoveAll();
-        data.Save(Config.assignmentFileName);
+        XMLTools.SaveListToXMLElement(data, Config.assignmentFileName);
     }
 
     /// <summary>
@@ -109,9 +109,9 @@ public class AssignmentImplementation : IAssignment
             ?? throw new DalDoesNotExistException($"Assignment with ID of: {newAssignment.Id} doesn't exists");
         res.Remove();
         data.Add(getXMLAssignmentValue(newAssignment));
-        data.Save(Config.assignmentFileName);
+        XMLTools.SaveListToXMLElement(data, Config.assignmentFileName);
     }
-    
+
     /// <summary>
     /// Translates all the XML values into a single Assignment variable
     /// </summary>

@@ -261,9 +261,9 @@ Please Choose The Operation That You Would Like To Use:
         /// </summary>
         private static void resetDbAndSystem()
         {
+            s_dal?.Volunteer?.DeleteAll();
             s_dal?.Call?.DeleteAll();
-            s_dal?.Call?.DeleteAll();
-            s_dal?.Call?.DeleteAll();
+            s_dal?.Assignment?.DeleteAll();
             s_dal?.Config?.Reset();
         }
         

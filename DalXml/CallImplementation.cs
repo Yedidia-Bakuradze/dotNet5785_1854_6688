@@ -30,7 +30,6 @@ internal class CallImplementation : ICall
         Call res = Calls.Find(v => v.Id == id)
             ?? throw new DalDoesNotExistException($"Call with ID of: {id} doesn't exists");
         Calls.Remove(res);
-
         XMLTools.SaveListToXMLSerializer<Call>(Calls, Config.callFileName);
     }
 

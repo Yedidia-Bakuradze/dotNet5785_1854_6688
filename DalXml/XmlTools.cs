@@ -1,8 +1,6 @@
 ﻿namespace Dal;
 
 using DO;
-using System.Diagnostics;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
