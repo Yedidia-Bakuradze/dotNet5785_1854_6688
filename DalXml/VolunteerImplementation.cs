@@ -23,7 +23,7 @@ internal class VolunteerImplementation : IVolunteer
     }
 
     /// <summary>
-    /// Accepts an id of a volnteer and removes it from the XML database file
+    /// Accepts an id of a volunteer and removes it from the XML database file
     /// if the volunteer doesn't exist the method will throw an exception with a proper message.
     /// </summary>
     /// <param name="id">The id of the volunteer to be removed</param>
