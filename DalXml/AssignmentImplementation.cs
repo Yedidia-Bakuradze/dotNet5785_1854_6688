@@ -1,7 +1,6 @@
 ﻿using DalApi;
 using DO;
 using System.Xml.Linq;
-
 namespace Dal;
 
 public class AssignmentImplementation : IAssignment
