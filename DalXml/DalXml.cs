@@ -1,8 +1,9 @@
-﻿
-using DalApi;
-
+﻿using DalApi;
 namespace Dal;
 
+/// <summary>
+/// This class manages the data access layer via the XML file including all the CRUD methods
+/// </summary>
 public class DalXml : IDal
 {
     public IAssignment Assignment { get; } = new AssignmentImplementation();
