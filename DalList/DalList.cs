@@ -4,16 +4,16 @@ using DalApi;
 sealed internal class DalList : IDal
 {
     // A private instance which is initialized only when the DalList has been called at least one time (Lazy Singleton)
-    private static DalList instance = null!;
+    private static IDal instance = null!;
     
-    //an indicator for a lcoa
+    //an indicator for a thread safty lock
     private static readonly object lockObj = new object()!;
     
     //private ctor for class's use only
     private DalList(){}
 
     //Returns the same instance without craeating multiple instances (Singleton)
-    public static DalList Instance {
+    public static IDal Instance {
         get { 
             if(instance == null)
             {
