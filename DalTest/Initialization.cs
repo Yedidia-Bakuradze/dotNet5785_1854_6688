@@ -474,9 +474,12 @@ static public class Initialization
     /// <param name="dalVolunteer"></param>
     /// <param name="dalConfig"></param>
     /// <exception cref="NullReferenceException"></exception>
-    public static void Do(IDal dal)
+    //public static void Do(IDal dal) // stage 2
+    public static void Do() // stage 4
     {
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!");
+        //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+        s_dal = DalApi.Factory.Get; // stage 4
+        
         //Assignment of the interfaces
         //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
         //s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
