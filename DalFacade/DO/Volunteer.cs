@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace DO;
+﻿namespace DO;
 /// <summary>
 /// Represents a volunteer entity with personal details and preferences.
 /// </summary>
