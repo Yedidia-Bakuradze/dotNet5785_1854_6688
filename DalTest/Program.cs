@@ -13,7 +13,8 @@ namespace DalTest
         //private static ICall? s_dalCall = new CallImplementation(); // Stage 1
         //private static IConfig? s_dalConfig = new ConfigImplementation(); // Stage 1
         //static readonly IDal s_dal = new DalList(); // Stage 2
-        static readonly IDal s_dal = new DalXml(); // Stage 3
+        //static readonly IDal s_dal = new DalXml(); // Stage 3
+        static readonly IDal s_dal = Factory.Get; // Stage 4
 
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
@@ -1201,7 +1202,8 @@ Longitude : {Longitude}
         /// This method initializes the database, filling it with pre-made dummy data 
         /// </summary>
         //private static void dbInit() => DalTest.Initialization.Do(s_dalAssignment, s_dalCall, s_dalVolunteer, s_dalConfig);// Stage 1
-        private static void dbInit() => DalTest.Initialization.Do(s_dal);// Stage 2
+        //private static void dbInit() => DalTest.Initialization.Do(s_dal);// Stage 2
+        private static void dbInit() => DalTest.Initialization.Do();// Stage 4
 
         /// <summary>
         /// Help Method: Requests from the user to choose a ConfigVariable value and returns it
