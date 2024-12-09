@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Helpers;
+
+namespace BO;
 public enum VolunteerType { Admin, Volunteer, Undefined };
 public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
 public enum ClosedCallType { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
@@ -39,4 +41,17 @@ public enum CallStatus {
     /// Currently handled by another volunteer but the call's deadline it close (Within the RiskRange range)
     /// </summary>
     InProgressAndRisky
+}
+
+
+public enum VolunteerInListField
+{
+    Id ,
+    FullName ,
+    IsActive ,
+    TotalCallsDoneByVolunteer ,
+    TotalCallsCancelByVolunteer ,
+    TotalCallsExpiredByVolunteer ,
+    CallId ,
+    CallType
 }
