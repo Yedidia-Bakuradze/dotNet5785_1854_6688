@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Helpers;
+
+namespace BO;
 
 public class Volunteer
 {
@@ -69,6 +71,7 @@ public class Volunteer
 
     //TODO: Add the CallInProgress class in the BO folder
     public BO.CallInProgress? CurrentCall { get; }
+    public override string ToString() => this.ToStringProperty();
 
 
 }
