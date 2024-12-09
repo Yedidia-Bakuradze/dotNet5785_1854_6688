@@ -25,5 +25,5 @@ public class VolunteerInList
     public int? callId { get; set; }
 
     // Type of the current call assigned to the volunteer // Taken from DO.Call entity
-    public CallTypes callType { get; set; }
+    public CallType callType { get; set; }
 }
