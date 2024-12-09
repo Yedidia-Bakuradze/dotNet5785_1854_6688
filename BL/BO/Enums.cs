@@ -1,6 +1,42 @@
 ﻿namespace BO;
 public enum VolunteerType { Admin, Volunteer, Undefined };
 public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
-public enum TypeOfClosedCall { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
-public enum CallType { None,Undefined, FoodPreparation, FoodDelivery }
-public enum CallStatus { Taken, TakenAndInRisk }
+public enum ClosedCallType { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
+public enum CallType { Undefined, FoodPreparation, FoodDelivery }
+public enum CallInProgressStatus { Taken, TakenAndInRisk }
+
+/// <summary>
+/// The Call Status
+/// </summary>
+public enum CallStatus {
+
+    /// <summary>
+    /// Free to be taken
+    /// </summary>
+    Open,
+
+    /// <summary>
+    /// Currently handled by another volunteer
+    /// </summary>
+    InProgress,
+
+    /// <summary>
+    /// Closed by a volunteer
+    /// </summary>
+    Closed,
+    
+    /// <summary>
+    /// Hasn't been taken care of, or hasn't been done in time
+    /// </summary>
+    Expiered,
+
+    /// <summary>
+    /// Free to be taken but its close to its deadline
+    /// </summary>
+    OpenAndRisky,
+
+    /// <summary>
+    /// Currently handled by another volunteer but the call's deadline it close (Within the RiskRange range)
+    /// </summary>
+    InProgressAndRisky
+}
