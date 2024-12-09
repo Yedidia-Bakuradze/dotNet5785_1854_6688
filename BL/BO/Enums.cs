@@ -1,6 +1,6 @@
 ﻿namespace BO;
-public enum Roles { Admin, Volunteer, Undefined };
+public enum VolunteerType { Admin, Volunteer, Undefined };
 public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
-public enum TypeOfEnding { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
-public enum CallTypes { Undefined, FoodPreparation, FoodDelivery }
+public enum TypeOfClosedCall { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
+public enum CallType { Undefined, FoodPreparation, FoodDelivery }
 public enum CallStatus { Taken, TakenAndInRisk }

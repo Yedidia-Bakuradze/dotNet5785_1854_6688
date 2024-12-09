@@ -589,7 +589,7 @@ Please Choose The Operation That You Would Like To Use:
                     {
                         // Prompt for the call type
                         bool isValid;
-                        CallTypes callType;
+                        CallType callType;
                         do
                         {
                             Console.Write("Type Of Call (FoodPreparation,FoodDelivery): ");
@@ -597,7 +597,7 @@ Please Choose The Operation That You Would Like To Use:
                             isValid = Enum.TryParse(input, out callType);
                             if (!isValid)
                             {
-                                Console.WriteLine($"Error! Please provide a proper Type Of Call value ({CallTypes.FoodDelivery},{CallTypes.FoodPreparation})");
+                                Console.WriteLine($"Error! Please provide a proper Type Of Call value ({CallType.FoodDelivery},{CallType.FoodPreparation})");
                             }
                         } while (!isValid);
 
@@ -889,7 +889,7 @@ Type Of Ending: {TypeOfEnding}
                     {
                             Call result = s_dal?.Call?.Read(id) ??
                                     throw new DalDoesNotExistException($"The Call instance with ID of {id} hasn't been found");
-                            CallTypes Type = result.Type;
+                            CallType Type = result.Type;
                             string FullAddressCall = result.FullAddressCall;
                             double Latitude = result.Latitude;
                             double Longitude = result.Longitude;
@@ -908,7 +908,7 @@ ID: {result.Id}
                             //Request for a new Type Of Call value 
                             do
                             {
-                                Console.WriteLine($"Enter new Type Of Call from these options ({DO.CallTypes.FoodPreparation},{DO.CallTypes.FoodDelivery})");
+                                Console.WriteLine($"Enter new Type Of Call from these options ({DO.CallType.FoodPreparation},{DO.CallType.FoodDelivery})");
                                 Console.Write(">>> ");
 
                                 input = Console.ReadLine() ?? "";

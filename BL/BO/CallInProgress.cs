@@ -18,7 +18,7 @@ public class CallInProgress
     /// <summary>
     /// From DO.Call
     /// </summary>
-    public CallTypes TypeOfCall { get; set; }
+    public CallType TypeOfCall { get; set; }
 
     /// <summary>
     /// From DO.Call

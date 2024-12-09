@@ -40,7 +40,7 @@ public class Volunteer
 
     //Get: From the DO object
     //Set: Check if the user is a manager
-    public Roles Role { get; set; }
+    public VolunteerType Role { get; set; }
 
     //A Guesss: 
     //Get: From the DO object

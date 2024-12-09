@@ -15,7 +15,7 @@
 public record Call
 (
     int Id,
-    CallTypes Type,
+    CallType Type,
     string FullAddressCall,
     double Latitude,
     double Longitude,
@@ -24,5 +24,5 @@ public record Call
     DateTime? DeadLine = null
 )
 {
-    public Call() : this(0, CallTypes.Undefined, "", 0.0, 0.0, DateTime.Now) { }
+    public Call() : this(0, CallType.Undefined, "", 0.0, 0.0, DateTime.Now) { }
 };
