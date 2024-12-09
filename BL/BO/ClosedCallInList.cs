@@ -38,5 +38,5 @@ public class ClosedCallInList
     /// <summary>
     /// From Do.Assignment
     /// </summary>
-    public TypeOfClosedCall TypeOfClosing{ get; set; }
+    public ClosedCallType TypeOfClosedCall{ get; set; }
 }
