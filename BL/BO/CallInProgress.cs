@@ -54,4 +54,7 @@ public class CallInProgress
     /// Either: Taken, or TakenAndInRisk if the time that left is in the RiskRange area
     /// </summary>
     public CallStatus Status { get; set; }
+
+    public override string ToString() => this.ToStringProperty();
+
 }

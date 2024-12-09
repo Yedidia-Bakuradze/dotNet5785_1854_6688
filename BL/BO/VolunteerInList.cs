@@ -26,4 +26,8 @@ public class VolunteerInList
 
     // Type of the current call assigned to the volunteer // Taken from DO.Call entity
     public CallType callType { get; set; }
+    public override string ToString() => this.ToStringProperty();
+
+
+
 }
