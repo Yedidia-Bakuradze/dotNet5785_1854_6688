@@ -39,4 +39,8 @@ public class ClosedCallInList
     /// From Do.Assignment
     /// </summary>
     public ClosedCallType TypeOfClosedCall{ get; set; }
+
+
+    public override string ToString() => this.ToStringProperty();
+
 }

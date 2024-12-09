@@ -65,4 +65,6 @@ public class Call
     /// Every assingment which has been made due to this call, if none then null
     /// </summary>
     public List<BO.CallAssignment>? MyProperty { get; set; }
+
+    public override string ToString() => this.ToStringProperty();
 }
