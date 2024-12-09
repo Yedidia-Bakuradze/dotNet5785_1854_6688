@@ -4,7 +4,7 @@ namespace BO;
 public class OpenCallInList
 {
     // callId - unique identifier for the call // taken from Do.call entity
-    public int callId { get; init; }
+    public int CallId { get; init; }
 
     // TypeOfCall - the type of the call // taken from Do.call entity
     public CallType TypeOfCall { get; set; }
@@ -13,7 +13,7 @@ public class OpenCallInList
     public string? Description { get; set; }
 
     // callFullAddress - the full address of the call // taken from Do.call entity
-    public string callFullAddress { get; set; }
+    public string CallFullAddress { get; set; }
 
     // OpenningTime - the time when the call was opened // taken from Do.call entity
     public DateTime OpenningTime { get; set; }
