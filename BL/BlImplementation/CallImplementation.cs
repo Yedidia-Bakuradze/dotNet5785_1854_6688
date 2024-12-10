@@ -1,7 +1,7 @@
 ﻿
 namespace BlImplementation;
 using BlApi;
-
+using Helpers;
 using System.Collections.Generic;
 
 internal class CallImplementation : ICall
@@ -11,14 +11,18 @@ internal class CallImplementation : ICall
     {
         try
         {
-            // Check if the format is correct for each var
-            // Check if the vars are logically sound
-            
-            if(call.CallStartTime > call.CallDeadLine)
+            //check if the id is valid according to the format we chose in the CallManager
+            if (!CallManager.IsCallIdValid(call.Id)
+            {
+                throw new ArgumentException("The ID of the call is invalid");
+            }
+            // check if the times are valid
+            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
             {
                 throw new ArgumentException("The deadline of the call cannot be before the start time of the call");
             }
-
+            //check if the address is valid
+            //TODO:: using api.
             DO.Call newCall = new DO.Call
             {
                 Id = call.Id,
@@ -44,6 +48,7 @@ internal class CallImplementation : ICall
 
     public void DeleteCallRequest(int VolunteerId)
     {
+
         throw new NotImplementedException();
     }
 
