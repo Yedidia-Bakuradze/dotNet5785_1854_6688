@@ -6,6 +6,9 @@ public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
 public enum ClosedCallType { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 public enum CallType { Undefined, FoodPreparation, FoodDelivery }
 public enum CallInProgressStatus { Taken, TakenAndInRisk }
+public enum CallInListFields { Id, TypeOfCall, CallAddress, CallStartTime, EnteryTime, ClosingTime, TypeOfClosedCall }
+public enum OpenCallFields { Id, CallId, TypeOfCall, OpenningTime, TimeToEnd, LastVolunteerName, TimeElapsed, Status, TotalAlocations }
+public enum ClosedCallInListFields { Id, TypeOfCall, CallAddress, CallStartTime, EnteryTime, ClosingTime, TypeOfClosedCall }
 
 /// <summary>
 /// The Call Status
