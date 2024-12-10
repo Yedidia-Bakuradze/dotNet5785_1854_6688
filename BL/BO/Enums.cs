@@ -46,7 +46,6 @@ public enum CallStatus {
     InProgressAndRisky
 }
 
-
 public enum VolunteerInListField
 {
     Id ,
@@ -57,4 +56,18 @@ public enum VolunteerInListField
     TotalCallsExpiredByVolunteer ,
     CallId ,
     CallType
+}
+
+/// <summary>
+/// The enum which manages the base clock units
+/// </summary>
+public enum TimeUnit
+{
+    Seconds,
+    Minutes,
+    Hours,
+    Days,
+    Weeks,
+    Months,
+    Years
 }
