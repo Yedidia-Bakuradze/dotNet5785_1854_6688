@@ -440,13 +440,13 @@ static public class Initialization
                 Id = (s_ids.Count >=1)
                 ? s_ids[s_rand.Next(0, s_ids.Count-1)]
                 : s_rand.Next(200000000, 400000000),
-                Role = (i == 0) ? Roles.Admin : Roles.Volunteer,
+                Role = (i == 0) ? UserRole.Admin : UserRole.Volunteer,
                 FullName = s_names[i],
                 PhoneNumber = s_phoneNumbers[i],
                 Email = s_emails[i],
                 MaxDistanceToCall = s_rand.Next(1,30),
-                TypeOfRange = TypeOfRange.AirDistance,
-                Active = (i == 76) ? false : true,
+                RangeType = TypeOfRange.AirDistance,
+                IsActive = (i == 76) ? false : true,
                 Password = s_passwords[i % (s_passwords.Length-1)],
                 FullCurrentAddress = s_addresses[i % (s_addresses.Length-1)],
                 Latitude = s_latitudes[i % (s_latitudes.Length-1)],

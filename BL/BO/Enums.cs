@@ -1,7 +1,7 @@
 ﻿using Helpers;
 
 namespace BO;
-public enum VolunteerType { Admin, Volunteer, Undefined };
+public enum UserRole { Admin, Volunteer, Undefined };
 public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
 public enum ClosedCallType { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 public enum CallType { Undefined, FoodPreparation, FoodDelivery }

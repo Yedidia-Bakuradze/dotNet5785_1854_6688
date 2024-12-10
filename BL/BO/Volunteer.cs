@@ -42,12 +42,12 @@ public class Volunteer
 
     //Get: From the DO object
     //Set: Check if the user is a manager
-    public VolunteerType Role { get; set; }
+    public UserRole Role { get; set; }
 
     //A Guesss: 
     //Get: From the DO object
     //Set: Check if the modifier is a manager / the current user
-    public bool Active { get; set; }
+    public bool IsActive { get; set; }
 
     //Get: From the DO object
     //Set: Check logics (Val > 0)
@@ -55,7 +55,7 @@ public class Volunteer
 
     //For display only
     //[Bounus]: Calculation of the distance would be done according to this field value
-    public TypeOfRange TypeOfRange { get; set; }
+    public TypeOfRange RangeType { get; set; }
 
     //Get: Find all the 'Treated' calls and sum them up
     public int NumOfHandledCalls { get; }
