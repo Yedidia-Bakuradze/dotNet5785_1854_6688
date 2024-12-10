@@ -8,8 +8,8 @@
 /// <param name="PhoneNumber">The volunteer's phone number, which should start with 0 and be exactly 10 digits long.</param>
 /// <param name="Email">The volunteer's email address for communication.</param>
 /// <param name="MaxDistanceToCall">The maximum distance (in kilometers) the volunteer is willing to travel when called for assignments. Null if no limit is set.</param>
-/// <param name="TypeOfRange">The type of range preference for assignments (e.g., local, regional, etc.).</param>
-/// <param name="Active">Indicates whether the volunteer is currently active (true) or inactive (false) in the system.</param>
+/// <param name="RangeType">The type of range preference for assignments (e.g., local, regional, etc.).</param>
+/// <param name="IsActive">Indicates whether the volunteer is currently active (true) or inactive (false) in the system.</param>
 /// <param name="Password">An optional password for the volunteer's access, null if not set.</param>
 /// <param name="FullCurrentAddress">The full current address of the volunteer, null if not provided.</param>
 /// <param name="Latitude">The latitude of the volunteer's location, for mapping purposes; null if not specified.</param>
@@ -17,18 +17,18 @@
 public record Volunteer
 (
     int Id,// Valid check digit
-    Roles Role,
+    UserRole Role,
     string FullName,
     string PhoneNumber,//Starts with 0, 10 digit long
     string Email,
     double? MaxDistanceToCall,
-    TypeOfRange TypeOfRange,
-    bool Active,
+    TypeOfRange RangeType,
+    bool IsActive,
     string? Password = null,
     string? FullCurrentAddress = null,
     double? Latitude = null,
     double? Longitude = null
 )
 {
-    public Volunteer() : this(0, Roles.Undefined, "","","",0, TypeOfRange.AirDistance,false) { }
+    public Volunteer() : this(0, UserRole.Undefined, "","","",0, TypeOfRange.AirDistance,false) { }
 };

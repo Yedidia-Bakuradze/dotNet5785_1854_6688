@@ -641,16 +641,16 @@ Please Choose The Operation That You Would Like To Use:
                         int id = requestIntValue("Volunteer ID: ");
 
                         // Prompt for the role of the volunteer
-                        Roles role;
+                        UserRole role;
                         bool isValid;
                         do
                         {
-                            Console.Write($"Volunteer's Access Role ({Roles.Admin} / {Roles.Volunteer}): ");
+                            Console.Write($"Volunteer's Access Role ({UserRole.Admin} / {UserRole.Volunteer}): ");
                             string input = Console.ReadLine() ?? "";
                             isValid = Enum.TryParse(input, out role);
                             if (!isValid)
                             {
-                                Console.WriteLine($"Error! Please provide a proper Role value ({Roles.Admin} / {Roles.Volunteer})");
+                                Console.WriteLine($"Error! Please provide a proper Role value ({UserRole.Admin} / {UserRole.Volunteer})");
                             }
 
                         } while (!isValid);
@@ -722,10 +722,10 @@ Please Choose The Operation That You Would Like To Use:
                             PhoneNumber = phoneNumber,
                             Email = email,
                             MaxDistanceToCall = maxDistance,
-                            Active = active,
+                            IsActive = active,
                             Password = password,
                             FullCurrentAddress = address,
-                            TypeOfRange = typeOfRange,
+                            RangeType = typeOfRange,
                             Latitude = lat,
                             Longitude = lng,
                         });
@@ -1053,13 +1053,13 @@ DeadLine : {DeadLine}
                             Volunteer result = s_dal?.Volunteer?.Read(id) ??
                                         throw new DalDoesNotExistException($"The Volunteer instance with ID of {id} hasn't been found");
                             int Id = result.Id;
-                            Roles Role = result.Role;
+                            UserRole Role = result.Role;
                             string FullName = result.FullName;
                             string PhoneNumber = result.PhoneNumber;
                             string Email = result.Email;
                             double? MaxDistanceToCall = result.MaxDistanceToCall;
-                            TypeOfRange TypeOfRange=result.TypeOfRange;
-                            bool Active= result.Active;
+                            TypeOfRange TypeOfRange=result.RangeType;
+                            bool Active= result.IsActive;
                             string? Password = result.Password;
                             string? FullCurrentAddress = result.FullCurrentAddress;
                             double? Latitude = result.Latitude;
@@ -1076,7 +1076,7 @@ ID: {result.Id}
 ");
 
                             //Request for a new Role value for the volunteer
-                            Console.WriteLine($"Enter new Role value for the role ({DO.Roles.Admin},{DO.Roles.Volunteer})");
+                            Console.WriteLine($"Enter new Role value for the role ({DO.UserRole.Admin},{DO.UserRole.Volunteer})");
                             Console.Write(">>> ");
                             Enum.TryParse(input, out Role);
 
@@ -1144,8 +1144,8 @@ Full Name : {result.FullName}
 Phone Number : {result.PhoneNumber}
 Email : {result.Email}
 Max Distance To Call : {result.MaxDistanceToCall}
-Type Of Range : {result.TypeOfRange}
-Active : {result.Active}
+Type Of Range : {result.RangeType}
+Active : {result.IsActive}
 Password : {result.Password}
 Full Current Address : {result.FullCurrentAddress}
 Latitude : {result.Latitude}
@@ -1181,8 +1181,8 @@ Longitude : {Longitude}
                                 PhoneNumber = PhoneNumber,
                                 Email = Email,
                                 MaxDistanceToCall = MaxDistanceToCall,
-                                TypeOfRange = TypeOfRange,
-                                Active = Active,
+                                RangeType = TypeOfRange,
+                                IsActive = Active,
                                 Password = Password,
                                 FullCurrentAddress = FullCurrentAddress,
                                 Latitude = Latitude,
@@ -1286,8 +1286,8 @@ Longitude : {Longitude}
                 Full Name: {volunteer.FullName}
                 Email Address: {volunteer.Email}
                 Max Distance From The Call: {volunteer.MaxDistanceToCall}
-                Type Of Distance Range: {volunteer.TypeOfRange}
-                Active: {volunteer.Active}
+                Type Of Distance Range: {volunteer.RangeType}
+                Active: {volunteer.IsActive}
                 Password: {volunteer.Password}
                 Living Address: {volunteer.FullCurrentAddress}
                 Living Address Latitude: {volunteer.Latitude}
