@@ -8,14 +8,18 @@ internal class VolunteerImplementation : IVolunteer
     //The contract which we will make all the action with when using the Dal layer
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+
+
     /// <summary>
     /// This method accepts a well defiend BO.Volunteer variabel which is needed to be added to the dataabse
     /// It would check its logics again (like in the update action)
-    /// It would cehck its formmting again (like in the update action)
-    /// It would create a new DO.Volunteer entity using the volunteer's values, the it would call the Create action from the DAL layer
+    /// It would check its format again (like in the update action)
+    /// It would create a new DO.Volunteer entity using the volunteer's values,
+    /// Then it would call the Create action from the DAL layer
     /// If such a volunteer already exists it would handle the thrown excpetion by throwing a new exception to the upper layers
     /// </summary>
     /// <param name="volunteer"></param>
+    /// <exception cref="BoAlreadyExistsException">A</exception>
     public void AddVolunteer(BO.Volunteer volunteer)
     {
         try

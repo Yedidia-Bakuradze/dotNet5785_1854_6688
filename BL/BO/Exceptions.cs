@@ -29,6 +29,12 @@ public class BoInvalidEntityFieldFormatting : Exception
     public BoInvalidEntityFieldFormatting(string? msg) : base(msg) { }
 }
 
+[Serializable]
+public class BoUnimplementedMethodOrFunction : Exception
+{
+    public BoUnimplementedMethodOrFunction(string? msg) : base(msg) { }
+}
+
 
 
 #endregion BL
