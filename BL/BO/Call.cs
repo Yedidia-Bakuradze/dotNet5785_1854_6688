@@ -47,7 +47,7 @@ public class Call
     /// Get: From DO.Call
     /// Set: From DO.Call which is calculated by the system clock
     /// </summary>
-    public DateTime CalStartTime { get; init; }
+    public DateTime CallStartTime { get; init; }
 
     /// <summary>
     /// Get: From DO.Call
