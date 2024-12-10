@@ -1,4 +1,6 @@
 ﻿
+using Helpers;
+
 namespace BO;
 
 public class ClosedCallInList
