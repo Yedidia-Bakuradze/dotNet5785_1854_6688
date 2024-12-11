@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using Helpers;
 using System;
 
 internal class VolunteerImplementation : IVolunteer
@@ -109,11 +110,16 @@ internal class VolunteerImplementation : IVolunteer
             //Get the Dal call
             DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
                 ?? throw new BO.BoDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
-            
+
             //TODO: Calculate the time left for the assignment
 
-            //TODO: Calculate the distance
-
+            //Calculate the distance
+            double distance = -1.0;
+            if (volunteer.FullCurrentAddress != null)
+            {
+                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!,volunteerCall.FullAddressCall,volunteer.RangeType);
+            }
+            
             //Create the CallInProgress intance for the Volunteer's field
             volunteerCallInProgress = new BO.CallInProgress
             {
@@ -126,7 +132,7 @@ internal class VolunteerImplementation : IVolunteer
                 EntryTime = volunteerAssignment.TimeOfStarting,
                 LastTimeForClosingTheCall = volunteerCall.DeadLine,
                 //TODO: Status
-                //TODO: DistanceFromAssignedVolunteer
+                DistanceFromAssignedVolunteer = distance,
             };
         }
 
