@@ -2,6 +2,7 @@
 
 using BO;
 using DO;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -10,51 +11,83 @@ using System.Xml.Linq;
 internal static class VolunteerManager
 {
     //API Configurations
-    static readonly string URI = "https://maps.googleapis.com/maps/api/geocode/";
+    static readonly string URI = "https://maps.googleapis.com/maps/api/";
     static readonly string APIKEY = "AIzaSyBjTxg6_sTOtBKHkaBJ7bkCpk8ylmjLMGk";
 
-    //private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
-    internal static (double?, double?) GetGeoCordinates(string streetAddress)
-    {
-        //Dealocates the memory after exiting the scope
-        using HttpClient client = new HttpClient();
+    private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
 
-        //Builds the URL requests
-        Uri requestUri = new Uri(URI + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
+    /// <summary>
+    /// Converts degrees to radian
+    /// </summary>
+    /// <param name="angle">The requested degress value</param>
+    /// <returns>The radian representation of the given degree</returns>
+    private static double ToRadians(double angle)
+    {
+        return angle * (Math.PI / 180);
+    }
+
+    /// <summary>
+    /// This method recives an Http response value and converts it to a XElement
+    /// </summary>
+    /// <param name="httpResponse">The string result of the API call</param>
+    /// <returns>The root XElement value</returns>
+    /// <exception cref="BoHttpGetException">Throws an exception if the Http response was corrupted The response status was not OK</exception>
+    private static XElement HttpGetXmlReponse(Uri requestUri)
+    {
+        using HttpClient client = new HttpClient();
         
         //Accepts the GET response
-        string xmlTree = new HttpClient().GetAsync(requestUri.AbsoluteUri)
+        string httpResponse = client.GetAsync(requestUri.AbsoluteUri)
                         .Result
                         .Content
                         .ReadAsStringAsync()
                         .Result;
 
-        //Checks the status of the call
-        XElement status;
+        //Try to parse to Xml content value
+        XElement root = XElement.Parse(httpResponse).Element("status")
+                        ?? throw new BoHttpGetException("Http Exception: Response is unable to be converted to an XML file");
+        
+        //If the GET response content is not good then the address it coropted
+        if (root?.Value != "OK")
+        {
+            throw new BoHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
+        }
+        return XElement.Parse(httpResponse);
+    }
+
+    /// <summary>
+    /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
+    /// </summary>
+    /// <param name="streetAddress">The requested street address to convert to cordinates</param>
+    /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
+    private static (double?, double?) GetGeoCordinates(string streetAddress)
+    {
+        //Builds the URL requests
+        Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
+        
         try
         {
-            status = XElement.Parse(xmlTree).Element("status")
-                ?? throw new BoHttpGetException("Http Exception: Response is unable to be converted to an XML file");
-            //If the GET response content is not good then the address it coropted
-            if(status?.Value != "OK")
-            {
-                throw new BoHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
-            }
+            XElement res = HttpGetXmlReponse(requestUri);
+            res = res
+                    ?.Element("result")
+                    ?.Element("geometry")
+                    ?.Element("location")
+                    ?? throw new BoXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
+            return ((double?)res?.Element("lat"), (double?)res?.Element("lng"));
+
         }
-        catch(Exception ex)
+        catch (BO.BoHttpGetException ex)
         {
+            Console.WriteLine(ex.Message);
+            return (null, null);
+        }
+        catch (BO.BoXmlElementDoesntExsist ex)
+        {
+            Console.WriteLine(ex.Message);
             return (null, null);
         }
 
 
-        //Gets the location element which holds the cordinates
-        XElement? locationElement = XElement.Parse(xmlTree)
-                                        ?.Element("result")
-                                        ?.Element("geometry")
-                                        ?.Element("location");
-
-        
-        return ((double?)locationElement?.Element("lat"), (double?)locationElement?.Element("lng"));
     }
 
     /// <summary>
@@ -62,7 +95,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="id">The uesr's id</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    internal static bool IsVolunteerIdValid(int id)
+    private static bool IsVolunteerIdValid(int id)
     {
         // Convert the integer ID to a string for easier manipulation
         string idStr = id.ToString();
@@ -95,7 +128,7 @@ internal static class VolunteerManager
     /// <param name="name">The uesr's full name</param>
     /// <returns>Boolean value whether its valid or not</returns>
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
-    internal static bool IsValidFullName(string name)
+    private static bool IsValidFullName(string name)
     {
         // Regex pattern to check if there is at least one blank space, every word is at least two letters long,
         // and all characters are either letters or blank spaces
@@ -109,7 +142,7 @@ internal static class VolunteerManager
     /// <param name="phoneNumber">The uesr's phone number</param>
     /// <returns>Boolean value whether its valid or not</returns>
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
-    internal static bool IsValidPhoneNumber(string phoneNumber)
+    private static bool IsValidPhoneNumber(string phoneNumber)
     {
         string pattern = @"^0\d{9}$";
         return Regex.IsMatch(phoneNumber, pattern);
@@ -121,7 +154,7 @@ internal static class VolunteerManager
     /// <param name="email">The uesr's email address</param>
     /// <returns>Boolean value whether its valid or not</returns>
     /// <exception cref="Exception">UnImplemented exception</exception>
-    internal static bool IsValidEmailAddress(string email)
+    private static bool IsValidEmailAddress(string email)
     {
         // Regex pattern to check if the email address is valid
         string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
@@ -134,7 +167,7 @@ internal static class VolunteerManager
     /// <param name="pasword">The uesr's password</param>
     /// <returns>Boolean value whether its valid or not</returns>
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
-    internal static bool IsValidPassword(string? password)
+    private static bool IsValidPassword(string? password)
     {
         //TODO: [Bonus]: eyncrypt the password using SHA256
         
@@ -163,7 +196,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="streetAddress">The uesr's street address</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    internal static bool IsStreetAddressValid(string? streetAddress)
+    private static bool IsStreetAddressValid(string? streetAddress)
     {
         //If the user doesn't have a registered address - its ok because its optional
         if (streetAddress == null)
@@ -179,7 +212,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="distance">The uesr's max distance</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    internal static bool IsMaxDistnaceValid(double? distance)
+    private static bool IsMaxDistnaceValid(double? distance)
     {
         return (distance == null) ? true : distance >= 0.0;
     }
@@ -201,4 +234,95 @@ internal static class VolunteerManager
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
             
     }
+
+    /// <summary>
+    /// This method calculates the air distance between the given streets
+    /// </summary>
+    /// <param name="origin">The departure street</param>
+    /// <param name="destanation">The arrival street</param>
+    /// <returns>The distance in KM</returns>
+    private static double CalculatedAirDistance(string origin, string destanation)
+    {
+        (double? lat1, double? lon1) = GetGeoCordinates(origin);
+        (double? lat2, double? lon2) = GetGeoCordinates(destanation);
+
+        if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
+        {
+            throw new BO.BoInvalidEntityDetails("BL: One or both of the provided addresses could not be geocoded.");
+        }
+
+        double R = 6371; // Radius of the Earth in kilometers
+        double dLat = ToRadians((double)(lat2 - lat1));
+        double dLon = ToRadians((double)(lon2 - lon1));
+        double lat1Rad = ToRadians((double)lat1);
+        double lat2Rad = ToRadians((double)lat2);
+
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        return R * c; // Distance in kilometers
+    }
+
+    /// <summary>
+    /// This method calculates the walking distance between the given streets
+    /// </summary>
+    /// <param name="origin">The departure street</param>
+    /// <param name="destanation">The arrival street</param>
+    /// <returns>The distance in KM</returns>
+    private static double CalculatedWalkingDistance(string origin, string destanation)
+    {
+        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}&destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.walking}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
+        XElement root = HttpGetXmlReponse(requestUri);
+
+        //Issue 13: Fix the possible null value
+        return (double)(Int32.Parse
+            (root
+                ?.Element("row")
+                ?.Element("element")
+                ?.Element("distance")
+                ?.Element("value").Value.ToString()
+            )) / 1000.0;
+    }
+
+    /// <summary>
+    /// This method calculates the driving distance between the given streets
+    /// </summary>
+    /// <param name="origin">The departure street</param>
+    /// <param name="destanation">The arrival street</param>
+    /// <returns>The distance in KM</returns>
+    private static double CalculatedDrivingDistance(string origin, string destanation)
+    {
+        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}&destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.driving}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
+        XElement root = HttpGetXmlReponse(requestUri);
+
+        //Issue 13: Fix the possible null value
+        return (double)(Int32.Parse
+            (root
+                ?.Element("row") 
+                ?.Element("element")
+                ?.Element("distance")
+                ?.Element("value").Value.ToString()
+            ))/1000.0;
+    }
+
+
+    /// <summary>
+    /// This method returns the distance between the volunteer to the call depending on the range type which is requested to be calculated with
+    /// </summary>
+    /// <param name="volunteerAddress">The Volunteer's address</param>
+    /// <param name="callAddress">The call's address</param>
+    /// <param name="typeOfRange">The specified range, either Air, Walking or Driving distance</param>
+    /// <returns>The distnace in KM calculated as requested</returns>
+    internal static double CalculateDistanceFromVolunteerToCall(string volunteerAddress, string callAddress, DO.TypeOfRange typeOfRange)
+    //Issue 14: Switch from using the addresses to use the cordinates
+        => typeOfRange switch
+    {
+        DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress) ,
+            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress) ,
+            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress),
+            _ => throw new BO.BoInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
+        };
+
 }

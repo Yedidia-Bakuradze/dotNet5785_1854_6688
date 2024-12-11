@@ -1,6 +1,5 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
 using System;
 
 internal class VolunteerImplementation : IVolunteer
@@ -27,7 +26,7 @@ internal class VolunteerImplementation : IVolunteer
             //Check logics and formmating
             if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
             {
-                throw new BoInvalidEntityDetails($"BL-DAL Error: When craeting new Volunteer entity: For id: {volunteer.Id}");
+                throw new BoInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
             }
 
             //Create Dal Volunteer entity
@@ -53,7 +52,7 @@ internal class VolunteerImplementation : IVolunteer
         catch(DO.DalAlreadyExistsException ex)
         {
             //Throw new BL excpetion to the upper layers
-            throw new BoAlreadyExistsException($"BL: Such object already exists in the database",ex);
+            throw new BoAlreadyExistsException($"BL-DAL: Such object already exists in the database",ex);
         }
     }
 
@@ -83,14 +82,58 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch(DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException($"BL: Volunteer {id} doesn't exists", ex);
+            throw new BO.BoDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
         }
 
     }
 
+    /// <summary>
+    /// This method accepts an id value, calls the Read method from DAL, using the returned value it creates a new BO.Volunteer entity,
+    /// also, the method adds a related call to the volunteer in the BO.CallInProgress field, adds to the created BO.Volunteer entity and retuns it.
+    /// If such volunteer hasn't been found, the system will throw an exception which would be taken care of in the BL layer and which then will throw an exception to the upper layer
+    /// </summary>
+    /// <param name="id">The requersted volunteer's id</param>
+    /// <returns>An BO.Volunteer entity which contains the requested entity's values and the current in progress call which is taken care of by the volunteer</returns>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-        throw new NotImplementedException();
+        DO.Volunteer volunteer = _dal.Volunteer.Read(id)
+            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
+
+        DO.Assignment? volunteerAssignment = _dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
+        BO.CallInProgress? volunteerCallInProgress = null;
+        
+        //If there is an assingment there is a call to create
+        if(volunteerAssignment != null)
+        {
+            //Get the Dal call
+            DO.Call volunteerCall = _dal.Call.Read(call => call.Id == volunteerAssignment.Called)
+                ?? throw new BO.BoDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.Called}");
+            
+            //TODO: Calculate the time left for the assignment
+
+            //TODO: Calculate the distance
+
+            //Create the CallInProgress intance for the Volunteer's field
+            volunteerCallInProgress = new BO.CallInProgress
+            {
+                Id = volunteerAssignment.Id,
+                CallId = volunteerCall.Id,
+                OpenningTime = volunteerCall.OpeningTime,
+                Description = volunteerCall.Description,
+                EmailAddress = volunteer.Email,
+                TypeOfCall = (BO.CallType)volunteerCall.Type,
+                EntryTime = volunteerAssignment.TimeOfStarting,
+                LastTimeForClosingTheCall = volunteerCall.DeadLine,
+                //TODO: Status
+                //TODO: DistanceFromAssignedVolunteer
+            };
+        }
+
+        //Create the BO Volunteer
+        return new BO.Volunteer
+        {
+
+        };
     }
 
     public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField)
