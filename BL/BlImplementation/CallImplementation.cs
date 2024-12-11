@@ -12,7 +12,7 @@ internal class CallImplementation : ICall
         try
         {
             //check if the id is valid according to the format we chose in the CallManager
-            if (!CallManager.IsCallIdValid(call.Id)
+            if (!CallManager.IsCallIdValid(call.Id))
             {
                 throw new ArgumentException("The ID of the call is invalid");
             }
