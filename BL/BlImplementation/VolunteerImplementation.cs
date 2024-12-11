@@ -41,7 +41,9 @@ internal class VolunteerImplementation : IVolunteer
                 MaxDistanceToCall = volunteer.MaxDistanceToCall,
                 RangeType = (DO.TypeOfRange)Enum.Parse(typeof(DO.TypeOfRange), volunteer.RangeType.ToString()),
                 IsActive = volunteer.IsActive,
-                Password = volunteer.Password,
+                Password = volunteer.Password == null
+                        ? null
+                        : VolunteerManager.GetSHA256HashedPassword(volunteer.Password),
                 FullCurrentAddress = volunteer.FullCurrentAddress,
                 Latitude = volunteer.Latitude,
                 Longitude = volunteer.Longitude
@@ -137,8 +139,6 @@ internal class VolunteerImplementation : IVolunteer
         //Create the BO Volunteer
         return VolunteerManager.ConvertDoVolunteerToBoVolunteer(volunteer, volunteerCallInProgress);
     }
-
-
 
     /// <summary>
     /// This method returns an enumarable of VolunteerInList entities.
