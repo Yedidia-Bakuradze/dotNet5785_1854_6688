@@ -325,4 +325,31 @@ internal static class VolunteerManager
             _ => throw new BO.BoInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
+    /// <summary>
+    /// This method converts from DO version of Volunteer to its BO version
+    /// </summary>
+    /// <param name="volunteer">The original DO.Volunteer variable</param>
+    /// <param name="callInProgress">The CallInProgress variable which is related to the volunteer</param>
+    /// <returns>A new BO Volunteer variable</returns>
+    internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
+    {
+        return new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            CurrentCall = callInProgress,
+            Email = volunteer.Email,
+            FullCurrentAddress = volunteer.FullCurrentAddress,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            MaxDistanceToCall = volunteer.MaxDistanceToCall,
+            Password = volunteer.Password,
+            PhoneNumber = volunteer.PhoneNumber,
+            RangeType = (BO.TypeOfRange)volunteer.RangeType,
+            Role = (BO.UserRole)volunteer.Role,
+            FullName = volunteer.FullName,
+            IsActive = volunteer.IsActive,
+        };
+    }
+
+
 }

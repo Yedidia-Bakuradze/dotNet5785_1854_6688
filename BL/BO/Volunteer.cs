@@ -69,8 +69,7 @@ public class Volunteer
 
     //Holds the call which is handled otherwise: null
 
-    //TODO: Add the CallInProgress class in the BO folder
-    public BO.CallInProgress? CurrentCall { get; }
+    public BO.CallInProgress? CurrentCall { get; set; }
     public override string ToString() => this.ToStringProperty();
 
 

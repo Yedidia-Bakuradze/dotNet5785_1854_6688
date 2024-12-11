@@ -104,14 +104,12 @@ internal class VolunteerImplementation : IVolunteer
         DO.Assignment? volunteerAssignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
         BO.CallInProgress? volunteerCallInProgress = null;
         
-        //If there is an assingment there is a call to create
+        //If there is an assingment - there is a call to create
         if(volunteerAssignment != null)
         {
             //Get the Dal call
             DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
                 ?? throw new BO.BoDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
-
-            //TODO: Calculate the time left for the assignment
 
             //Calculate the distance
             double distance = -1.0;
@@ -131,16 +129,13 @@ internal class VolunteerImplementation : IVolunteer
                 TypeOfCall = (BO.CallType)volunteerCall.Type,
                 EntryTime = volunteerAssignment.TimeOfStarting,
                 LastTimeForClosingTheCall = volunteerCall.DeadLine,
-                //TODO: Status
+                Status = CallManager.GetStatus(volunteerCall.Id),
                 DistanceFromAssignedVolunteer = distance,
             };
         }
 
         //Create the BO Volunteer
-        return new BO.Volunteer
-        {
-
-        };
+        return VolunteerManager.ConvertDoVolunteerToBoVolunteer(volunteer,volunteerCallInProgress);
     }
 
     public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField)
