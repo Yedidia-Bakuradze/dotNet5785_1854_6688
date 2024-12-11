@@ -577,7 +577,7 @@ Please Choose The Operation That You Would Like To Use:
                         //Creation of the assignment entity
                         ss_dal?.Assignment?.Create(new Assignment
                         {
-                            Called = callId,
+                            CallId = callId,
                             VolunteerId = volunteerId,
                             TimeOfStarting = start,
                             TimeOfEnding = end,
@@ -761,7 +761,7 @@ Please Choose The Operation That You Would Like To Use:
                         {
                             Assignment result = ss_dal?.Assignment?.Read(id) ?? 
                                 throw new DalDoesNotExistException($"The Assignment instance with Id of {id} hasn't been found");
-                            int Called = result.Called ;
+                            int Called = result.CallId ;
                             int VolunteerId = result.VolunteerId ;
                             DateTime TimeOfStarting = result.TimeOfStarting;
                             DateTime? TimeOfEnding = result.TimeOfEnding ;
@@ -771,7 +771,7 @@ Please Choose The Operation That You Would Like To Use:
 ---------------------------------------
 Assignment Object
 ID: {result.Id}
-CallId: {result.Called}
+CallId: {result.CallId}
 VolunteerId: {result.VolunteerId}
 ---------------------------------------
 
@@ -850,7 +850,7 @@ VolunteerId: {result.VolunteerId}
 ----------------------------------------
 Assignment Object Update - Old Version
 Assignment ID: {result.Id}                 --->
-Call ID: {result.Called}                   --->
+Call ID: {result.CallId}                   --->
 Volunteer ID: {result.VolunteerId}         --->
 Time Of Starting: {result.TimeOfStarting}  --->
 Time Of Ending: {result.TimeOfEnding }     --->
@@ -875,7 +875,7 @@ Type Of Ending: {TypeOfEnding}
                             Assignment newAssignment = new Assignment()
                             {
                                 Id = result.Id,
-                                Called  = Called ,
+                                CallId  = Called ,
                                 VolunteerId  = VolunteerId ,
                                 TimeOfStarting = TimeOfStarting,
                                 TimeOfEnding = TimeOfEnding,
@@ -1237,7 +1237,7 @@ Longitude : {Longitude}
             ---------------------------------------------------------------
                     
                 Assignment ID: {assignment.Id}
-                Related Call ID: {assignment.Called}
+                Related Call ID: {assignment.CallId}
                 Related Volunteer ID: {assignment.VolunteerId}
                 Start Time: {assignment.TimeOfStarting}
                 Finish Time: {assignment.TimeOfEnding}

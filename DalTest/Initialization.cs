@@ -8,11 +8,11 @@ using System.Collections.Generic;
 
 static public class Initialization
 {
-    private static IDal? ss_dal;
-    //private static IAssignment? ss_dalAssignment; // stage 1
-    //private static ICall? ss_dalCall; // stage 1
-    //private static IVolunteer? ss_dalVolunteer; // stage 1
-    //private static IConfig? ss_dalConfig; // stage 1
+    private static IDal? s_dal;
+    //private static IAssignment? s_dalAssignment; // stage 1
+    //private static ICall? s_dalCall; // stage 1
+    //private static IVolunteer? s_dalVolunteer; // stage 1
+    //private static IConfig? s_dalConfig; // stage 1
 
     private static readonly Random s_rand = new();
 
@@ -338,9 +338,9 @@ static public class Initialization
     private static void createAssignments()
     {
         //Gets dbs
-        List<Call> listOfCalls = ss_dal?.Call?.ReadAll().ToList()
+        List<Call> listOfCalls = s_dal?.Call?.ReadAll().ToList()
              ?? throw new DalUnGeneratedDependedList("List of Calls hasn't been generated yet");
-        List<Volunteer> listOfVolunteers = ss_dal?.Volunteer?.ReadAll().ToList()
+        List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
             ?? throw new DalUnGeneratedDependedList("List of Volunteers hasn't been generated yet");
 
         Volunteer currentVolunteer;
@@ -356,7 +356,7 @@ static public class Initialization
             //Calculates the delta time between the opening and closing time of the call    
             TimeSpan delta = (currentCall.DeadLine != null)
                 ? (TimeSpan) (currentCall.DeadLine - currentCall.OpeningTime)
-                : ss_dal!.Config!.Clock.AddDays(31) - currentCall.OpeningTime;
+                : s_dal!.Config!.Clock.AddDays(31) - currentCall.OpeningTime;
 
             //Sets the start and end date based on the delta time that has been calculated   
             DateTime start = currentCall.OpeningTime.AddDays(s_rand.Next(0,delta.Days));
@@ -364,7 +364,7 @@ static public class Initialization
             //Calculates the delta time between the selected start time and the closing time of the call
             delta = (currentCall.DeadLine != null)
                 ? (TimeSpan)(currentCall.DeadLine - start)
-                : ss_dal!.Config!.Clock.AddDays(31) - start;
+                : s_dal!.Config!.Clock.AddDays(31) - start;
 
             DateTime end = start.AddDays(s_rand.Next(0, delta.Days));
 
@@ -384,7 +384,7 @@ static public class Initialization
             };
             try
             {
-                ss_dal?.Assignment?.Create(newAssignment);
+                s_dal?.Assignment?.Create(newAssignment);
             }catch(Exception error)
             {
                 Console.WriteLine(error.Message);
@@ -399,8 +399,8 @@ static public class Initialization
         for (int i = 0;i < 100;i++)
         {
             Console.WriteLine($"Call Number {i+1} has been created!");
-            DateTime start = ss_dal!.Config!.Clock.AddDays(s_rand.Next(-31, -5));
-            int deltaDays = (ss_dal.Config!.Clock - start).Days;
+            DateTime start = s_dal!.Config!.Clock.AddDays(s_rand.Next(-31, -5));
+            int deltaDays = (s_dal.Config!.Clock - start).Days;
             int position = s_rand.Next(0, s_addresses.Length-1);
             DateTime end = (i < 30 && i >= 20)
                 ? start.AddDays(s_rand.Next(1, deltaDays)) // Expired
@@ -420,7 +420,7 @@ static public class Initialization
             };
             try
             {
-                ss_dal?.Call?.Create(newCall);
+                s_dal?.Call?.Create(newCall);
             }catch(Exception error)
             {
                 Console.WriteLine(error.Message);
@@ -457,7 +457,7 @@ static public class Initialization
             }
             try
             {
-                ss_dal?.Volunteer?.Create(newVolunteer);
+                s_dal?.Volunteer?.Create(newVolunteer);
             }catch(Exception error)
             {
                 Console.WriteLine(error.Message);
@@ -477,22 +477,22 @@ static public class Initialization
     //public static void Do(IDal dal) // stage 2
     public static void Do() // stage 4
     {
-        //ss_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
-        ss_dal = DalApi.Factory.Get; // stage 4
+        //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+        s_dal = DalApi.Factory.Get; // stage 4
         
         //Assignment of the interfaces
-        //ss_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
-        //ss_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
-        //ss_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
-        //ss_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
+        //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
+        //s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
+        //s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
+        //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
 
         //Resetting the system
         Console.WriteLine("Reset Configuration values and List values...");
-        //ss_dalConfig.Reset(); // Stage 1
-        //ss_dalAssignment.DeleteAll(); // Stage 1
-        //ss_dalCall.DeleteAll(); // Stage 1
-        //ss_dalVolunteer.DeleteAll(); // Stage 1
-        ss_dal.ResetDB();
+        //s_dalConfig.Reset(); // Stage 1
+        //s_dalAssignment.DeleteAll(); // Stage 1
+        //s_dalCall.DeleteAll(); // Stage 1
+        //s_dalVolunteer.DeleteAll(); // Stage 1
+        s_dal.ResetDB();
         Console.WriteLine("Initializing Db list ...");
         try
         {

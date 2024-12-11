@@ -56,6 +56,15 @@ public class BoEntityRecordIsNotEmpty : Exception
 }
 
 /// <summary>
+/// This exception handles cases where the past enum value is not valid for the operation that the switch depends on
+/// </summary>
+[Serializable]
+public class BoInvalidDistanceCalculationException : Exception
+{
+    public BoInvalidDistanceCalculationException(string? msg) : base(msg) { }
+}
+
+/// <summary>
 /// This exception is used when there is a failur in Http requests
 /// </summary>
 [Serializable]
@@ -64,6 +73,18 @@ public class BoHttpGetException : Exception
     public BoHttpGetException(string? msg) : base(msg) { }
 }
 
+/// <summary>
+/// This exception is thrown when the reqiered XElement tag is not found in the given XML tree
+/// </summary>
+[Serializable]
+public class BoXmlElementDoesntExsist : Exception
+{
+    public BoXmlElementDoesntExsist(string? msg) : base(msg) { }
+}
+
+/// <summary>
+/// This exception is thrown when 
+/// </summary>
 [Serializable]
 public class BoForbidenActionExeption : Exception
 {

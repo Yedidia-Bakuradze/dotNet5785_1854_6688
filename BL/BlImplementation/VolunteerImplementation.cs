@@ -1,6 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
+using Helpers;
 using System;
 
 internal class VolunteerImplementation : IVolunteer
@@ -27,7 +27,7 @@ internal class VolunteerImplementation : IVolunteer
             //Check logics and formmating
             if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
             {
-                throw new BoInvalidEntityDetails($"BL-DAL Error: When craeting new Volunteer entity: For id: {volunteer.Id}");
+                throw new BO.BoInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
             }
 
             //Create Dal Volunteer entity
@@ -54,7 +54,7 @@ internal class VolunteerImplementation : IVolunteer
         catch(DO.DalAlreadyExistsException ex)
         {
             //Throw new BL excpetion to the upper layers
-            throw new BoAlreadyExistsException($"BL: Such object already exists in the database",ex);
+            throw new BO.BoAlreadyExistsException($"BL-DAL: Such object already exists in the database",ex);
         }
     }
 
@@ -68,30 +68,79 @@ internal class VolunteerImplementation : IVolunteer
     public void DeleteVolunteer(int id)
     {
         //Tries to find such volunteer
-        DO.Volunteer volunteer = _dal.Volunteer.Read(id)
-            ?? throw new BoDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
+        DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
+            ?? throw new BO.BoDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
 
         //Checks if the volunteer is in any records of assignments
-        if(_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
+        if(s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
         {
-            throw new BoEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
+            throw new BO.BoEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
         }
 
         //Tries to remove if the volunteer exists
         try
         {
-            _dal.Volunteer.Delete(id);
+            s_dal.Volunteer.Delete(id);
         }
         catch(DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException($"BL: Volunteer {id} doesn't exists", ex);
+            throw new BO.BoDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
         }
 
     }
 
+    /// <summary>
+    /// This method accepts an id value, calls the Read method from DAL, using the returned value it creates a new BO.Volunteer entity,
+    /// also, the method adds a related call to the volunteer in the BO.CallInProgress field, adds to the created BO.Volunteer entity and retuns it.
+    /// If such volunteer hasn't been found, the system will throw an exception which would be taken care of in the BL layer and which then will throw an exception to the upper layer
+    /// </summary>
+    /// <param name="id">The requersted volunteer's id</param>
+    /// <returns>An BO.Volunteer entity which contains the requested entity's values and the current in progress call which is taken care of by the volunteer</returns>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-        throw new NotImplementedException();
+        DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
+            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
+
+        DO.Assignment? volunteerAssignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
+        BO.CallInProgress? volunteerCallInProgress = null;
+        
+        //If there is an assingment there is a call to create
+        if(volunteerAssignment != null)
+        {
+            //Get the Dal call
+            DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
+                ?? throw new BO.BoDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
+
+            //TODO: Calculate the time left for the assignment
+
+            //Calculate the distance
+            double distance = -1.0;
+            if (volunteer.FullCurrentAddress != null)
+            {
+                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!,volunteerCall.FullAddressCall,volunteer.RangeType);
+            }
+            
+            //Create the CallInProgress intance for the Volunteer's field
+            volunteerCallInProgress = new BO.CallInProgress
+            {
+                Id = volunteerAssignment.Id,
+                CallId = volunteerCall.Id,
+                OpenningTime = volunteerCall.OpeningTime,
+                Description = volunteerCall.Description,
+                EmailAddress = volunteer.Email,
+                TypeOfCall = (BO.CallType)volunteerCall.Type,
+                EntryTime = volunteerAssignment.TimeOfStarting,
+                LastTimeForClosingTheCall = volunteerCall.DeadLine,
+                //TODO: Status
+                DistanceFromAssignedVolunteer = distance,
+            };
+        }
+
+        //Create the BO Volunteer
+        return new BO.Volunteer
+        {
+
+        };
     }
 
     public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField)
