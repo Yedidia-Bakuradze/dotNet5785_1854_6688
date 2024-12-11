@@ -8,13 +8,13 @@ namespace DalTest
 {
     internal class Program
     {
-        //private static IAssignment? s_dalAssignment = new AssignmentImplementation(); // Stage 1
-        //private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); // Stage 1
-        //private static ICall? s_dalCall = new CallImplementation(); // Stage 1
-        //private static IConfig? s_dalConfig = new ConfigImplementation(); // Stage 1
-        //static readonly IDal s_dal = new DalList(); // Stage 2
-        //static readonly IDal s_dal = new DalXml(); // Stage 3
-        static readonly IDal s_dal = Factory.Get; // Stage 4
+        //private static IAssignment? ss_dalAssignment = new AssignmentImplementation(); // Stage 1
+        //private static IVolunteer? ss_dalVolunteer = new VolunteerImplementation(); // Stage 1
+        //private static ICall? ss_dalCall = new CallImplementation(); // Stage 1
+        //private static IConfig? ss_dalConfig = new ConfigImplementation(); // Stage 1
+        //static readonly IDal ss_dal = new DalList(); // Stage 2
+        //static readonly IDal ss_dal = new DalXml(); // Stage 3
+        static readonly IDal ss_dal = Factory.Get; // Stage 4
 
         public enum MainMenuEnum { FirstRun, Exit, ShowAssignmentMenu, ShowCallMenu, ShowVolunteerMenu, DbInit, ShowAllDbData, ShowConfigMenu, ResetSysAndDb }
         public enum ClassSubMenuEnum { FirstRun, Exit, Create, Read, ReadAll, Update, Delete, DeleteAll }
@@ -181,17 +181,17 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            s_dal?.Assignment?.DeleteAll();
+                            ss_dal?.Assignment?.DeleteAll();
                             break;
                         }
                     case ClassType.Call:
                         {
-                            s_dal?.Call?.DeleteAll();
+                            ss_dal?.Call?.DeleteAll();
                             break;
                         }
                     case ClassType.Volunteer:
                         {
-                            s_dal?.Volunteer?.DeleteAll();
+                            ss_dal?.Volunteer?.DeleteAll();
                             break;
                         }
                     default:
@@ -231,17 +231,17 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            s_dal?.Volunteer?.Delete(id);
+                            ss_dal?.Volunteer?.Delete(id);
                             break;
                         }
                     case ClassType.Call:
                         {
-                            s_dal?.Call?.Delete(id);
+                            ss_dal?.Call?.Delete(id);
                             break;
                         }
                     case ClassType.Volunteer:
                         {
-                            s_dal?.Call?.Delete(id);
+                            ss_dal?.Call?.Delete(id);
                             break;
                         }
                     default:
@@ -262,10 +262,10 @@ Please Choose The Operation That You Would Like To Use:
         /// </summary>
         private static void resetDbAndSystem()
         {
-            s_dal?.Volunteer?.DeleteAll();
-            s_dal?.Call?.DeleteAll();
-            s_dal?.Assignment?.DeleteAll();
-            s_dal?.Config?.Reset();
+            ss_dal?.Volunteer?.DeleteAll();
+            ss_dal?.Call?.DeleteAll();
+            ss_dal?.Assignment?.DeleteAll();
+            ss_dal?.Config?.Reset();
         }
         
 
@@ -316,31 +316,31 @@ Please Choose The Operation That You Would Like To Use:
                             case ConfigSubMenuEnum.AddMinute:
                                 {
                                     // Adds one minute to the current clock setting
-                                    s_dal?.Config?.Clock.AddMinutes(1);
+                                    ss_dal?.Config?.Clock.AddMinutes(1);
                                     break;
                                 }
                             case ConfigSubMenuEnum.AddHour:
                                 {
                                     // Adds one hour to the current clock setting
-                                    s_dal?.Config?.Clock.AddHours(1);
+                                    ss_dal?.Config?.Clock.AddHours(1);
                                     break;
                                 }
                             case ConfigSubMenuEnum.AddMonth:
                                 {
                                     // Adds one month to the current clock setting
-                                    s_dal?.Config?.Clock.AddMonths(1);
+                                    ss_dal?.Config?.Clock.AddMonths(1);
                                     break;
                                 }
                             case ConfigSubMenuEnum.AddYear:
                                 {
                                     // Adds one year to the current clock setting
-                                    s_dal?.Config?.Clock.AddYears(1);
+                                    ss_dal?.Config?.Clock.AddYears(1);
                                     break;
                                 }
                             case ConfigSubMenuEnum.ShowCurrentClock:
                                 {
                                     // Displays the current clock setting
-                                    Console.WriteLine(s_dal?.Config?.Clock);
+                                    Console.WriteLine(ss_dal?.Config?.Clock);
                                     break;
                                 }
                             case ConfigSubMenuEnum.SetValue:
@@ -353,13 +353,13 @@ Please Choose The Operation That You Would Like To Use:
                                             // Sets a new value for RiskRange
                                             Console.WriteLine("Enter the new value: ");
                                             TimeSpan timeSpan = TimeSpan.Parse(Console.ReadLine() ?? "");
-                                            s_dal!.Config!.RiskRange = timeSpan;
+                                            ss_dal!.Config!.RiskRange = timeSpan;
                                             break;
                                         case ConfigVariable.Clock:
                                             // Sets a new value for Clock
                                             Console.WriteLine("Enter the new value: ");
                                             DateTime clock = DateTime.Parse(Console.ReadLine() ?? "");
-                                            s_dal!.Config!.Clock = clock;
+                                            ss_dal!.Config!.Clock = clock;
                                             break;
                                         default:
                                             {
@@ -376,11 +376,11 @@ Please Choose The Operation That You Would Like To Use:
                                     {
                                         case ConfigVariable.RiskRange:
                                             // Shows the current RiskRange value
-                                            Console.WriteLine(s_dal?.Config?.RiskRange);
+                                            Console.WriteLine(ss_dal?.Config?.RiskRange);
                                             break;
                                         case ConfigVariable.Clock:
                                             // Shows the current Clock value
-                                            Console.WriteLine(s_dal?.Config?.Clock);
+                                            Console.WriteLine(ss_dal?.Config?.Clock);
                                             break;
                                         default:
                                             {
@@ -392,7 +392,7 @@ Please Choose The Operation That You Would Like To Use:
                             case ConfigSubMenuEnum.Reset:
                                 {
                                     // Resets all settings to their default values
-                                    s_dal?.Config?.Reset();
+                                    ss_dal?.Config?.Reset();
                                     break;
                                 }
                             default:
@@ -428,7 +428,7 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            IEnumerable listOfAssignments = (s_dal?.Assignment?.ReadAll()
+                            IEnumerable listOfAssignments = (ss_dal?.Assignment?.ReadAll()
                                 ?? throw new DalDoesNotExistException("The Assignments in Database Are Not Available"));
                             Console.WriteLine("Assignment Entities: ");
                             Console.Beep();
@@ -438,7 +438,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Call:
                         {
-                            IEnumerable listOfCalls = s_dal?.Call?.ReadAll()
+                            IEnumerable listOfCalls = ss_dal?.Call?.ReadAll()
                                 ?? throw new DalDoesNotExistException("The Calls in Database Are Not Available!");
                             Console.WriteLine("\nCall Entities: ");
                             foreach (Call call in listOfCalls)
@@ -447,7 +447,7 @@ Please Choose The Operation That You Would Like To Use:
                         }
                     case ClassType.Volunteer:
                         {
-                            List<Volunteer> listOfVolunteers = s_dal?.Volunteer?.ReadAll().ToList()
+                            List<Volunteer> listOfVolunteers = ss_dal?.Volunteer?.ReadAll().ToList()
                                 ?? throw new DalDoesNotExistException("The Volunteers in Database Are Not Available!");
                             
                             Console.WriteLine("\nVolunteer Entities: ");
@@ -509,21 +509,21 @@ Please Choose The Operation That You Would Like To Use:
                     {
                         case ClassType.Assignment:
                             {
-                                Assignment result = s_dal?.Assignment?.Read(requestedObjectId)!
+                                Assignment result = ss_dal?.Assignment?.Read(requestedObjectId)!
                                     ?? throw new DalDoesNotExistException($"The Assignment instance with id of {requestedObjectId} hasn't been found");
                                 printAssignmentEntity(result);
                                 break;
                             }
                         case ClassType.Call:
                             {
-                                Call result = s_dal?.Call?.Read(requestedObjectId)!
+                                Call result = ss_dal?.Call?.Read(requestedObjectId)!
                                     ?? throw new DalDoesNotExistException($"The Call instance with id of {requestedObjectId} hasn't been found");
                                 printCallEntity(result);
                                 break;
                             }
                         case ClassType.Volunteer:
                             {
-                                Volunteer result = s_dal?.Volunteer?.Read(requestedObjectId)!
+                                Volunteer result = ss_dal?.Volunteer?.Read(requestedObjectId)!
                                     ?? throw new DalDoesNotExistException($"The Volunteer instance with id of {requestedObjectId} hasn't been found");
                                 printVolunteerEntity(result);
                                 break;
@@ -575,7 +575,7 @@ Please Choose The Operation That You Would Like To Use:
                         TypeOfEnding? typeOfEnding = (isValid) ? tmp2 : null;
 
                         //Creation of the assignment entity
-                        s_dal?.Assignment?.Create(new Assignment
+                        ss_dal?.Assignment?.Create(new Assignment
                         {
                             Called = callId,
                             VolunteerId = volunteerId,
@@ -623,7 +623,7 @@ Please Choose The Operation That You Would Like To Use:
                         isValid = DateTime.TryParse(Console.ReadLine(),out tmp);
                         DateTime? deadLine = (isValid) ? tmp : null;
 
-                        s_dal?.Call?.Create(new Call
+                        ss_dal?.Call?.Create(new Call
                         {
                             Type = callType,
                             FullAddressCall = address,
@@ -714,7 +714,7 @@ Please Choose The Operation That You Would Like To Use:
                         isValid = double.TryParse(Console.ReadLine(), out tmp2);
                         double? lng = (isValid) ? tmp2 : null;
 
-                        s_dal?.Volunteer?.Create(new Volunteer
+                        ss_dal?.Volunteer?.Create(new Volunteer
                         {
                             Id = id,
                             FullName = name,
@@ -759,7 +759,7 @@ Please Choose The Operation That You Would Like To Use:
                 {
                     case ClassType.Assignment:
                         {
-                            Assignment result = s_dal?.Assignment?.Read(id) ?? 
+                            Assignment result = ss_dal?.Assignment?.Read(id) ?? 
                                 throw new DalDoesNotExistException($"The Assignment instance with Id of {id} hasn't been found");
                             int Called = result.Called ;
                             int VolunteerId = result.VolunteerId ;
@@ -881,13 +881,13 @@ Type Of Ending: {TypeOfEnding}
                                 TimeOfEnding = TimeOfEnding,
                                 TypeOfEnding = TypeOfEnding,
                             };
-                            s_dal?.Assignment.Update(newAssignment);
+                            ss_dal?.Assignment.Update(newAssignment);
                             
                             break;
                         }
                     case ClassType.Call:
                     {
-                            Call result = s_dal?.Call?.Read(id) ??
+                            Call result = ss_dal?.Call?.Read(id) ??
                                     throw new DalDoesNotExistException($"The Call instance with ID of {id} hasn't been found");
                             CallType Type = result.Type;
                             string FullAddressCall = result.FullAddressCall;
@@ -1045,12 +1045,12 @@ DeadLine : {DeadLine}
                                 Description = Description,
                                 DeadLine = DeadLine,
                             };
-                            s_dal?.Call?.Update(newCall);
+                            ss_dal?.Call?.Update(newCall);
                             break;
                     }
                     case ClassType.Volunteer:
                     {
-                            Volunteer result = s_dal?.Volunteer?.Read(id) ??
+                            Volunteer result = ss_dal?.Volunteer?.Read(id) ??
                                         throw new DalDoesNotExistException($"The Volunteer instance with ID of {id} hasn't been found");
                             int Id = result.Id;
                             UserRole Role = result.Role;
@@ -1188,7 +1188,7 @@ Longitude : {Longitude}
                                 Latitude = Latitude,
                                 Longitude = Longitude
                             };
-                            s_dal?.Volunteer?.Update(newVolunteer);
+                            ss_dal?.Volunteer?.Update(newVolunteer);
                             break;
                     }
                 }
@@ -1201,8 +1201,8 @@ Longitude : {Longitude}
         /// <summary>
         /// This method initializes the database, filling it with pre-made dummy data 
         /// </summary>
-        //private static void dbInit() => DalTest.Initialization.Do(s_dalAssignment, s_dalCall, s_dalVolunteer, s_dalConfig);// Stage 1
-        //private static void dbInit() => DalTest.Initialization.Do(s_dal);// Stage 2
+        //private static void dbInit() => DalTest.Initialization.Do(ss_dalAssignment, ss_dalCall, ss_dalVolunteer, ss_dalConfig);// Stage 1
+        //private static void dbInit() => DalTest.Initialization.Do(ss_dal);// Stage 2
         private static void dbInit() => DalTest.Initialization.Do();// Stage 4
 
         /// <summary>

@@ -6,7 +6,7 @@ using System;
 internal class VolunteerImplementation : IVolunteer
 {
     //The contract which we will make all the action with when using the Dal layer
-    private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
 
 
 
@@ -48,7 +48,7 @@ internal class VolunteerImplementation : IVolunteer
             };
 
             //Add the new entity to the database
-            _dal.Volunteer.Create(newVolunteer);
+            s_dal.Volunteer.Create(newVolunteer);
             
         }
         catch(DO.DalAlreadyExistsException ex)

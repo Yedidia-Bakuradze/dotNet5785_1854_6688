@@ -13,7 +13,7 @@ public static class VolunteerManager
     static readonly string URI = "https://maps.googleapis.com/maps/api/geocode/";
     static readonly string APIKEY = "AIzaSyBjTxg6_sTOtBKHkaBJ7bkCpk8ylmjLMGk";
 
-    //private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
+    //private static DalApi.IDal ss_dal = DalApi.Factory.Get; //stage 4
     public static (double?, double?) GetGeoCordinates(string streetAddress)
     {
         //Dealocates the memory after exiting the scope

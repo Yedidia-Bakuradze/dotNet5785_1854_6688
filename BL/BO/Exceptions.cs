@@ -53,5 +53,10 @@ public class BoHttpGetException : Exception
     public BoHttpGetException(string? msg) : base(msg) { }
 }
 
+[Serializable]
+public class BoForbidenActionExeption : Exception
+{
+    public BoForbidenActionExeption(string? msg) : base(msg) { }
+}
 
 #endregion BL
