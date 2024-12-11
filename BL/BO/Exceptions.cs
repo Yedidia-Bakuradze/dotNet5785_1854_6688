@@ -4,13 +4,15 @@
 [Serializable]
 public class BoDoesNotExistException : Exception
 {
-    public BoDoesNotExistException(string? msg,DO.DalDoesNotExistException ex) : base(msg) { }
+    DO.DalDoesNotExistException? oldEx;
+    public BoDoesNotExistException(string? msg, DO.DalDoesNotExistException? ex=null) : base(msg) => oldEx = ex;
 }
 
 [Serializable]
 public class BoAlreadyExistsException : Exception
 {
-    public BoAlreadyExistsException(string? msg,DO.DalAlreadyExistsException ex) : base(msg) { }
+    DO.DalAlreadyExistsException? oldEx;
+    public BoAlreadyExistsException(string? msg, DO.DalAlreadyExistsException? ex=null) : base(msg) => oldEx = ex;
 }
 
 #endregion DalBLException
@@ -42,6 +44,15 @@ public class BoInvalidEntityFieldFormatting : Exception
 public class BoUnimplementedMethodOrFunction : Exception
 {
     public BoUnimplementedMethodOrFunction(string? msg) : base(msg) { }
+}
+
+/// <summary>
+/// This exception is thrown where the system attempts to delete an entity record which is related to other records (Like a volunteer which has an assignment)
+/// </summary>
+[Serializable]
+public class BoEntityRecordIsNotEmpty : Exception
+{
+    public BoEntityRecordIsNotEmpty(string? msg) : base(msg) { }
 }
 
 /// <summary>
