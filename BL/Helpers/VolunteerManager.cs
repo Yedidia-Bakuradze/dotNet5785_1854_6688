@@ -34,18 +34,18 @@ public static class VolunteerManager
         try
         {
             status = XElement.Parse(xmlTree).Element("status")
-                ?? throw new Exception("Http GET Reponse ERROR: Xml file is not good");
+                ?? throw new HttpGetException("Http Exception: Response is unable to be converted to an XML file");
+            //If the GET response content is not good then the address it coropted
+            if(status?.Value != "OK")
+            {
+                throw new HttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
+            }
         }
         catch(Exception ex)
         {
             return (null, null);
         }
 
-        //If the GET response content is not good then the address it coropted
-        if(status?.Value != "OK")
-        {
-            return (null, null);
-        }
 
         //Gets the location element which holds the cordinates
         XElement? locationElement = XElement.Parse(xmlTree)
