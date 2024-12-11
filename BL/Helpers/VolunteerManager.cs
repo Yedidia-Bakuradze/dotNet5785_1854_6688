@@ -1,11 +1,12 @@
 ﻿namespace Helpers;
 
 using BO;
-using DalApi;
+using System.Text.RegularExpressions;
+
 //Remember: All the method shall be as internal static
 internal static class VolunteerManager
 {
-    private static IDal s_dal = Factory.Get; //stage 4
+    private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
 
     /// <summary>
     /// This static method checks if the given user id is valid
@@ -47,10 +48,10 @@ internal static class VolunteerManager
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
     public static bool IsValidFullName(string name)
     {
-        //TODO: check using regex if the full name is valid
-        //Check if has two words saparated with a blank space
-        //Check if the name doesnt contain characters such as ',@# etc
-        throw new BoUnimplementedMethodOrFunction("IsValidFullName at VolunteerManager class hasn't been implemented");
+        // Regex pattern to check if there is at least one blank space, every word is at least two letters long,
+        // and all characters are either letters or blank spaces
+        string pattern = @"^(?=.*\s)([A-Za-z]{2,}\s)+[A-Za-z]{2,}$";
+        return Regex.IsMatch(name, pattern);
     }
 
     /// <summary>
@@ -61,13 +62,8 @@ internal static class VolunteerManager
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
     public static bool IsValidPhoneNumber(string phoneNumber)
     {
-        //TODO: check if the phone number is valid
-        //Check if it doesn't contain any letters
-        //Check if it starts with + sign
-        //Check that the length is valid
-        //[Optional]: Check if the first digits are a valid prefix for a number
-
-        throw new BoUnimplementedMethodOrFunction("IsValidPhoneNumber at VolunteerManager class hasn't been implemented");
+        string pattern = @"^0\d{9}$";
+        return Regex.IsMatch(phoneNumber, pattern);
     }
     
     /// <summary>
@@ -78,10 +74,9 @@ internal static class VolunteerManager
     /// <exception cref="Exception">UnImplemented exception</exception>
     public static bool IsValidEmailAddress(string email)
     {
-        //TODO: check using regex if the email is valid
-        //Check if it ends with .somthing
-        //Check if it contains @ sign
-        throw new BoUnimplementedMethodOrFunction("IsValidEmailAddress at VolunteerManager class hasn't been implemented");
+        // Regex pattern to check if the email address is valid
+        string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+        return Regex.IsMatch(email, pattern);
     }
 
     /// <summary>
@@ -90,18 +85,28 @@ internal static class VolunteerManager
     /// <param name="pasword">The uesr's password</param>
     /// <returns>Boolean value whether its valid or not</returns>
     /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
-    public static bool IsValidPassword(string? pasword)
+    public static bool IsValidPassword(string? password)
     {
-        //TODO: check using regex if the password is valid
-        //Check if it ends doesn't contain any blank spaces
-
-        //TODO: [Bonus]: check if the password is strong 
-        //Check that it contains some special characters
-        //Check that it contains some numbers
-
         //TODO: [Bonus]: eyncrypt the password using SHA256
+        
+        if (password == null)
+            return true;
 
-        throw new BoUnimplementedMethodOrFunction("IsValidPassword at VolunteerManager class hasn't been implemented");
+        // Check if the password is at least 8 characters long
+        if (password.Length < 8)
+            return false;
+
+        // Regex pattern to check if the password contains at least two special characters
+        string specialCharPattern = @"[^a-zA-Z0-9]{2,}";
+        if (!Regex.IsMatch(password, specialCharPattern))
+            return false;
+
+        // Regex pattern to check if the password contains at least two numbers
+        string numberPattern = @"\d{2,}";
+        if (!Regex.IsMatch(password, numberPattern))
+            return false;
+
+        return true;
     }
 
     /// <summary>
