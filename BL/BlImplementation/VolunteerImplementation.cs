@@ -1,11 +1,8 @@
 ﻿namespace BlImplementation;
-using BlApi;
-using BO;
-using DO;
 using Helpers;
 using System;
 
-internal class VolunteerImplementation : IVolunteer
+internal class VolunteerImplementation : BlApi.IVolunteer
 {
     //The contract which we will make all the action with when using the Dal layer
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
@@ -218,9 +215,24 @@ internal class VolunteerImplementation : IVolunteer
         return volunteerInLists;
     }
 
-    public string Login(string username, string password)
+    /// <summary>
+    /// Logs into an account using the past username and password
+    /// If such a user doesn't exists or the credentials aren't correct, then method will throw an exception
+    /// </summary>
+    /// <param name="username">User's username value</param>
+    /// <param name="password">User's password value</param>
+    /// <returns>The type of user</returns>
+    public string Login(string username, string? password)
     {
-        throw new NotImplementedException();
+        string? hashedPassword = password is null
+            ? null
+            : VolunteerManager.GetSHA256HashedPassword(password);
+        
+        DO.Volunteer volunteer = s_dal.Volunteer
+            .Read((DO.Volunteer volunteer) => volunteer.Email == username && volunteer.Password == hashedPassword)
+            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with email address: {username} and password: {password} doesn't exsits");
+        
+        return volunteer.Role.ToString();
     }
 
     public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer)

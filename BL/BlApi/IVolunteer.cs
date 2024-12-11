@@ -7,12 +7,12 @@ public interface IVolunteer
 {
     /// <summary>
     /// Logs into an account using the past username and password
-    /// If such a user doesn't exists or the redemtials aren't right, the method shall thrown an exception
+    /// If such a user doesn't exists or the credentials aren't correct, the method shall thrown an exception
     /// </summary>
     /// <param name="username">User's username value</param>
-    /// <param name="password">User's password value</param>
+    /// <param name="password">[Optional]: User's password value</param>
     /// <returns>The type of user</returns>
-    string Login(string username, string password);
+    string Login(string username, string? password);
 
     /// <summary>
     /// This method returns an enumarable of VolunteerInList entities.
