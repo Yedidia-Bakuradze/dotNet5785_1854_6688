@@ -57,9 +57,35 @@ internal class VolunteerImplementation : IVolunteer
         }
     }
 
+    /// <summary>
+    /// This method accespts an id value, requests from the DAL layer such a volunteer with that id, to check if it is allowed to be deleted
+    /// a volunteer is allowed to be deleted if it never and would ever hadle a call
+    /// If the action is now allowed it would throw an exception to the upper layer
+    /// If the volunteer hasn't been found it would handler the thrown exception by throwing a new one to the upper layer
+    /// </summary>
+    /// <param name="id">The requested volunteer's id value</param>
     public void DeleteVolunteer(int id)
     {
-        throw new NotImplementedException();
+        //Tries to find such volunteer
+        DO.Volunteer volunteer = _dal.Volunteer.Read(id)
+            ?? throw new BoDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
+
+        //Checks if the volunteer is in any records of assignments
+        if(_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
+        {
+            throw new BoEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
+        }
+
+        //Tries to remove if the volunteer exists
+        try
+        {
+            _dal.Volunteer.Delete(id);
+        }
+        catch(DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BoDoesNotExistException($"BL: Volunteer {id} doesn't exists", ex);
+        }
+
     }
 
     public BO.Volunteer GetVolunteerDetails(int id)
@@ -82,3 +108,4 @@ internal class VolunteerImplementation : IVolunteer
         throw new NotImplementedException();
     }
 }
+
