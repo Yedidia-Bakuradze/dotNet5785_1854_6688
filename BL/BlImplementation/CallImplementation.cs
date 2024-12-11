@@ -66,7 +66,7 @@ internal class CallImplementation : ICall
         DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BoDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
-            throw new BO.BoForbidenActionExeption("BL: Cant update the assignment");
+            throw new BO.BoForbidenSystemActionExeption("BL: Cant update the assignment");
         }
         try
         {

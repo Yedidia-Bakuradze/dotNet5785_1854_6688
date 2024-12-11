@@ -197,7 +197,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     }
                 default:
                     {
-                        throw new BO.BoForbidenActionExeption($"BL: Aren't able to order by the field {sortByField}");
+                        throw new BO.BoInvalidEnumValueOperationException($"BL: Aren't able to order by the field {sortByField}");
                     }
             }
         }
@@ -251,7 +251,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         //Check if allowed to modify
         if (id != volunteer.Id || s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BoForbidenActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
+            throw new BO.BoForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
         
         //Check if logics are correct
         if (!VolunteerManager.IsVolunteerValid(volunteer))
@@ -263,7 +263,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
         //Checks what fields are requested to be modified - The role is modifable by only the manager
         if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BoForbidenActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+            throw new BO.BoForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
 
         //Create new instance of DO.Volunteer
         DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);

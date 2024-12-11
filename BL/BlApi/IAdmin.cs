@@ -35,7 +35,6 @@ public interface IAdmin
     /// </summary>
     void DbReset();
 
-
     /// <summary>
     /// This method initializes the databse with pre-set entities
     /// </summary>
