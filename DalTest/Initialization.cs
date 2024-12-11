@@ -371,7 +371,7 @@ static public class Initialization
             //Creates the assignment object - the id is generated in the CRUD's create method so there is no need to provide one here 
             Assignment newAssignment = new()
             {
-                Called = currentCall.Id,
+                CallId = currentCall.Id,
                 VolunteerId = currentVolunteer.Id,
                 TimeOfStarting = start,
                 TimeOfEnding = end,

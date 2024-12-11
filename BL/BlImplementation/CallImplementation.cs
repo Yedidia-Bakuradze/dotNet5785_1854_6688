@@ -1,12 +1,13 @@
 ﻿
 namespace BlImplementation;
 using BlApi;
+using BO;
 using Helpers;
 using System.Collections.Generic;
 
 internal class CallImplementation : ICall
 {
-    private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     public void AddCall(BO.Call call)
     {
         try
@@ -30,7 +31,7 @@ internal class CallImplementation : ICall
                 Description = call.Description,
                 DeadLine = call.CallDeadLine
             };
-            _dal.Call.Create(newCall);
+            s_dal.Call.Create(newCall);
         }
         catch (BO.BoInvalidEntityDetails ex)
         {
@@ -46,12 +47,12 @@ internal class CallImplementation : ICall
     {
         try
         {
-            if (_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
+            if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
             {
                 throw new BO.BoAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }
-            // Attempt to delete the call
-            _dal.Call.Delete(requestId);
+            // Attempt to delete the callnew 
+            s_dal.Call.Delete(requestId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -61,7 +62,24 @@ internal class CallImplementation : ICall
 
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
-        throw new NotImplementedException();
+
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BoDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
+        if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
+        {
+            throw new BoForbidenActionExeption("BL: Cant update the assignment");
+        }
+        try
+        {
+            s_dal.Assignment.Update(res! with
+            {
+                TypeOfEnding = DO.TypeOfEnding.Treated,
+                TimeOfEnding = ClockManager.Now
+            });
+        }
+        catch(DO.DalDoesNotExistException ex) 
+        {
+            throw new BoDoesNotExistException("Bl: ASsignement does not exist", ex);
+        }
     }
 
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int id, BO.CallType? callType, BO.ClosedCallInListFields? parameter)

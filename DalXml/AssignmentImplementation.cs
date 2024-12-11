@@ -120,7 +120,7 @@ public class AssignmentImplementation : IAssignment
         {
             //TODO: Chaneg the exceptions to a dal version
             Id = el.ToIntNullable("Id") ?? throw new Exception("Id cann't be converted"),
-            Called = el.ToIntNullable("Called") ?? throw new Exception("CallId cann't be converted"),
+            CallId = el.ToIntNullable("CallId") ?? throw new Exception("CallId cann't be converted"),
             VolunteerId = el.ToIntNullable("VolunteerId") ?? throw new Exception("CallId cann't be converted"),
             TimeOfStarting = el.ToDateTimeNullable("TimeOfStarting") ?? throw new Exception("TimOfStarting cann't be converted"),
             TimeOfEnding = el.ToDateTimeNullable("TimeOfEnding") ?? null,
@@ -137,7 +137,7 @@ public class AssignmentImplementation : IAssignment
     {
         List<XElement> subTags = new List<XElement>() {
                 new XElement("Id", assignment.Id),
-                new XElement("Called", assignment.Called),
+                new XElement("Called", assignment.CallId),
                 new XElement("VolunteerId", assignment.VolunteerId),
                 new XElement("TimeOfStarting", assignment.TimeOfStarting)
                };

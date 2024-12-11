@@ -5,17 +5,17 @@ namespace Helpers;
 
 internal static class CallManager
 {
-    private static IDal s_dal = Factory.Get; //stage 4
+    private static IDal ss_dal = Factory.Get; //stage 4
     public static void UpdateAllOpenAndExpierdCalls()
     {
-        List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < ClockManager.Now).ToList();
-        List<DO.Assignment> listOfAssignments = s_dal.Assignment.ReadAll().ToList();
+        List<DO.Call> listOfCalls = ss_dal.Call.ReadAll((DO.Call call) => call.DeadLine < ClockManager.Now).ToList();
+        List<DO.Assignment> listOfAssignments = ss_dal.Assignment.ReadAll().ToList();
 
         listOfCalls
             .Where(call => !listOfAssignments.Any(assignment => assignment.CallId == call.Id))
             .Select(call => call)
             .ToList()
-            .ForEach(call => s_dal.Assignment.Create( new DO.Assignment
+            .ForEach(call => ss_dal.Assignment.Create( new DO.Assignment
         {
             CallId = call.Id,
             TimeOfStarting = call.OpeningTime,
@@ -30,7 +30,7 @@ internal static class CallManager
             .Where(assignment => listOfCalls.Any(call => call.Id == assignment.CallId))
             .Select(assignment => assignment)
             .ToList()
-            .ForEach((assignment) => s_dal.Assignment.Update(assignment with
+            .ForEach((assignment) => ss_dal.Assignment.Update(assignment with
         {
             TimeOfEnding = ClockManager.Now,
             TypeOfEnding = DO.TypeOfEnding.CancellationExpired

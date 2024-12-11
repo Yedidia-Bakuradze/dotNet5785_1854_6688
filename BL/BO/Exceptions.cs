@@ -82,6 +82,13 @@ public class BoXmlElementDoesntExsist : Exception
     public BoXmlElementDoesntExsist(string? msg) : base(msg) { }
 }
 
-
+/// <summary>
+/// This exception is thrown when 
+/// </summary>
+[Serializable]
+public class BoForbidenActionExeption : Exception
+{
+    public BoForbidenActionExeption(string? msg) : base(msg) { }
+}
 
 #endregion BL
