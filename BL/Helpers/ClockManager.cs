@@ -1,4 +1,4 @@
-﻿//using BlImplementation;
+﻿using BlImplementation;
 using BO;
 namespace Helpers;
 
@@ -14,6 +14,7 @@ internal static class ClockManager //stage 4
     /// Property for providing current application's clock value for any BL class that may need it
     /// </summary>
     internal static DateTime Now { get => s_dal.Config.Clock; } //stage 4
+    internal static TimeSpan RiskRange { get => s_dal.Config.RiskRange; } //stage 4
 
     /// <summary>
     /// Method to perform application's clock from any BL class as may be required
