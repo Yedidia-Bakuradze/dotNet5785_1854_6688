@@ -11,15 +11,11 @@ internal class CallImplementation : ICall
     {
         try
         {
-            //check if the id is valid according to the format we chose in the CallManager
-            if (!CallManager.IsCallIdValid(call.Id)
-            {
-                throw new ArgumentException("The ID of the call is invalid");
-            }
+
             // check if the times are valid
             if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
             {
-                throw new ArgumentException("The deadline of the call cannot be before the start time of the call");
+                throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
             }
             //check if the address is valid
             //TODO:: using api.
@@ -28,15 +24,15 @@ internal class CallImplementation : ICall
                 Id = call.Id,
                 Type = (DO.CallType)call.TypeOfCall,
                 FullAddressCall = call.CallAddress,
-                Latitude = (double)call.Latitude,
-                Longitude = (double)call.Longitude,
+                Latitude = call.Latitude,
+                Longitude = call.Longitude,
                 OpeningTime = call.CallStartTime,
                 Description = call.Description,
                 DeadLine = call.CallDeadLine
             };
             _dal.Call.Create(newCall);
         }
-        catch (Exception ex)
+        catch (BO.BoInvalidEntityDetails ex)
         {
             // Handle the exception here
             Console.WriteLine("An exception occurred: " + ex.Message);
@@ -46,10 +42,21 @@ internal class CallImplementation : ICall
 
     }
 
-    public void DeleteCallRequest(int VolunteerId)
+    public void DeleteCallRequest(int requestId)
     {
-
-        throw new NotImplementedException();
+        try
+        {
+            if (_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
+            {
+                throw new BO.BoAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
+            }
+            // Attempt to delete the call
+            _dal.Call.Delete(requestId);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BoDoesNotExistException("Bl Exception: id does not exist", ex) ; 
+        }
     }
 
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)

@@ -13,7 +13,7 @@ namespace DO;
 public record Assignment
 (
     int Id,
-    int Called,
+    int CallId,
     int VolunteerId,
     DateTime TimeOfStarting,
     DateTime? TimeOfEnding = null,
