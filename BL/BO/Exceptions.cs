@@ -56,6 +56,15 @@ public class BoEntityRecordIsNotEmpty : Exception
 }
 
 /// <summary>
+/// This exception handles cases where the past enum value is not valid for the operation that the switch depends on
+/// </summary>
+[Serializable]
+public class BoForbbidenEnumValueOperationException : Exception
+{
+    public BoForbbidenEnumValueOperationException(string? msg) : base(msg) { }
+}
+
+/// <summary>
 /// This exception is used when there is a failur in Http requests
 /// </summary>
 [Serializable]
