@@ -5,3 +5,4 @@ public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance};
 public enum TypeOfEnding { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 public enum CallType {Undefined,FoodPreparation,FoodDelivery}
 
+public enum FileFormat { json,xml}

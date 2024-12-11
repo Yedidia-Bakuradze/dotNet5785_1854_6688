@@ -1,12 +1,61 @@
 ﻿namespace Helpers;
 
 using BO;
+using DO;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 //Remember: All the method shall be as internal static
-internal static class VolunteerManager
+//Remember: The class shall be internal static
+public static class VolunteerManager
 {
-    private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
+    //API Configurations
+    static readonly string URI = "https://maps.googleapis.com/maps/api/geocode/";
+    static readonly string APIKEY = "AIzaSyBjTxg6_sTOtBKHkaBJ7bkCpk8ylmjLMGk";
+
+    //private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
+    public static (double?, double?) GetGeoCordinates(string streetAddress)
+    {
+        //Dealocates the memory after exiting the scope
+        using HttpClient client = new HttpClient();
+
+        //Builds the URL requests
+        Uri requestUri = new Uri(URI + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
+        
+        //Accepts the GET response
+        string xmlTree = new HttpClient().GetAsync(requestUri.AbsoluteUri)
+                        .Result
+                        .Content
+                        .ReadAsStringAsync()
+                        .Result;
+
+        //Checks the status of the call
+        XElement status;
+        try
+        {
+            status = XElement.Parse(xmlTree).Element("status")
+                ?? throw new BoHttpGetException("Http Exception: Response is unable to be converted to an XML file");
+            //If the GET response content is not good then the address it coropted
+            if(status?.Value != "OK")
+            {
+                throw new BoHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
+            }
+        }
+        catch(Exception ex)
+        {
+            return (null, null);
+        }
+
+
+        //Gets the location element which holds the cordinates
+        XElement? locationElement = XElement.Parse(xmlTree)
+                                        ?.Element("result")
+                                        ?.Element("geometry")
+                                        ?.Element("location");
+
+        
+        return ((double?)locationElement?.Element("lat"), (double?)locationElement?.Element("lng"));
+    }
 
     /// <summary>
     /// This static method checks if the given user id is valid
@@ -114,13 +163,15 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="streetAddress">The uesr's street address</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
     public static bool IsStreetAddressValid(string? streetAddress)
     {
-        //TODO: check if the street address is valid
-        //Check logics: Check if it has a valid cordinates in the world
-        //Check Formating: Check if the format is valid [Street address number, city]
-        throw new BoUnimplementedMethodOrFunction("IsStreetAddressValid at VolunteerManager class hasn't been implemented");
+        //If the user doesn't have a registered address - its ok because its optional
+        if (streetAddress == null)
+            return true;
+
+        //If the user has any address - check if it has a valid cordinates
+        (double? a,double?b) = GetGeoCordinates(streetAddress);
+        return a != null && b != null;
     }
 
     /// <summary>
