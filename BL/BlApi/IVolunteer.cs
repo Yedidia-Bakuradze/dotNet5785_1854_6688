@@ -33,7 +33,7 @@ public interface IVolunteer
     BO.Volunteer GetVolunteerDetails(int id);
 
     /// <summary>
-    /// This method update the corisponding Volunteer entity from DO 
+    /// This method shall update the corisponding Volunteer entity from DO 
     /// It checks if the given id field is assosiated with a manager or with the updated volunteer person
     /// It checks if the new fields (id, address) are valid
     /// It requests the volunteer from the DO and compares what field been modified and check if the fields are modifiable by the user which makes the action (Role is modifable by the manager only)

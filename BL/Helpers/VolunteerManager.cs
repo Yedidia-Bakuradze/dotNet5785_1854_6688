@@ -2,6 +2,7 @@
 
 using BO;
 using DO;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -329,9 +330,9 @@ internal static class VolunteerManager
     /// <summary>
     /// This method converts from DO version of Volunteer to its BO version
     /// </summary>
-    /// <param name="volunteer">The original DO.Volunteer variable</param>
-    /// <param name="callInProgress">The CallInProgress variable which is related to the volunteer</param>
-    /// <returns>A new BO Volunteer variable</returns>
+    /// <param name="volunteer">The original DO Volunteer variable</param>
+    /// <param name="callInProgress">The assosiated call to that volunteer</param>
+    /// <returns>a new BO Volunteer variable</returns>
     internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
         => new BO.Volunteer
         {
@@ -349,7 +350,29 @@ internal static class VolunteerManager
             FullName = volunteer.FullName,
             IsActive = volunteer.IsActive,
         };
-    
+
+    /// <summary>
+    /// This method converts from BO version of Volunteer to its DO version
+    /// </summary>
+    /// <param name="volunteer">The original BO Volunteer variable</param>
+    /// <returns>a new DO Volunteer variable</returns>
+    internal static DO.Volunteer ConvertBoVolunteerToDoVolunteer(BO.Volunteer volunteer)
+        => new DO.Volunteer
+        {
+            Id = volunteer.Id,
+            Role = (DO.UserRole) volunteer.Role,
+            FullName = volunteer.FullName,
+            PhoneNumber = volunteer.PhoneNumber,
+            Email = volunteer.Email,
+            MaxDistanceToCall = volunteer.MaxDistanceToCall,
+            RangeType = (DO.TypeOfRange) volunteer.RangeType,
+            IsActive = volunteer.IsActive,
+            Password  = volunteer.Password ,
+            FullCurrentAddress  = volunteer.FullCurrentAddress ,
+            Latitude  = volunteer.Latitude ,
+            Longitude  = volunteer.Longitude
+        };
+
     /// <summary>
     /// This method accepts a string value and converts it into a hashed value using SHA256 algorithm
     /// </summary>

@@ -1,4 +1,6 @@
 ﻿namespace BlImplementation;
+
+using BO;
 using Helpers;
 using System;
 
@@ -235,9 +237,46 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         return volunteer.Role.ToString();
     }
 
+    /// <summary>
+    /// This method updates the corisponding Volunteer entity from DO 
+    /// It checks if the given id field is assosiated with a manager or with the updated volunteer person
+    /// It checks if the new fields (id, address) are valid
+    /// It requests the volunteer from the DO and compares what field been modified and check if the fields are modifiable by the user which makes the action (Role is modifable by the manager only)
+    /// It would create a DO.Volunteer entity out of the given volunteer variable and will request an Update action from the DAL layer
+    /// If such user doesn't exist the exception would be handled in the logical layer and it will throw an exception to the upper layer
+    /// </summary>
+    /// <param name="id">The user id which wants to make the update action</param>
+    /// <param name="volunteer">The volunteer entity which is need an updated</param>
     public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer)
     {
-        throw new NotImplementedException();
+        //Check if allowed to modify
+        if (id != volunteer.Id || s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
+            throw new BO.BoForbidenActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
+        
+        //Check if logics are correct
+        if (!VolunteerManager.IsVolunteerValid(volunteer))
+            throw new BO.BoInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
+
+        //Get original Volunteer for comparing
+        DO.Volunteer currentVolunteer = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == volunteer.Id)
+            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
+
+        //Checks what fields are requested to be modified - The role is modifable by only the manager
+        if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
+            throw new BO.BoForbidenActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+
+        //Create new instance of DO.Volunteer
+        DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);
+
+        //Update the entity in Dal
+        try
+        {
+            s_dal.Volunteer.Update(newVolunteer);
+        }
+        catch(DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BoDoesNotExistException($"Bl: The volunteer Id: {volunteer.Id} doesn't exists", ex);
+        }
     }
 }
 
