@@ -71,3 +71,5 @@ public enum TimeUnit
     Months,
     Years
 }
+
+public enum DistanceType { driving, walking,air }

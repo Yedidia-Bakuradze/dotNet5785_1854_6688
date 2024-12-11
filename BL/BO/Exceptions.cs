@@ -59,9 +59,9 @@ public class BoEntityRecordIsNotEmpty : Exception
 /// This exception handles cases where the past enum value is not valid for the operation that the switch depends on
 /// </summary>
 [Serializable]
-public class BoForbbidenEnumValueOperationException : Exception
+public class BoInvalidDistanceCalculationException : Exception
 {
-    public BoForbbidenEnumValueOperationException(string? msg) : base(msg) { }
+    public BoInvalidDistanceCalculationException(string? msg) : base(msg) { }
 }
 
 /// <summary>
