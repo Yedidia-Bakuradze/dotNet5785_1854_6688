@@ -1,29 +1,41 @@
-﻿
-
-using DalApi;
-
+﻿using DalApi;
+using DO;
+using System.Security.Cryptography;
 namespace Helpers;
 
 internal static class CallManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
-    public static bool IsCallIdValid(int id)
+    public static void UpdateAllOpenAndExpierdCalls()
     {
-        // Convert the ID to a string to validate length
-        string idStr = id.ToString();
+        List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < ClockManager.Now).ToList();
+        List<DO.Assignment> listOfAssignments = s_dal.Assignment.ReadAll().ToList();
 
-        // Check if the ID has exactly 10 digits
-        if (idStr.Length != 10)
-            return false;
-
-        // Calculate the checksum
-        int sum = 0;
-        foreach (char c in idStr)
+        listOfCalls
+            .Where(call => !listOfAssignments.Any(assignment => assignment.CallId == call.Id))
+            .Select(call => call)
+            .ToList()
+            .ForEach(call => s_dal.Assignment.Create( new DO.Assignment
         {
-            sum += c - '0'; // Convert each character to its numeric value
+            CallId = call.Id,
+            TimeOfStarting = call.OpeningTime,
+            TimeOfEnding = ClockManager.Now,
+            Id = -1,
+            TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
+            VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
         }
+        ));
 
-        // Check if the sum is divisible by 7 (arbitrary checksum rule)
-        return sum % 7 == 0;
+        listOfAssignments
+            .Where(assignment => listOfCalls.Any(call => call.Id == assignment.CallId))
+            .Select(assignment => assignment)
+            .ToList()
+            .ForEach((assignment) => s_dal.Assignment.Update(assignment with
+        {
+            TimeOfEnding = ClockManager.Now,
+            TypeOfEnding = DO.TypeOfEnding.CancellationExpired
+        }));
+
+
     }
 }

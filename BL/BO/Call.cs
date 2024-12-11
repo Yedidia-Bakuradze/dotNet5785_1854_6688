@@ -27,21 +27,21 @@ public class Call
     /// Set: Check in the logigcal layer if the address is a real addrees which means if there are legit logitude and lantitue values
     /// If the address is invalid / the user didn't give any valid values, then the address shall be null
     /// </summary>
-    public string? CallAddress { get; set; }
+    public string CallAddress { get; set; }
 
     /// <summary>
     /// Get: From DO.Call
     /// Set: Every time the address has been updated, the Latitude value would be updated as well
     /// NFD - Not For Displayment
     /// </summary>
-    public double? Latitude { get; set; }
+    public double Latitude { get; set; }
 
     /// <summary>
     /// Get: From DO.Call
     /// Set: Every time the address has been updated, the Longitude value would be updated as well
     /// NFD - Not For Displayment
     /// </summary>
-    public double? Longitude{ get; set; }
+    public double Longitude{ get; set; }
 
     /// <summary>
     /// Get: From DO.Call
