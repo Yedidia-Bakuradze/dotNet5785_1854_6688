@@ -47,7 +47,7 @@ public enum CallStatus {
     /// <summary>
     /// For edge scenarios
     /// </summary>
-    undefaind
+    Undefined
 }
 
 public enum VolunteerInListField

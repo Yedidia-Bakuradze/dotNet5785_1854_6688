@@ -71,7 +71,7 @@ internal static class CallManager
             return BO.CallStatus.InProgressAndRisky;
         }
 
-        return BO.CallStatus.undefaind;
+        return BO.CallStatus.Undefined;
 
     }
 }
