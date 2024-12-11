@@ -43,7 +43,11 @@ public enum CallStatus {
     /// <summary>
     /// Currently handled by another volunteer but the call's deadline it close (Within the RiskRange range)
     /// </summary>
-    InProgressAndRisky
+    InProgressAndRisky,
+    /// <summary>
+    /// For edge scenarios
+    /// </summary>
+    undefaind
 }
 
 public enum VolunteerInListField

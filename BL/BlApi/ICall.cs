@@ -18,7 +18,7 @@ public interface ICall
     /// Get the details of a specific call
     /// </summary>
     /// <param name="callId">The ID of the call</param>
-    public BO.Call GetDetialsOfCall(int callId);
+    public BO.Call GetDetielsOfCall(int callId);
 
     /// <summary>
     /// Update the details of a call

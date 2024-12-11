@@ -1,7 +1,7 @@
 ﻿
 namespace BlImplementation;
 using BlApi;
-using BO;
+
 using Helpers;
 using System.Collections.Generic;
 
@@ -63,10 +63,10 @@ internal class CallImplementation : ICall
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
 
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BoDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BoDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
-            throw new BoForbidenActionExeption("BL: Cant update the assignment");
+            throw new BO.BoForbidenActionExeption("BL: Cant update the assignment");
         }
         try
         {
@@ -78,16 +78,17 @@ internal class CallImplementation : ICall
         }
         catch(DO.DalDoesNotExistException ex) 
         {
-            throw new BoDoesNotExistException("Bl: ASsignement does not exist", ex);
+            throw new BO.BoDoesNotExistException("Bl: ASsignement does not exist", ex);
         }
     }
 
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int id, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
     {
+        
         throw new NotImplementedException();
     }
 
-    public BO.Call GetDetialsOfCall(int callId)
+    public BO.Call GetDetielsOfCall(int callId)
     {
         throw new NotImplementedException();
     }
