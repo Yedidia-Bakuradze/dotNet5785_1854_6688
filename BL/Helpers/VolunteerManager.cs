@@ -34,11 +34,11 @@ public static class VolunteerManager
         try
         {
             status = XElement.Parse(xmlTree).Element("status")
-                ?? throw new HttpGetException("Http Exception: Response is unable to be converted to an XML file");
+                ?? throw new BoHttpGetException("Http Exception: Response is unable to be converted to an XML file");
             //If the GET response content is not good then the address it coropted
             if(status?.Value != "OK")
             {
-                throw new HttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
+                throw new BoHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
             }
         }
         catch(Exception ex)
