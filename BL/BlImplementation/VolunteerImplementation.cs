@@ -24,11 +24,11 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            //Check logics
-            //TODO: Create a static method which checks the logics and throws an excpetion if the value are invalid
-
-            //Check formmating
-            //TODO: Create a static method which checks the formmating and throws an excpetion if the value is in wrong format
+            //Check logics and formmating
+            if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
+            {
+                throw new BoInvalidEntityDetails($"BL-DAL Error: When craeting new Volunteer entity: For id: {volunteer.Id}");
+            }
 
             //Create Dal Volunteer entity
             DO.Volunteer newVolunteer = new DO.Volunteer
@@ -49,20 +49,11 @@ internal class VolunteerImplementation : IVolunteer
 
             //Add the new entity to the database
             _dal.Volunteer.Create(newVolunteer);
-            
         }
         catch(DO.DalAlreadyExistsException ex)
         {
             //Throw new BL excpetion to the upper layers
             throw new BoAlreadyExistsException($"BL: Such object already exists in the database",ex);
-        }
-        catch(BoInvalidEntityDetails ex)
-        {
-            Console.WriteLine(ex);
-        }
-        catch(BoInvalidEntityFieldFormatting ex)
-        {
-            Console.WriteLine(ex.Message);
         }
     }
 
