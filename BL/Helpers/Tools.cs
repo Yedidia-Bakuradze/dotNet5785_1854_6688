@@ -25,6 +25,7 @@ internal static class Tools
             {
                 var fieldValue = field.GetValue(val);
                 msg += $"{field.Name}:";
+
                 //Type of field (IEnumerable / Simple field)
                 if(fieldValue is IEnumerable)
                 {

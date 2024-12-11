@@ -58,7 +58,7 @@ public class Volunteer
     public TypeOfRange RangeType { get; set; }
 
     //Get: Find all the 'Treated' calls and sum them up
-    public int NumOfHandledCalls { get; }
+    public int NumOfHandledCalls { get;}
 
     //Get: Find all the 'SelfCanceled' calls and sum them up
     public int NumOfCanceledCalls { get; }

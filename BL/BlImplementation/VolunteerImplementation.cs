@@ -1,5 +1,7 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
+using DO;
 using Helpers;
 using System;
 
@@ -7,8 +9,6 @@ internal class VolunteerImplementation : IVolunteer
 {
     //The contract which we will make all the action with when using the Dal layer
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
-
-
 
     /// <summary>
     /// This method accepts a well defiend BO.Volunteer variabel which is needed to be added to the dataabse
@@ -34,12 +34,12 @@ internal class VolunteerImplementation : IVolunteer
             DO.Volunteer newVolunteer = new DO.Volunteer
             {
                 Id = volunteer.Id,
-                Role = (DO.UserRole)Enum.Parse(typeof(DO.UserRole) ,volunteer.Role.ToString()) ,
+                Role = (DO.UserRole)Enum.Parse(typeof(DO.UserRole), volunteer.Role.ToString()),
                 FullName = volunteer.FullName,
                 PhoneNumber = volunteer.PhoneNumber,
                 Email = volunteer.Email,
                 MaxDistanceToCall = volunteer.MaxDistanceToCall,
-                RangeType = (DO.TypeOfRange)Enum.Parse(typeof(DO.TypeOfRange),volunteer.RangeType.ToString()),
+                RangeType = (DO.TypeOfRange)Enum.Parse(typeof(DO.TypeOfRange), volunteer.RangeType.ToString()),
                 IsActive = volunteer.IsActive,
                 Password = volunteer.Password,
                 FullCurrentAddress = volunteer.FullCurrentAddress,
@@ -49,12 +49,12 @@ internal class VolunteerImplementation : IVolunteer
 
             //Add the new entity to the database
             s_dal.Volunteer.Create(newVolunteer);
-            
+
         }
-        catch(DO.DalAlreadyExistsException ex)
+        catch (DO.DalAlreadyExistsException ex)
         {
             //Throw new BL excpetion to the upper layers
-            throw new BO.BoAlreadyExistsException($"BL-DAL: Such object already exists in the database",ex);
+            throw new BO.BoAlreadyExistsException($"BL-DAL: Such object already exists in the database", ex);
         }
     }
 
@@ -72,7 +72,7 @@ internal class VolunteerImplementation : IVolunteer
             ?? throw new BO.BoDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
 
         //Checks if the volunteer is in any records of assignments
-        if(s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
+        if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
         {
             throw new BO.BoEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
         }
@@ -82,7 +82,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             s_dal.Volunteer.Delete(id);
         }
-        catch(DO.DalDoesNotExistException ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BoDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
         }
@@ -103,9 +103,9 @@ internal class VolunteerImplementation : IVolunteer
 
         DO.Assignment? volunteerAssignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
         BO.CallInProgress? volunteerCallInProgress = null;
-        
+
         //If there is an assingment - there is a call to create
-        if(volunteerAssignment != null)
+        if (volunteerAssignment != null)
         {
             //Get the Dal call
             DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
@@ -115,9 +115,9 @@ internal class VolunteerImplementation : IVolunteer
             double distance = -1.0;
             if (volunteer.FullCurrentAddress != null)
             {
-                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!,volunteerCall.FullAddressCall,volunteer.RangeType);
+                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!, volunteerCall.FullAddressCall, volunteer.RangeType);
             }
-            
+
             //Create the CallInProgress intance for the Volunteer's field
             volunteerCallInProgress = new BO.CallInProgress
             {
@@ -135,12 +135,87 @@ internal class VolunteerImplementation : IVolunteer
         }
 
         //Create the BO Volunteer
-        return VolunteerManager.ConvertDoVolunteerToBoVolunteer(volunteer,volunteerCallInProgress);
+        return VolunteerManager.ConvertDoVolunteerToBoVolunteer(volunteer, volunteerCallInProgress);
     }
 
-    public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField)
+
+
+    /// <summary>
+    /// This method returns an enumarable of VolunteerInList entities.
+    /// The enumerable can be filtered and unfiltered, sorted and unsorted depending on the past parameters
+    /// </summary>
+    /// <param name="filterByActiveStatus">If null the returned enumarable would be full and not filtered, otherwise the return enumerable will be filtered by the given boolean value</param>
+    /// <param name="sortByField">If null the returned enumerable would be sorted by the Id, otherwise the enumerable will be sorted by the given value</param>
+    /// <returns></returns>
+    public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByActiveStatus, BO.VolunteerInListField? sortByField)
     {
-        throw new NotImplementedException();
+
+        //Get filtered or unfiltered enumerable of Volunteers
+        IEnumerable<DO.Volunteer> volunteers = (filterByActiveStatus == null)
+            ? s_dal.Volunteer.ReadAll()
+            : s_dal.Volunteer.ReadAll((DO.Volunteer volunteer) => volunteer.IsActive == (bool)filterByActiveStatus);
+
+        //Sort the given above enumerable
+        if (sortByField is null)
+        {
+            volunteers = from volunteer in volunteers
+                         orderby volunteer.Id
+                         select volunteer;
+        }
+        else
+        {
+            //Issue #16: Refactor
+            switch (sortByField)
+            {
+                case BO.VolunteerInListField.Id:
+                    {
+                        volunteers = from volunteer in volunteers
+                                        orderby volunteer.Id
+                                        select volunteer;
+                        break;
+                    }
+                case BO.VolunteerInListField.FullName:
+                    {
+                        volunteers = from volunteer in volunteers
+                                        orderby volunteer.FullName
+                                        select volunteer;
+                        break;
+                    }
+                case BO.VolunteerInListField.IsActive:
+                    {
+                        volunteers = from volunteer in volunteers
+                                        orderby volunteer.IsActive
+                                        select volunteer;
+                        break;
+                    }
+                    //Issue #15: Find why theses fields aren't orderby-able
+                    { 
+                        //case BO.VolunteerInListField.TotalCallsDoneByVolunteer:
+                        //case BO.VolunteerInListField.TotalCallsCancelByVolunteer:
+                        //case BO.VolunteerInListField.TotalCallsExpiredByVolunteer:
+                        //case BO.VolunteerInListField.CallId:
+                        //case BO.VolunteerInListField.TypeOfCall:
+                    }
+                default:
+                    {
+                        throw new BO.BoForbidenActionExeption($"BL: Aren't able to order by the field {sortByField}");
+                    }
+            }
+        }
+
+        //Convert to VolunteerInList entities
+        IEnumerable<BO.VolunteerInList> volunteerInLists = from volunteer in volunteers
+                                                           select new BO.VolunteerInList
+                                                           {
+                                                               Id = volunteer.Id,
+                                                               FullName = volunteer.FullName,
+                                                               IsActive = volunteer.IsActive,
+                                                               CallId = s_dal.Assignment
+                                                                    .Read((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
+                                                                    ?.CallId
+                                                                    
+                                                           };
+        return volunteerInLists;
     }
 
     public string Login(string username, string password)

@@ -2,7 +2,6 @@
 
 using BO;
 using DO;
-using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -332,8 +331,7 @@ internal static class VolunteerManager
     /// <param name="callInProgress">The CallInProgress variable which is related to the volunteer</param>
     /// <returns>A new BO Volunteer variable</returns>
     internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
-    {
-        return new BO.Volunteer
+        => new BO.Volunteer
         {
             Id = volunteer.Id,
             CurrentCall = callInProgress,
@@ -349,7 +347,4 @@ internal static class VolunteerManager
             FullName = volunteer.FullName,
             IsActive = volunteer.IsActive,
         };
-    }
-
-
 }

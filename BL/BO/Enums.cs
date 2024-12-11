@@ -59,12 +59,9 @@ public enum VolunteerInListField
     TotalCallsCancelByVolunteer ,
     TotalCallsExpiredByVolunteer ,
     CallId ,
-    CallType
+    TypeOfCall
 }
 
-/// <summary>
-/// The enum which manages the base clock units
-/// </summary>
 public enum TimeUnit
 {
     Seconds,

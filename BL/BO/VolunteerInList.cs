@@ -18,7 +18,7 @@ public class VolunteerInList
     public int TotalCallsDoneByVolunteer { get; }
 
     // Total number of calls cancelled by the volunteer
-    public int TotalCallsCancelByVolunteer { get;}
+    public int TotalCallsCancelByVolunteer { get; }
 
     // Total number of calls expired by the volunteer
     public int TotalCallsExpiredByVolunteer { get;}
@@ -27,7 +27,7 @@ public class VolunteerInList
     public int? CallId { get; set; }
 
     // Type of the current call assigned to the volunteer // Taken from DO.Call entity
-    public CallType CallType { get; set; }
+    public CallType TypeOfCall { get; set; }
     public override string ToString() => this.ToStringProperty();
 
 

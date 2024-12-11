@@ -15,13 +15,13 @@ public interface IVolunteer
     string Login(string username, string password);
 
     /// <summary>
-    /// This methdo returns an enumarable of VolunteerInList entities.
+    /// This method returns an enumarable of VolunteerInList entities.
     /// The enumerable can be filtered and unfiltered, sorted and unsorted depending on the past parameters
     /// </summary>
     /// <param name="filterByStatus">If null the returned enumarable would be full and not filtered, otherwise the return enumerable will be filtered by the given boolean value</param>
     /// <param name="sortByField">If null the returned enumerable would be sorted by the Id, otherwise the enumerable will be sorted by the given value</param>
     /// <returns></returns>
-    IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField);
+    IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField? sortByField);
 
     /// <summary>
     /// This method accepts an id value, calls the Read method from DAL, using the returned value it creates a new BO.Volunteer entity,
