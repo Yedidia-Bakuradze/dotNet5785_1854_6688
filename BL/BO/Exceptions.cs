@@ -73,5 +73,15 @@ public class BoHttpGetException : Exception
     public BoHttpGetException(string? msg) : base(msg) { }
 }
 
+/// <summary>
+/// This exception is thrown when the reqiered XElement tag is not found in the given XML tree
+/// </summary>
+[Serializable]
+public class BoXmlElementDoesntExsist : Exception
+{
+    public BoXmlElementDoesntExsist(string? msg) : base(msg) { }
+}
+
+
 
 #endregion BL
