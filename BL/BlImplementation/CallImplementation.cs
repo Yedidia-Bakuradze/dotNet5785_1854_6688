@@ -70,7 +70,7 @@ internal class CallImplementation : ICall
         }
         try
         {
-            s_dal.Assignment.Update(res with
+            s_dal.Assignment.Update(res! with
             {
                 TypeOfEnding = DO.TypeOfEnding.Treated,
                 TimeOfEnding = ClockManager.Now
