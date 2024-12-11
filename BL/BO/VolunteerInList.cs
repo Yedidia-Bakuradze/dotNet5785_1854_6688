@@ -15,13 +15,13 @@ public class VolunteerInList
     public bool IsActive { get; set; }
 
     // Total number of calls done by the volunteer
-    public int TotalCallsDoneByVolunteer { get; set; }
+    public int TotalCallsDoneByVolunteer { get; }
 
     // Total number of calls cancelled by the volunteer
-    public int TotalCallsCancelByVolunteer { get; set; }
+    public int TotalCallsCancelByVolunteer { get;}
 
     // Total number of calls expired by the volunteer
-    public int TotalCallsExpiredByVolunteer { get; set; }
+    public int TotalCallsExpiredByVolunteer { get;}
 
     // Identifier of the current call assigned to the volunteer
     public int? CallId { get; set; }
