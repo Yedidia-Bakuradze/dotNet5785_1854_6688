@@ -58,7 +58,7 @@ public class Volunteer
     public TypeOfRange RangeType { get; set; }
 
     //Get: Find all the 'Treated' calls and sum them up
-    public int NumOfHandledCalls { get; }
+    public int NumOfHandledCalls { get;}
 
     //Get: Find all the 'SelfCanceled' calls and sum them up
     public int NumOfCanceledCalls { get; }
@@ -69,8 +69,7 @@ public class Volunteer
 
     //Holds the call which is handled otherwise: null
 
-    //TODO: Add the CallInProgress class in the BO folder
-    public BO.CallInProgress? CurrentCall { get; }
+    public BO.CallInProgress? CurrentCall { get; set; }
     public override string ToString() => this.ToStringProperty();
 
 

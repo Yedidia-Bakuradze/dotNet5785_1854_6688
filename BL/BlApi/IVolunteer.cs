@@ -7,21 +7,21 @@ public interface IVolunteer
 {
     /// <summary>
     /// Logs into an account using the past username and password
-    /// If such a user doesn't exists or the redemtials aren't right, the method shall thrown an exception
+    /// If such a user doesn't exists or the credentials aren't correct, the method shall thrown an exception
     /// </summary>
     /// <param name="username">User's username value</param>
-    /// <param name="password">User's password value</param>
+    /// <param name="password">[Optional]: User's password value</param>
     /// <returns>The type of user</returns>
-    string Login(string username, string password);
+    string Login(string username, string? password);
 
     /// <summary>
-    /// This methdo returns an enumarable of VolunteerInList entities.
+    /// This method returns an enumarable of VolunteerInList entities.
     /// The enumerable can be filtered and unfiltered, sorted and unsorted depending on the past parameters
     /// </summary>
     /// <param name="filterByStatus">If null the returned enumarable would be full and not filtered, otherwise the return enumerable will be filtered by the given boolean value</param>
     /// <param name="sortByField">If null the returned enumerable would be sorted by the Id, otherwise the enumerable will be sorted by the given value</param>
     /// <returns></returns>
-    IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField sortByField);
+    IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField? sortByField);
 
     /// <summary>
     /// This method accepts an id value, calls the Read method from DAL, using the returned value it creates a new BO.Volunteer entity,
@@ -33,7 +33,7 @@ public interface IVolunteer
     BO.Volunteer GetVolunteerDetails(int id);
 
     /// <summary>
-    /// This method update the corisponding Volunteer entity from DO 
+    /// This method shall update the corisponding Volunteer entity from DO 
     /// It checks if the given id field is assosiated with a manager or with the updated volunteer person
     /// It checks if the new fields (id, address) are valid
     /// It requests the volunteer from the DO and compares what field been modified and check if the fields are modifiable by the user which makes the action (Role is modifable by the manager only)

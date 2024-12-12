@@ -2,7 +2,9 @@
 
 using BO;
 using DO;
-using System.Security.AccessControl;
+using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -325,4 +327,69 @@ internal static class VolunteerManager
             _ => throw new BO.BoInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
+    /// <summary>
+    /// This method converts from DO version of Volunteer to its BO version
+    /// </summary>
+    /// <param name="volunteer">The original DO Volunteer variable</param>
+    /// <param name="callInProgress">The assosiated call to that volunteer</param>
+    /// <returns>a new BO Volunteer variable</returns>
+    internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
+        => new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            CurrentCall = callInProgress,
+            Email = volunteer.Email,
+            FullCurrentAddress = volunteer.FullCurrentAddress,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            MaxDistanceToCall = volunteer.MaxDistanceToCall,
+            Password = volunteer.Password,
+            PhoneNumber = volunteer.PhoneNumber,
+            RangeType = (BO.TypeOfRange)volunteer.RangeType,
+            Role = (BO.UserRole)volunteer.Role,
+            FullName = volunteer.FullName,
+            IsActive = volunteer.IsActive,
+        };
+
+    /// <summary>
+    /// This method converts from BO version of Volunteer to its DO version
+    /// </summary>
+    /// <param name="volunteer">The original BO Volunteer variable</param>
+    /// <returns>a new DO Volunteer variable</returns>
+    internal static DO.Volunteer ConvertBoVolunteerToDoVolunteer(BO.Volunteer volunteer)
+        => new DO.Volunteer
+        {
+            Id = volunteer.Id,
+            Role = (DO.UserRole) volunteer.Role,
+            FullName = volunteer.FullName,
+            PhoneNumber = volunteer.PhoneNumber,
+            Email = volunteer.Email,
+            MaxDistanceToCall = volunteer.MaxDistanceToCall,
+            RangeType = (DO.TypeOfRange) volunteer.RangeType,
+            IsActive = volunteer.IsActive,
+            Password  = volunteer.Password ,
+            FullCurrentAddress  = volunteer.FullCurrentAddress ,
+            Latitude  = volunteer.Latitude ,
+            Longitude  = volunteer.Longitude
+        };
+
+    /// <summary>
+    /// This method accepts a string value and converts it into a hashed value using SHA256 algorithm
+    /// </summary>
+    /// <param name="originalPassword">The password before hashing</param>
+    /// <returns>The password after hashing</returns>
+    internal static string GetSHA256HashedPassword(string originalPassword)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+            {
+                //Converts the chars into bytes and hashes them
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
+
+                //Converts back the hashed bytes into a hex value 
+                StringBuilder builder = new StringBuilder();
+                string hashedPassword = "";
+                bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));    
+                return hashedPassword;
+            }
+    }
 }

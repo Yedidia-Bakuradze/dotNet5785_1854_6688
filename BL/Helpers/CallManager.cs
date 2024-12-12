@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using System.Reflection.Metadata.Ecma335;
 namespace Helpers;
 
 internal static class CallManager
@@ -37,41 +38,35 @@ internal static class CallManager
 
     }
 
+    /// <summary>
+    /// Accepts a Call Id and returns it status based on the CallStatus enum values
+    /// </summary>
+    /// <param name="callID">The Call Id value</param>
+    /// <returns>The status of the call</returns>
+    /// <exception cref="DO.DalDoesNotExistException">Throws an exception if such call doesn't exists</exception>
     public static BO.CallStatus GetStatus(int callID)
     {
-        DO.Call res = s_dal.Call.Read(call => call.Id == callID);
-        DO.Assignment resAssignments = s_dal.Assignment.Read(ass => ass.CallId == callID);
+        DO.Call res = s_dal.Call.Read(call => call.Id == callID)
+            ?? throw new DO.DalDoesNotExistException("Call Does not exist");
 
-        if( res == null) 
-        {
-            throw new DO.DalDoesNotExistException("Call Does not exist");
-        }
+        DO.Assignment? resAssignments = s_dal.Assignment.Read(ass => ass.CallId == callID);
+
+        //If there is not assingment - no one took the call therefor the call is open
         if(resAssignments == null )
         {
-            return BO.CallStatus.Open;
-        }
-        if(res.DeadLine < ClockManager.Now && resAssignments.TypeOfEnding == null)
-        {
-            return BO.CallStatus.Expiered;
-        }
-        if(res.DeadLine > ClockManager.Now && resAssignments.TypeOfEnding == null)
-        {
-            return BO.CallStatus.InProgress;
-        }
-        if(res.DeadLine > ClockManager.Now && resAssignments.TypeOfEnding != null)
-        {
-            return BO.CallStatus.Closed;
-        }
-        if((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange && resAssignments == null)
-        {
-            return BO.CallStatus.OpenAndRisky;
-        }
-        if ((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange && resAssignments.TypeOfEnding == null)
-        {
-            return BO.CallStatus.InProgressAndRisky;
+            return ((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange)
+                    ? BO.CallStatus.OpenAndRisky
+                    : BO.CallStatus.Open;
         }
 
-        return BO.CallStatus.Undefined;
-
+        //If there is such assignment containing the CallId - Check if expiered or in progress
+        if (resAssignments.TypeOfEnding == null)
+        {
+            if (res.DeadLine <= ClockManager.Now) return BO.CallStatus.Expiered;
+            if (res.DeadLine > ClockManager.Now) return BO.CallStatus.InProgress;
+            if ((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
+        }
+        
+        return BO.CallStatus.Closed;
     }
 }

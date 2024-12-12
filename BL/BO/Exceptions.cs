@@ -83,12 +83,24 @@ public class BoXmlElementDoesntExsist : Exception
 }
 
 /// <summary>
-/// This exception is thrown when 
+/// This exception is thrown when the system tries to make a forbidden action such as chaneging user's role mode without access
 /// </summary>
 [Serializable]
-public class BoForbidenActionExeption : Exception
+public class BoForbidenSystemActionExeption : Exception
 {
-    public BoForbidenActionExeption(string? msg) : base(msg) { }
+    public BoForbidenSystemActionExeption(string? msg) : base(msg) { }
+}
+
+/// <summary>
+/// This exception is thrown when the system tries to make un registered operation
+/// might occure in switch statments when the value is not a valid enum value for that operation
+/// </summary>
+public class BoInvalidEnumValueOperationException : Exception
+{
+    public BoInvalidEnumValueOperationException(string?msg):base(msg)
+    {
+        
+    }
 }
 
 #endregion BL
