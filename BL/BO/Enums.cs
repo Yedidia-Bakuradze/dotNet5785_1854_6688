@@ -6,14 +6,27 @@ public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
 public enum ClosedCallType { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 public enum CallType { Undefined, FoodPreparation, FoodDelivery }
 public enum CallInProgressStatus { Taken, TakenAndInRisk }
-public enum CallInListFields { Id, TypeOfCall, CallAddress, CallStartTime, EnteryTime, ClosingTime, TypeOfClosedCall }
+public enum CallInListFields
+{
+    Id,
+    CallId,
+    TypeOfCall,
+    OpenningTime,
+    TimeToEnd,
+    LastVolunteerName,
+    TimeElapsed,
+    Status,
+    TotalAlocations
+}
+
 public enum OpenCallFields { Id, CallId, TypeOfCall, OpenningTime, TimeToEnd, LastVolunteerName, TimeElapsed, Status, TotalAlocations }
 public enum ClosedCallInListFields { Id, TypeOfCall, CallAddress, CallStartTime, EnteryTime, ClosingTime, TypeOfClosedCall }
 
 /// <summary>
 /// The Call Status
 /// </summary>
-public enum CallStatus {
+public enum CallStatus
+{
 
     /// <summary>
     /// Free to be taken
@@ -29,7 +42,7 @@ public enum CallStatus {
     /// Closed by a volunteer
     /// </summary>
     Closed,
-    
+
     /// <summary>
     /// Hasn't been taken care of, or hasn't been done in time
     /// </summary>
@@ -52,13 +65,13 @@ public enum CallStatus {
 
 public enum VolunteerInListField
 {
-    Id ,
-    FullName ,
-    IsActive ,
-    TotalCallsDoneByVolunteer ,
-    TotalCallsCancelByVolunteer ,
-    TotalCallsExpiredByVolunteer ,
-    CallId ,
+    Id,
+    FullName,
+    IsActive,
+    TotalCallsDoneByVolunteer,
+    TotalCallsCancelByVolunteer,
+    TotalCallsExpiredByVolunteer,
+    CallId,
     TypeOfCall
 }
 
@@ -73,4 +86,4 @@ public enum TimeUnit
     Years
 }
 
-public enum DistanceType { driving, walking,air }
+public enum DistanceType { driving, walking, air }

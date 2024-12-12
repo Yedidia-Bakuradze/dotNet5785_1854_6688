@@ -1,7 +1,9 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
+using DO;
 using Helpers;
+using System.Security.Cryptography;
 
 internal class CallImplementation : ICall
 {
@@ -93,7 +95,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="VolunteerId">The ID of the volunteer.</param>
     /// <param name="callType">Optional filter for the type of call.</param>
-    /// <param name="parameter">Optional parameter for sorting the resulting list.</param>
+    /// <param name="parameter">Optional filterField for sorting the resulting list.</param>
     /// <returns>A sorted and filtered list of closed calls.</returns>
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int VolunteerId, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
     {
@@ -121,7 +123,7 @@ internal class CallImplementation : ICall
             TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
         }).ToList();
 
-        // Step 5: Sort the list based on the specified parameter
+        // Step 5: Sort the list based on the specified filterField
         if (parameter != null)
         {
             switch (parameter)
@@ -148,7 +150,7 @@ internal class CallImplementation : ICall
                     closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
                     break;
                 default:
-                    throw new BO.BlInvalidEnumValueOperationException("Invalid sorting parameter");
+                    throw new BO.BlInvalidEnumValueOperationException("Invalid sorting filterField");
             }
         }
 
@@ -200,14 +202,134 @@ internal class CallImplementation : ICall
     }
 
 
-    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? parameter = null, object? value = null, BO.CallInListFields? parameter1 = null)
+    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null)
     {
         List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
         List<DO.Assignment> assignments = s_dal.Assignment .ReadAll().ToList();
 
+        IEnumerable<BO.CallInList> callsInlist = from call in calls
+                          let callsAssignments = from assignment in assignments
+                                                 where assignment.CallId == call.Id
+                                                 orderby assignment.Id descending
+                                                 select assignment
+                          select new BO.CallInList
+                          {
+                              Id = callsAssignments.First().Id,
+                              CallId = call.Id,
+                              Status = CallManager.GetStatus(call.Id),
+                              OpenningTime = call.OpeningTime,
+                              LastVolunteerName = s_dal.Volunteer.Read(vol => vol.Id == callsAssignments.First().VolunteerId)?.FullName,
+                              TimeToEnd = call.DeadLine - ClockManager.Now,
+                              TypeOfCall = (BO.CallType) call.Type,
+                              TimeElapsed = (callsAssignments.First().TypeOfEnding != null)
+                                ? callsAssignments.First().TimeOfEnding - callsAssignments.First().TimeOfStarting
+                                : null,
+                              TotalAlocations = callsAssignments.Count(),
+                          };
+        
+        //Filtering the list
+        if (filterField != null)
+        {
+            switch (filterField)
+            {
+                case CallInListFields.Id:
+                    callsInlist = from call in callsInlist
+                                  where call.Id == (int)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.CallId:
+                    callsInlist = from call in callsInlist
+                                  where call.CallId == (int)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.TypeOfCall:
+                    callsInlist = from call in callsInlist
+                                  where call.TypeOfCall == (BO.CallType)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.OpenningTime:
+                    callsInlist = from call in callsInlist
+                                  where call.OpenningTime == (DateTime)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.TimeToEnd:
+                    callsInlist = from call in callsInlist
+                                  where call.TimeToEnd == (TimeSpan)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.LastVolunteerName:
+                    callsInlist = from call in callsInlist
+                                  where call.LastVolunteerName == (string)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.TimeElapsed:
+                    callsInlist = from call in callsInlist
+                                  where call.TimeElapsed == (TimeSpan)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.Status:
+                    callsInlist = from call in callsInlist
+                                  where call.Status == (CallStatus)filterValue!
+                                  select call;
+                    break;
+                case CallInListFields.TotalAlocations:
+                    callsInlist = from call in callsInlist
+                                  where call.TotalAlocations == (int)filterValue!
+                                  select call;
+                    break;
+                case null:
+                    throw new BO.BlInvalidEnumValueOperationException($"Bl: Filter value is null");
+                    break;
+            }
+        }
 
-        throw new NotImplementedException();
+        //Sorting the list by given field
+        switch (sortingField)
+        {
+            case CallInListFields.Id:
+                return from call in callsInlist
+                       orderby call.Id
+                       select call;
+            case CallInListFields.CallId:
+                return from call in callsInlist
+                       orderby call.CallId
+                         select call;
+            case CallInListFields.TypeOfCall:
+                return from call in callsInlist
+                       orderby call.TypeOfCall
+                       select call;
+            case CallInListFields.OpenningTime:
+                return from call in callsInlist
+                       orderby call.OpenningTime
+                       select call;
+            case CallInListFields.TimeToEnd:
+                return from call in callsInlist
+                       orderby call.TimeToEnd
+                       select call;
+            case CallInListFields.LastVolunteerName:
+                return from call in callsInlist
+                       orderby call.LastVolunteerName
+                       select call;
+            case CallInListFields.TimeElapsed:
+                return from call in callsInlist
+                       orderby call.TimeElapsed
+                       select call;
+            case CallInListFields.Status:
+                return from call in callsInlist
+                       orderby call.Status
+                       select call;
+            case CallInListFields.TotalAlocations:
+                return from call in callsInlist
+                       orderby call.TotalAlocations
+                       select call;
+                case null:
+                    break;
+        }
 
+        //If the sorting field is null, return the list as is
+        return from call in callsInlist
+               orderby call.CallId
+               select call;
     }
 
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int id, BO.CallType? callType, BO.OpenCallFields? parameter)
