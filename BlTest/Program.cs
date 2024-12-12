@@ -7,7 +7,8 @@ namespace BlTest
         //Main BL Action manager for the bl layer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        public enum Operation { Exit, Call, Volunteer, Admin}
+        public enum MainMenuOperation { Exit, Call, Volunteer, Admin}
+        public enum CallMenuOperation { Exit, AddCall, GetCall, UpdateCallSelectCallToDo, UpdateCallEnd, EndOfCallStatusUpdate, DeleteCallRequest, GetListOfCalls, GetDetielsOfCall ,GetClosedCallsByVolunteer, GetOpenCallsForVolunteer, GetTotalCallsByStatus,  GetAllCalls }
 
         static void Main(string[] args)
         {
@@ -29,7 +30,7 @@ Press 0 To Exit
 ");
             Console.Write(">>> ");
             string input;
-            Operation operation;
+            MainMenuOperation operation;
             do
             {
                 input = Console.ReadLine() ?? "";
@@ -40,13 +41,13 @@ Press 0 To Exit
                 {
                     switch (operation)
                     {
-                        case Operation.Exit:
+                        case MainMenuOperation.Exit:
                             return;
-                        case Operation.Call:
+                        case MainMenuOperation.Call:
                             break;
-                        case Operation.Volunteer:
+                        case MainMenuOperation.Volunteer:
                             break;
-                        case Operation.Admin:
+                        case MainMenuOperation.Admin:
                             break;
                     }
                 }
@@ -61,9 +62,59 @@ Press 0 To Exit
         }
 
 
-        public void ICallSubMenu()
+        public void ICallSubMenu(CallMenuOperation callMenuOperation)
         {
+            Console.WriteLine(@"
+----------------------------------------------------------------
+Select Your Option:
 
+Press 1 To Use ICall Interface
+Press 2 To Use IVolunteer Interface
+Press 3 To Use IAdmin Interface
+Press 0 To Exit
+----------------------------------------------------------------                
+");
+            Console.Write(">>> ");
+            string input;
+            CallMenuOperation Calloperation;
+            do
+            {
+                input = Console.ReadLine() ?? "";
+                if (!Enum.TryParse(input, out Calloperation))
+                    throw new BO.BlInvalidEnumValueOperationException($"Bl: Enum value for the main window is not a valid operation");
+
+                switch (Calloperation)
+                {
+                    case CallMenuOperation.Exit:
+                        return;
+                    case CallMenuOperation.AddCall:
+                        
+                        break;
+                    case CallMenuOperation.GetCall:
+                        break;
+                    case CallMenuOperation.UpdateCallSelectCallToDo:
+                        break;
+                    case CallMenuOperation.UpdateCallEnd:
+                        break;
+                    case CallMenuOperation.EndOfCallStatusUpdate:
+                        break;
+                    case CallMenuOperation.DeleteCallRequest:
+                        break;
+                    case CallMenuOperation.GetListOfCalls:
+                        break;
+                    case CallMenuOperation.GetDetielsOfCall:
+                        break;
+                    case CallMenuOperation.GetClosedCallsByVolunteer:
+                        break;
+                    case CallMenuOperation.GetOpenCallsForVolunteer:
+                        break;
+                    case CallMenuOperation.GetTotalCallsByStatus:
+                        break;
+                    case CallMenuOperation.GetAllCalls:
+                        break;
+                }
+            }
+            while (true);
         }
 
 
