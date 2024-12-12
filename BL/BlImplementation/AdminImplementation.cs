@@ -61,7 +61,7 @@ internal class AdminImplementation : IAdmin
     /// This method accepts a TimeUnit and moves forrward the time by one unit of the specified TimeUnit
     /// </summary>
     /// <param name="timeUnit">The TimeUnit which is needed to be add on the current clock by one unit</param>
-    /// <exception cref="BO.BoInvalidEnumValueOperationException">An excption that indicates that there is a forbidden operation</exception>
+    /// <exception cref="BO.BlInvalidEnumValueOperationException">An excption that indicates that there is a forbidden operation</exception>
     public void UpdateClock(TimeUnit timeUnit)
     {
         switch (timeUnit)
@@ -94,7 +94,7 @@ internal class AdminImplementation : IAdmin
                 }
             default:
                 {
-                    throw new BO.BoInvalidEnumValueOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");
+                    throw new BO.BlInvalidEnumValueOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");
                 }
 
         }

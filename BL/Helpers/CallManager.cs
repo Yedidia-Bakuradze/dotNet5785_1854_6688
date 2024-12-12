@@ -66,4 +66,20 @@ internal static class CallManager
         
         return BO.CallStatus.Closed;
     }
+
+
+    internal static bool IsCallValid(BO.Call call)
+    {
+        //Check if the times are valid
+        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
+        {
+            throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
+        }
+
+        //Checks if the address is valid (if cordinates exist)
+        (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+        if (lat == null || lng == null)
+            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+
+    }
 }

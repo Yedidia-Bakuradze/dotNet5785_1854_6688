@@ -33,7 +33,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="httpResponse">The string result of the API call</param>
     /// <returns>The root XElement value</returns>
-    /// <exception cref="BoHttpGetException">Throws an exception if the Http response was corrupted The response status was not OK</exception>
+    /// <exception cref="BlHttpGetException">Throws an exception if the Http response was corrupted The response status was not OK</exception>
     private static XElement HttpGetXmlReponse(Uri requestUri)
     {
         using HttpClient client = new HttpClient();
@@ -47,12 +47,12 @@ internal static class VolunteerManager
 
         //Try to parse to Xml content value
         XElement root = XElement.Parse(httpResponse).Element("status")
-                        ?? throw new BoHttpGetException("Http Exception: Response is unable to be converted to an XML file");
+                        ?? throw new BlHttpGetException("Http Exception: Response is unable to be converted to an XML file");
         
         //If the GET response content is not good then the address it coropted
         if (root?.Value != "OK")
         {
-            throw new BoHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
+            throw new BlHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
         }
         return XElement.Parse(httpResponse);
     }
@@ -74,16 +74,16 @@ internal static class VolunteerManager
                     ?.Element("result")
                     ?.Element("geometry")
                     ?.Element("location")
-                    ?? throw new BoXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
+                    ?? throw new BlXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
             return ((double?)res?.Element("lat"), (double?)res?.Element("lng"));
 
         }
-        catch (BO.BoHttpGetException ex)
+        catch (BO.BlHttpGetException ex)
         {
             Console.WriteLine(ex.Message);
             return (null, null);
         }
-        catch (BO.BoXmlElementDoesntExsist ex)
+        catch (BO.BlXmlElementDoesntExsist ex)
         {
             Console.WriteLine(ex.Message);
             return (null, null);
@@ -129,7 +129,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="name">The uesr's full name</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
+    /// <exception cref="BlUnimplementedMethodOrFunction">UnImplemented exception</exception>
     private static bool IsValidFullName(string name)
     {
         // Regex pattern to check if there is at least one blank space, every word is at least two letters long,
@@ -143,7 +143,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="phoneNumber">The uesr's phone number</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
+    /// <exception cref="BlUnimplementedMethodOrFunction">UnImplemented exception</exception>
     private static bool IsValidPhoneNumber(string phoneNumber)
     {
         string pattern = @"^0\d{9}$";
@@ -168,7 +168,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="pasword">The uesr's password</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    /// <exception cref="BoUnimplementedMethodOrFunction">UnImplemented exception</exception>
+    /// <exception cref="BlUnimplementedMethodOrFunction">UnImplemented exception</exception>
     private static bool IsValidPassword(string? password)
     {
         //TODO: [Bonus]: eyncrypt the password using SHA256
@@ -250,7 +250,7 @@ internal static class VolunteerManager
 
         if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
         {
-            throw new BO.BoInvalidEntityDetails("BL: One or both of the provided addresses could not be geocoded.");
+            throw new BO.BlInvalidEntityDetails("BL: One or both of the provided addresses could not be geocoded.");
         }
 
         double R = 6371; // Radius of the Earth in kilometers
@@ -324,7 +324,7 @@ internal static class VolunteerManager
         DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress) ,
             DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress) ,
             DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress),
-            _ => throw new BO.BoInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
+            _ => throw new BO.BlInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
     /// <summary>
