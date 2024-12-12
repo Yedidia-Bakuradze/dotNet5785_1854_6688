@@ -1,24 +1,24 @@
 ﻿namespace BO;
 
-#region DalBLException
+#region Dal-BL Exceptions
 [Serializable]
 public class BlDoesNotExistException : Exception
 {
-    DO.DalDoesNotExistException? oldEx;
-    public BlDoesNotExistException(string? msg, DO.DalDoesNotExistException? ex=null) : base(msg) => oldEx = ex;
+    public BlDoesNotExistException(string? msg) : base(msg) { }
+    public BlDoesNotExistException(string msg, DO.DalDoesNotExistException ex) : base(msg, ex) { }
 }
 
 [Serializable]
 public class BlAlreadyExistsException : Exception
 {
-    DO.DalAlreadyExistsException? oldEx;
-    public BlAlreadyExistsException(string? msg, DO.DalAlreadyExistsException? ex=null) : base(msg) => oldEx = ex;
+    public BlAlreadyExistsException(string? msg) : base(msg) { }
+    public BlAlreadyExistsException(string msg, DO.DalAlreadyExistsException ex) : base(msg, ex) { };
 }
 
 #endregion DalBLException
 
 
-#region BL
+#region BL Specific Exceptions
 /// <summary>
 /// This exception is used as an indicator if one or more values of a entity (Prop?) is not valid due to foramtting
 /// </summary>
