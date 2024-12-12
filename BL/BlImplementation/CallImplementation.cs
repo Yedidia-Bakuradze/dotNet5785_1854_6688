@@ -7,15 +7,19 @@ internal class CallImplementation : ICall
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     public void AddCall(BO.Call call)
     {
-        
 
-        // check if the times are valid
+        //Check if the times are valid
         if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
         {
             throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
         }
-        //check if the address is valid
-        //TODO:: using api.
+
+        //Checks if the address is valid (if cordinates exist)
+        (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+        if (lat == null || lng == null)
+            throw new BO.BoInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+        
+        //Create new Dal entity
         DO.Call newCall = new DO.Call
         {
             Id = call.Id,
@@ -28,9 +32,6 @@ internal class CallImplementation : ICall
             DeadLine = call.CallDeadLine
         };
         s_dal.Call.Create(newCall);
-        
-
-
     }
 
     public void DeleteCallRequest(int requestId)

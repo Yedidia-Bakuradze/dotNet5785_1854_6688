@@ -62,7 +62,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="streetAddress">The requested street address to convert to cordinates</param>
     /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
-    private static (double?, double?) GetGeoCordinates(string streetAddress)
+    internal static (double?, double?) GetGeoCordinates(string streetAddress)
     {
         //Builds the URL requests
         Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");

@@ -12,6 +12,9 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public void DbInit()
     {
+        //TODO: Find the place which we need to added the function call
+        ClockManager.ClockUpdatedObservers += CallManager.UpdateAllOpenAndExpierdCalls;
+
         DalTest.Initialization.Do();
         ClockManager.UpdateRiskRange(ClockManager.RiskRange);
         ClockManager.UpdateClock(ClockManager.Now);
