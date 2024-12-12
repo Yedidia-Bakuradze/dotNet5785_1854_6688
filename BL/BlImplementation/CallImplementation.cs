@@ -7,17 +7,12 @@ internal class CallImplementation : ICall
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     public void AddCall(BO.Call call)
     {
-
-        //Check if the times are valid
-        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
-        {
-            throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
-        }
-
-        //Checks if the address is valid (if cordinates exist)
+        //Check if the call entity is valid or not
+        if(!CallManager.IsCallValid(call))
+            throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
+        
+        //Get Call cordinates
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
-        if (lat == null || lng == null)
-            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
         
         //Create new Dal entity
         DO.Call newCall = new DO.Call
