@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using System.Net.Http.Headers;
 namespace Helpers;
 
 internal static class CallManager
@@ -93,4 +94,23 @@ internal static class CallManager
         }
         return true;
     }
+    
+    /// <summary>
+    /// This method converts between the BO version of Call to the DO version of call
+    /// </summary>
+    /// <param name="call">The original BO Call entity</param>
+    /// <returns>The converted DO Call entity</returns>
+    internal static DO.Call ConvertFromBdToD(BO.Call call)
+    =>
+        new DO.Call
+        {
+            Id = call.Id,
+            Type = (DO.CallType)call.TypeOfCall,
+            FullAddressCall = call.CallAddress,
+            Latitude = call.Latitude,
+            Longitude = call.Longitude,
+            OpeningTime = call.CallStartTime,
+            Description = call.Description,
+            DeadLine = call.CallDeadLine
+        };
 }

@@ -6,6 +6,11 @@ using Helpers;
 internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
+    /// <summary>
+    /// Adds a new call to the system after validating its details.
+    /// </summary>
+    /// <param name="call">The call object containing details to be added.</param>
+    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
     public void AddCall(BO.Call call)
     {
         //Check if the call entity is valid or not
@@ -14,58 +19,72 @@ internal class CallImplementation : ICall
         
         //Get Call cordinates
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
-        
+        if (lat == null || lng == null)
+            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+
         //Create new Dal entity
-        DO.Call newCall = new DO.Call
-        {
-            Id = call.Id,
-            Type = (DO.CallType)call.TypeOfCall,
-            FullAddressCall = call.CallAddress,
-            Latitude = call.Latitude,
-            Longitude = call.Longitude,
-            OpeningTime = call.CallStartTime,
-            Description = call.Description,
-            DeadLine = call.CallDeadLine
-        };
+        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+
+        // Add the new call to the database
         s_dal.Call.Create(newCall);
     }
 
+    /// <summary>
+    /// Deletes a call request by its request ID.
+    /// </summary>
+    /// <param name="requestId">The ID of the call request to delete.</param>
+    /// <exception cref="BO.BlAlreadyExistsException">Thrown if there are assignments related to the call that prevent deletion.</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the given ID does not exist in the database.</exception>
     public void DeleteCallRequest(int requestId)
     {
         try
         {
+            // Check if there are any assignments related to the call
             if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
             {
                 throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }
-            // Attempt to delete the callnew 
+            // Attempt to delete the call
             s_dal.Call.Delete(requestId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Bl Exception: id does not exist", ex) ; 
+            // If the call does not exist, throw an exception
+            throw new BO.BlDoesNotExistException("Bl Exception: id does not exist", ex);
         }
     }
 
+    /// <summary>
+    /// Updates the status of an assignment when the call ends.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
+    /// <param name="callId">The ID of the call associated with the assignment.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
+        // Retrieve the assignment details for the given volunteer and call ID
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist", new DO.DalDoesNotExistException(""));
 
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
+        // Check if the assignment already has an ending type or time
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
-            throw new BO.BlForbidenSystemActionExeption("BL: Cant update the assignment");
+            throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
         }
+
         try
         {
+            // Update the assignment with the new ending type and time
             s_dal.Assignment.Update(res! with
             {
                 TypeOfEnding = DO.TypeOfEnding.Treated,
                 TimeOfEnding = ClockManager.Now
             });
         }
-        catch(DO.DalDoesNotExistException ex) 
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Bl: ASsignement does not exist", ex);
+            // If the assignment does not exist in the database, throw an exception
+            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
         }
     }
 
@@ -137,12 +156,49 @@ internal class CallImplementation : ICall
         return closedCalls;
     }
 
-
-
+    /// <summary>
+    /// Retrieves the details of a call based on the provided call ID.
+    /// </summary>
     public BO.Call GetDetielsOfCall(int callId)
     {
-        throw new NotImplementedException();
+        // Fetch the call details from the data layer (DAL) by the given call ID.
+        DO.Call call = s_dal.Call.Read(call => call.Id == callId)!;
+
+        // Fetch all assignments related to the call ID.
+        List<DO.Assignment> res = s_dal.Assignment.ReadAll(ass => ass.CallId == callId).ToList();
+
+        // If the call does not exist, throw an exception with a relevant message.
+        if (call == null)
+        {
+            throw new BO.BlDoesNotExistException("BL: Call does not exist");
+        }
+
+        // Map the fetched call details and assignments to a BO (Business Object) call.
+        BO.Call boCall = new BO.Call
+        {
+            Id = call.Id,  // Set the call ID
+            TypeOfCall = (BO.CallType)call.Type,  // Convert the call type to the corresponding BO enum
+            Description = call.Description,  // Set the call description
+            CallAddress = call.FullAddressCall,  // Set the full address of the call
+            Latitude = call.Latitude,  // Set the latitude of the call
+            Longitude = call.Longitude,  // Set the longitude of the call
+            CallStartTime = call.OpeningTime,  // Set the opening time of the call
+            CallDeadLine = call.DeadLine,  // Set the deadline for the call
+            Status = CallManager.GetStatus(call.Id),  // Get the status of the call using the CallManager
+            MyAssignments = res.Select((assignment) => new BO.CallAssignInList
+            {
+                VolunteerId = assignment.VolunteerId,  // Set the volunteer ID for the assignment
+                VolunteerName = s_dal.Volunteer.Read(vol => vol.Id == assignment.VolunteerId)?.FullName,  // Get the volunteer's full name based on the ID
+                EntryTime = assignment.TimeOfStarting,  // Set the start time of the assignment
+                FinishTime = assignment.TimeOfEnding,  // Set the finish time of the assignment
+                TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!  // Set the type of the closed call if found
+            }).ToList()  // Convert the assignments to a list of BO.CallAssignInList objects
+        };
+
+        // Return the populated BO.Call object containing all relevant details.
+        return boCall;
     }
+
 
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? parameter = null, object? value = null, BO.CallInListFields? parameter1 = null)
     {
@@ -174,6 +230,12 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// This method updates the DO Call with the past BO Call field values
+    /// </summary>
+    /// <param name="call">The new (BO) Call entity with the new values</param>
+    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the Call values are not valid</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
     public void UpdateCall(BO.Call call)
     {
         if (!CallManager.IsCallValid(call))
