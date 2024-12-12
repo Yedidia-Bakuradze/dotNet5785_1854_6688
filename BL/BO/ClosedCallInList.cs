@@ -35,7 +35,7 @@ public class ClosedCallInList
     /// <summary>
     /// From Do.Assignment
     /// </summary>
-    public DateTime ClosingTime { get; set; }
+    public DateTime? ClosingTime { get; set; }
 
     /// <summary>
     /// From Do.Assignment
