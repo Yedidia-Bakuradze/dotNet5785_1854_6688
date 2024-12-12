@@ -18,7 +18,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// If such a volunteer already exists it would handle the thrown excpetion by throwing a new exception to the upper layers
     /// </summary>
     /// <param name="volunteer"></param>
-    /// <exception cref="BoAlreadyExistsException">A</exception>
+    /// <exception cref="BlAlreadyExistsException">A</exception>
     public void AddVolunteer(BO.Volunteer volunteer)
     {
         try
@@ -26,7 +26,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             //Check logics and formmating
             if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
             {
-                throw new BO.BoInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
+                throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
             }
 
             //Create Dal Volunteer entity
@@ -55,7 +55,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         catch (DO.DalAlreadyExistsException ex)
         {
             //Throw new BL excpetion to the upper layers
-            throw new BO.BoAlreadyExistsException($"BL-DAL: Such object already exists in the database", ex);
+            throw new BO.BlAlreadyExistsException($"BL-DAL: Such object already exists in the database", ex);
         }
     }
 
@@ -70,12 +70,12 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         //Tries to find such volunteer
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
-            ?? throw new BO.BoDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
+            ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
 
         //Checks if the volunteer is in any records of assignments
         if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
         {
-            throw new BO.BoEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
+            throw new BO.BlEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
         }
 
         //Tries to remove if the volunteer exists
@@ -85,7 +85,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
+            throw new BO.BlDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
         }
 
     }
@@ -100,7 +100,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     public BO.Volunteer GetVolunteerDetails(int id)
     {
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
-            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
 
         DO.Assignment? volunteerAssignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
         BO.CallInProgress? volunteerCallInProgress = null;
@@ -110,7 +110,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         {
             //Get the Dal call
             DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
-                ?? throw new BO.BoDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
+                ?? throw new BO.BlDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
 
             //Calculate the distance
             double distance = -1.0;
@@ -197,7 +197,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     }
                 default:
                     {
-                        throw new BO.BoInvalidEnumValueOperationException($"BL: Aren't able to order by the field {sortByField}");
+                        throw new BO.BlInvalidEnumValueOperationException($"BL: Aren't able to order by the field {sortByField}");
                     }
             }
         }
@@ -232,7 +232,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         
         DO.Volunteer volunteer = s_dal.Volunteer
             .Read((DO.Volunteer volunteer) => volunteer.Email == username && volunteer.Password == hashedPassword)
-            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with email address: {username} and password: {password} doesn't exsits");
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with email address: {username} and password: {password} doesn't exsits");
         
         return volunteer.Role.ToString();
     }
@@ -251,19 +251,19 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         //Check if allowed to modify
         if (id != volunteer.Id || s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BoForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
+            throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
         
         //Check if logics are correct
         if (!VolunteerManager.IsVolunteerValid(volunteer))
-            throw new BO.BoInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
+            throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
 
         //Get original Volunteer for comparing
         DO.Volunteer currentVolunteer = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == volunteer.Id)
-            ?? throw new BO.BoDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
 
         //Checks what fields are requested to be modified - The role is modifable by only the manager
         if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BoForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+            throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
 
         //Create new instance of DO.Volunteer
         DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);
@@ -275,7 +275,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
         catch(DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException($"Bl: The volunteer Id: {volunteer.Id} doesn't exists", ex);
+            throw new BO.BlDoesNotExistException($"Bl: The volunteer Id: {volunteer.Id} doesn't exists", ex);
         }
     }
 }

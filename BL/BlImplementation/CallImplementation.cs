@@ -11,13 +11,13 @@ internal class CallImplementation : ICall
         //Check if the times are valid
         if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
         {
-            throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
+            throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
         }
 
         //Checks if the address is valid (if cordinates exist)
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
-            throw new BO.BoInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
         
         //Create new Dal entity
         DO.Call newCall = new DO.Call
@@ -40,24 +40,24 @@ internal class CallImplementation : ICall
         {
             if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
             {
-                throw new BO.BoAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
+                throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }
             // Attempt to delete the callnew 
             s_dal.Call.Delete(requestId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException("Bl Exception: id does not exist", ex) ; 
+            throw new BO.BlDoesNotExistException("Bl Exception: id does not exist", ex) ; 
         }
     }
 
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
 
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BoDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
-            throw new BO.BoForbidenSystemActionExeption("BL: Cant update the assignment");
+            throw new BO.BlForbidenSystemActionExeption("BL: Cant update the assignment");
         }
         try
         {
@@ -69,7 +69,7 @@ internal class CallImplementation : ICall
         }
         catch(DO.DalDoesNotExistException ex) 
         {
-            throw new BO.BoDoesNotExistException("Bl: ASsignement does not exist", ex);
+            throw new BO.BlDoesNotExistException("Bl: ASsignement does not exist", ex);
         }
     }
 
@@ -133,7 +133,7 @@ internal class CallImplementation : ICall
                     closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
                     break;
                 default:
-                    throw new BO.BoInvalidEnumValueOperationException("Invalid sorting parameter");
+                    throw new BO.BlInvalidEnumValueOperationException("Invalid sorting parameter");
             }
         }
 
@@ -222,8 +222,44 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// This method updates the Call status with the past callId
+    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests the modification</param>
+    /// <param name="callId">The call if of the Call which is needed to be updated</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
     public void UpdateCallEnd(int VolunteerId, int callId)
     {
-        throw new NotImplementedException();
+        //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+        DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+            ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+
+        if (assignment.CallId != VolunteerId)
+            throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+
+        //Check that the call is not ended (Cancled, Expiered or completed)
+        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+
+        //Throw exception if access not granted or if there is Dal exception
+
+        //Update the Dal entity with current system time and Closed status
+        DO.Assignment newAssignment = assignment with
+        {
+            TypeOfEnding = DO.TypeOfEnding.Treated,
+            TimeOfEnding = ClockManager.Now,
+        };
+
+        try
+        {
+            s_dal.Assignment.Update(newAssignment);
+        }
+        catch(DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
+        }
+
     }
 }
