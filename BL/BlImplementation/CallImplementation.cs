@@ -212,7 +212,12 @@ internal class CallImplementation : ICall
 
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? parameter = null, object? value = null, BO.CallInListFields? parameter1 = null)
     {
+        List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
+        List<DO.Assignment> assignments = s_dal.Assignment .ReadAll().ToList();
+
+
         throw new NotImplementedException();
+
     }
 
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int id, BO.CallType? callType, BO.OpenCallFields? parameter)
