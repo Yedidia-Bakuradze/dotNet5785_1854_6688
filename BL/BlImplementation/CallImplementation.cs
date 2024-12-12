@@ -5,21 +5,25 @@ using Helpers;
 internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
+    /// <summary>
+    /// Adds a new call to the system after validating its details.
+    /// </summary>
+    /// <param name="call">The call object containing details to be added.</param>
+    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
     public void AddCall(BO.Call call)
     {
-
-        //Check if the times are valid
+        // Check if the times are valid
         if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
         {
             throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
         }
 
-        //Checks if the address is valid (if cordinates exist)
+        // Checks if the address is valid (if coordinates exist)
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
             throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
-        
-        //Create new Dal entity
+
+        // Create new Dal entity
         DO.Call newCall = new DO.Call
         {
             Id = call.Id,
@@ -31,45 +35,66 @@ internal class CallImplementation : ICall
             Description = call.Description,
             DeadLine = call.CallDeadLine
         };
+        // Add the new call to the database
         s_dal.Call.Create(newCall);
     }
 
+    /// <summary>
+    /// Deletes a call request by its request ID.
+    /// </summary>
+    /// <param name="requestId">The ID of the call request to delete.</param>
+    /// <exception cref="BO.BlAlreadyExistsException">Thrown if there are assignments related to the call that prevent deletion.</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the given ID does not exist in the database.</exception>
     public void DeleteCallRequest(int requestId)
     {
         try
         {
+            // Check if there are any assignments related to the call
             if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
             {
                 throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }
-            // Attempt to delete the callnew 
+            // Attempt to delete the call
             s_dal.Call.Delete(requestId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Bl Exception: id does not exist", ex) ; 
+            // If the call does not exist, throw an exception
+            throw new BO.BlDoesNotExistException("Bl Exception: id does not exist", ex);
         }
     }
 
+    /// <summary>
+    /// Updates the status of an assignment when the call ends.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
+    /// <param name="callId">The ID of the call associated with the assignment.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
+        // Retrieve the assignment details for the given volunteer and call ID
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist", new DO.DalDoesNotExistException(""));
 
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignement does not exist", new DO.DalDoesNotExistException(""));
+        // Check if the assignment already has an ending type or time
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
-            throw new BO.BlForbidenSystemActionExeption("BL: Cant update the assignment");
+            throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
         }
+
         try
         {
+            // Update the assignment with the new ending type and time
             s_dal.Assignment.Update(res! with
             {
                 TypeOfEnding = DO.TypeOfEnding.Treated,
                 TimeOfEnding = ClockManager.Now
             });
         }
-        catch(DO.DalDoesNotExistException ex) 
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Bl: ASsignement does not exist", ex);
+            // If the assignment does not exist in the database, throw an exception
+            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
         }
     }
 
@@ -140,8 +165,6 @@ internal class CallImplementation : ICall
         // Step 6: Return the final list
         return closedCalls;
     }
-
-
 
     /// <summary>
     /// Retrieves the details of a call based on the provided call ID.
