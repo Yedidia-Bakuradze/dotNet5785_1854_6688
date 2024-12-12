@@ -122,8 +122,44 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// This method updates the Call status with the past callId
+    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests the modification</param>
+    /// <param name="callId">The call if of the Call which is needed to be updated</param>
+    /// <exception cref="BO.BoDoesNotExistException">Thrown when the assignment doesn't exists</exception>
+    /// <exception cref="BO.BoForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
     public void UpdateCallEnd(int VolunteerId, int callId)
     {
-        throw new NotImplementedException();
+        //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+        DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+            ?? throw new BO.BoDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+
+        if (assignment.CallId != VolunteerId)
+            throw new BO.BoForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+
+        //Check that the call is not ended (Cancled, Expiered or completed)
+        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BoForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+
+        //Throw exception if access not granted or if there is Dal exception
+
+        //Update the Dal entity with current system time and Closed status
+        DO.Assignment newAssignment = assignment with
+        {
+            TypeOfEnding = DO.TypeOfEnding.Treated,
+            TimeOfEnding = ClockManager.Now,
+        };
+
+        try
+        {
+            s_dal.Assignment.Update(newAssignment);
+        }
+        catch(DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BoDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
+        }
+
     }
 }
