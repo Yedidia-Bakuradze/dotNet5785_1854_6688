@@ -1,9 +1,7 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
-using DO;
+using DalApi;
 using Helpers;
-using System.Security.Cryptography;
 
 internal class CallImplementation : ICall
 {
@@ -418,9 +416,24 @@ internal class CallImplementation : ICall
         return openCalls;
     }
 
+    /// <summary>
+    /// This method returns an array that contains the number of calls for eaach status, each status on its index value in the cell
+    /// </summary>
+    /// <returns>Array containing the call count per status</returns>
     public int[] GetTotalCallsByStatus()
     {
-        throw new NotImplementedException();
+        var groupedCallAndStatuses = s_dal.Call
+                .ReadAll()
+                .GroupBy(
+                    call => CallManager.GetStatus(call.Id),
+                    (key, group) => new { Status = key, Count = group.ToList().Count }
+                    );
+
+        int[] statusCount = groupedCallAndStatuses
+                           .Select(call => call.Count)
+                           .ToArray();
+        
+        return statusCount;
     }
 
     /// <summary>
