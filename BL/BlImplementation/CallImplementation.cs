@@ -10,36 +10,29 @@ internal class CallImplementation : ICall
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     public void AddCall(BO.Call call)
     {
-        try
-        {
+        
 
-            // check if the times are valid
-            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
-            {
-                throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
-            }
-            //check if the address is valid
-            //TODO:: using api.
-            DO.Call newCall = new DO.Call
-            {
-                Id = call.Id,
-                Type = (DO.CallType)call.TypeOfCall,
-                FullAddressCall = call.CallAddress,
-                Latitude = call.Latitude,
-                Longitude = call.Longitude,
-                OpeningTime = call.CallStartTime,
-                Description = call.Description,
-                DeadLine = call.CallDeadLine
-            };
-            s_dal.Call.Create(newCall);
-        }
-        catch (BO.BoInvalidEntityDetails ex)
+        // check if the times are valid
+        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
         {
-            // Handle the exception here
-            Console.WriteLine("An exception occurred: " + ex.Message);
-            // You can also log the exception or perform any other necessary actions
-            throw; // Rethrow the exception to propagate it further if needed
+            throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
         }
+        //check if the address is valid
+        //TODO:: using api.
+        DO.Call newCall = new DO.Call
+        {
+            Id = call.Id,
+            Type = (DO.CallType)call.TypeOfCall,
+            FullAddressCall = call.CallAddress,
+            Latitude = call.Latitude,
+            Longitude = call.Longitude,
+            OpeningTime = call.CallStartTime,
+            Description = call.Description,
+            DeadLine = call.CallDeadLine
+        };
+        s_dal.Call.Create(newCall);
+        
+
 
     }
 
