@@ -408,7 +408,7 @@ internal class CallImplementation : ICall
                 break;
             default:
                 // Throw an exception if the sorting field is invalid.
-                throw new BO.BlInvalidEnumValueOperationException("Invalid sorting filterField");
+                throw new BO.BlInvalidEnumValueOperationException("BL: Invalid sorting filterField");
         }
 
         // Return the sorted list of open calls.
