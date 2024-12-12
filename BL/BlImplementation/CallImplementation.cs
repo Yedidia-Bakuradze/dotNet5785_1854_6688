@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using Helpers;
 
 internal class CallImplementation : ICall
@@ -175,7 +176,24 @@ internal class CallImplementation : ICall
 
     public void UpdateCall(BO.Call call)
     {
-        throw new NotImplementedException();
+        if (!CallManager.IsCallValid(call))
+            throw new BO.BlInvalidEntityDetails($"BL: Call (Id: {call.Id}) has invalid details");
+
+        (double? lat, double? log) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+
+        call.Latitude = (double) lat!;
+        call.Longitude= (double) log!;
+
+        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+
+        try
+        {
+            s_dal.Call.Update(newCall);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"BL: Call with Id: {newCall.Id} doesn't exists");
+        }
     }
 
     /// <summary>
