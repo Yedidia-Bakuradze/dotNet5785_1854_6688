@@ -352,12 +352,6 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
-    public void Read(int callId)
-    {
-        throw new NotImplementedException();
-    }
-
-
     /// <summary>
     /// This methods assignes a call to a volunteer if the call is free to be alocated
     /// </summary>

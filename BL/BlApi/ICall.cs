@@ -75,10 +75,4 @@ public interface ICall
     /// <param name="callId">The ID of the call</param>
     public void SelectCallToDo(int VolunteerId, int callId);
 
-    /// <summary>
-    /// Read call from database
-    /// </summary>
-    /// <param name="callId">The ID of the call</param>
-    public void Read(int callId);
-
 }
