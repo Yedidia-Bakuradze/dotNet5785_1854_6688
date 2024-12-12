@@ -339,10 +339,81 @@ internal class CallImplementation : ICall
                select call;
     }
 
-    public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int id, BO.CallType? callType, BO.OpenCallFields? parameter)
+    /// <summary>
+    /// Retrieves a list of open calls available for a specific volunteer, 
+    /// optionally filtered by call type and sorted by a specified field.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer for whom the open calls are fetched.</param>
+    /// <param name="callType">An optional filter to include only calls of a specific type.</param>
+    /// <param name="sortingField">An optional sorting field to order the returned calls.</param>
+    /// <returns>A list of open calls formatted as <see cref="BO.OpenCallInList"/>.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer does not exist.</exception>
+    /// <exception cref="BO.BlInvalidEnumValueOperationException">Thrown if an invalid sorting field is provided.</exception>
+    public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int VolunteerId, BO.CallType? callType, BO.OpenCallFields? sortingField)
     {
-        
-        throw new NotImplementedException();
+        // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
+        DO.Volunteer volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
+            ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
+
+        // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
+        List<BO.OpenCallInList> openCalls = s_dal.Call
+            .ReadAll(call => CallManager.GetStatus(call.Id) == CallStatus.Open || CallManager.GetStatus(call.Id) == CallStatus.OpenAndRisky)
+            .Select(call => new BO.OpenCallInList
+            {
+                CallId = call.Id,  // ID of the call
+                CallFullAddress = call.FullAddressCall,  // Full address of the call
+                Description = call.Description,  // Description of the call
+                LastTimeForClosingTheCall = call.DeadLine,  // Deadline for closing the call
+                TypeOfCall = (BO.CallType)call.Type,  // Type of the call
+                OpenningTime = call.OpeningTime,  // Opening time of the call
+                DistanceFromVolunteer = volunteer.FullCurrentAddress is null
+                    ? -1  // If the volunteer's address is unknown, set distance to -1
+                    : VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType)
+            }).ToList();
+
+        // If a call type filter is provided, filter the list by the specified type.
+        if (callType != null)
+        {
+            openCalls = openCalls.Where(call => call.TypeOfCall == callType).ToList();
+        }
+
+        // If no sorting field is provided, sort the calls by their ID.
+        if (sortingField == null)
+        {
+            return openCalls.OrderBy(call => call.CallId);
+        }
+
+        // Sort the list based on the specified sorting field.
+        switch (sortingField)
+        {
+            case OpenCallFields.CallId:
+                openCalls = openCalls.OrderBy(call => call.CallId).ToList();
+                break;
+            case OpenCallFields.TypeOfCall:
+                openCalls = openCalls.OrderBy(call => call.TypeOfCall).ToList();
+                break;
+            case OpenCallFields.Description:
+                openCalls = openCalls.OrderBy(call => call.Description).ToList();
+                break;
+            case OpenCallFields.CallFullAddress:
+                openCalls = openCalls.OrderBy(call => call.CallFullAddress).ToList();
+                break;
+            case OpenCallFields.OpenningTime:
+                openCalls = openCalls.OrderBy(call => call.OpenningTime).ToList();
+                break;
+            case OpenCallFields.LastTimeForClosingTheCall:
+                openCalls = openCalls.OrderBy(call => call.LastTimeForClosingTheCall).ToList();
+                break;
+            case OpenCallFields.DistanceFromVolunteer:
+                openCalls = openCalls.OrderBy(call => call.DistanceFromVolunteer).ToList();
+                break;
+            default:
+                // Throw an exception if the sorting field is invalid.
+                throw new BO.BlInvalidEnumValueOperationException("Invalid sorting filterField");
+        }
+
+        // Return the sorted list of open calls.
+        return openCalls;
     }
 
     /// <summary>
