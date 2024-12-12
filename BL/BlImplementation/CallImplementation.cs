@@ -1,6 +1,5 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using DalApi;
 using Helpers;
 
 internal class CallImplementation : ICall
@@ -117,7 +116,7 @@ internal class CallImplementation : ICall
             CallAddress = call.FullAddressCall,
             CallStartTime = call.OpeningTime,
             EnteryTime = res.Find(ass => ass.CallId == call.Id)!.TimeOfStarting, // Access the start time from the corresponding assignment
-            ClosingTime = res.Find(ass => ass.CallId == call.Id)?.TimeOfEnding, // Access the ending time from the corresponding assignment
+            ClosingTime = (DateTime) res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
             TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
         }).ToList();
 
@@ -239,47 +238,47 @@ internal class CallImplementation : ICall
         {
             switch (filterField)
             {
-                case CallInListFields.Id:
+                case BO.CallInListFields.Id:
                     callsInlist = from call in callsInlist
                                   where call.Id == (int)filterValue!
                                   select call;
                     break;
-                case CallInListFields.CallId:
+                case BO.CallInListFields.CallId:
                     callsInlist = from call in callsInlist
                                   where call.CallId == (int)filterValue!
                                   select call;
                     break;
-                case CallInListFields.TypeOfCall:
+                case BO.CallInListFields.TypeOfCall:
                     callsInlist = from call in callsInlist
                                   where call.TypeOfCall == (BO.CallType)filterValue!
                                   select call;
                     break;
-                case CallInListFields.OpenningTime:
+                case BO.CallInListFields.OpenningTime:
                     callsInlist = from call in callsInlist
                                   where call.OpenningTime == (DateTime)filterValue!
                                   select call;
                     break;
-                case CallInListFields.TimeToEnd:
+                case BO.CallInListFields.TimeToEnd:
                     callsInlist = from call in callsInlist
                                   where call.TimeToEnd == (TimeSpan)filterValue!
                                   select call;
                     break;
-                case CallInListFields.LastVolunteerName:
+                case BO.CallInListFields.LastVolunteerName:
                     callsInlist = from call in callsInlist
                                   where call.LastVolunteerName == (string)filterValue!
                                   select call;
                     break;
-                case CallInListFields.TimeElapsed:
+                case BO.CallInListFields.TimeElapsed:
                     callsInlist = from call in callsInlist
                                   where call.TimeElapsed == (TimeSpan)filterValue!
                                   select call;
                     break;
-                case CallInListFields.Status:
+                case BO.CallInListFields.Status:
                     callsInlist = from call in callsInlist
-                                  where call.Status == (CallStatus)filterValue!
+                                  where call.Status == (BO.CallStatus)filterValue!
                                   select call;
                     break;
-                case CallInListFields.TotalAlocations:
+                case BO.CallInListFields.TotalAlocations:
                     callsInlist = from call in callsInlist
                                   where call.TotalAlocations == (int)filterValue!
                                   select call;
@@ -293,39 +292,39 @@ internal class CallImplementation : ICall
         // Sorting the list based on the specified sorting field
         switch (sortingField)
         {
-            case CallInListFields.Id:
+            case BO.CallInListFields.Id:
                 return from call in callsInlist
                        orderby call.Id
                        select call;
-            case CallInListFields.CallId:
+            case BO.CallInListFields.CallId:
                 return from call in callsInlist
                        orderby call.CallId
                        select call;
-            case CallInListFields.TypeOfCall:
+            case BO.CallInListFields.TypeOfCall:
                 return from call in callsInlist
                        orderby call.TypeOfCall
                        select call;
-            case CallInListFields.OpenningTime:
+            case BO.CallInListFields.OpenningTime:
                 return from call in callsInlist
                        orderby call.OpenningTime
                        select call;
-            case CallInListFields.TimeToEnd:
+            case BO.CallInListFields.TimeToEnd:
                 return from call in callsInlist
                        orderby call.TimeToEnd
                        select call;
-            case CallInListFields.LastVolunteerName:
+            case BO.CallInListFields.LastVolunteerName:
                 return from call in callsInlist
                        orderby call.LastVolunteerName
                        select call;
-            case CallInListFields.TimeElapsed:
+            case BO.CallInListFields.TimeElapsed:
                 return from call in callsInlist
                        orderby call.TimeElapsed
                        select call;
-            case CallInListFields.Status:
+            case BO.CallInListFields.Status:
                 return from call in callsInlist
                        orderby call.Status
                        select call;
-            case CallInListFields.TotalAlocations:
+            case BO.CallInListFields.TotalAlocations:
                 return from call in callsInlist
                        orderby call.TotalAlocations
                        select call;
@@ -357,7 +356,7 @@ internal class CallImplementation : ICall
 
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         List<BO.OpenCallInList> openCalls = s_dal.Call
-            .ReadAll(call => CallManager.GetStatus(call.Id) == CallStatus.Open || CallManager.GetStatus(call.Id) == CallStatus.OpenAndRisky)
+            .ReadAll(call => CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky)
             .Select(call => new BO.OpenCallInList
             {
                 CallId = call.Id,  // ID of the call
@@ -386,25 +385,25 @@ internal class CallImplementation : ICall
         // Sort the list based on the specified sorting field.
         switch (sortingField)
         {
-            case OpenCallFields.CallId:
+            case BO.OpenCallFields.CallId:
                 openCalls = openCalls.OrderBy(call => call.CallId).ToList();
                 break;
-            case OpenCallFields.TypeOfCall:
+            case BO.OpenCallFields.TypeOfCall:
                 openCalls = openCalls.OrderBy(call => call.TypeOfCall).ToList();
                 break;
-            case OpenCallFields.Description:
+            case BO.OpenCallFields.Description:
                 openCalls = openCalls.OrderBy(call => call.Description).ToList();
                 break;
-            case OpenCallFields.CallFullAddress:
+            case BO.OpenCallFields.CallFullAddress:
                 openCalls = openCalls.OrderBy(call => call.CallFullAddress).ToList();
                 break;
-            case OpenCallFields.OpenningTime:
+            case BO.OpenCallFields.OpenningTime:
                 openCalls = openCalls.OrderBy(call => call.OpenningTime).ToList();
                 break;
-            case OpenCallFields.LastTimeForClosingTheCall:
+            case BO.OpenCallFields.LastTimeForClosingTheCall:
                 openCalls = openCalls.OrderBy(call => call.LastTimeForClosingTheCall).ToList();
                 break;
-            case OpenCallFields.DistanceFromVolunteer:
+            case BO.OpenCallFields.DistanceFromVolunteer:
                 openCalls = openCalls.OrderBy(call => call.DistanceFromVolunteer).ToList();
                 break;
             default:
