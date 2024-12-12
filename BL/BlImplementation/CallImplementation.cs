@@ -146,7 +146,7 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Retrieves the details of a call based on the provided call ID.
     /// </summary>
-    public BO.Call GetDetailsOfCall(int callId)
+    public BO.Call GetDetielsOfCall(int callId)
     {
         // Fetch the call details from the data layer (DAL) by the given call ID.
         DO.Call call = s_dal.Call.Read(call => call.Id == callId)!;
