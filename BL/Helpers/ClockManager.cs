@@ -50,7 +50,7 @@ internal static class ClockManager //stage 4
 
         //StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
         //etc ...
-        
+        CallManager.UpdateAllOpenAndExpierdCalls(); //stage 4
         //Calling all the observers of clock update
         ClockUpdatedObservers?.Invoke(); //prepared for stage 5
     }
