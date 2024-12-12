@@ -405,19 +405,41 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
-    public void Read(int callId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<BO.CallInList> ReadAll()
-    {
-        throw new NotImplementedException();
-    }
-
+    /// <summary>
+    /// This methods assignes a call to a volunteer if the call is free to be alocated
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests a new call</param>
+    /// <param name="callId">The requested call to be assigned</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
     public void SelectCallToDo(int VolunteerId, int callId)
     {
-        throw new NotImplementedException();
+        //Check if there is such call
+        DO.Call call = s_dal.Call.Read((call) => call.Id == callId)
+            ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
+
+        //Check if the call hasn't been taken by someone else
+        DO.Assignment? callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
+
+        //Check if call already been taken
+        if (callAssignment != null)
+            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
+
+        //Check if there is time to complete the call
+        if (call.DeadLine - ClockManager.Now <= TimeSpan.Zero)
+            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
+
+        //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
+        DO.Assignment newAssignment = new DO.Assignment
+        {
+            Id = -1, //Temp id, the real id is assigned in the Dal layer
+            CallId = callId,
+            VolunteerId = VolunteerId,
+            TimeOfEnding = null,
+            TimeOfStarting = ClockManager.Now,
+            TypeOfEnding = null,
+        };
+        s_dal.Assignment.Create(newAssignment);
     }
 
     /// <summary>
