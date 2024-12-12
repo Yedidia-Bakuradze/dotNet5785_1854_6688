@@ -13,20 +13,25 @@ internal class CallImplementation : ICall
         try
         {
 
-            // check if the times are valid
+            //Check if the times are valid
             if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
             {
                 throw new BO.BoInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
             }
-            //check if the address is valid
-            //TODO:: using api.
+
+            //Checks if the address is valid (if cordinates exist)
+            (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+            if(lat == null || lng ==null)
+                throw new BO.BoInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+
+            //Create new Dal Call entity and create
             DO.Call newCall = new DO.Call
             {
                 Id = call.Id,
                 Type = (DO.CallType)call.TypeOfCall,
                 FullAddressCall = call.CallAddress,
-                Latitude = call.Latitude,
-                Longitude = call.Longitude,
+                Latitude = (double) lat,
+                Longitude = (double) lng,
                 OpeningTime = call.CallStartTime,
                 Description = call.Description,
                 DeadLine = call.CallDeadLine

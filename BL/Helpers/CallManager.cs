@@ -1,5 +1,4 @@
 ﻿using DalApi;
-using System.Reflection.Metadata.Ecma335;
 namespace Helpers;
 
 internal static class CallManager
@@ -34,8 +33,6 @@ internal static class CallManager
             TimeOfEnding = ClockManager.Now,
             TypeOfEnding = DO.TypeOfEnding.CancellationExpired
         }));
-
-
     }
 
     /// <summary>
