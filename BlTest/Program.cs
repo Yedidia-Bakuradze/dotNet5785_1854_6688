@@ -175,8 +175,22 @@ Press 0 To Exit
                         s_bl.Call.UpdateCall(call1);
                         break;
                     case CallMenuOperation.SelectCallToDo:
+                        int callId1;
+                        int VolunteerId;
+                        Console.WriteLine("Please give me the call ID you want to select:");
+                        callId1 = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine("Please give me the volunteer ID you want to select:");
+                        VolunteerId = int.Parse(Console.ReadLine() ?? "");
+                        s_bl.Call.SelectCallToDo(VolunteerId, callId1);
                         break;
                     case CallMenuOperation.UpdateCallEnd:
+                        int callId2;
+                        int VolunteerId1;
+                        Console.WriteLine("Please give me the call ID you want to update:");
+                        callId2 = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine("Please give me the volunteer ID you want to update:");
+                        VolunteerId1 = int.Parse(Console.ReadLine() ?? "");
+                        s_bl.Call.UpdateCallEnd(VolunteerId1, callId2);
                         break;
                     case CallMenuOperation.EndOfCallStatusUpdate:
                         break;
