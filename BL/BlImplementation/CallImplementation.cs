@@ -201,7 +201,6 @@ internal class CallImplementation : ICall
         return boCall;
     }
 
-
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null)
     {
         List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
