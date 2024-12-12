@@ -201,32 +201,42 @@ internal class CallImplementation : ICall
         return boCall;
     }
 
+    /// <summary>
+    /// Retrieves a list of calls with optional filtering and sorting based on specified fields.
+    /// </summary>
+    /// <param name="filterField">The field by which to filter the calls. Optional.</param>
+    /// <param name="filterValue">The value to filter by. Optional.</param>
+    /// <param name="sortingField">The field by which to sort the calls. Optional.</param>
+    /// <returns>An IEnumerable of CallInList objects representing the filtered and sorted list of calls.</returns>
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null)
     {
+        // Retrieve all calls and assignments from the database
         List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
-        List<DO.Assignment> assignments = s_dal.Assignment .ReadAll().ToList();
+        List<DO.Assignment> assignments = s_dal.Assignment.ReadAll().ToList();
 
+        // Build the initial list of CallInList objects based on the calls and their assignments
         IEnumerable<BO.CallInList> callsInlist = from call in calls
-                          let callsAssignments = from assignment in assignments
-                                                 where assignment.CallId == call.Id
-                                                 orderby assignment.Id descending
-                                                 select assignment
-                          select new BO.CallInList
-                          {
-                              Id = callsAssignments.First().Id,
-                              CallId = call.Id,
-                              Status = CallManager.GetStatus(call.Id),
-                              OpenningTime = call.OpeningTime,
-                              LastVolunteerName = s_dal.Volunteer.Read(vol => vol.Id == callsAssignments.First().VolunteerId)?.FullName,
-                              TimeToEnd = call.DeadLine - ClockManager.Now,
-                              TypeOfCall = (BO.CallType) call.Type,
-                              TimeElapsed = (callsAssignments.First().TypeOfEnding != null)
-                                ? callsAssignments.First().TimeOfEnding - callsAssignments.First().TimeOfStarting
-                                : null,
-                              TotalAlocations = callsAssignments.Count(),
-                          };
-        
-        //Filtering the list
+                                                 let callsAssignments = from assignment in assignments
+                                                                        where assignment.CallId == call.Id
+                                                                        orderby assignment.Id descending
+                                                                        select assignment
+                                                 select new BO.CallInList
+                                                 {
+                                                     // Set the properties for each CallInList object
+                                                     Id = callsAssignments.First().Id,
+                                                     CallId = call.Id,
+                                                     Status = CallManager.GetStatus(call.Id),
+                                                     OpenningTime = call.OpeningTime,
+                                                     LastVolunteerName = s_dal.Volunteer.Read(vol => vol.Id == callsAssignments.First().VolunteerId)?.FullName,
+                                                     TimeToEnd = call.DeadLine - ClockManager.Now,
+                                                     TypeOfCall = (BO.CallType)call.Type,
+                                                     TimeElapsed = (callsAssignments.First().TypeOfEnding != null)
+                                                         ? callsAssignments.First().TimeOfEnding - callsAssignments.First().TimeOfStarting
+                                                         : null,
+                                                     TotalAlocations = callsAssignments.Count(),
+                                                 };
+
+        // Filtering the list based on the specified filter field and value
         if (filterField != null)
         {
             switch (filterField)
@@ -282,7 +292,7 @@ internal class CallImplementation : ICall
             }
         }
 
-        //Sorting the list by given field
+        // Sorting the list based on the specified sorting field
         switch (sortingField)
         {
             case CallInListFields.Id:
@@ -292,7 +302,7 @@ internal class CallImplementation : ICall
             case CallInListFields.CallId:
                 return from call in callsInlist
                        orderby call.CallId
-                         select call;
+                       select call;
             case CallInListFields.TypeOfCall:
                 return from call in callsInlist
                        orderby call.TypeOfCall
@@ -321,11 +331,11 @@ internal class CallImplementation : ICall
                 return from call in callsInlist
                        orderby call.TotalAlocations
                        select call;
-                case null:
-                    break;
+            case null:
+                break;
         }
 
-        //If the sorting field is null, return the list as is
+        // If no sorting field is provided, return the list sorted by CallId as default
         return from call in callsInlist
                orderby call.CallId
                select call;
@@ -333,6 +343,7 @@ internal class CallImplementation : ICall
 
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int id, BO.CallType? callType, BO.OpenCallFields? parameter)
     {
+        
         throw new NotImplementedException();
     }
 
