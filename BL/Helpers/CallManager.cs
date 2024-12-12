@@ -68,19 +68,49 @@ internal static class CallManager
         return BO.CallStatus.Closed;
     }
 
-
+    /// <summary>
+    /// This method checks if the given BO Call entity is valid
+    /// </summary>
+    /// <param name="call">The call to be reviewed</param>
+    /// <returns>a boolean value whether the entity is valid or not</returns>
+    /// <exception cref="BO.BlInvalidEntityDetails"></exception>
     internal static bool IsCallValid(BO.Call call)
     {
-        //Check if the times are valid
-        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
+        try
         {
-            throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
-        }
+            //Check if the times are valid
+            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
+                throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
 
-        //Checks if the address is valid (if cordinates exist)
-        (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
-        if (lat == null || lng == null)
-            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+            //Checks if the address is valid (if cordinates exist)
+            (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+            if (lat == null || lng == null)
+                throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+        }
+        catch(BO.BlInvalidEntityDetails ex)
+        {
+            Console.WriteLine(ex.Message);
+            return false;
+        }
         return true;
     }
+    
+    /// <summary>
+    /// This method converts between the BO version of Call to the DO version of call
+    /// </summary>
+    /// <param name="call">The original BO Call entity</param>
+    /// <returns>The converted DO Call entity</returns>
+    internal static DO.Call ConvertFromBdToD(BO.Call call)
+    =>
+        new DO.Call
+        {
+            Id = call.Id,
+            Type = (DO.CallType)call.TypeOfCall,
+            FullAddressCall = call.CallAddress,
+            Latitude = call.Latitude,
+            Longitude = call.Longitude,
+            OpeningTime = call.CallStartTime,
+            Description = call.Description,
+            DeadLine = call.CallDeadLine
+        };
 }

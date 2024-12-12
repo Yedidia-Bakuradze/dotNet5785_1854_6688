@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using Helpers;
 
 internal class CallImplementation : ICall
@@ -12,29 +13,18 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
     public void AddCall(BO.Call call)
     {
-        // Check if the times are valid
-        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
-        {
-            throw new BO.BlInvalidEntityDetails("The deadline of the call cannot be before the start time of the call");
-        }
-
-        // Checks if the address is valid (if coordinates exist)
+        //Check if the call entity is valid or not
+        if(!CallManager.IsCallValid(call))
+            throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
+        
+        //Get Call cordinates
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
             throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
 
-        // Create new Dal entity
-        DO.Call newCall = new DO.Call
-        {
-            Id = call.Id,
-            Type = (DO.CallType)call.TypeOfCall,
-            FullAddressCall = call.CallAddress,
-            Latitude = call.Latitude,
-            Longitude = call.Longitude,
-            OpeningTime = call.CallStartTime,
-            Description = call.Description,
-            DeadLine = call.CallDeadLine
-        };
+        //Create new Dal entity
+        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+
         // Add the new call to the database
         s_dal.Call.Create(newCall);
     }
@@ -245,9 +235,32 @@ internal class CallImplementation : ICall
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// This method updates the DO Call with the past BO Call field values
+    /// </summary>
+    /// <param name="call">The new (BO) Call entity with the new values</param>
+    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the Call values are not valid</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
     public void UpdateCall(BO.Call call)
     {
-        throw new NotImplementedException();
+        if (!CallManager.IsCallValid(call))
+            throw new BO.BlInvalidEntityDetails($"BL: Call (Id: {call.Id}) has invalid details");
+
+        (double? lat, double? log) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+
+        call.Latitude = (double) lat!;
+        call.Longitude= (double) log!;
+
+        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+
+        try
+        {
+            s_dal.Call.Update(newCall);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"BL: Call with Id: {newCall.Id} doesn't exists");
+        }
     }
 
     /// <summary>
