@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using System.Net.Http.Headers;
 namespace Helpers;
 
 internal static class CallManager
@@ -80,6 +81,6 @@ internal static class CallManager
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
             throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
-
+        return true;
     }
 }
