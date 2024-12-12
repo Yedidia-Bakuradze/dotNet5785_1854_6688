@@ -19,7 +19,7 @@ public enum CallInListFields
     TotalAlocations
 }
 
-public enum OpenCallFields { Id, CallId, TypeOfCall, OpenningTime, TimeToEnd, LastVolunteerName, TimeElapsed, Status, TotalAlocations }
+public enum OpenCallFields {CallId, TypeOfCall, Description, CallFullAddress, OpenningTime, LastTimeForClosingTheCall, DistanceFromVolunteer }
 public enum ClosedCallInListFields { Id, TypeOfCall, CallAddress, CallStartTime, EnteryTime, ClosingTime, TypeOfClosedCall }
 
 /// <summary>
