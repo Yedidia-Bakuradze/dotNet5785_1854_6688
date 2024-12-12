@@ -180,7 +180,7 @@ internal class CallImplementation : ICall
         // If the call does not exist, throw an exception with a relevant message.
         if (call == null)
         {
-            throw new BO.BoDoesNotExistException("BL: Call does not exist");
+            throw new BO.BlDoesNotExistException("BL: Call does not exist");
         }
 
         // Map the fetched call details and assignments to a BO (Business Object) call.
