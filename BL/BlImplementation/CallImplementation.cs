@@ -143,10 +143,49 @@ internal class CallImplementation : ICall
 
 
 
-    public BO.Call GetDetielsOfCall(int callId)
+    /// <summary>
+    /// Retrieves the details of a call based on the provided call ID.
+    /// </summary>
+    public BO.Call GetDetailsOfCall(int callId)
     {
-        throw new NotImplementedException();
+        // Fetch the call details from the data layer (DAL) by the given call ID.
+        DO.Call call = s_dal.Call.Read(call => call.Id == callId)!;
+
+        // Fetch all assignments related to the call ID.
+        List<DO.Assignment> res = s_dal.Assignment.ReadAll(ass => ass.CallId == callId).ToList();
+
+        // If the call does not exist, throw an exception with a relevant message.
+        if (call == null)
+        {
+            throw new BO.BoDoesNotExistException("BL: Call does not exist");
+        }
+
+        // Map the fetched call details and assignments to a BO (Business Object) call.
+        BO.Call boCall = new BO.Call
+        {
+            Id = call.Id,  // Set the call ID
+            TypeOfCall = (BO.CallType)call.Type,  // Convert the call type to the corresponding BO enum
+            Description = call.Description,  // Set the call description
+            CallAddress = call.FullAddressCall,  // Set the full address of the call
+            Latitude = call.Latitude,  // Set the latitude of the call
+            Longitude = call.Longitude,  // Set the longitude of the call
+            CallStartTime = call.OpeningTime,  // Set the opening time of the call
+            CallDeadLine = call.DeadLine,  // Set the deadline for the call
+            Status = CallManager.GetStatus(call.Id),  // Get the status of the call using the CallManager
+            MyAssignments = res.Select((assignment) => new BO.CallAssignInList
+            {
+                VolunteerId = assignment.VolunteerId,  // Set the volunteer ID for the assignment
+                VolunteerName = s_dal.Volunteer.Read(vol => vol.Id == assignment.VolunteerId)?.FullName,  // Get the volunteer's full name based on the ID
+                EntryTime = assignment.TimeOfStarting,  // Set the start time of the assignment
+                FinishTime = assignment.TimeOfEnding,  // Set the finish time of the assignment
+                TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!  // Set the type of the closed call if found
+            }).ToList()  // Convert the assignments to a list of BO.CallAssignInList objects
+        };
+
+        // Return the populated BO.Call object containing all relevant details.
+        return boCall;
     }
+
 
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? parameter = null, object? value = null, BO.CallInListFields? parameter1 = null)
     {

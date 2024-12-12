@@ -66,7 +66,7 @@
         /// <summary>
         /// Every assingment which has been made due to this call, if none then null
         /// </summary>
-        public List<BO.CallAssignInList>? MyProperty { get; set; }
+        public List<BO.CallAssignInList>? MyAssignments { get; set; }
 
         public override string ToString() => this.ToStringProperty();
     }
