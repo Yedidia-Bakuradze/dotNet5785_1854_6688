@@ -1,20 +1,21 @@
 ﻿using BO;
-using System.Globalization;
-using System.Runtime.InteropServices;
+using Helpers;
+using System.Data.Common;
+using System.Security.Cryptography.X509Certificates;
 
-namespace BlTest
+namespace BlTest;
+
+internal class Program
 {
-    internal class Program
-    {
-        //Main BL Action manager for the bl layer
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    //Main BL Action manager for the bl layer
+    static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        public enum Operation { Exit, Call, Volunteer, Admin}
-        public enum IVolunteerOperations { Exit, Add, Remove, Update, Read, ReadAll, Login}
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+    public enum MainMenuOperation { Exit, Call, Volunteer, Admin}
+    public enum CallMenuOperation { Exit, AddCall,UpdateCall,SelectCallToDo, UpdateCallEnd, EndOfCallStatusUpdate, DeleteCallRequest, GetListOfCalls, GetDetielsOfCall ,GetClosedCallsByVolunteer, GetOpenCallsForVolunteer, GetTotalCallsByStatus }
+    static void Main(string[] args)
+    {
+        MainMenu();
+    }
 
 
         public void MainMenu()
@@ -201,98 +202,17 @@ namespace BlTest
                 Console.Write("Enter new Email Address: ");
                 currentVolunteer.Email = Console.ReadLine() ?? "";
             }
-
-            if (RequestPremissionToChanged("Password"))
-            {
-                Console.Write("[Optional] Enter new Password: ");
-                currentVolunteer.Password = Console.ReadLine() ?? null;
             }
+        } while (true);
+    }
 
-            if (RequestPremissionToChanged("Current Address"))
-            {
-                Console.Write("[Optional] Enter new Current Address: ");
-                currentVolunteer.FullCurrentAddress = Console.ReadLine() ?? null;
-            }
 
-            if (RequestPremissionToChanged("User Mode"))
-            {
-                Console.Write($"Enter new User Mode ({BO.UserRole.Volunteer} / {BO.UserRole.Admin}): ");
-                string input = Console.ReadLine() ?? "";
-                if (!Enum.TryParse(input, out BO.UserRole role))
-                    throw new BlInvalidValueTypeToFormatException($"Bl: Unable to convert the value {input}, to UserMode enum value");
-                else
-                    currentVolunteer.Role = role;
-            }
-
-            if (RequestPremissionToChanged("Active"))
-            {
-                Console.Write("Do You Want To Be an Active Volunteer? (yes / no): ");
-                string input = Console.ReadLine() ?? "";
-                if (input == "yes")
-                    currentVolunteer.IsActive = true;
-                else if (input == "no")
-                    currentVolunteer.IsActive = false;
-                else
-                    throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not either 'yes' or 'not'");
-            }
-
-            if (RequestPremissionToChanged("Max Distance"))
-            {
-                Console.Write("Enter new Max Distance For Taking a Call: ");
-                string input = Console.ReadLine() ?? "";
-                if (!double.TryParse(input, out double maxDistanceToCall))
-                    throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not a double");
-                else
-                    currentVolunteer.MaxDistanceToCall = maxDistanceToCall;
-            }
-
-            if(RequestPremissionToChanged("Distance Range Type "))
-            {
-                Console.Write($"Enter new Distance Range Type ({BO.TypeOfRange.AirDistance} / {BO.TypeOfRange.WalkingDistance} / {BO.TypeOfRange.DrivingDistance}): ");
-                string input = Console.ReadLine() ?? "";
-                if (!Enum.TryParse(input, out BO.TypeOfRange rangeType))
-                    throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not a type of a range");
-                else
-                    currentVolunteer.RangeType = rangeType;
-
-            }
-            
-            s_bl.Volunteer.UpdateVolunteerDetails(updaterId, currentVolunteer);
-        }
-
-        private static bool RequestPremissionToChanged(string requestedFieldChanged)
+        public void ICallSubMenu()
         {
-            string input;
-            do
-            {
-                Console.WriteLine($"Do You Want To Chanege the {requestedFieldChanged}? (yes / no)");
-                input  = Console.ReadLine() ?? "";
 
-                if (input != "yes" || input != "no")
-                    Console.WriteLine($"Error: Input (Accepted: {input}) must be either a yes or a no");
-                else
-                    break;
-            } while (true);
-            
-            return input == "yes";
         }
-
-        /// <summary>
-        /// This method accepts from the user an id of a volunteer to remove
-        /// </summary>
-        /// <exception cref="BO.BlInvalidValueTypeToFormatException">Thrown when the user enters unconvertable value</exception>
-        private static void RemoveVolunteer()
-        {
-            int id;
-            Console.WriteLine("Enter the Id of The Requiered Volunteer To Remove:");
-            Console.Write(">>> ");
-            string input = Console.ReadLine() ?? "";
-
-            if (!Enum.TryParse(input, out id))
-                throw new BO.BlInvalidValueTypeToFormatException($"Bl: Unable to convert:{input} ,to an integer");
-            
-            s_bl.Volunteer.DeleteVolunteer(id);
-        }
+        while (true);
+    }
 
         /// <summary>
         /// This method adds a new Volunteer to the database using the user's input values
@@ -340,29 +260,14 @@ namespace BlTest
             Console.Write($"Enter Your Distance Range Type ({BO.TypeOfRange.AirDistance} / {BO.TypeOfRange.WalkingDistance} / {BO.TypeOfRange.DrivingDistance}): ");
             Enum.TryParse(Console.ReadLine() ?? "", out rangeType);
 
-            BO.Volunteer newVolunteer = new BO.Volunteer
-            {
-                Id = id,
-                Email = email,
-                RangeType = rangeType,
-                CurrentCall = null,
-                FullCurrentAddress = fullCurrentAddress,
-                FullName = fullName,
-                IsActive = isActive,
-                Latitude = null,
-                Longitude = null,
-                MaxDistanceToCall = maxDistanceToCall,
-                Password = password,
-                PhoneNumber = phoneNumber,
-                Role = role
-            };
-
-            s_bl.Volunteer.AddVolunteer(newVolunteer);
-        }
-
-        public void IAdminSubMenu()
+        public void IVolunteerSubMenu()
         {
 
         }
+
+    public void IAdminSubMenu()
+    {
+
     }
 }
+
