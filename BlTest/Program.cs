@@ -258,6 +258,21 @@ internal class Program
         Console.WriteLine("To Continue: Please Press Enter");
         Console.Read();
     }
+
+    static public bool RequestPremissionToChanged(string valueToRequest)
+    {
+        string input;
+        do
+        {
+            Console.WriteLine($"Do You Want to Update The {valueToRequest}? (yes / no) ");
+            input = Console.ReadLine() ?? "";
+            if (input != "yes" || input != "no")
+                Console.WriteLine($"Please Choose Either 'yes' or 'no'");
+            else
+                break;
+        } while (true);
+        return input == "yes";
+    }
 }
 
 
