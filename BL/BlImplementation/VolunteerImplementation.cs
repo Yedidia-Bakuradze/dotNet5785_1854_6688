@@ -218,7 +218,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     }
 
     /// <summary>
-    /// Logs into an account using the past username and password
+    /// Logs into an account using the past username (Email address) and password
     /// If such a user doesn't exists or the credentials aren't correct, then method will throw an exception
     /// </summary>
     /// <param name="username">User's username value</param>

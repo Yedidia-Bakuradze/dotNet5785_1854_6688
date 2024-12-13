@@ -6,7 +6,7 @@
 public interface IVolunteer
 {
     /// <summary>
-    /// Logs into an account using the past username and password
+    /// Logs into an account using the past username (Emaill address) and password
     /// If such a user doesn't exists or the credentials aren't correct, the method shall thrown an exception
     /// </summary>
     /// <param name="username">User's username value</param>
