@@ -29,6 +29,12 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
             }
 
+            (double? lat, double? lng) = (null, null);
+            if(volunteer.FullCurrentAddress != null)
+            {
+                (lat,lng) = Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
+            }
+
             //Create Dal Volunteer entity
             DO.Volunteer newVolunteer = new DO.Volunteer
             {
@@ -44,8 +50,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                         ? null
                         : VolunteerManager.GetSHA256HashedPassword(volunteer.Password),
                 FullCurrentAddress = volunteer.FullCurrentAddress,
-                Latitude = volunteer.Latitude,
-                Longitude = volunteer.Longitude
+                Latitude = lat,
+                Longitude = lng
             };
 
             //Add the new entity to the database
