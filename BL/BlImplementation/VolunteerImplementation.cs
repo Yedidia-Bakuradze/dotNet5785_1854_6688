@@ -253,14 +253,15 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// </summary>
     /// <param name="id">The user id which wants to make the update action</param>
     /// <param name="volunteer">The volunteer entity which is need an updated</param>
-    public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer)
+    /// <param name="hasOldPassword">[Optional] an indicator whether the user has modified his password or not</param>
+    public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
     {
         //Check if allowed to modify
-        if (id != volunteer.Id || s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
+        if (id != volunteer.Id && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
             throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
         
         //Check if logics are correct
-        if (!VolunteerManager.IsVolunteerValid(volunteer))
+        if (!VolunteerManager.IsVolunteerValid(volunteer, !isPasswordBeenModified))
             throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
 
         //Get original Volunteer for comparing
@@ -271,6 +272,16 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
             throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
 
+        //Update the cordinates
+        if(volunteer.FullCurrentAddress != null)
+        {
+            (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress);
+        }
+        else
+        {
+            (volunteer.Latitude, volunteer.Longitude) = (null, null);
+        }
+        
         //Create new instance of DO.Volunteer
         DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);
 

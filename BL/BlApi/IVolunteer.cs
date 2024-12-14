@@ -42,7 +42,7 @@ public interface IVolunteer
     /// </summary>
     /// <param name="id">The user id which wants to make the update action</param>
     /// <param name="volunteer">The volunteer entity which is need an updated</param>
-    void UpdateVolunteerDetails(int id, BO.Volunteer volunteer);
+    void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true);
 
     /// <summary>
     /// This method accespts an id value, requests from the DAL layer to check if it is allowed to delete the volunteer with the given id value
