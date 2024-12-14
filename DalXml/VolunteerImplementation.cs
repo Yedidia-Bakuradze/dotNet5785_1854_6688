@@ -112,10 +112,10 @@ internal class VolunteerImplementation : IVolunteer
     public void Update(Volunteer newVolunteer)
     {
         List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.volunteerFileName);
-        Volunteer? res = Read(newVolunteer.Id)
+        Volunteer res = Read(newVolunteer.Id)
             ?? throw new DalDoesNotExistException($"Volunteer entity with Id of {newVolunteer.Id} hasn't been found");
 
-        Delete(res.Id);
+        volunteers.Remove(res);
         volunteers.Add(newVolunteer);
 
         XMLTools.SaveListToXMLSerializer<Volunteer>(volunteers, Config.volunteerFileName);
