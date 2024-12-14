@@ -179,6 +179,22 @@ internal class Program
         Console.Write($"Enter Your Distance Range Type ({BO.TypeOfRange.AirDistance} / {BO.TypeOfRange.WalkingDistance} / {BO.TypeOfRange.DrivingDistance}): ");
         Enum.TryParse(Console.ReadLine() ?? "", out rangeType);
 
+        s_bl.Volunteer.AddVolunteer(new BO.Volunteer
+        {
+            Id = id,
+            Email = email,
+            CurrentCall = null,
+            FullCurrentAddress = fullCurrentAddress,
+            FullName = fullName,
+            IsActive = isActive,
+            Latitude = null,
+            Longitude = null,
+            MaxDistanceToCall = maxDistanceToCall,
+            Password = password,
+            PhoneNumber = phoneNumber,
+            RangeType = rangeType,
+            Role = role
+        });
     }
     private static void RemoveVolunteer()
     {
