@@ -40,7 +40,7 @@ public class ClosedCallInList
     /// <summary>
     /// From Do.Assignment
     /// </summary>
-    public ClosedCallType TypeOfClosedCall{ get; set; }
+    public TypeOfEndingCall TypeOfClosedCall{ get; set; }
 
 
     public override string ToString() => this.ToStringProperty();

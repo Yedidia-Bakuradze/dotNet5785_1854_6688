@@ -117,7 +117,7 @@ internal class CallImplementation : ICall
             CallStartTime = call.OpeningTime,
             EnteryTime = res.Find(ass => ass.CallId == call.Id)!.TimeOfStarting, // Access the start time from the corresponding assignment
             ClosingTime = (DateTime) res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
-            TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
+            TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
         }).ToList();
 
         // Step 5: Sort the list based on the specified filterField
@@ -190,7 +190,7 @@ internal class CallImplementation : ICall
                 VolunteerName = s_dal.Volunteer.Read(vol => vol.Id == assignment.VolunteerId)?.FullName,  // Get the volunteer's full name based on the ID
                 EntryTime = assignment.TimeOfStarting,  // Set the start time of the assignment
                 FinishTime = assignment.TimeOfEnding,  // Set the finish time of the assignment
-                TypeOfClosedCall = (BO.ClosedCallType)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!  // Set the type of the closed call if found
+                TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!  // Set the type of the closed call if found
             }).ToList()  // Convert the assignments to a list of BO.CallAssignInList objects
         };
 

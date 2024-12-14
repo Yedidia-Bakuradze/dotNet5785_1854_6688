@@ -18,7 +18,7 @@ public class CallAssignInList
     public DateTime? FinishTime { get; set; }
 
     // typeOfClosedCall - type of closed call (if applicable) // taken from DO.Assignment entity
-    public ClosedCallType TypeOfClosedCall { get; set; }
+    public TypeOfEndingCall TypeOfClosedCall { get; set; }
 
     public override string ToString() => this.ToStringProperty();
 }
