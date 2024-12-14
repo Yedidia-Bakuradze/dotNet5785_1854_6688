@@ -3,15 +3,15 @@
   <Volunteer>
     <Id>332461854</Id>
     <Role>Volunteer</Role>
-    <FullName>Yedidia Bakuradze</FullName>
-    <PhoneNumber>0535002312</PhoneNumber>
-    <Email>yedidia@gmail.com</Email>
+    <FullName>Moshe Moshkovitz</FullName>
+    <PhoneNumber>0527707391</PhoneNumber>
+    <Email>moshe@gmail.com</Email>
     <MaxDistanceToCall>2.3</MaxDistanceToCall>
     <RangeType>AirDistance</RangeType>
-    <IsActive>false</IsActive>
-    <Password>8377bc822480755dde8df035e064f635357e5a256406934b08c36e673665d9e8</Password>
-    <FullCurrentAddress>HaTothan 3 Jerusalem Israel</FullCurrentAddress>
-    <Latitude>31.8323803</Latitude>
-    <Longitude>35.2411291</Longitude>
+    <IsActive>true</IsActive>
+    <Password />
+    <FullCurrentAddress>Hava'ad Haleumi 21 jerusalem</FullCurrentAddress>
+    <Latitude>31.7648461</Latitude>
+    <Longitude>35.1901441</Longitude>
   </Volunteer>
 </ArrayOfVolunteer>

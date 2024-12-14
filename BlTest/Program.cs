@@ -210,6 +210,11 @@ Press 0: To Exit
         else
             s_bl.Volunteer.DeleteVolunteer(id);
     }
+    
+    /// <summary>
+    /// This method requests from the user new values for the modified volunteer entity together with the actor Id value which wants to preform the modification
+    /// </summary>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
     private static void UpdateVolunteer()
     {
         int updaterId;
