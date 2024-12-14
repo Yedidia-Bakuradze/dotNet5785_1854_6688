@@ -12,7 +12,8 @@ internal class Program
 
     public enum MainMenuOperation { Exit, Call, Volunteer, Admin }
     public enum CallMenuOperation { Exit, AddCall, UpdateCall, SelectCallToDo, UpdateCallEnd, EndOfCallStatusUpdate, DeleteCallRequest, GetListOfCalls, GetDetielsOfCall, GetClosedCallsByVolunteer, GetOpenCallsForVolunteer, GetTotalCallsByStatus }
-    public enum IVolunteerOperations { Exit, Add, Remove, Update, Read, ReadAll, Login}
+    public enum IVolunteerOperations { Exit, Add, Remove, Update, Read, ReadAll, Login }
+    public enum IAdminOperations { Exit, GetClock, UpdateClock, GetRiskRange, SetRiskRange, DbReset, DbInit }
     static void Main(string[] args)
     {
         MainMenu();
@@ -21,25 +22,25 @@ internal class Program
     {
         do
         {
-            Console.WriteLine(@"
-    ----------------------------------------------------------------
-    Select Your Option:
-
-    Press 1 To Use ICall Interface
-    Press 2 To Use IVolunteer Interface
-    Press 3 To Use IAdmin Interface
-    Press 0 To Exit
-    ----------------------------------------------------------------
-    ");
-            Console.Write(">>> ");
-            string input;
-            MainMenuOperation operation;
-            input = Console.ReadLine() ?? "";
-            if (!Enum.TryParse(input, out operation))
-                throw new BO.BlInvalidEnumValueOperationException($"Bl: Enum value for the main window is not a valid operation");
-
             try
             {
+                Console.Write(@"
+----------------------------------------------------------------
+Select Your Option:
+
+Press 1 To Use ICall Interface
+Press 2 To Use IVolunteer Interface
+Press 3 To Use IAdmin Interface
+Press 0 To Exit
+----------------------------------------------------------------
+
+>>> ");
+                string input;
+                MainMenuOperation operation;
+                input = Console.ReadLine() ?? "";
+                if (!Enum.TryParse(input, out operation))
+                    throw new BO.BlInvalidOperationException($"Bl: Enum value for the main window is not a valid operation");
+
                 switch (operation)
                 {
                     case MainMenuOperation.Exit:
@@ -50,6 +51,7 @@ internal class Program
                         IVolunteerSubMenu();
                         break;
                     case MainMenuOperation.Admin:
+                        IAdminSubMenu();
                         break;
                 }
             }
@@ -61,6 +63,123 @@ internal class Program
         } while (true);
     }
 
+    private static void IAdminSubMenu()
+    {
+        do
+        {
+            try
+            {
+                //Get operation from user
+                Console.Write(
+                @"
+----------------------------------------------------------------
+Admin's SubMenu: Please Select One Of The Presented Options
+
+Press 1: To Print The Current System Clock
+Press 2: To Update System's Clock
+Press 3: To Print The Current System Risk Range Value
+Press 4: To Update System's System Risk Range
+Press 5: To Reset The Database
+Press 6: To Initialize The Database
+----------------------------------------------------------------
+
+>>> ");
+                IAdminOperations operation;
+                string input = Console.ReadLine() ?? "";
+
+                if (!Enum.TryParse(input, out operation))
+                    throw new BO.BlInvalidOperationException($"Bl: Operation {input}, is not available");
+
+                switch (operation)
+                {
+                    case IAdminOperations.Exit:
+                        return;
+                    case IAdminOperations.GetClock:
+                        ShowSystemClock();
+                        break;
+                    case IAdminOperations.UpdateClock:
+                        UpdateSystemClock();
+                        break;
+                    case IAdminOperations.GetRiskRange:
+                        ShowSystemRiskRange();
+                        break;
+                    case IAdminOperations.SetRiskRange:
+                        UpdateSystemRiskRange();
+                        break;
+                    case IAdminOperations.DbReset:
+                        ResetSystemDatabase();
+                        break;
+                    case IAdminOperations.DbInit:
+                        InitializeSystemDatabase();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionDisplay(ex);
+            }
+        } while (true);
+    }
+
+    /// <summary>
+    /// This method initializes the database with the premade values
+    /// </summary>
+    private static void InitializeSystemDatabase() => s_bl.Admin.DbInit();
+
+    /// <summary>
+    /// This method resets the database and the configuration values
+    /// </summary>
+    private static void ResetSystemDatabase() => s_bl.Admin.DbReset();
+
+    /// <summary>
+    /// This method updates the current risk range value by the value provided by the user
+    /// </summary>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
+    private static void UpdateSystemRiskRange()
+    {
+        Console.Write("Enter the new Risk Range (in this format: DD:HH:MM:SS): ");
+        string input = Console.ReadLine() ?? "";
+        if (!TimeSpan.TryParse(input, out TimeSpan newRiskRange))
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid TimeSpan value");
+
+        s_bl.Admin.SetRiskRange(newRiskRange);
+    }
+
+    /// <summary>
+    /// This method displays the current risk range value
+    /// </summary>
+    private static void ShowSystemRiskRange() => Console.WriteLine($"Current System RiskRange: {s_bl.Admin.GetRiskRange()}");
+
+    /// <summary>
+    /// This method updates the current system clock by one unit according the provided Time Unit type by the user
+    /// </summary>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
+    private static void UpdateSystemClock()
+    {
+        Console.Write(
+ @$"
+    ------------------------------------------------------------------------------
+    Please Select the Time Unit that You are willing to forward to time with:
+    Press 1: To Forward By One {TimeUnit.Second}
+    Press 2: To Forward By One {TimeUnit.Minute}
+    Press 3: To Forward By One {TimeUnit.Hour}
+    Press 4: To Forward By One {TimeUnit.Day}
+    Press 5: To Forward By One {TimeUnit.Week}
+    Press 6: To Forward By One {TimeUnit.Month}
+    Press 7: To Forward By One {TimeUnit.Year}
+    ------------------------------------------------------------------------------
+    ");
+        string input = Console.ReadLine() ?? "";
+        if (!Enum.TryParse(input, out TimeUnit option))
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a vaid IAdminOperations value");
+        s_bl.Admin.UpdateClock(option);
+    }
+
+    /// <summary>
+    /// This method displays the current system clock
+    /// </summary>
+    private static void ShowSystemClock() => Console.WriteLine($"Current System Clock: {s_bl.Admin.GetClock()}");
+
     public void ICallSubMenu()
     {
 
@@ -71,6 +190,10 @@ internal class Program
 
 
 
+    /// <summary>
+    /// Volunteer's action hub which the user is able to preform all the IVolunteer action
+    /// </summary>
+    /// <exception cref="BO.BlInvalidOperationException"></exception>
     static public void IVolunteerSubMenu()
     {
         do
@@ -92,13 +215,12 @@ Press 6: To Login as a Volunteer
 Press 0: To Exit
 ----------------------------------------------------------------
 
->>> "
-    );
+>>> ");
                 IVolunteerOperations operation;
                 string input = Console.ReadLine() ?? "";
 
                 if (!Enum.TryParse(input, out operation))
-                    throw new BO.BlInvalidEnumValueOperationException($"Bl: Operation {input}, is not available");
+                    throw new BO.BlInvalidOperationException($"Bl: Operation {input}, is not available");
 
                 switch (operation)
                 {
@@ -131,7 +253,6 @@ Press 0: To Exit
         } while (true);
 
     }
-
 
     /// <summary>
     /// This method adds a new Volunteer to the database using the user's input values
@@ -196,7 +317,7 @@ Press 0: To Exit
             Role = role
         });
     }
-    
+
     /// <summary>
     /// This method requests from the user an volunteer's id and removes it from the database
     /// </summary>
@@ -210,7 +331,7 @@ Press 0: To Exit
         else
             s_bl.Volunteer.DeleteVolunteer(id);
     }
-    
+
     /// <summary>
     /// This method requests from the user new values for the modified volunteer entity together with the actor Id value which wants to preform the modification
     /// </summary>
@@ -231,7 +352,7 @@ Press 0: To Exit
         Int32.TryParse(Console.ReadLine() ?? "", out volunteerId);
 
         BO.Volunteer currentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
-        
+
         //Get new name
         if (RequestPremissionToChanged("Full Name"))
         {
@@ -259,7 +380,7 @@ Press 0: To Exit
             isPasswordBeenModifed = true;
             Console.Write("Enter new Password (If you don't want any password, just hit enter): ");
             string? oldPassword = currentVolunteer.Password;
-            currentVolunteer.Password= Console.ReadLine();
+            currentVolunteer.Password = Console.ReadLine();
         }
 
         //Get new address
@@ -295,13 +416,14 @@ Press 0: To Exit
             input = Console.ReadLine() ?? null;
             if (input == null)
                 currentVolunteer.MaxDistanceToCall = null;
-            else {
+            else
+            {
                 if (!double.TryParse(input, out double res))
                     throw new BO.BlInputValueUnConvertableException($"Bl: Unable to convert user input. The value {input}, is not a double");
                 else
                     currentVolunteer.MaxDistanceToCall = res;
             }
-         }
+        }
 
         //Get new range type
         if (RequestPremissionToChanged("Type of Range"))
@@ -321,22 +443,22 @@ Press 0: To Exit
             Id = (newVolunteerId == -1) ? currentVolunteer.Id : newVolunteerId,
             CurrentCall = currentVolunteer.CurrentCall,
             Email = currentVolunteer.Email,
-            FullCurrentAddress =currentVolunteer.FullCurrentAddress,
+            FullCurrentAddress = currentVolunteer.FullCurrentAddress,
             FullName = currentVolunteer.FullName,
             IsActive = currentVolunteer.IsActive,
             Latitude = null,
             Longitude = null,
             MaxDistanceToCall = currentVolunteer.MaxDistanceToCall,
             Password = currentVolunteer.Password,
-            PhoneNumber =currentVolunteer.PhoneNumber,
+            PhoneNumber = currentVolunteer.PhoneNumber,
             RangeType = currentVolunteer.RangeType,
             Role = currentVolunteer.Role
         };
 
-        s_bl.Volunteer.UpdateVolunteerDetails(updaterId, newVolunteer,isPasswordBeenModifed);
+        s_bl.Volunteer.UpdateVolunteerDetails(updaterId, newVolunteer, isPasswordBeenModifed);
 
     }
-    
+
     /// <summary>
     /// This method requests from the user an id and prints out all the Volunteer's field values
     /// </summary>
@@ -350,6 +472,10 @@ Press 0: To Exit
         else
             Console.WriteLine(s_bl.Volunteer.GetVolunteerDetails(id));
     }
+
+    /// <summary>
+    /// This method prints out all the Volunteer's that the database contains
+    /// </summary>
     private static void ReadAllVolunteers()
     {
         Console.WriteLine("Displaying all the volunteers");
@@ -360,6 +486,10 @@ Press 0: To Exit
             Console.WriteLine("-------------------------------------------");
         }
     }
+
+    /// <summary>
+    /// This method logs into the account with the givne details
+    /// </summary>
     private static void LoginVolunteer()
     {
         Console.Write("Enter Your Username (Email Address): ");
@@ -371,15 +501,30 @@ Press 0: To Exit
         Console.WriteLine($"The account under the email address of: {emailAddress} is a {userType}");
     }
 
+    /// <summary>
+    /// An help method for waiting for the user to prsss enter to continue
+    /// </summary>
+    /// <param name="ex"></param>
     static public void ExceptionDisplay(Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.WriteLine("To Continue: Please Press Enter");
-        Console.Read();
+        Console.WriteLine("Press enter to continue");
+        var tmp = Console.ReadLine();
     }
 
+    /// <summary>
+    /// An help method which requests from the user whether he wants to modify the given field value
+    /// </summary>
+    /// <param name="valueToRequest"></param>
+    /// <returns>The user's answer (yes = true, no = false)</returns>
     static public bool RequestPremissionToChanged(string valueToRequest)
     => RequestBooleanAnswerFromUser($"Do You Want to Update The {valueToRequest}? (yes / no) ");
+
+    /// <summary>
+    /// An help method which handles boolean input from the user
+    /// </summary>
+    /// <param name="msg">The display presented to the user</param>
+    /// <returns>The user's answer (yes = true, no = false)</returns>
     static private bool RequestBooleanAnswerFromUser(string msg)
     {
         string input;

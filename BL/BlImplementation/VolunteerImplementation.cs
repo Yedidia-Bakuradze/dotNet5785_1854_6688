@@ -203,7 +203,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     }
                 default:
                     {
-                        throw new BO.BlInvalidEnumValueOperationException($"BL: Aren't able to order by the field {sortByField}");
+                        throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
                     }
             }
         }

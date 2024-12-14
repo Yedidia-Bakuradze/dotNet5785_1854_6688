@@ -77,13 +77,13 @@ public enum VolunteerInListField
 
 public enum TimeUnit
 {
-    Seconds,
-    Minutes,
-    Hours,
-    Days,
-    Weeks,
-    Months,
-    Years
+    Second = 1,
+    Minute,
+    Hour,
+    Day,
+    Week,
+    Month,
+    Year
 }
 
 public enum DistanceType { driving, walking, air }

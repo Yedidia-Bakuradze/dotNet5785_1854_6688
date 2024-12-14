@@ -61,40 +61,40 @@ internal class AdminImplementation : IAdmin
     /// This method accepts a TimeUnit and moves forrward the time by one unit of the specified TimeUnit
     /// </summary>
     /// <param name="timeUnit">The TimeUnit which is needed to be add on the current clock by one unit</param>
-    /// <exception cref="BO.BlInvalidEnumValueOperationException">An excption that indicates that there is a forbidden operation</exception>
+    /// <exception cref="BO.BlInvalidOperationException">An excption that indicates that there is a forbidden operation</exception>
     public void UpdateClock(TimeUnit timeUnit)
     {
         switch (timeUnit)
         {
-            case TimeUnit.Seconds:
+            case TimeUnit.Second:
                 {
                     ClockManager.UpdateClock(ClockManager.Now.AddSeconds(1));
                     break;
                 }
-            case TimeUnit.Minutes:
+            case TimeUnit.Minute:
                 {
                     ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
 
                     break;
                 }
-            case TimeUnit.Hours:
+            case TimeUnit.Hour:
                 {
                     ClockManager.UpdateClock(ClockManager.Now.AddHours(1));
                     break;
                 }
-            case TimeUnit.Days:
+            case TimeUnit.Day:
                 {
                     ClockManager.UpdateClock(ClockManager.Now.AddDays(1));
                     break;
                 }
-            case TimeUnit.Months:
+            case TimeUnit.Month:
                 {
                     ClockManager.UpdateClock(ClockManager.Now.AddMonths(1));
                     break;
                 }
             default:
                 {
-                    throw new BO.BlInvalidEnumValueOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");
+                    throw new BO.BlInvalidOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");
                 }
 
         }

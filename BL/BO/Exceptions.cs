@@ -95,9 +95,9 @@ public class BlForbidenSystemActionExeption : Exception
 /// This exception is thrown when the system tries to make un registered operation
 /// might occure in switch statments when the value is not a valid enum value for that operation
 /// </summary>
-public class BlInvalidEnumValueOperationException : Exception
+public class BlInvalidOperationException : Exception
 {
-    public BlInvalidEnumValueOperationException(string?msg):base(msg)
+    public BlInvalidOperationException(string?msg):base(msg)
     {
         
     }

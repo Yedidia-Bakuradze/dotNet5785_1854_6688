@@ -147,7 +147,7 @@ internal class CallImplementation : ICall
                     closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
                     break;
                 default:
-                    throw new BO.BlInvalidEnumValueOperationException("Invalid sorting filterField");
+                    throw new BO.BlInvalidOperationException("Invalid sorting filterField");
             }
         }
 
@@ -284,7 +284,7 @@ internal class CallImplementation : ICall
                                   select call;
                     break;
                 case null:
-                    throw new BO.BlInvalidEnumValueOperationException($"Bl: Filter value is null");
+                    throw new BO.BlInvalidOperationException($"Bl: Filter value is null");
                     break;
             }
         }
@@ -347,7 +347,7 @@ internal class CallImplementation : ICall
     /// <param name="sortingField">An optional sorting field to order the returned calls.</param>
     /// <returns>A list of open calls formatted as <see cref="BO.OpenCallInList"/>.</returns>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer does not exist.</exception>
-    /// <exception cref="BO.BlInvalidEnumValueOperationException">Thrown if an invalid sorting field is provided.</exception>
+    /// <exception cref="BO.BlInvalidOperationException">Thrown if an invalid sorting field is provided.</exception>
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int VolunteerId, BO.CallType? callType, BO.OpenCallFields? sortingField)
     {
         // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
@@ -408,7 +408,7 @@ internal class CallImplementation : ICall
                 break;
             default:
                 // Throw an exception if the sorting field is invalid.
-                throw new BO.BlInvalidEnumValueOperationException("BL: Invalid sorting filterField");
+                throw new BO.BlInvalidOperationException("BL: Invalid sorting filterField");
         }
 
         // Return the sorted list of open calls.
