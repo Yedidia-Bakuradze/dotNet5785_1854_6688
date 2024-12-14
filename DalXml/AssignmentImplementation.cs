@@ -68,10 +68,17 @@ public class AssignmentImplementation : IAssignment
     /// <exception cref="DalDoesNotExistException">An exception will be thrown if such entity hasn't been found</exception>
     public Assignment? Read(Func<Assignment, bool> filter)
     {
-        XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
-        XElement res = data.Elements().FirstOrDefault(a => filter(getAssignment(a)))
-            ?? throw new DalDoesNotExistException("No assignment which satisfies the given filter has been found");
-        return getAssignment(res);
+        try
+        {
+            XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
+            XElement res = data.Elements().FirstOrDefault(a => filter(getAssignment(a)))
+                ?? throw new DalDoesNotExistException("No assignment which satisfies the given filter has been found");
+            return getAssignment(res);
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
     }
 
     /// <summary>
