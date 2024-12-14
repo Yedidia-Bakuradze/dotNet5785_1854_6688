@@ -352,13 +352,13 @@ Press 0: To Exit
     }
     private static void ReadAllVolunteers()
     {
-        Console.WriteLine("-------------------------------------------");
         Console.WriteLine("Displaying all the volunteers");
         foreach (BO.VolunteerInList volunteer in s_bl.Volunteer.GetVolunteers(null, null))
         {
+            Console.WriteLine("-------------------------------------------");
             Console.WriteLine(volunteer);
+            Console.WriteLine("-------------------------------------------");
         }
-        Console.WriteLine("-------------------------------------------");
     }
     private static void LoginVolunteer()
     {
