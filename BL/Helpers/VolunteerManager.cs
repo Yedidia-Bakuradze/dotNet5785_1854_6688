@@ -171,23 +171,24 @@ internal static class VolunteerManager
     /// <exception cref="BlUnimplementedMethodOrFunction">UnImplemented exception</exception>
     private static bool IsValidPassword(string? password)
     {
-        //TODO: [Bonus]: eyncrypt the password using SHA256
-        
         if (password == null)
-            return true;
+            return false;
 
         // Check if the password is at least 8 characters long
         if (password.Length < 8)
             return false;
 
-        // Regex pattern to check if the password contains at least two special characters
-        string specialCharPattern = @"[^a-zA-Z0-9]{2,}";
+        // Check if the password contains at least two upper-case letters
+        if (password.Count(char.IsUpper) < 2)
+            return false;
+
+        // Check if the password contains at least one special character
+        string specialCharPattern = @"[!@#$%^&*(),.?""{}|<>]";
         if (!Regex.IsMatch(password, specialCharPattern))
             return false;
 
-        // Regex pattern to check if the password contains at least two numbers
-        string numberPattern = @"\d{2,}";
-        if (!Regex.IsMatch(password, numberPattern))
+        // Check if the password contains at least two numbers
+        if (password.Count(char.IsDigit) < 2)
             return false;
 
         return true;
