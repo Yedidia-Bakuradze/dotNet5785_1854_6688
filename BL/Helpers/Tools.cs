@@ -27,7 +27,7 @@ internal static class Tools
                 msg += $"{field.Name}:";
 
                 //Type of field (IEnumerable / Simple field)
-                if(fieldValue is IEnumerable)
+                if(fieldValue is IEnumerable && fieldValue is not string)
                 {
                     msg += " [";
                     foreach(var element in (IEnumerable)fieldValue)
