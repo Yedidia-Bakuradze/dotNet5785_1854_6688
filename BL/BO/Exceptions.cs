@@ -106,9 +106,9 @@ public class BlInvalidEnumValueOperationException : Exception
 /// <summary>
 /// This exception is thrown when the user's tries to enter a value that cann't be converted to its real value
 /// </summary>
-public class BlInvalidValueTypeToFormatException: Exception
+public class BlInputValueUnConvertableException: Exception
 {
-    public BlInvalidValueTypeToFormatException(string? msg) : base(msg) {}
+    public BlInputValueUnConvertableException(string? msg) : base(msg) {}
 }
 
 

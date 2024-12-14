@@ -200,60 +200,148 @@ Press 0: To Exit
     /// <summary>
     /// This method requests from the user an volunteer's id and removes it from the database
     /// </summary>
-    /// <exception cref="BO.BlInvalidValueTypeToFormatException"></exception>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
     private static void RemoveVolunteer()
     {
         Console.Write("Enter the Id of the volunteer to remove: ");
         string input = Console.ReadLine() ?? "";
         if (!Int32.TryParse(input, out int id))
-            throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not a integer");
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a integer");
         else
             s_bl.Volunteer.DeleteVolunteer(id);
     }
     private static void UpdateVolunteer()
     {
         int updaterId;
-        int id;
+        int volunteerId;
+        int newVolunteerId = -1;
+        bool isPasswordBeenModifed = false;
         Console.WriteLine("Volunteer Update Mode:");
         Console.Write("Enter Your Id: ");
         Int32.TryParse(Console.ReadLine() ?? "", out updaterId);
 
         Console.WriteLine("Volunteer's New Field Values:");
 
-        Console.Write("Enter new Id: ");
-        Int32.TryParse(Console.ReadLine() ?? "", out id);
+        Console.Write("Enter the Id of the Volunteer that you are willing to modify: ");
+        Int32.TryParse(Console.ReadLine() ?? "", out volunteerId);
 
-        BO.Volunteer currentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
-
+        BO.Volunteer currentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
+        
+        //Get new name
         if (RequestPremissionToChanged("Full Name"))
         {
             Console.Write("Enter new Full Name: ");
             currentVolunteer.FullName = Console.ReadLine() ?? "";
         }
 
+        //Get new Phone number
         if (RequestPremissionToChanged("Phone Number"))
         {
             Console.Write("Enter new Phone Number: ");
             currentVolunteer.PhoneNumber = Console.ReadLine() ?? "";
         }
 
+        //Get new email address
         if (RequestPremissionToChanged("Email Address"))
         {
             Console.Write("Enter new Email Address: ");
             currentVolunteer.Email = Console.ReadLine() ?? "";
         }
+
+        //Get new password
+        if (RequestPremissionToChanged("Password"))
+        {
+            isPasswordBeenModifed = true;
+            Console.Write("Enter new Password (If you don't want any password, just hit enter): ");
+            string? oldPassword = currentVolunteer.Password;
+            currentVolunteer.Password= Console.ReadLine();
+        }
+
+        //Get new address
+        if (RequestPremissionToChanged("Current Address"))
+        {
+            Console.Write("Enter new Current Address (If you don't want any password, just hit enter): ");
+            currentVolunteer.FullCurrentAddress = Console.ReadLine();
+        }
+
+        //Get new user role
+        if (RequestPremissionToChanged("User Role"))
+        {
+            string input;
+            Console.Write($"Enter new User Role ({UserRole.Volunteer}, {UserRole.Admin}): ");
+            input = Console.ReadLine() ?? "";
+            if (!Enum.TryParse(input, out UserRole userRole))
+                throw new BO.BlInputValueUnConvertableException($"Bl: There is no such a role as {input}");
+            else
+                currentVolunteer.Role = userRole;
+        }
+
+        //Get new active status
+        if (RequestPremissionToChanged("Is Active"))
+        {
+            currentVolunteer.IsActive = RequestBooleanAnswerFromUser("Do you wanna be Active? (yes / no): ");
+        }
+
+        //Get new max distance for call 
+        if (RequestPremissionToChanged("Max Distance for Accepting a Call"))
+        {
+            string? input;
+            Console.Write($"Enter new MaxDistance (If you don't want any password, just hit enter): ");
+            input = Console.ReadLine() ?? null;
+            if (input == null)
+                currentVolunteer.MaxDistanceToCall = null;
+            else {
+                if (!double.TryParse(input, out double res))
+                    throw new BO.BlInputValueUnConvertableException($"Bl: Unable to convert user input. The value {input}, is not a double");
+                else
+                    currentVolunteer.MaxDistanceToCall = res;
+            }
+         }
+
+        //Get new range type
+        if (RequestPremissionToChanged("Type of Range"))
+        {
+            string input;
+            Console.Write($"Enter new RangeType ({TypeOfRange.AirDistance}, {TypeOfRange.WalkingDistance}, {TypeOfRange.DrivingDistance}): ");
+            input = Console.ReadLine() ?? "";
+            if (!Enum.TryParse(input, out TypeOfRange res))
+                throw new BO.BlInputValueUnConvertableException($"Bl: Unable to convert user input. The value {input}, is not either {TypeOfRange.AirDistance}, {TypeOfRange.WalkingDistance} or {TypeOfRange.DrivingDistance}");
+            else
+                currentVolunteer.RangeType = res;
+
+        }
+
+        BO.Volunteer newVolunteer = new BO.Volunteer
+        {
+            Id = (newVolunteerId == -1) ? currentVolunteer.Id : newVolunteerId,
+            CurrentCall = currentVolunteer.CurrentCall,
+            Email = currentVolunteer.Email,
+            FullCurrentAddress =currentVolunteer.FullCurrentAddress,
+            FullName = currentVolunteer.FullName,
+            IsActive = currentVolunteer.IsActive,
+            Latitude = null,
+            Longitude = null,
+            MaxDistanceToCall = currentVolunteer.MaxDistanceToCall,
+            Password = currentVolunteer.Password,
+            PhoneNumber =currentVolunteer.PhoneNumber,
+            RangeType = currentVolunteer.RangeType,
+            Role = currentVolunteer.Role
+        };
+
+        s_bl.Volunteer.UpdateVolunteerDetails(updaterId, newVolunteer,isPasswordBeenModifed);
+
     }
     
     /// <summary>
     /// This method requests from the user an id and prints out all the Volunteer's field values
     /// </summary>
-    /// <exception cref="BO.BlInvalidValueTypeToFormatException"></exception>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
     private static void ReadVolunteer()
     {
         Console.Write("Enter the Id of the volunteer to read: ");
         string input = Console.ReadLine() ?? "";
         if (!Int32.TryParse(input, out int id))
-            throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not a integer");
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a integer");
         else
             Console.WriteLine(s_bl.Volunteer.GetVolunteerDetails(id));
     }
@@ -286,13 +374,15 @@ Press 0: To Exit
     }
 
     static public bool RequestPremissionToChanged(string valueToRequest)
+    => RequestBooleanAnswerFromUser($"Do You Want to Update The {valueToRequest}? (yes / no) ");
+    static private bool RequestBooleanAnswerFromUser(string msg)
     {
         string input;
         do
         {
-            Console.WriteLine($"Do You Want to Update The {valueToRequest}? (yes / no) ");
+            Console.WriteLine(msg);
             input = Console.ReadLine() ?? "";
-            if (input != "yes" || input != "no")
+            if (input != "yes" && input != "no")
                 Console.WriteLine($"Please Choose Either 'yes' or 'no'");
             else
                 break;

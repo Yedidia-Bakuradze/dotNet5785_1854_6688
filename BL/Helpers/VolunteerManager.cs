@@ -171,8 +171,8 @@ internal static class VolunteerManager
     /// <exception cref="BlUnimplementedMethodOrFunction">UnImplemented exception</exception>
     private static bool IsValidPassword(string? password)
     {
-        if (password == null)
-            return false;
+        if (password == null || password == "")
+            return true;
 
         // Check if the password is at least 8 characters long
         if (password.Length < 8)
@@ -224,19 +224,18 @@ internal static class VolunteerManager
     /// This method checks if the volunteer's field values are valid and returns the proper boolean value
     /// </summary>
     /// <param name="volunteer">The Volunteer instance</param>
+    /// <param name="isPasswordOk">[Optional] if true the method wont check the hashed password</param>
     /// <returns>a boolean value whether the volunteer is valid or not</returns>
-    internal static bool IsVolunteerValid(BO.Volunteer volunteer)
-    {
-        return
+    internal static bool IsVolunteerValid(BO.Volunteer volunteer, bool isPasswordOk = false)
+    =>
             IsVolunteerIdValid(volunteer.Id) &&
             IsValidFullName(volunteer.FullName) &&
             IsValidPhoneNumber(volunteer.PhoneNumber) &&
             IsValidEmailAddress(volunteer.Email) &&
-            IsValidPassword(volunteer.Password) &&
+            (isPasswordOk || IsValidPassword(volunteer.Password)) &&
             IsStreetAddressValid(volunteer.FullCurrentAddress) &&
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
             
-    }
 
     /// <summary>
     /// This method calculates the air distance between the given streets
