@@ -78,28 +78,27 @@ internal class Program
             try
             {
                 //Get operation from user
-                Console.WriteLine(
-    @"
-        ----------------------------------------------------------------
-        Volunteer SubMenu: Please Select One Of The Presented Options
+                Console.Write(
+@"
+----------------------------------------------------------------
+Volunteer SubMenu: Please Select One Of The Presented Options
 
-        Press 1: To Add a New Volunteer
-        Press 2: To Remove an Volunteer
-        Press 3: To Update a Volunteer
-        Press 4: To Read a Volunteer
-        Press 5: To Read All Volunteers 
-        Press 6: To Login as a Volunteer
-        Press 0: To Exit
-        ----------------------------------------------------------------
+Press 1: To Add a New Volunteer
+Press 2: To Remove an Volunteer
+Press 3: To Update a Volunteer
+Press 4: To Read a Volunteer
+Press 5: To Read All Volunteers 
+Press 6: To Login as a Volunteer
+Press 0: To Exit
+----------------------------------------------------------------
 
-        >>> 
-        "
+>>> "
     );
                 IVolunteerOperations operation;
                 string input = Console.ReadLine() ?? "";
 
                 if (!Enum.TryParse(input, out operation))
-                    throw new BO.BlInvalidEnumValueOperationException($"Bl: There is not such a opereation as {input}");
+                    throw new BO.BlInvalidEnumValueOperationException($"Bl: Operation {input}, is not available");
 
                 switch (operation)
                 {
@@ -132,6 +131,7 @@ internal class Program
         } while (true);
 
     }
+
 
     /// <summary>
     /// This method adds a new Volunteer to the database using the user's input values
@@ -243,6 +243,11 @@ internal class Program
             currentVolunteer.Email = Console.ReadLine() ?? "";
         }
     }
+    
+    /// <summary>
+    /// This method requests from the user an id and prints out all the Volunteer's field values
+    /// </summary>
+    /// <exception cref="BO.BlInvalidValueTypeToFormatException"></exception>
     private static void ReadVolunteer()
     {
         Console.Write("Enter the Id of the volunteer to read: ");

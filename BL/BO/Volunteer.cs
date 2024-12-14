@@ -58,18 +58,20 @@ public class Volunteer
     public TypeOfRange RangeType { get; set; }
 
     //Get: Find all the 'Treated' calls and sum them up
+    //Af far as we understand the assignment - the call count calculatations are made in the runtime and now saved as a field
     public int NumOfHandledCalls {
-
-        //Af far as we understand the assignment - the call count calculatations are made in the runtime and now saved as a field
-        get;
+        get => Helpers.AssignmentManager.GetNumOfHandledCallsByVolunteerId(this.Id, BO.TypeOfEndingCall.Treated);
     }
 
     //Get: Find all the 'SelfCanceled' calls and sum them up
-    public int NumOfCanceledCalls { get; }
-
+    public int NumOfCanceledCalls {
+        get => Helpers.AssignmentManager.GetNumOfHandledCallsByVolunteerId(this.Id,BO.TypeOfEndingCall.SelfCanceled);
+    }
 
     //Get: Find all the 'CancellationExpired' calls and sum them up
-    public int NumOfExpiredCalls{ get; }
+    public int NumOfExpiredCalls{ 
+        get=>Helpers.AssignmentManager.GetNumOfHandledCallsByVolunteerId(this.Id, BO.TypeOfEndingCall.CancellationExpired);
+    }
 
     //Holds the call which is handled otherwise: null
 
