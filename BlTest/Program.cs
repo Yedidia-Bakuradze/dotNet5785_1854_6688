@@ -196,6 +196,11 @@ internal class Program
             Role = role
         });
     }
+    
+    /// <summary>
+    /// This method requests from the user an volunteer's id and removes it from the database
+    /// </summary>
+    /// <exception cref="BO.BlInvalidValueTypeToFormatException"></exception>
     private static void RemoveVolunteer()
     {
         Console.Write("Enter the Id of the volunteer to remove: ");
@@ -245,7 +250,7 @@ internal class Program
         if (!Int32.TryParse(input, out int id))
             throw new BO.BlInvalidValueTypeToFormatException($"Bl: The value {input}, is not a integer");
         else
-            s_bl.Volunteer.GetVolunteerDetails(id);
+            Console.WriteLine(s_bl.Volunteer.GetVolunteerDetails(id));
     }
     private static void ReadAllVolunteers()
     {
