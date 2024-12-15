@@ -160,54 +160,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             ? s_dal.Volunteer.ReadAll()
             : s_dal.Volunteer.ReadAll((DO.Volunteer volunteer) => volunteer.IsActive == (bool)filterByActiveStatus);
 
-        //Sort the given above enumerable
-        if (sortByField is null)
-        {
-            volunteers = from volunteer in volunteers
-                         orderby volunteer.Id
-                         select volunteer;
-        }
-        else
-        {
-            //Issue #16: Refactor
-            switch (sortByField)
-            {
-                case BO.VolunteerInListField.Id:
-                    {
-                        volunteers = from volunteer in volunteers
-                                        orderby volunteer.Id
-                                        select volunteer;
-                        break;
-                    }
-                case BO.VolunteerInListField.FullName:
-                    {
-                        volunteers = from volunteer in volunteers
-                                        orderby volunteer.FullName
-                                        select volunteer;
-                        break;
-                    }
-                case BO.VolunteerInListField.IsActive:
-                    {
-                        volunteers = from volunteer in volunteers
-                                        orderby volunteer.IsActive
-                                        select volunteer;
-                        break;
-                    }
-                    //Issue #15: Find why theses fields aren't orderby-able
-                    { 
-                        //case BO.VolunteerInListField.TotalCallsDoneByVolunteer:
-                        //case BO.VolunteerInListField.TotalCallsCancelByVolunteer:
-                        //case BO.VolunteerInListField.TotalCallsExpiredByVolunteer:
-                        //case BO.VolunteerInListField.CallId:
-                        //case BO.VolunteerInListField.TypeOfCall:
-                    }
-                default:
-                    {
-                        throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
-                    }
-            }
-        }
-
         //Convert to VolunteerInList entities
         IEnumerable<BO.VolunteerInList> volunteerInLists = from volunteer in volunteers
                                                            select new BO.VolunteerInList
@@ -218,8 +170,66 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                                                                CallId = s_dal.Assignment
                                                                     .Read((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
                                                                     ?.CallId
-                                                                    
+
                                                            };
+        //Sort the given above enumerable
+        if (sortByField is null)
+            return from volunteer in volunteerInLists
+                   orderby volunteer.Id
+                   select volunteer;
+        //Issue #16: Refactor
+        switch (sortByField)
+        {
+            case BO.VolunteerInListField.Id:
+                {
+                    volunteers = from volunteer in volunteers
+                                    orderby volunteer.Id
+                                    select volunteer;
+                    break;
+                }
+            case BO.VolunteerInListField.FullName:
+                {
+                    volunteers = from volunteer in volunteers
+                                    orderby volunteer.FullName
+                                    select volunteer;
+                    break;
+                }
+            case BO.VolunteerInListField.IsActive:
+                    volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.IsActive
+                                    select volunteer;
+                    break;
+            case VolunteerInListField.TotalCallsDoneByVolunteer:
+                volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.TotalCallsDoneByVolunteer
+                                    select volunteer;
+                break;
+            case VolunteerInListField.TotalCallsCancelByVolunteer:
+                volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.TotalCallsCancelByVolunteer
+                                    select volunteer;
+                break;
+            case VolunteerInListField.TotalCallsExpiredByVolunteer:
+                volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.TotalCallsExpiredByVolunteer
+                                    select volunteer;
+                break;
+            case VolunteerInListField.CallId:
+                volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.CallId
+                                    select volunteer;
+                break;
+            case VolunteerInListField.TypeOfCall:
+                volunteerInLists = from volunteer in volunteerInLists
+                                    orderby volunteer.TypeOfCall
+                                    select volunteer;
+                break;
+            case null:
+                throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field null value");
+            default:
+                    throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
+        }
+
         return volunteerInLists;
     }
 
