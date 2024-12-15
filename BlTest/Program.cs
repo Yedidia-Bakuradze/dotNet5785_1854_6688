@@ -44,6 +44,7 @@ Press 0 To Exit
                     case MainMenuOperation.Exit:
                         return;
                     case MainMenuOperation.Call:
+                        ICallSubMenu();
                         break;
                     case MainMenuOperation.Volunteer:
                         IVolunteerSubMenu();
@@ -178,7 +179,7 @@ Press 6: To Initialize The Database
     /// </summary>
     private static void ShowSystemClock() => Console.WriteLine($"Current System Clock: {s_bl.Admin.GetClock()}");
 
-    public void ICallSubMenu()
+    public static void ICallSubMenu()
     {
         Console.WriteLine(@"
 ----------------------------------------------------------------
