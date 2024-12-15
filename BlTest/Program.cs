@@ -1,7 +1,5 @@
 ﻿using BO;
 using Helpers;
-using System.Data.Common;
-using System.Security.Cryptography.X509Certificates;
 
 namespace BlTest;
 
@@ -11,7 +9,7 @@ internal class Program
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
     public enum MainMenuOperation { Exit, Call, Volunteer, Admin }
-    public enum CallMenuOperation { Exit, AddCall, UpdateCall, SelectCallToDo, UpdateCallEnd, EndOfCallStatusUpdate, DeleteCallRequest, GetListOfCalls, GetDetielsOfCall, GetClosedCallsByVolunteer, GetOpenCallsForVolunteer, GetTotalCallsByStatus }
+    public enum CallMenuOperation { Exit = 1, AddCall, UpdateCall, SelectCallToDo, UpdateCallEnd, EndOfCallStatusUpdate, DeleteCallRequest, GetListOfCalls, GetDetielsOfCall, GetClosedCallsByVolunteer, GetOpenCallsForVolunteer, GetTotalCallsByStatus }
     public enum IVolunteerOperations { Exit, Add, Remove, Update, Read, ReadAll, Login }
     public enum IAdminOperations { Exit, GetClock, UpdateClock, GetRiskRange, SetRiskRange, DbReset, DbInit }
     static void Main(string[] args)
@@ -185,10 +183,19 @@ Press 6: To Initialize The Database
         Console.WriteLine(@"
 ----------------------------------------------------------------
 Select Your Option:
-Press 1 To Use ICall Interface
-Press 2 To Use IVolunteer Interface
-Press 3 To Use IAdmin Interface
-Press 0 To Exit
+Press 1 To Exit
+Press 2 To AddCall
+Press 3 To UpdateCall
+Press 4 To SelectCallToDo
+Press 5 To UpdateCallEnd
+Press 6 To EndOfCallStatusUpdate
+Press 7 To DeleteCallRequest
+Press 8 To GetListOfCalls
+Press 9 To GetDetielsOfCall
+Press 10 To GetClosedCallsByVolunteer
+Press 11 To GetOpenCallsForVolunteer
+Press 12 To GetTotalCallsByStatus
+
 ----------------------------------------------------------------                
 ");
         Console.Write(">>> ");
@@ -306,6 +313,13 @@ Press 0 To Exit
                     s_bl.Call.UpdateCallEnd(VolunteerId1, callId2);
                     break;
                 case CallMenuOperation.EndOfCallStatusUpdate:
+                    int callId3;
+                    int VolunteerId2;
+                    Console.WriteLine("Please give me the call ID you want to update:");
+                    callId3 = int.Parse(Console.ReadLine() ?? "");
+                    Console.WriteLine("Please give me the volunteer ID you want to update:");
+                    VolunteerId2 = int.Parse(Console.ReadLine() ?? "");
+
                     break;
                 case CallMenuOperation.DeleteCallRequest:
                     break;

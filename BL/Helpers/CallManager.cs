@@ -14,15 +14,15 @@ internal static class CallManager
             .Where(call => !listOfAssignments.Any(assignment => assignment.CallId == call.Id))
             .Select(call => call)
             .ToList()
-            .ForEach(call => s_dal.Assignment.Create( new DO.Assignment
-        {
-            CallId = call.Id,
-            TimeOfStarting = call.OpeningTime,
-            TimeOfEnding = ClockManager.Now,
-            Id = -1,
-            TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
-            VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
-        }
+            .ForEach(call => s_dal.Assignment.Create(new DO.Assignment
+            {
+                CallId = call.Id,
+                TimeOfStarting = call.OpeningTime,
+                TimeOfEnding = ClockManager.Now,
+                Id = -1,
+                TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
+                VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
+            }
         ));
 
         listOfAssignments
@@ -30,11 +30,12 @@ internal static class CallManager
             .Select(assignment => assignment)
             .ToList()
             .ForEach((assignment) => s_dal.Assignment.Update(assignment with
-        {
-            TimeOfEnding = ClockManager.Now,
-            TypeOfEnding = DO.TypeOfEnding.CancellationExpired
-        }));
+            {
+                TimeOfEnding = ClockManager.Now,
+                TypeOfEnding = DO.TypeOfEnding.CancellationExpired
+            }));
     }
+
 
     /// <summary>
     /// Accepts a Call Id and returns it status based on the CallStatus enum values
