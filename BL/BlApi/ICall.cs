@@ -59,14 +59,14 @@ public interface ICall
     /// </summary>
     /// <param name="VolunteerId">The ID of the volunteer</param>
     /// <param name="callId">The ID of the call</param>
-    public void UpdateCallEnd(int VolunteerId, int callId);
+    public void CancelAssignement(int VolunteerId, int callId);
 
     /// <summary>
     /// Update the status of the end of a call
     /// </summary>
     /// <param name="VolunteerId">The ID of the volunteer</param>
     /// <param name="callId">The ID of the call</param>
-    public void EndOfCallStatusUpdate(int VolunteerId, int callId);
+    public void FinishAssignement(int VolunteerId, int callId);
 
     /// <summary>
     /// Select a call to do by a volunteer
