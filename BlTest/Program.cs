@@ -1,4 +1,5 @@
 ﻿using BO;
+using System.Globalization;
 
 namespace BlTest;
 
@@ -614,8 +615,39 @@ Press 0: To Exit
     /// </summary>
     private static void ReadAllVolunteers()
     {
-        Console.WriteLine("Displaying all the volunteers");
-        foreach (BO.VolunteerInList volunteer in s_bl.Volunteer.GetVolunteers(null, null))
+        bool? isActive = null;
+        VolunteerInListField? volunteerInList = null;
+        if(RequestBooleanAnswer("Do You want To Filter By IsActive Value? (yes / no): "))
+            isActive = RequestBooleanAnswer("Do You Want to Get Active (yes / no)? ");
+        if(RequestBooleanAnswer("The list would be returns ordered by the Volunteer's Id, Do you Want to Change it? (yes / no): "))
+        {
+            do
+            {
+                Console.Write(
+    $@"
+    -------------------------------------------------------------------
+    Please Choose One Of the Presented Fields To Order By:
+    {BO.VolunteerInListField.Id}
+    {BO.VolunteerInListField.FullName}
+    {BO.VolunteerInListField.IsActive}
+    {BO.VolunteerInListField.TotalCallsDoneByVolunteer}
+    {BO.VolunteerInListField.TotalCallsCancelByVolunteer}
+    {BO.VolunteerInListField.TotalCallsExpiredByVolunteer}
+    {BO.VolunteerInListField.CallId}
+    {BO.VolunteerInListField.TypeOfCall}
+    -------------------------------------------------------------------
+
+    >>>
+    ");
+                string input = Console.ReadLine() ?? "";
+                if(!Enum.TryParse(input,out VolunteerInListField tmp))
+                    Console.WriteLine($"The value {input}, is not a valid VolunteerInListField value");
+                else {
+                    volunteerInList = tmp; 
+                }
+            } while (true);
+        }
+        foreach (BO.VolunteerInList volunteer in s_bl.Volunteer.GetVolunteers(isActive, volunteerInList))
         {
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine(volunteer);
