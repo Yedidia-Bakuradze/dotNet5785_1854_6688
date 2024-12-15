@@ -348,7 +348,6 @@ static public class Initialization
         
         //For each volunteer we would assign couple of calls to him
         for (int i = 20; i < 100; i++) {
-
             Console.WriteLine($"Assignment Number {i -20 + 1} has been created!");
             currentVolunteer = listOfVolunteers[i];
             currentCall = listOfCalls[i];
