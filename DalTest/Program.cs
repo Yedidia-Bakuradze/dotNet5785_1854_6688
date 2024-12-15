@@ -761,7 +761,7 @@ Please Choose The Operation That You Would Like To Use:
                         {
                             Assignment result = ss_dal?.Assignment?.Read(id) ?? 
                                 throw new DalDoesNotExistException($"The Assignment instance with Id of {id} hasn't been found");
-                            int Called = result.CallId ;
+                            int CallId = result.CallId ;
                             int VolunteerId = result.VolunteerId ;
                             DateTime TimeOfStarting = result.TimeOfStarting;
                             DateTime? TimeOfEnding = result.TimeOfEnding ;
@@ -862,7 +862,7 @@ Type Of Ending: {result.TypeOfEnding}      --->
 ----------------------------------------
 Assignment Object Update - New Version
 Assignment ID: {result.Id}          
-Call ID: {Called}                   
+Call ID: {CallId}                   
 Volunteer ID: {VolunteerId}         
 Time Of Starting: {TimeOfStarting}  
 Time Of Ending: {TimeOfEnding}     
@@ -875,7 +875,7 @@ Type Of Ending: {TypeOfEnding}
                             Assignment newAssignment = new Assignment()
                             {
                                 Id = result.Id,
-                                CallId  = Called ,
+                                CallId  = CallId ,
                                 VolunteerId  = VolunteerId ,
                                 TimeOfStarting = TimeOfStarting,
                                 TimeOfEnding = TimeOfEnding,

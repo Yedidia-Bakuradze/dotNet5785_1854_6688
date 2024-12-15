@@ -144,7 +144,7 @@ public class AssignmentImplementation : IAssignment
     {
         List<XElement> subTags = new List<XElement>() {
                 new XElement("Id", assignment.Id),
-                new XElement("Called", assignment.CallId),
+                new XElement("CallId", assignment.CallId),
                 new XElement("VolunteerId", assignment.VolunteerId),
                 new XElement("TimeOfStarting", assignment.TimeOfStarting)
                };

@@ -63,7 +63,8 @@ internal class CallImplementation : ICall
     public void EndOfCallStatusUpdate(int VolunteerId, int callId)
     {
         // Retrieve the assignment details for the given volunteer and call ID
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist", new DO.DalDoesNotExistException(""));
+        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId)
+            ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
 
         // Check if the assignment already has an ending type or time
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
