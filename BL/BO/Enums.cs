@@ -4,6 +4,7 @@ namespace BO;
 public enum UserRole { Admin, Volunteer, Undefined };
 public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
 public enum TypeOfEndingCall { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
+//Issue #20: Not enough CallTypes 
 public enum CallType { Undefined, FoodPreparation, FoodDelivery }
 public enum CallInProgressStatus { Taken, TakenAndInRisk }
 public enum CallInListFields

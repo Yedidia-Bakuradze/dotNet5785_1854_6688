@@ -345,13 +345,16 @@ static public class Initialization
 
         Volunteer currentVolunteer;
         Call currentCall;
-        
+        int iterations = listOfCalls.Count() > listOfVolunteers.Count()
+            ? listOfVolunteers.Count()
+            : listOfCalls.Count();
+
         //For each volunteer we would assign couple of calls to him
-        for (int i = 20; i < 100; i++) {
+        for (int i = 20; i < iterations; i++) {
             Console.WriteLine($"Assignment Number {i -20 + 1} has been created!");
             currentVolunteer = listOfVolunteers[i];
             currentCall = listOfCalls[i];
-            if(currentVolunteer.Id == -1)
+            if(currentVolunteer.Id == -1 || i == 99)
                 Console.WriteLine("");
                 //Calculates the delta time between the opening and closing time of the call    
                 TimeSpan delta = (currentCall.DeadLine != null)
@@ -385,7 +388,8 @@ static public class Initialization
             try
             {
                 s_dal?.Assignment?.Create(newAssignment);
-            }catch(Exception error)
+            }
+            catch(Exception error)
             {
                 Console.WriteLine(error.Message);
             }
@@ -421,7 +425,8 @@ static public class Initialization
             try
             {
                 s_dal?.Call?.Create(newCall);
-            }catch(Exception error)
+            }
+            catch(Exception error)
             {
                 Console.WriteLine(error.Message);
             }
@@ -479,7 +484,8 @@ static public class Initialization
             try
             {
                 s_dal?.Volunteer?.Create(newVolunteer);
-            }catch(Exception error)
+            }
+            catch(Exception error)
             {
                 Console.WriteLine(error.Message);
             }

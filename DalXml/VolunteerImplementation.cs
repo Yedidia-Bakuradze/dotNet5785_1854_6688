@@ -86,7 +86,6 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DalDoesNotExistException error)
         {
-            Console.WriteLine(error.Message);
             return null;
         }
     }

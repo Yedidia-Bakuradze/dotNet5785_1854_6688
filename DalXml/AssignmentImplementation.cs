@@ -146,17 +146,10 @@ public class AssignmentImplementation : IAssignment
                 new XElement("Id", assignment.Id),
                 new XElement("CallId", assignment.CallId),
                 new XElement("VolunteerId", assignment.VolunteerId),
-                new XElement("TimeOfStarting", assignment.TimeOfStarting)
-               };
-
-        if(assignment.TimeOfEnding != null)
-        {
-            subTags.Add(new XElement("TimeOfEnding", assignment.TimeOfEnding.ToString()));
-        }
-        if(assignment.TypeOfEnding != null)
-        {
-            subTags.Add(new XElement("TypeOfEnding", assignment.TypeOfEnding.ToString()));
-        }
+                new XElement("TimeOfStarting", assignment.TimeOfStarting),
+                new XElement("TimeOfEnding", (assignment.TimeOfEnding == null) ?null : assignment.TimeOfEnding.ToString()),
+                new XElement("TypeOfEnding", (assignment.TypeOfEnding == null) ?null : assignment.TypeOfEnding.ToString())
+        };
 
         return new ("Assignment", subTags.ToArray());
     }

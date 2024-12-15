@@ -1,5 +1,4 @@
 ﻿using BO;
-using Helpers;
 
 namespace BlTest;
 
@@ -62,6 +61,10 @@ Press 0 To Exit
         } while (true);
     }
 
+    /// <summary>
+    /// Admin's action hub which the user is able to preform all the IAdmin action
+    /// </summary>
+    /// <exception cref="BO.BlInvalidOperationException"></exception>
     private static void IAdminSubMenu()
     {
         do
@@ -74,6 +77,7 @@ Press 0 To Exit
 ----------------------------------------------------------------
 Admin's SubMenu: Please Select One Of The Presented Options
 
+Press 0: To Exit to The Main Hub
 Press 1: To Print The Current System Clock
 Press 2: To Update System's Clock
 Press 3: To Print The Current System Risk Range Value
@@ -121,89 +125,34 @@ Press 6: To Initialize The Database
     }
 
     /// <summary>
-    /// This method initializes the database with the premade values
-    /// </summary>
-    private static void InitializeSystemDatabase() => s_bl.Admin.DbInit();
-
-    /// <summary>
-    /// This method resets the database and the configuration values
-    /// </summary>
-    private static void ResetSystemDatabase() => s_bl.Admin.DbReset();
-
-    /// <summary>
-    /// This method updates the current risk range value by the value provided by the user
+    /// Calls's action hub which the user is able to preform all the ICall action
     /// </summary>
     /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
-    private static void UpdateSystemRiskRange()
-    {
-        Console.Write("Enter the new Risk Range (in this format: DD:HH:MM:SS): ");
-        string input = Console.ReadLine() ?? "";
-        if (!TimeSpan.TryParse(input, out TimeSpan newRiskRange))
-            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid TimeSpan value");
-
-        s_bl.Admin.SetRiskRange(newRiskRange);
-    }
-
-    /// <summary>
-    /// This method displays the current risk range value
-    /// </summary>
-    private static void ShowSystemRiskRange() => Console.WriteLine($"Current System RiskRange: {s_bl.Admin.GetRiskRange()}");
-
-    /// <summary>
-    /// This method updates the current system clock by one unit according the provided Time Unit type by the user
-    /// </summary>
-    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
-    private static void UpdateSystemClock()
-    {
-        Console.Write(
- @$"
-    ------------------------------------------------------------------------------
-    Please Select the Time Unit that You are willing to forward to time with:
-    Press 1: To Forward By One {TimeUnit.Second}
-    Press 2: To Forward By One {TimeUnit.Minute}
-    Press 3: To Forward By One {TimeUnit.Hour}
-    Press 4: To Forward By One {TimeUnit.Day}
-    Press 5: To Forward By One {TimeUnit.Week}
-    Press 6: To Forward By One {TimeUnit.Month}
-    Press 7: To Forward By One {TimeUnit.Year}
-    ------------------------------------------------------------------------------
-    ");
-        string input = Console.ReadLine() ?? "";
-        if (!Enum.TryParse(input, out TimeUnit option))
-            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a vaid IAdminOperations value");
-        s_bl.Admin.UpdateClock(option);
-    }
-
-    /// <summary>
-    /// This method displays the current system clock
-    /// </summary>
-    private static void ShowSystemClock() => Console.WriteLine($"Current System Clock: {s_bl.Admin.GetClock()}");
-
     public static void ICallSubMenu()
     {
-        Console.WriteLine(@"
-----------------------------------------------------------------
-Select Your Option:
-Press 1 To Exit
-Press 2 To AddCall
-Press 3 To UpdateCall
-Press 4 To SelectCallToDo
-Press 5 To CancelAssignement
-Press 6 To FinishAssignement
-Press 7 To DeleteCallRequest
-Press 8 To GetListOfCalls
-Press 9 To GetDetielsOfCall
-Press 10 To GetClosedCallsByVolunteer
-Press 11 To GetOpenCallsForVolunteer
-Press 12 To GetTotalCallsByStatus
-
-----------------------------------------------------------------                
-");
-        Console.Write(">>> ");
-        string input;
-        CallMenuOperation Calloperation;
         do
         {
+            Console.WriteLine(@"
+    ----------------------------------------------------------------
+    Select Your Option:
+    Press 1 To Exit
+    Press 2 To AddCall
+    Press 3 To UpdateCall
+    Press 4 To SelectCallToDo
+    Press 5 To CancelAssignement
+    Press 6 To FinishAssignement
+    Press 7 To DeleteCallRequest
+    Press 8 To GetListOfCalls
+    Press 9 To GetDetielsOfCall
+    Press 10 To GetClosedCallsByVolunteer
+    Press 11 To GetOpenCallsForVolunteer
+    Press 12 To GetTotalCallsByStatus
+
+    ----------------------------------------------------------------                
+    ");
+            Console.Write(">>> ");
+            string input;
+            CallMenuOperation Calloperation;
             input = Console.ReadLine() ?? "";
             if (!Enum.TryParse(input, out Calloperation))
                 throw new BO.BlInputValueUnConvertableException($"Bl: Enum value for the main window is not a valid operation");
@@ -323,34 +272,54 @@ Press 12 To GetTotalCallsByStatus
                     }
                     break;
                 case CallMenuOperation.FinishAssignement:
-                    int callId3;
-                    int VolunteerId2;
-                    Console.WriteLine("Please give me the call ID you want to update:");
-                    callId3 = int.Parse(Console.ReadLine() ?? "");
-                    Console.WriteLine("Please give me the volunteer ID you want to update:");
-                    VolunteerId2 = int.Parse(Console.ReadLine() ?? "");
-                    try
                     {
-                        s_bl.Call.FinishAssignement(VolunteerId2, callId3);
-                        Console.WriteLine("Assignement has been Updated");
+                        int callId3;
+                        int VolunteerId2;
+                        Console.WriteLine("Please give me the call ID you want to update:");
+                        callId3 = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine("Please give me the volunteer ID you want to update:");
+                        VolunteerId2 = int.Parse(Console.ReadLine() ?? "");
+                        try
+                        {
+                            s_bl.Call.FinishAssignement(VolunteerId2, callId3);
+                            Console.WriteLine("Assignement has been Updated");
+                        }
+                        catch (Exception ex)
+                        {
+                            ExceptionDisplay(ex);
+                        }
+                        break;
                     }
-                    catch(Exception ex)
-                    {
-                    
-                    }
-                    break;
                 case CallMenuOperation.DeleteCallRequest:
-                    break;
+                    {
+                        DeleteCallReqeust();
+                        break;
+                    }
                 case CallMenuOperation.GetListOfCalls:
-                    break;
+                    {
+                        GetListOfCalls();
+                        break;
+                    }
                 case CallMenuOperation.GetDetielsOfCall:
-                    break;
+                    {
+                        GetDetielsOfCall();
+                        break;
+                    }
                 case CallMenuOperation.GetClosedCallsByVolunteer:
-                    break;
+                    {
+                        GetClosedCallsByVolunteer();
+                        break;
+                    }
                 case CallMenuOperation.GetOpenCallsForVolunteer:
-                    break;
+                    {
+                        GetOpenCallsForVolunteer();
+                        break;
+                    }
                 case CallMenuOperation.GetTotalCallsByStatus:
-                    break;
+                    {
+                        GetTotalCallsByStatus();
+                        break;
+                    }
             }
         }
         while (true);
@@ -420,6 +389,7 @@ Press 0: To Exit
 
     }
 
+    #region IVolunteerr Methods
     /// <summary>
     /// This method adds a new Volunteer to the database using the user's input values
     /// </summary>
@@ -520,28 +490,28 @@ Press 0: To Exit
         BO.Volunteer currentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
 
         //Get new name
-        if (RequestPremissionToChanged("Full Name"))
+        if (RequestPremissionToOperate("Full Name"))
         {
             Console.Write("Enter new Full Name: ");
             currentVolunteer.FullName = Console.ReadLine() ?? "";
         }
 
         //Get new Phone number
-        if (RequestPremissionToChanged("Phone Number"))
+        if (RequestPremissionToOperate("Phone Number"))
         {
             Console.Write("Enter new Phone Number: ");
             currentVolunteer.PhoneNumber = Console.ReadLine() ?? "";
         }
 
         //Get new email address
-        if (RequestPremissionToChanged("Email Address"))
+        if (RequestPremissionToOperate("Email Address"))
         {
             Console.Write("Enter new Email Address: ");
             currentVolunteer.Email = Console.ReadLine() ?? "";
         }
 
         //Get new password
-        if (RequestPremissionToChanged("Password"))
+        if (RequestPremissionToOperate("Password"))
         {
             isPasswordBeenModifed = true;
             Console.Write("Enter new Password (If you don't want any password, just hit enter): ");
@@ -550,14 +520,14 @@ Press 0: To Exit
         }
 
         //Get new address
-        if (RequestPremissionToChanged("Current Address"))
+        if (RequestPremissionToOperate("Current Address"))
         {
             Console.Write("Enter new Current Address (If you don't want any password, just hit enter): ");
             currentVolunteer.FullCurrentAddress = Console.ReadLine();
         }
 
         //Get new user role
-        if (RequestPremissionToChanged("User Role"))
+        if (RequestPremissionToOperate("User Role"))
         {
             string input;
             Console.Write($"Enter new User Role ({UserRole.Volunteer}, {UserRole.Admin}): ");
@@ -569,13 +539,13 @@ Press 0: To Exit
         }
 
         //Get new active status
-        if (RequestPremissionToChanged("Is Active"))
+        if (RequestPremissionToOperate("Is Active"))
         {
-            currentVolunteer.IsActive = RequestBooleanAnswerFromUser("Do you wanna be Active? (yes / no): ");
+            currentVolunteer.IsActive = RequestBooleanAnswer("Do you wanna be Active? (yes / no): ");
         }
 
         //Get new max distance for call 
-        if (RequestPremissionToChanged("Max Distance for Accepting a Call"))
+        if (RequestPremissionToOperate("Max Distance for Accepting a Call"))
         {
             string? input;
             Console.Write($"Enter new MaxDistance (If you don't want any password, just hit enter): ");
@@ -592,7 +562,7 @@ Press 0: To Exit
         }
 
         //Get new range type
-        if (RequestPremissionToChanged("Type of Range"))
+        if (RequestPremissionToOperate("Type of Range"))
         {
             string input;
             Console.Write($"Enter new RangeType ({TypeOfRange.AirDistance}, {TypeOfRange.WalkingDistance}, {TypeOfRange.DrivingDistance}): ");
@@ -666,6 +636,201 @@ Press 0: To Exit
         string userType = s_bl.Volunteer.Login(emailAddress, password);
         Console.WriteLine($"The account under the email address of: {emailAddress} is a {userType}");
     }
+    #endregion
+
+    #region ICall Methods
+    private static void GetTotalCallsByStatus()
+    {
+        int typeOfCall = 1;
+        foreach (int value in s_bl.Call.GetTotalCallsByStatus())
+            Console.WriteLine($"Number of {(BO.CallStatus)typeOfCall++}: {value}");
+    }
+
+    private static void GetOpenCallsForVolunteer()
+    {
+        BO.OpenCallFields? sortField = null;
+        BO.CallType? callType = null;
+
+        int id = RequestIntegerInputFromUser("Enter the Volunteer's Id: ");
+
+        if (RequestBooleanAnswer("Do You Want to Filter the Values? (yes / no): "))
+        {
+            //Issue #20: Not enough CallTypes 
+            Console.Write($"Enter the Value Which You Want To Filter the Results By ({BO.CallType.FoodPreparation},{BO.CallType.FoodDelivery}): ");
+            string input = Console.ReadLine() ?? "";
+            if (Enum.TryParse(input, out BO.CallType tmp))
+                throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
+            else
+                callType = tmp;
+        }
+        if (RequestBooleanAnswer("Do You Want to Sort the Values? (yes / no): "))
+
+        {
+            Console.Write(
+$@"
+--------------------------------------------------------
+Choose One Of the Presented Options:
+{BO.OpenCallFields.CallId}
+{BO.OpenCallFields.TypeOfCall}
+{BO.OpenCallFields.Description}
+{BO.OpenCallFields.CallFullAddress}
+{BO.OpenCallFields.OpenningTime}
+{BO.OpenCallFields.LastTimeForClosingTheCall}
+{BO.OpenCallFields.DistanceFromVolunteer}
+--------------------------------------------------------
+
+>>> ");
+            string input = Console.ReadLine() ?? "";
+            if (Enum.TryParse(input, out BO.OpenCallFields tmp))
+                throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
+            else
+                sortField = tmp;
+        }
+
+        foreach (var call in s_bl.Call.GetOpenCallsForVolunteer(id, callType, sortField))
+            Console.WriteLine(call);
+    }
+
+    private static void GetClosedCallsByVolunteer()
+    {
+        BO.ClosedCallInListFields? sortField = null;
+        BO.CallType? callType = null;
+
+        int id = RequestIntegerInputFromUser("Enter the Volunteer's Id: ");
+
+        if (RequestBooleanAnswer("Do You Want to Filter the Values? (yes / no): "))
+        {
+            //Issue #20: Not enough CallTypes 
+            Console.Write($"Enter the Value Which You Want To Filter the Results By ({BO.CallType.FoodPreparation},{BO.CallType.FoodDelivery}): ");
+            string input = Console.ReadLine() ?? "";
+            if (Enum.TryParse(input, out BO.CallType tmp))
+                throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
+            else
+                callType = tmp;
+        }
+        if (RequestBooleanAnswer("Do You Want to Sort the Values? (yes / no): "))
+        {
+            Console.Write(
+$@"
+--------------------------------------------------------
+Choose One Of the Presented Options:
+
+{BO.ClosedCallInListFields.Id}
+{BO.ClosedCallInListFields.TypeOfCall}
+{BO.ClosedCallInListFields.CallAddress}
+{BO.ClosedCallInListFields.CallStartTime}
+{BO.ClosedCallInListFields.EnteryTime}
+{BO.ClosedCallInListFields.ClosingTime}
+{BO.ClosedCallInListFields.TypeOfClosedCall}
+
+--------------------------------------------------------
+
+>>> ");
+            string input = Console.ReadLine() ?? "";
+            if (Enum.TryParse(input, out BO.ClosedCallInListFields tmp))
+                throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
+            else
+                sortField = tmp;
+        }
+
+        foreach (var call in s_bl.Call.GetClosedCallsByVolunteer(id, callType, sortField))
+            Console.WriteLine(call);
+    }
+
+    private static void GetDetielsOfCall()
+    {
+        int id = RequestIntegerInputFromUser("Enter the Cal Id that You Would Like Inforamtion About: ");
+        Console.WriteLine(s_bl.Call.GetDetielsOfCall(id));
+    }
+
+    private static void GetListOfCalls()
+    {
+        foreach (CallInList callInList in s_bl.Call.GetListOfCalls())
+            Console.WriteLine(callInList);
+    }
+
+    /// <summary>
+    /// This method requests a Volunteer's id and un-assigns him from his current task
+    /// </summary>
+    private static void DeleteCallReqeust()
+    {
+        int id = RequestIntegerInputFromUser("Enter the Volunteer's Id Which You Want to Un-Assign Him From His Current Task Call: ");
+        s_bl.Call.DeleteCallRequest(id);
+    }
+
+
+
+    #endregion
+
+    #region IAdmin Methods
+    
+    /// <summary>
+    /// This method initializes the database with the premade values
+    /// </summary>
+    private static void InitializeSystemDatabase() => s_bl.Admin.DbInit();
+
+    /// <summary>
+    /// This method resets the database and the configuration values
+    /// </summary>
+    private static void ResetSystemDatabase() => s_bl.Admin.DbReset();
+
+    /// <summary>
+    /// This method updates the current risk range value by the value provided by the user
+    /// </summary>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
+
+    private static void UpdateSystemRiskRange()
+    {
+        Console.Write("Enter the new Risk Range (in this format: DD:HH:MM:SS): ");
+        string input = Console.ReadLine() ?? "";
+        if (!TimeSpan.TryParse(input, out TimeSpan newRiskRange))
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid TimeSpan value");
+
+        s_bl.Admin.SetRiskRange(newRiskRange);
+    }
+
+    /// <summary>
+    /// This method displays the current risk range value
+    /// </summary>
+    private static void ShowSystemRiskRange() => Console.WriteLine($"Current System RiskRange: {s_bl.Admin.GetRiskRange()}");
+
+    /// <summary>
+    /// This method updates the current system clock by one unit according the provided Time Unit type by the user
+    /// </summary>
+    /// <exception cref="BO.BlInputValueUnConvertableException"></exception>
+    private static void UpdateSystemClock()
+    {
+        Console.Write(
+ @$"
+------------------------------------------------------------------------------
+Clock Update Menu:
+
+Please Select the Time Unit that You are willing to forward to time with:
+Press 1: To Forward By One {TimeUnit.Second}
+Press 2: To Forward By One {TimeUnit.Minute}
+Press 3: To Forward By One {TimeUnit.Hour}
+Press 4: To Forward By One {TimeUnit.Day}
+Press 5: To Forward By One {TimeUnit.Week}
+Press 6: To Forward By One {TimeUnit.Month}
+Press 7: To Forward By One {TimeUnit.Year}
+------------------------------------------------------------------------------
+
+>>> ");
+        string input = Console.ReadLine() ?? "";
+        if (!Enum.TryParse(input, out TimeUnit option))
+            throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a vaid IAdminOperations value");
+        s_bl.Admin.UpdateClock(option);
+    }
+
+    /// <summary>
+    /// This method displays the current system clock
+    /// </summary>
+    private static void ShowSystemClock() => Console.WriteLine($"Current System Clock: {s_bl.Admin.GetClock()}");
+
+
+    #endregion
+
+    #region Help Methods
 
     /// <summary>
     /// An help method for waiting for the user to prsss enter to continue
@@ -675,6 +840,7 @@ Press 0: To Exit
     {
         Console.WriteLine(ex.Message);
         Console.WriteLine("Press enter to continue");
+        Console.Write(">>> ");
         var tmp = Console.ReadLine();
     }
 
@@ -683,15 +849,15 @@ Press 0: To Exit
     /// </summary>
     /// <param name="valueToRequest"></param>
     /// <returns>The user's answer (yes = true, no = false)</returns>
-    static public bool RequestPremissionToChanged(string valueToRequest)
-        => RequestBooleanAnswerFromUser($"Do You Want to Update The {valueToRequest}? (yes / no) ");
+    static public bool RequestPremissionToOperate(string valueToRequest)
+        => RequestBooleanAnswer($"Do You Want to Update The {valueToRequest}? (yes / no) ");
 
     /// <summary>
     /// An help method which handles boolean input from the user
     /// </summary>
     /// <param name="msg">The display presented to the user</param>
     /// <returns>The user's answer (yes = true, no = false)</returns>
-    static private bool RequestBooleanAnswerFromUser(string msg)
+    static private bool RequestBooleanAnswer(string msg)
     {
         string input;
         do
@@ -706,7 +872,22 @@ Press 0: To Exit
         return input == "yes";
     }
 
-
+    static private int RequestIntegerInputFromUser(string msg)
+    {
+        int res;
+        string input;
+        do
+        {
+            Console.Write(msg);
+            input = Console.ReadLine() ?? "";
+            if (Int32.TryParse(input, out res))
+                break;
+            else
+                throw new BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid integer");
+        } while (true);
+        return res;
+    }
+    #endregion
 
 }
 

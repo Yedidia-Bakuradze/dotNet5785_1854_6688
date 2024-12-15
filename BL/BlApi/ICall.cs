@@ -43,7 +43,7 @@ public interface ICall
     /// </summary>
     /// <param name="id">The ID of the volunteer</param>
     /// <param name="callType">The type of call to filter by</param>
-    /// <param name="parameter">The field to filter the closed calls by</param>
+    /// <param name="parameter">Optional filterField for sorting the resulting list</param>
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int id, BO.CallType? callType, BO.ClosedCallInListFields? parameter);
 
     /// <summary>
