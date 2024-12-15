@@ -60,7 +60,7 @@ internal class CallImplementation : ICall
     /// <param name="callId">The ID of the call associated with the assignment.</param>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
-    public void EndOfCallStatusUpdate(int VolunteerId, int callId)
+    public void FinishAssignement(int VolunteerId, int callId)
     {
         // Retrieve the assignment details for the given volunteer and call ID
         DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId) ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist", new DO.DalDoesNotExistException(""));
@@ -508,7 +508,7 @@ internal class CallImplementation : ICall
     /// <param name="callId">The call if of the Call which is needed to be updated</param>
     /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
-    public void UpdateCallEnd(int VolunteerId, int callId)
+    public void CancelAssignement(int VolunteerId, int callId)
     {
         //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
         DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
