@@ -97,10 +97,7 @@ public class BlForbidenSystemActionExeption : Exception
 /// </summary>
 public class BlInvalidOperationException : Exception
 {
-    public BlInvalidOperationException(string?msg):base(msg)
-    {
-        
-    }
+    public BlInvalidOperationException(string?msg):base(msg){}
 }
 
 /// <summary>
@@ -111,5 +108,11 @@ public class BlInputValueUnConvertableException: Exception
     public BlInputValueUnConvertableException(string? msg) : base(msg) {}
 }
 
-
+/// <summary>
+/// This exception is thrown when a null value is inserted into a method when he is not welcomeed
+/// </summary>
+public class BlUnWantedNullValueException:Exception
+{
+    public BlUnWantedNullValueException(string? msg) : base(msg) { }
+}
 #endregion BL

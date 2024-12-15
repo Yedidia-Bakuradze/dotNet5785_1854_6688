@@ -14,9 +14,7 @@ internal static class Tools
     {
         string msg = "";
         if(val == null)
-        {
-            throw new Exception("Internal Error: Cann't represent string for null values");
-        }
+            throw new BO.BlUnWantedNullValueException("Internal Error: Cann't represent string for null values");
         else
         {
             Type currentVarType = val.GetType();
