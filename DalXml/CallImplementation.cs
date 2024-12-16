@@ -100,7 +100,9 @@ internal class CallImplementation : ICall
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
-        return Calls;
+        return filter == null
+            ? Calls
+            : Calls.Where(call => filter(call));
     }
 
     /// <summary>
