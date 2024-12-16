@@ -90,6 +90,9 @@ internal class AdminImplementation : IAdmin
                     ClockManager.UpdateClock(ClockManager.Now.AddMonths(1));
                     break;
                 }
+            case TimeUnit.Year:
+                ClockManager.UpdateClock(ClockManager.Now.AddYears(1));
+                break;
             default:
                 {
                     throw new BO.BlInvalidOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");
