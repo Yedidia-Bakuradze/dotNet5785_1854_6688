@@ -331,16 +331,6 @@
     <DeadLine>2024-12-18T20:00:13</DeadLine>
   </Call>
   <Call>
-    <Id>34</Id>
-    <Type>FoodDelivery</Type>
-    <FullAddressCall>6 King George St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0704183</Latitude>
-    <Longitude>34.7718028</Longitude>
-    <OpeningTime>2024-12-02T20:00:13</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-01-01T20:00:13</DeadLine>
-  </Call>
-  <Call>
     <Id>35</Id>
     <Type>FoodDelivery</Type>
     <FullAddressCall>15 Yehuda Halevi St, Tel Aviv</FullAddressCall>

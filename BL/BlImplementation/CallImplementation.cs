@@ -39,7 +39,7 @@ internal class CallImplementation : ICall
         try
         {
             // Check if there are any assignments related to the call
-            if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) != null)
+            if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) == null)
             {
                 throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }

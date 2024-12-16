@@ -841,7 +841,7 @@ Please select one of the following fields to sort by:
     /// </summary>
     private static void DeleteCallReqeust()
     {
-        int id = RequestIntegerInputFromUser("Enter the Volunteer's Id Which You Want to Un-Assign Him From His Current Task Call: ");
+        int id = RequestIntegerInputFromUser("Enter the Call Id that you want to delete: ");
         s_bl.Call.DeleteCallRequest(id);
     }
 
