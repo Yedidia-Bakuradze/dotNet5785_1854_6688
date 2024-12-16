@@ -116,7 +116,7 @@ internal class CallImplementation : ICall
             TypeOfCall = (BO.CallType)call.Type,
             CallAddress = call.FullAddressCall,
             CallStartTime = call.OpeningTime,
-            EnteryTime = res.Find(ass => ass.CallId == call.Id)!.TimeOfStarting, // Access the start time from the corresponding assignment
+            EnteryTime = res.FirstOrDefault(ass => ass.CallId == call.Id).TimeOfStarting, // Access the start time from the corresponding assignment
             ClosingTime = (DateTime) res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
             TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
         }).ToList();
@@ -214,22 +214,24 @@ internal class CallImplementation : ICall
 
         // Build the initial list of CallInList objects based on the calls and their assignments
         IEnumerable<BO.CallInList> callsInlist = from call in calls
-                                                 let callsAssignments = from assignment in assignments
-                                                                        where assignment.CallId == call.Id
-                                                                        orderby assignment.Id descending
-                                                                        select assignment
+                                                 let callsAssignments = assignments
+                                                     .Where(ass => ass.CallId == call.Id)
+                                                     .OrderByDescending(ass => ass.Id)
+                                                     .ToList()
+                                                 let firstAssignment = callsAssignments.FirstOrDefault()
                                                  select new BO.CallInList
                                                  {
-                                                     // Set the properties for each CallInList object
-                                                     Id = callsAssignments.First().Id,
+                                                     Id = firstAssignment?.Id ?? 0, // Default to 0 if no assignment exists
                                                      CallId = call.Id,
                                                      Status = CallManager.GetStatus(call.Id),
                                                      OpenningTime = call.OpeningTime,
-                                                     LastVolunteerName = s_dal.Volunteer.Read(vol => vol.Id == callsAssignments.First().VolunteerId)?.FullName,
+                                                     LastVolunteerName = firstAssignment != null
+                                                         ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
+                                                         : null,
                                                      TimeToEnd = call.DeadLine - ClockManager.Now,
                                                      TypeOfCall = (BO.CallType)call.Type,
-                                                     TimeElapsed = (callsAssignments.First().TypeOfEnding != null)
-                                                         ? callsAssignments.First().TimeOfEnding - callsAssignments.First().TimeOfStarting
+                                                     TimeElapsed = firstAssignment?.TypeOfEnding != null
+                                                         ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
                                                          : null,
                                                      TotalAlocations = callsAssignments.Count(),
                                                  };
@@ -241,27 +243,27 @@ internal class CallImplementation : ICall
             {
                 case BO.CallInListFields.Id:
                     callsInlist = from call in callsInlist
-                                  where call.Id == (int)filterValue!
+                                  where call.Id == Convert.ToInt32(filterValue)
                                   select call;
                     break;
                 case BO.CallInListFields.CallId:
                     callsInlist = from call in callsInlist
-                                  where call.CallId == (int)filterValue!
+                                  where call.CallId == Convert.ToInt32(filterValue)
                                   select call;
                     break;
                 case BO.CallInListFields.TypeOfCall:
                     callsInlist = from call in callsInlist
-                                  where call.TypeOfCall == (BO.CallType)filterValue!
+                                  where call.TypeOfCall == (BO.CallType)Enum.Parse(typeof(BO.CallType), filterValue!.ToString()!)
                                   select call;
                     break;
                 case BO.CallInListFields.OpenningTime:
                     callsInlist = from call in callsInlist
-                                  where call.OpenningTime == (DateTime)filterValue!
+                                  where call.OpenningTime == Convert.ToDateTime(filterValue)
                                   select call;
                     break;
                 case BO.CallInListFields.TimeToEnd:
                     callsInlist = from call in callsInlist
-                                  where call.TimeToEnd == (TimeSpan)filterValue!
+                                  where call.TimeToEnd == TimeSpan.Parse(filterValue!.ToString()!)
                                   select call;
                     break;
                 case BO.CallInListFields.LastVolunteerName:
@@ -271,24 +273,25 @@ internal class CallImplementation : ICall
                     break;
                 case BO.CallInListFields.TimeElapsed:
                     callsInlist = from call in callsInlist
-                                  where call.TimeElapsed == (TimeSpan)filterValue!
+                                  where call.TimeElapsed == TimeSpan.Parse(filterValue!.ToString()!)
                                   select call;
                     break;
                 case BO.CallInListFields.Status:
                     callsInlist = from call in callsInlist
-                                  where call.Status == (BO.CallStatus)filterValue!
+                                  where call.Status == (BO.CallStatus)Enum.Parse(typeof(BO.CallStatus), filterValue!.ToString()!)
                                   select call;
                     break;
                 case BO.CallInListFields.TotalAlocations:
                     callsInlist = from call in callsInlist
-                                  where call.TotalAlocations == (int)filterValue!
+                                  where call.TotalAlocations == Convert.ToInt32(filterValue)
                                   select call;
                     break;
                 case null:
                     throw new BO.BlInvalidOperationException($"Bl: Filter value is null");
-                    break;
+                    
             }
         }
+
 
         // Sorting the list based on the specified sorting field
         switch (sortingField)
@@ -355,9 +358,10 @@ internal class CallImplementation : ICall
         DO.Volunteer volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
             ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
 
+        
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         List<BO.OpenCallInList> openCalls = s_dal.Call
-            .ReadAll(call => CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky)
+            .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
             .Select(call => new BO.OpenCallInList
             {
                 CallId = call.Id,  // ID of the call

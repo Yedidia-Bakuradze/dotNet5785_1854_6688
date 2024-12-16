@@ -265,7 +265,7 @@ Press 12 - To GetTotalCallsByStatus
                     }
                     catch (Exception ex)
                     {
-
+                        ExceptionDisplay(ex);
                     }
                     break;
                 case CallMenuOperation.FinishAssignement:
