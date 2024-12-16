@@ -133,24 +133,24 @@ Press 6: To Initialize The Database
     {
         do
         {
-            Console.WriteLine(@"
-    ----------------------------------------------------------------
-    Select Your Option:
-    Press 1 To Exit
-    Press 2 To AddCall
-    Press 3 To UpdateCall
-    Press 4 To SelectCallToDo
-    Press 5 To CancelAssignement
-    Press 6 To FinishAssignement
-    Press 7 To DeleteCallRequest
-    Press 8 To GetListOfCalls
-    Press 9 To GetDetielsOfCall
-    Press 10 To GetClosedCallsByVolunteer
-    Press 11 To GetOpenCallsForVolunteer
-    Press 12 To GetTotalCallsByStatus
-
-    ----------------------------------------------------------------                
-    ");
+            Console.WriteLine(
+@"
+----------------------------------------------------------------
+Select Your Option:
+Press 1  - To Exit
+Press 2  - To AddCall
+Press 3  - To UpdateCall
+Press 4  - To SelectCallToDo
+Press 5  - To CancelAssignement
+Press 6  - To FinishAssignement
+Press 7  - To DeleteCallRequest
+Press 8  - To GetListOfCalls
+Press 9  - To GetDetielsOfCall
+Press 10 - To GetClosedCallsByVolunteer
+Press 11 - To GetOpenCallsForVolunteer
+Press 12 - To GetTotalCallsByStatus
+----------------------------------------------------------------                
+");
             Console.Write(">>> ");
             string input;
             CallMenuOperation Calloperation;
@@ -170,19 +170,14 @@ Press 6: To Initialize The Database
                     Console.WriteLine("Pls enter the type of the call:");
                     input = Console.ReadLine() ?? "";
                     if (!Enum.TryParse(input, out callType))
-                    {
                         throw new BO.BlInputValueUnConvertableException($"Bl: Enum value for the main window is not a valid operation");
-                    }
                     Console.WriteLine("Pls describe your call [optional]:");
                     Description = Console.ReadLine() ?? "";
                     Console.WriteLine("Pls enter the address of the call:");
                     CallAddress = Console.ReadLine() ?? "";
                     Console.WriteLine("What is the deadline for the call:");
-                    DeadLine = DateTime.Parse(Console.ReadLine() ?? "");
-                    if (DeadLine < s_bl.Admin.GetClock())
-                    {
-                        throw new BO.BlInputValueUnConvertableException($"Bl: The deadline for the call is invalid");
-                    }
+                    if(!DateTime.TryParse(Console.ReadLine() ?? "",out DeadLine ))
+                        throw new BO.BlInputValueUnConvertableException($"Bl: The value is not a valid DateTime value");
                     BO.Call call = new BO.Call()
                     {
                         TypeOfCall = callType,
@@ -206,6 +201,7 @@ Press 6: To Initialize The Database
                     answer = Console.ReadLine() ?? "";
                     if (answer == "Y")
                     {
+                        //Issue #20
                         Console.WriteLine("Pls enter the type of the call:");
                         input = Console.ReadLine() ?? "";
                         if (!Enum.TryParse(input, out callType1))
@@ -777,7 +773,66 @@ Choose One Of the Presented Options:
 
     private static void GetListOfCalls()
     {
-        foreach (CallInList callInList in s_bl.Call.GetListOfCalls())
+        BO.CallInListFields? filterField = null;
+        object? filterValue = null;
+        BO.CallInListFields? sortingField = null;
+        if (RequestBooleanAnswer("Do you want to filter the calls? (yes / no): "))
+        {
+            Console.Write(
+$@"
+------------------------------------------------------------
+Please select one of the following fields to filter by:
+{CallInListFields.Id}
+{CallInListFields.CallId}
+{CallInListFields.TypeOfCall}
+{CallInListFields.OpenningTime}
+{CallInListFields.TimeToEnd}
+{CallInListFields.LastVolunteerName}
+{CallInListFields.TimeElapsed}
+{CallInListFields.Status}
+{CallInListFields.TotalAlocations}
+------------------------------------------------------------
+
+>>> ");
+            string input = Console.ReadLine() ?? "";
+            if (!Enum.TryParse(input, out CallInListFields tmp))
+                throw new BlInputValueUnConvertableException($"Bl: The value is not a valid CallInListField value");
+            else
+            {
+                filterField = tmp;
+            }
+
+            Console.Write($"Enter the value that you are willing the fields of {filterField} to contained: ");
+            filterValue = Console.ReadLine() ?? "";
+        }
+
+        if (RequestBooleanAnswer("Do you want to sort the calls? (yes / no): "))
+        {
+            Console.Write($@"
+------------------------------------------------------------
+Please select one of the following fields to sort by:
+{CallInListFields.Id}
+{CallInListFields.CallId}
+{CallInListFields.TypeOfCall}
+{CallInListFields.OpenningTime}
+{CallInListFields.TimeToEnd}
+{CallInListFields.LastVolunteerName}
+{CallInListFields.TimeElapsed}
+{CallInListFields.Status}
+{CallInListFields.TotalAlocations}
+------------------------------------------------------------
+
+>>> ");
+            string input = Console.ReadLine() ?? "";
+            if(!Enum.TryParse(input,out CallInListFields tmp))
+                throw new BlInputValueUnConvertableException($"Bl: The value is not a valid CallInListField value");
+            else
+            {
+                sortingField = tmp;
+            }
+        }
+        
+        foreach (CallInList callInList in s_bl.Call.GetListOfCalls(filterField,filterValue,sortingField))
             Console.WriteLine(callInList);
     }
 
