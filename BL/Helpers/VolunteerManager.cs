@@ -14,7 +14,7 @@ internal static class VolunteerManager
 {
     //API Configurations
     static readonly string URI = "https://maps.googleapis.com/maps/api/";
-    static readonly string APIKEY = "AIzaSyBjTxg6_sTOtBKHkaBJ7bkCpk8ylmjLMGk";
+    static readonly string APIKEY = "AIzaSyAzbe6J2zmObUxADHW0yfmaJ-9thYaD_mE";
 
     private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
 

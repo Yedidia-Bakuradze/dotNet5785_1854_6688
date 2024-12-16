@@ -7,6 +7,7 @@ internal class AdminImplementation : IAdmin
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+
     /// <summary>
     /// This method initializes the system and the database from the BL to the Dal layer
     /// </summary>
