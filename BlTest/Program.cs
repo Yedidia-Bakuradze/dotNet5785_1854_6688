@@ -1,4 +1,5 @@
 ﻿using BO;
+using System;
 using System.Globalization;
 
 namespace BlTest;
@@ -424,8 +425,7 @@ Press 0: To Exit
         Console.Write($"Enter Your User Mode ({BO.UserRole.Volunteer} / {BO.UserRole.Admin}): ");
         Enum.TryParse(Console.ReadLine() ?? "", out role);
 
-        Console.Write("Do You Want To Be an Active Volunteer? (yes / no)\n>>> ");
-        bool.TryParse(Console.ReadLine() ?? "", out isActive);
+        isActive = RequestBooleanAnswer("Do You Want To Be an Active Volunteer ? (yes / no): ");
 
         Console.Write("Enter Your Max Distance For Taking a Call: ");
         Double.TryParse(Console.ReadLine() ?? "", out maxDistanceToCall);
