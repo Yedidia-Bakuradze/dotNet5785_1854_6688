@@ -4,6 +4,19 @@ using Helpers;
 
 internal class CallImplementation : ICall
 {
+    // The implemention of the function in the observer 
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+        CallManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+        CallManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+        CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+        CallManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
+
+
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     /// <summary>
     /// Adds a new call to the system after validating its details.

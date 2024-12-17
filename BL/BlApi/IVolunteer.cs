@@ -3,7 +3,7 @@
 /// <summary>
 /// This interface exposese all the fucntionally which are used on Volunteer entities
 /// </summary>
-public interface IVolunteer
+public interface IVolunteer :IObservable //Stage 5
 {
     /// <summary>
     /// Logs into an account using the past username (Emaill address) and password

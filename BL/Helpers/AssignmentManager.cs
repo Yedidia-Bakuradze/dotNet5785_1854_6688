@@ -7,8 +7,6 @@ namespace Helpers;
 internal static class AssignmentManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
-    internal static ObserverManager Observers = new(); //stage 5 
-
     /// <summary>
     /// This method returns the number of handled calls for the given volunteer by his Id and the given parameter of type of ending
     /// </summary>

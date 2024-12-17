@@ -1,5 +1,5 @@
 ﻿namespace BlApi;
-public interface ICall
+public interface ICall :IObservable //Stage 5
 {
     /// <summary>
     /// Get the total number of calls by their status
