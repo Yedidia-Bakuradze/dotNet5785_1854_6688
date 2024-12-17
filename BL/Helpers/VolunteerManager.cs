@@ -11,12 +11,15 @@ using System.Xml.Linq;
 //Remember: All the method shall be as internal static
 //Remember: The class shall be internal static
 internal static class VolunteerManager
+
 {
     //API Configurations
     static readonly string URI = "https://maps.googleapis.com/maps/api/";
     static readonly string APIKEY = "AIzaSyAzbe6J2zmObUxADHW0yfmaJ-9thYaD_mE";
 
     private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
+
+    internal static ObserverManager Observers = new(); //stage 5 
 
     /// <summary>
     /// Converts degrees to radian
