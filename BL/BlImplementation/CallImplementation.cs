@@ -16,7 +16,7 @@ internal class CallImplementation : ICall
         CallManager.Observers.RemoveObserver(id, observer); //stage 5
     #endregion Stage 5
 
-
+    private object lockObject = new();
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
     /// <summary>
     /// Adds a new call to the system after validating its details.
@@ -39,6 +39,9 @@ internal class CallImplementation : ICall
 
         // Add the new call to the database
         s_dal.Call.Create(newCall);
+
+        //Notifies all observers that a call has been added
+        CallManager.Observers.NotifyListUpdated();
     }
 
     /// <summary>
@@ -56,8 +59,12 @@ internal class CallImplementation : ICall
             {
                 throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
             }
+            
             // Attempt to delete the call
             s_dal.Call.Delete(requestId);
+
+            //Notifies all observers that a call has been added
+            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -510,7 +517,16 @@ internal class CallImplementation : ICall
 
         try
         {
-            s_dal.Call.Update(newCall);
+            //Lock has been added so the update method wont be done simonteniassly
+            //which then would lead to the TakeLast method to take the wrong new object from the end of the enumarable
+            lock (lockObject)
+            {
+                s_dal.Call.Update(newCall);
+
+                //Notifies all observers that a call has been modified
+                CallManager.Observers.NotifyItemUpdated(s_dal.Call.ReadAll().TakeLast(1).First().Id);
+                CallManager.Observers.NotifyListUpdated();
+            }
         }
         catch (DO.DalDoesNotExistException ex)
         {
