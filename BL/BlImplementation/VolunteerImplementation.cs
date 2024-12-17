@@ -69,7 +69,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
             //Add the new entity to the database
             s_dal.Volunteer.Create(newVolunteer);
-
+            
+            //Notifies all observers that a volunteer has been add
+            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalAlreadyExistsException ex)
         {
@@ -101,6 +103,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         try
         {
             s_dal.Volunteer.Delete(id);
+
+            //Notifies all observers that a volunteer has been add
+            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -312,8 +317,13 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         try
         {
             s_dal.Volunteer.Update(newVolunteer);
+
+            //Notifies all observers that a volunteer has been changed
+            VolunteerManager.Observers.NotifyItemUpdated(newVolunteer.Id);
+            VolunteerManager.Observers.NotifyListUpdated();
+
         }
-        catch(DO.DalDoesNotExistException ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Bl: The volunteer Id: {volunteer.Id} doesn't exists", ex);
         }
