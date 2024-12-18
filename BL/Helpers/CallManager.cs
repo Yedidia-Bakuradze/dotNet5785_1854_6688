@@ -9,7 +9,7 @@ internal static class CallManager
 
     public static void UpdateAllOpenAndExpierdCalls()
     {
-        List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < ClockManager.Now).ToList();
+        List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < AdminManager.Now).ToList();
         List<DO.Assignment> listOfAssignments = s_dal.Assignment.ReadAll().ToList();
 
         listOfCalls
@@ -20,7 +20,7 @@ internal static class CallManager
             {
                 CallId = call.Id,
                 TimeOfStarting = call.OpeningTime,
-                TimeOfEnding = ClockManager.Now,
+                TimeOfEnding = AdminManager.Now,
                 Id = -1,
                 TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
                 VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
@@ -33,7 +33,7 @@ internal static class CallManager
             .ToList()
             .ForEach((assignment) => s_dal.Assignment.Update(assignment with
             {
-                TimeOfEnding = ClockManager.Now,
+                TimeOfEnding = AdminManager.Now,
                 TypeOfEnding = DO.TypeOfEnding.CancellationExpired
             }));
     }
@@ -55,7 +55,7 @@ internal static class CallManager
         //If there is not assingment - no one took the call therefor the call is open
         if(resAssignments == null )
         {
-            return ((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange)
+            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
                     ? BO.CallStatus.OpenAndRisky
                     : BO.CallStatus.Open;
         }
@@ -63,9 +63,9 @@ internal static class CallManager
         //If there is such assignment containing the CallId - Check if expiered or in progress
         if (resAssignments.TypeOfEnding == null)
         {
-            if (res.DeadLine <= ClockManager.Now) return BO.CallStatus.Expiered;
-            if (res.DeadLine > ClockManager.Now) return BO.CallStatus.InProgress;
-            if ((res.DeadLine - ClockManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
+            if (res.DeadLine <= AdminManager.Now) return BO.CallStatus.Expiered;
+            if (res.DeadLine > AdminManager.Now) return BO.CallStatus.InProgress;
+            if ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
         }
         
         return BO.CallStatus.Closed;
@@ -82,7 +82,7 @@ internal static class CallManager
         try
         {
             //Check if the times are valid
-            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < ClockManager.Now)
+            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < AdminManager.Now)
                 throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
 
             //Checks if the address is valid (if cordinates exist)

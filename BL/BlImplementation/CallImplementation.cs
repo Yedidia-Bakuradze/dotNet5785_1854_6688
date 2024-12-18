@@ -98,7 +98,7 @@ internal class CallImplementation : ICall
             s_dal.Assignment.Update(res! with
             {
                 TypeOfEnding = DO.TypeOfEnding.Treated,
-                TimeOfEnding = ClockManager.Now
+                TimeOfEnding = AdminManager.Now
             });
         }
         catch (DO.DalDoesNotExistException ex)
@@ -248,7 +248,7 @@ internal class CallImplementation : ICall
                                                      LastVolunteerName = firstAssignment != null
                                                          ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
                                                          : null,
-                                                     TimeToEnd = call.DeadLine - ClockManager.Now,
+                                                     TimeToEnd = call.DeadLine - AdminManager.Now,
                                                      TypeOfCall = (BO.CallType)call.Type,
                                                      TimeElapsed = firstAssignment?.TypeOfEnding != null
                                                          ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
@@ -481,7 +481,7 @@ internal class CallImplementation : ICall
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
 
         //Check if there is time to complete the call
-        if (call.DeadLine - ClockManager.Now <= TimeSpan.Zero)
+        if (call.DeadLine - AdminManager.Now <= TimeSpan.Zero)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
 
         //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
@@ -491,7 +491,7 @@ internal class CallImplementation : ICall
             CallId = callId,
             VolunteerId = VolunteerId,
             TimeOfEnding = null,
-            TimeOfStarting = ClockManager.Now,
+            TimeOfStarting = AdminManager.Now,
             TypeOfEnding = null,
         };
         s_dal.Assignment.Create(newAssignment);
@@ -561,7 +561,7 @@ internal class CallImplementation : ICall
         DO.Assignment newAssignment = assignment with
         {
             TypeOfEnding = DO.TypeOfEnding.Treated,
-            TimeOfEnding = ClockManager.Now,
+            TimeOfEnding = AdminManager.Now,
         };
 
         try

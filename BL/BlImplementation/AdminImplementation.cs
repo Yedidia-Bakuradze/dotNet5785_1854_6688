@@ -15,8 +15,8 @@ internal class AdminImplementation : IAdmin
     {
         //TODO: Find the place which we need to added the function call
         DalTest.Initialization.Do();
-        ClockManager.UpdateRiskRange(ClockManager.RiskRange);
-        ClockManager.UpdateClock(ClockManager.Now);
+        AdminManager.UpdateRiskRange(AdminManager.RiskRange);
+        AdminManager.UpdateClock(AdminManager.Now);
     }
 
     /// <summary>
@@ -25,8 +25,8 @@ internal class AdminImplementation : IAdmin
     public void DbReset()
     {
         _dal.ResetDB();
-        ClockManager.UpdateClock(ClockManager.Now);
-        ClockManager.UpdateRiskRange(ClockManager.RiskRange);
+        AdminManager.UpdateClock(AdminManager.Now);
+        AdminManager.UpdateRiskRange(AdminManager.RiskRange);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ internal class AdminImplementation : IAdmin
     /// <returns>System clock from BL</returns>
     public DateTime GetClock()
     {
-        return Helpers.ClockManager.Now;
+        return Helpers.AdminManager.Now;
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ internal class AdminImplementation : IAdmin
     /// <returns>System risk range value from BL</returns>
     public TimeSpan GetRiskRange()
     {
-        return Helpers.ClockManager.RiskRange;
+        return Helpers.AdminManager.RiskRange;
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ internal class AdminImplementation : IAdmin
     /// <param name="range">The new risk range value</param>
     public void SetRiskRange(TimeSpan range)
     {
-        ClockManager.UpdateRiskRange(range);
+        AdminManager.UpdateRiskRange(range);
     }
     
     /// <summary>
@@ -67,32 +67,32 @@ internal class AdminImplementation : IAdmin
         {
             case TimeUnit.Second:
                 {
-                    ClockManager.UpdateClock(ClockManager.Now.AddSeconds(1));
+                    AdminManager.UpdateClock(AdminManager.Now.AddSeconds(1));
                     break;
                 }
             case TimeUnit.Minute:
                 {
-                    ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
+                    AdminManager.UpdateClock(AdminManager.Now.AddMinutes(1));
 
                     break;
                 }
             case TimeUnit.Hour:
                 {
-                    ClockManager.UpdateClock(ClockManager.Now.AddHours(1));
+                    AdminManager.UpdateClock(AdminManager.Now.AddHours(1));
                     break;
                 }
             case TimeUnit.Day:
                 {
-                    ClockManager.UpdateClock(ClockManager.Now.AddDays(1));
+                    AdminManager.UpdateClock(AdminManager.Now.AddDays(1));
                     break;
                 }
             case TimeUnit.Month:
                 {
-                    ClockManager.UpdateClock(ClockManager.Now.AddMonths(1));
+                    AdminManager.UpdateClock(AdminManager.Now.AddMonths(1));
                     break;
                 }
             case TimeUnit.Year:
-                ClockManager.UpdateClock(ClockManager.Now.AddYears(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddYears(1));
                 break;
             default:
                 {
