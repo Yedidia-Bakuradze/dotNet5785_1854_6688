@@ -23,6 +23,26 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty CurrentTimeProperty =
         DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
 
+    private void btnAddOneSecond_Click(object sender, RoutedEventArgs e)
+    {
+        s_bl.Admin.UpdateClock(BO.TimeUnit.Second);
+    }
+    private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
+    {
+        s_bl.Admin.UpdateClock(BO.TimeUnit.Minute);
+    }
+    private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
+    {
+        s_bl.Admin.UpdateClock(BO.TimeUnit.Hour);
+    }
+    private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
+    {
+        s_bl.Admin.UpdateClock(BO.TimeUnit.Day);
+    }
+    private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
+    {
+        s_bl.Admin.UpdateClock(BO.TimeUnit.Year);
+    }
     public MainWindow()
     {
         InitializeComponent();
