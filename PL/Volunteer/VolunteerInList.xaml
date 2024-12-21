@@ -36,6 +36,8 @@
                       ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
+                      SelectedValue="{Binding FilterByCallTypes, Mode=TwoWay}"
+                      SelectionChanged="OnFilterCallTypeChange"
                       >
             </ComboBox>
         </Grid>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using BO;
+using System.Windows;
 
 namespace PL.Volunteer;
 
@@ -20,13 +21,17 @@ public partial class VolunteerInList : Window
             new PropertyMetadata(null));
 
 
-
+    public static BO.CallType FilterByCallTypes { get; set; } = BO.CallType.Undefined;
+    
 
 
     public VolunteerInList()
     {
         InitializeComponent();
     }
-    
 
+    private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        IEnumerable<VolunteerInList> VolunteerList = (IEnumerable<VolunteerInList>)((FilterByCallTypes == BO.CallType.Undefined) ? s_bl.Volunteer.GetVolunteers(null, null)! : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall));
+    }
 }
