@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="VolunteerInList" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -44,7 +45,9 @@
                   SelectedItem="{Binding SelectedStudent}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  Margin="10">
+                  Margin="10"
+                  ItemsSource="{Binding VolunteerList}"
+                  >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Is Active" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>

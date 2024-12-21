@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
-namespace PL.Volunteer
+namespace PL.Volunteer;
+
+
+public partial class VolunteerInList : Window
 {
-    /// <summary>
-    /// Interaction logic for VolunteerInList.xaml
-    /// </summary>
-    public partial class VolunteerInList : Window
+    static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    
+    public IEnumerable<VolunteerInList> VolunteerList
     {
-        public VolunteerInList()
-        {
-            InitializeComponent();
-        }
+        get => (IEnumerable<VolunteerInList>)GetValue(VolunteerListProperty);
+        set => SetValue(VolunteerListProperty, value);
     }
+
+    public static readonly DependencyProperty VolunteerListProperty =
+        DependencyProperty.Register("VolunteerListProperty",
+            typeof(IEnumerable<VolunteerInList>),
+            typeof(VolunteerInList),
+            new PropertyMetadata(null));
+
+
+
+
+
+    public VolunteerInList()
+    {
+        InitializeComponent();
+    }
+    
+
 }
