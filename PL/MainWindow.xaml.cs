@@ -43,6 +43,13 @@ public partial class MainWindow : Window
     {
         s_bl.Admin.UpdateClock(BO.TimeUnit.Year);
     }
+    private void clockObserver()
+    {
+        CurrentTime = s_bl.Admin.GetClock();
+    }
+    private void configObserver()
+    {
+    }
     public MainWindow()
     {
         InitializeComponent();
