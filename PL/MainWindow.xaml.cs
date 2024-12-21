@@ -70,4 +70,11 @@ public partial class MainWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnClick_RiskRangeUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.SetRiskRange(CurrentRiskRange);
+
+    private void OnWindowClosed(object sender, EventArgs e)
+    {
+        MessageBox.Show("The window is closed");
+        s_bl.Admin.RemoveClockObserver(clockObserver);
+        s_bl.Admin.RemoveConfigObserver(configObserver);
+    }
 }
