@@ -5,7 +5,7 @@ using Helpers;
 
 internal class AdminImplementation : IAdmin
 {
-    private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
 
 
     /// <summary>
@@ -13,10 +13,9 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public void DbInit()
     {
-        //TODO: Find the place which we need to added the function call
         DalTest.Initialization.Do();
-        AdminManager.UpdateRiskRange(AdminManager.RiskRange);
         AdminManager.UpdateClock(AdminManager.Now);
+        AdminManager.RiskRange = AdminManager.RiskRange;
     }
 
     /// <summary>
@@ -24,19 +23,16 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public void DbReset()
     {
-        _dal.ResetDB();
+        s_dal.ResetDB();
         AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.UpdateRiskRange(AdminManager.RiskRange);
+        AdminManager.RiskRange = AdminManager.RiskRange;
     }
 
     /// <summary>
     /// This method returns the current system clock of the BL layer
     /// </summary>
     /// <returns>System clock from BL</returns>
-    public DateTime GetClock()
-    {
-        return Helpers.AdminManager.Now;
-    }
+    public DateTime GetClock() => AdminManager.Now;
 
     /// <summary>
     /// This method returns the current system risk range value of the BL layer
@@ -53,7 +49,7 @@ internal class AdminImplementation : IAdmin
     /// <param name="range">The new risk range value</param>
     public void SetRiskRange(TimeSpan range)
     {
-        AdminManager.UpdateRiskRange(range);
+        AdminManager.RiskRange = range;
     }
     
     /// <summary>
