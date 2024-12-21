@@ -40,4 +40,28 @@ public interface IAdmin
     /// </summary>
     void DbInit();
 
+    /// <summary>
+    /// Adds a new observer to the config variables
+    /// </summary>
+    /// <param name="configObserver">The action method which needs to be added</param>
+    void AddConfigObserver(Action configObserver);
+
+    /// <summary>
+    /// Removes an observer from config variables
+    /// </summary>
+    /// <param name="configObserver">The action method which needs to be removed</param>
+    void RemoveConfigObserver(Action configObserver);
+
+    /// <summary>
+    /// Adds a new observer method for the clock
+    /// </summary>
+    /// <param name="clockObserver">The action method which needs to be added</param>
+    void AddClockObserver(Action clockObserver);
+
+    /// <summary>
+    /// Removes an method observer from the clock
+    /// </summary>
+    /// <param name="clockObserver">The action method which needs to be removed</param>
+    void RemoveClockObserver(Action clockObserver);
+
 }
