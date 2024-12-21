@@ -33,10 +33,10 @@
             </Label>
             <ComboBox Grid.Row="0"
                       Grid.Column="1"
+                      ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
                       >
-                <ComboBoxItem Content="Item 1"/>
-                <ComboBoxItem Content="Item 2"/>
-                <ComboBoxItem Content="Item 3"/>
             </ComboBox>
         </Grid>
         <DataGrid Grid.Row="1"

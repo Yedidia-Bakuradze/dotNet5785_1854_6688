@@ -2,7 +2,7 @@
 
 namespace PL;
 
-internal class CallTypesCollection : IEnumerable
+internal class CallTypesCollection: IEnumerable
 {
     static readonly IEnumerable<BO.CallType> s_enums =
         (Enum.GetValues(typeof(BO.CallType)) as IEnumerable<BO.CallType>)!;

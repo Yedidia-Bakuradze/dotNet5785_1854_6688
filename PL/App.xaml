@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:PL"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <local:CallTypesCollection x:Key="CallTypesCollectionKey"/>
     </Application.Resources>
 </Application>
