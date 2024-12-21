@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Closed="OnWindowClosed"
         >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -63,9 +64,9 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         >
-                <Button Content="Show List of Volunteer in list" Height="30"/>
-                <Button Content="Initialize Db" Height="30"/>
-                <Button Content="Reset Db" Height="30"/>
+                <Button Click="OnShowListOfVolunteerInList" Content="Show List of Volunteer in list" Height="30"/>
+                <Button Click="OnSystemInitialize" Content="Initialize Db" Height="30"/>
+                <Button Click="OnSyetmReset" Content="Reset Db" Height="30"/>
             </StackPanel>
         </Grid>
     </Grid>

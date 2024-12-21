@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using PL.Volunteer;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -80,5 +81,45 @@ public partial class MainWindow : Window
         s_bl.Admin.AddClockObserver(clockObserver);
 
         s_bl.Admin.AddConfigObserver(configObserver);
+    }
+
+    private void OnWindowClosed(object sender, EventArgs e)
+    {
+        MessageBox.Show("The window is closed");
+        s_bl.Admin.RemoveClockObserver(clockObserver);
+        s_bl.Admin.RemoveConfigObserver(configObserver);
+    }
+
+    /// <summary>
+    /// This method is triggered when the user clicks on the Show List of Volunteer in List and it opens a new window which shows the volunteer is list
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnShowListOfVolunteerInList(object sender, RoutedEventArgs e) => new VolunteerInList().Show();
+
+    /// <summary>
+    /// This method initializes the databse only if the user has clicked on the Yes button
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnSystemInitialize(object sender, RoutedEventArgs e)
+    {
+        MessageBoxResult result = MessageBox.Show("Do you want to initialize the system?", "System Initialize",MessageBoxButton.YesNo);
+        if (result == MessageBoxResult.No)
+            return;
+        s_bl.Admin.DbInit();
+    }
+
+    /// <summary>
+    /// This methdo reset the database and the system only if user click on the Yes button
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnSyetmReset(object sender, RoutedEventArgs e)
+    {
+        MessageBoxResult result = MessageBox.Show("Do you want to reset the system?", "System Reset", MessageBoxButton.YesNo);
+        if (result == MessageBoxResult.No)
+            return;
+        s_bl.Admin.DbReset();
     }
 }
