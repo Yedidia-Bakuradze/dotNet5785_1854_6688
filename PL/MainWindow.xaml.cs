@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty CurrentTimeProperty =
         DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
 
+    #region Clock Update Methods
     private void btnAddOneSecond_Click(object sender, RoutedEventArgs e)
     {
         s_bl.Admin.UpdateClock(BO.TimeUnit.Second);
@@ -43,6 +44,7 @@ public partial class MainWindow : Window
     {
         s_bl.Admin.UpdateClock(BO.TimeUnit.Year);
     }
+    #endregion
     public TimeSpan CurrentRiskRange
     {
         get => (TimeSpan)GetValue(CurrentRiskRangeProperty);
