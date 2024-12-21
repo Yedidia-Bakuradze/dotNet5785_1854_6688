@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using PL.Volunteer;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -77,4 +78,11 @@ public partial class MainWindow : Window
         s_bl.Admin.RemoveClockObserver(clockObserver);
         s_bl.Admin.RemoveConfigObserver(configObserver);
     }
+
+    /// <summary>
+    /// This method is triggered when the user clicks on the Show List of Volunteer in List and it opens a new window which shows the volunteer is list
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnShowListOfVolunteerInList(object sender, RoutedEventArgs e) => new VolunteerInList().Show();
 }

@@ -41,7 +41,6 @@
         <DataGrid Grid.Row="1"
        	          EnableRowVirtualization="True"
                   RowDetailsVisibilityMode="VisibleWhenSelected"
-       	          MouseDoubleClick="dgStudentList_MouseDoubleClick"
                   SelectedItem="{Binding SelectedStudent}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"

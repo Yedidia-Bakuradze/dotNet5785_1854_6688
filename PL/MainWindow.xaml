@@ -64,7 +64,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         >
-                <Button Content="Show List of Volunteer in list" Height="30"/>
+                <Button Click="OnShowListOfVolunteerInList" Content="Show List of Volunteer in list" Height="30"/>
                 <Button Content="Initialize Db" Height="30"/>
                 <Button Content="Reset Db" Height="30"/>
             </StackPanel>
