@@ -7,6 +7,32 @@ internal class AdminImplementation : IAdmin
 {
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
 
+    #region Observers Update Section
+    /// <summary>
+    /// Adds a new observer to the clock
+    /// </summary>
+    /// <param name="clockObserver">The action method which needs to be added</param>
+    public void AddClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers += clockObserver;
+
+    /// <summary>
+    /// Adds a new observer to the config variables
+    /// </summary>
+    /// <param name="configObserver">The action method which needs to be added</param>
+    public void AddConfigObserver(Action configObserver) => AdminManager.ClockUpdatedObservers += configObserver;
+
+    /// <summary>
+    /// Removes an observer from the clock
+    /// </summary>
+    /// <param name="clockObserver">The action method which needs to be removed</param>
+    public void RemoveClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers -= clockObserver;
+
+    /// <summary>
+    /// Removes an observer from the config variables
+    /// </summary>
+    /// <param name="configObserver">The action method which needs to be removed</param>
+    public void RemoveConfigObserver(Action configObserver) => AdminManager.ConfigUpdatedObservers -= configObserver;
+    #endregion 
+
 
     /// <summary>
     /// This method initializes the system and the database from the BL to the Dal layer
