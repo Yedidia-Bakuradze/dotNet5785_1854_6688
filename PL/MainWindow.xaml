@@ -29,15 +29,13 @@
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Content="{Binding CurrentTime}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-            </Label>
-
+            <Label Content="{Binding CurrentTime}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <StackPanel Grid.Row="1">
-                <Button Content="Add Second" Height="40"/>
-                <Button Content="Add Minute" Height="40"/>
-                <Button Content="Add Hour" Height="40"/>
-                <Button Content="Add Day"  Height="40"/>
-                <Button Content="Add Year"  Height="40"/>
+                <Button Content="Add Second" Click="btnAddOneSecond_Click" Height="40"/>
+                <Button Content="Add Minute" Click="btnAddOneMinute_Click" Height="40"/>
+                <Button Content="Add Hour" Click="btnAddOneHour_Click" Height="40"/>
+                <Button Content="Add Day" Click="btnAddOneDay_Click"  Height="40"/>
+                <Button Content="Add Year" Click="btnAddOneYear_Click"  Height="40"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1"
