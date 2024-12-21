@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty CurrentTimeProperty =
         DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
 
+    #region Clock Update Methods
     private void btnAddOneSecond_Click(object sender, RoutedEventArgs e)
     {
         s_bl.Admin.UpdateClock(BO.TimeUnit.Second);
@@ -50,8 +51,23 @@ public partial class MainWindow : Window
     private void configObserver()
     {
     }
+    #endregion
+    public TimeSpan CurrentRiskRange
+    {
+        get => (TimeSpan)GetValue(CurrentRiskRangeProperty);
+        set => SetValue(CurrentRiskRangeProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentRiskRangeProperty = DependencyProperty.Register("CurrentRiskRange", typeof(TimeSpan), typeof(MainWindow));
     public MainWindow()
     {
         InitializeComponent();
     }
+
+    /// <summary>
+    /// Triggered when user clicks the update risk range button and it updates the risk range variable with the current modified value
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnClick_RiskRangeUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.SetRiskRange(CurrentRiskRange);
 }
