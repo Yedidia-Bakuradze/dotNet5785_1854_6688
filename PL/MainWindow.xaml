@@ -29,9 +29,9 @@
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="{Binding CurrentTime}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 DD:MM:DD HH:TT:SS
-            </TextBlock>
+            </Label>
 
             <StackPanel Grid.Row="1">
                 <Button Content="Add Second" Height="40"/>
