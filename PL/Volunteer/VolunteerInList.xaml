@@ -7,6 +7,69 @@
         mc:Ignorable="d"
         Title="VolunteerInList" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Stretch"
+              Height="auto"
+              Grid.Row="0"
+              VerticalAlignment="Stretch"
+              Width="auto"
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Content="Select a Type of Call"
+                   FontSize="18"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Stretch"
+                   >
+            </Label>
+            <ComboBox Grid.Row="0"
+                      Grid.Column="1"
+                      >
+                <ComboBoxItem Content="Item 1"/>
+                <ComboBoxItem Content="Item 2"/>
+                <ComboBoxItem Content="Item 3"/>
+            </ComboBox>
+        </Grid>
+        <DataGrid Grid.Row="1"
+       	          EnableRowVirtualization="True"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+       	          MouseDoubleClick="dgStudentList_MouseDoubleClick"
+                  SelectedItem="{Binding SelectedStudent}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Is Active" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsEnabled="False" IsChecked="{Binding Path=IsActive}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150"/>
+                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="75"/>
+                <DataGridTextColumn Header="Calls Done" Binding="{Binding TotalCallsDoneByVolunteer}" Width="100"/>
+                <DataGridTextColumn Header="Calls Cancelled" Binding="{Binding TotalCallsCancelByVolunteer}" Width="120"/>
+                <DataGridTextColumn Header="Calls Expired" Binding="{Binding TotalCallsExpiredByVolunteer}" Width="120"/>
+                <DataGridTextColumn Header="Current Call Id" Binding="{Binding CallId}" Width="100"/>
+                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Create New Volunteer"
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                Height="50"
+                Width="200"
+                />
     </Grid>
 </Window>
