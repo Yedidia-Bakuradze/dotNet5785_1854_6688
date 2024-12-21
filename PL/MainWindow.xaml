@@ -7,6 +7,63 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                DD:MM:DD HH:TT:SS
+            </TextBlock>
+
+            <StackPanel Grid.Row="1">
+                <Button Content="Add Second" Height="40"/>
+                <Button Content="Add Minute" Height="40"/>
+                <Button Content="Add Hour" Height="40"/>
+                <Button Content="Add Day"  Height="40"/>
+                <Button Content="Add Year"  Height="40"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1"
+              Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                DD:MM:DD HH:TT:SS
+            </TextBox>
+            <Button Grid.Row="1" Content="Update Risk Range"/>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Grid.Column="1"
+              Grid.ColumnSpan="2">
+            <StackPanel Width="250"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+                <Button Content="Show List of Volunteer in list" Height="30"/>
+                <Button Content="Initialize Db" Height="30"/>
+                <Button Content="Reset Db" Height="30"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
