@@ -17,11 +17,34 @@ namespace PL.Volunteer
     /// <summary>
     /// Interaction logic for Volunteer.xaml
     /// </summary>
-    public partial class Volunteer : Window
+    public partial class VolunteerWindow : Window
     {
-        public Volunteer()
+        public string ButtonText
         {
+            get => (string)GetValue(ButtonTextProperty);
+            set => SetValue(ButtonTextProperty, value);
+        }
+
+        public static readonly DependencyProperty ButtonTextProperty =
+            DependencyProperty.Register("ButtonTextProperty",
+            typeof(string),
+            typeof(VolunteerWindow),
+            new PropertyMetadata(null));
+
+
+        public VolunteerWindow(int id = 0)
+        {
+            ButtonText = id == 0
+                ? "Add"
+                : "Update";
+
+            ButtonText += " Volunteer";
             InitializeComponent();
+        }
+
+        private void OnSubmitBtnClick(object sender, RoutedEventArgs e)
+        {
+            //TODO: Make the action either create or update
         }
     }
 }

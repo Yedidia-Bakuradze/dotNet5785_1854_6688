@@ -192,9 +192,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                                                            };
         //Sort the given above enumerable
         if (sortByField is null)
-            return from volunteer in volunteerInLists
+            return (from volunteer in volunteerInLists
                    orderby volunteer.Id
-                   select volunteer;
+                   select volunteer).ToList();
         //Issue #16: Refactor
         switch (sortByField)
         {
@@ -248,7 +248,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
         }
 
-        return volunteerInLists;
+        return volunteerInLists.ToList();
     }
 
     /// <summary>

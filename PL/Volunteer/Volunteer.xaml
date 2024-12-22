@@ -1,4 +1,4 @@
-﻿<Window x:Class="PL.Volunteer.Volunteer"
+﻿<Window x:Class="PL.Volunteer.VolunteerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,6 +7,111 @@
         mc:Ignorable="d"
         Title="Volunteer" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Hello XXXX"
+               Grid.Row="1" Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <!-- Id -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Id}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Full Name -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Full Name:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding FullName}" Width="200"/>
+                </StackPanel>
+
+                <!-- Phone Number -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Phone Number:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding PhoneNumber}" Width="200"/>
+                </StackPanel>
+
+                <!-- Email -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Email:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Email}" Width="200"/>
+                </StackPanel>
+
+                <!-- Password -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Password:" Width="200" VerticalAlignment="Center"/>
+                    <PasswordBox Width="200"/>
+                </StackPanel>
+
+                <!-- Full Current Address -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Full Current Address:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding FullCurrentAddress}" Width="200"/>
+                </StackPanel>
+
+                <!-- Role -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Role:" Width="200" VerticalAlignment="Center"/>
+                    <ComboBox SelectedItem="{Binding Role}" Width="200"/>
+                </StackPanel>
+
+                <!-- Is Active -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Is Active:" Width="200" VerticalAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding IsActive}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Max Distance To Call -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Max Distance To Call:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding MaxDistanceToCall}" Width="200"/>
+                </StackPanel>
+
+                <!-- Range Type -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Range Type:" Width="200" VerticalAlignment="Center"/>
+                    <ComboBox SelectedItem="{Binding RangeType}" Width="200"/>
+                </StackPanel>
+
+                <!-- Num Of Handled Calls -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Num Of Handled Calls:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding NumOfHandledCalls}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Num Of Canceled Calls -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Num Of Canceled Calls:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding NumOfCanceledCalls}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Num Of Expired Calls -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Num Of Expired Calls:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding NumOfExpiredCalls}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Current Call -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Current Call:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCall}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+                <Button Content="{Binding ButtonText}" Click="OnSubmitBtnClick"/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

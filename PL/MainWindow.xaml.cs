@@ -1,14 +1,4 @@
-﻿using PL.Volunteer;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace PL;
 
@@ -95,7 +85,7 @@ public partial class MainWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnShowListOfVolunteerInList(object sender, RoutedEventArgs e) => new VolunteerInList().Show();
+    private void OnShowListOfVolunteerInList(object sender, RoutedEventArgs e) => new Volunteer.VolunteerListWindow().Show();
 
     /// <summary>
     /// This method initializes the databse only if the user has clicked on the Yes button
