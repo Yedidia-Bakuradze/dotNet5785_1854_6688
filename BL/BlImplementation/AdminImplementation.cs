@@ -40,6 +40,9 @@ internal class AdminImplementation : IAdmin
     public void DbInit()
     {
         DalTest.Initialization.Do();
+        VolunteerManager.Observers.NotifyListUpdated();
+        CallManager.Observers.NotifyListUpdated();
+        //TODO: Should we? AssignmentManager.Observers.NotifyListUpdated();
         AdminManager.UpdateClock(AdminManager.Now);
         AdminManager.RiskRange = AdminManager.RiskRange;
     }
@@ -50,6 +53,9 @@ internal class AdminImplementation : IAdmin
     public void DbReset()
     {
         s_dal.ResetDB();
+        VolunteerManager.Observers.NotifyListUpdated();
+        CallManager.Observers.NotifyListUpdated();
+        //TODO: Should we? AssignmentManager.Observers.NotifyListUpdated();
         AdminManager.UpdateClock(AdminManager.Now);
         AdminManager.RiskRange = AdminManager.RiskRange;
     }

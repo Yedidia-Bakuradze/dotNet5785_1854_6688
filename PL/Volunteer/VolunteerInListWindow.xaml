@@ -10,7 +10,7 @@
         Height="450"
         Width="800"
         Closed="OnWindowClosed"
-        Loaded="Window_Loaded"
+        Loaded="OnWindowLoaded"
         >
     <Grid>
         <Grid.RowDefinitions>
