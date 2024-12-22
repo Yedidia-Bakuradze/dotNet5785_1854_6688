@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -78,7 +79,23 @@ namespace PL.Volunteer
 
         private void OnSubmitBtnClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Make the action either create or update
+            try
+            {
+                if (ButtonText == "Add")
+                {
+                    s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
+                    MessageBox.Show("Volunteer added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else if (ButtonText == "Update")
+                {
+                    s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer);
+                    MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
