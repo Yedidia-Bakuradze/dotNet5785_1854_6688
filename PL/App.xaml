@@ -9,5 +9,6 @@
         <local:UserRoleCollection x:Key="UserRoleCollectionKey"/>
         <local:TypeOfRangeCollection x:Key="TypeOfRangeCollectionKey"/>
         <local:ConvertIntToReadOnlyTrue x:Key="ConvertIntToReadOnlyTrueKey"/>
+        <local:ConvertStatusToReadOnlyTrue x:Key="ConvertStatusToReadOnlyTrueKey"/>
     </Application.Resources>
 </Application>
