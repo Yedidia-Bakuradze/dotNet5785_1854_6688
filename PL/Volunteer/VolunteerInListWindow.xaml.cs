@@ -39,16 +39,15 @@ public partial class VolunteerListWindow : Window
         InitializeComponent();
     }
 
-    private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-    {
-        IEnumerable<VolunteerInList> VolunteerList = (FilterByCallTypes == BO.CallType.Undefined) ? s_bl.Volunteer.GetVolunteers(null, null)! : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall);
-    }
     /// <summary>
     /// This method triggred when the user changed his selection of a call type and it filters the voluteers by the selected value
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => VolunteerList = GetFilteredVolunteerInList();
+    private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)=>
+        VolunteerList = (FilterByCallTypes == BO.CallType.Undefined)
+        ? s_bl.Volunteer.GetVolunteers(null, null)!
+        : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall);
 
     /// <summary>
     /// Returna filtered volunteers by the select call type
