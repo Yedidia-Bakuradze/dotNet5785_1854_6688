@@ -22,7 +22,7 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Hello XXXX"
+        <Label Content="{Binding CurrentVolunteer.FullName}"
                Grid.Row="1" Grid.Column="1"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"/>
@@ -90,35 +90,39 @@
                 <!-- Range Type -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Range Type:" Width="200" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Source={StaticResource TypeOfRangeCollectionKey}}" SelectedItem="{Binding CurrentVolounteer.RangeType}" Width="200"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource TypeOfRangeCollectionKey}}"
+                              SelectedItem="{Binding CurrentVolunteer.RangeType}" Width="200"/>
                 </StackPanel>
 
                 <!-- Num Of Handled Calls -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Num Of Handled Calls:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.NumOfHandledCalls}" Width="200"
+                    <TextBox Text="{Binding CurrentVolunteer.NumOfHandledCalls, Mode=OneWay}"
+                             Width="200"
                              IsReadOnly="{Binding CurrentVolunteer.NumOfHandledCalls, Converter={StaticResource ConvertIntToReadOnlyTrueKey}}"/>
                 </StackPanel>
 
                 <!-- Num Of Canceled Calls -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Num Of Canceled Calls:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.NumOfCanceledCalls}" Width="200"
+                    <TextBox Text="{Binding CurrentVolunteer.NumOfCanceledCalls, Mode=OneWay}" Width="200"
                              IsReadOnly="{Binding CurrentVolunteer.NumOfCanceledCalls, Converter={StaticResource ConvertIntToReadOnlyTrueKey}}"/>
                 </StackPanel>
 
                 <!-- Num Of Expired Calls -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Num Of Expired Calls:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.NumOfExpiredCalls}" Width="200"
+                    <TextBox Text="{Binding CurrentVolunteer.NumOfExpiredCalls ,Mode=OneWay}" Width="200"
                              IsReadOnly="{Binding CurrentVolunteer.NumOfExpiredCalls, Converter={StaticResource ConvertIntToReadOnlyTrueKey}}"/>
                 </StackPanel>
 
                 <!-- Current Call -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Current Call:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.CurrentCall.Status}" Width="200" IsReadOnly="True"/>
+                    <TextBox Text="{Binding CurrentVolunteer.CurrentCall.Status, Mode=OneWay}" Width="200" IsReadOnly="True"/>
                 </StackPanel>
+                
+                <!-- Submit Button-->
                 <Button Content="{Binding ButtonText}" Click="OnSubmitBtnClick"/>
             </StackPanel>
         </ScrollViewer>

@@ -7,7 +7,32 @@ namespace PL.Volunteer;
 /// </summary>
 public partial class VolunteerWindow : Window
 {
+    public VolunteerWindow(int id = 0)
+    {
+        ButtonText = id == 0
+            ? "Add"
+            : "Update";
+
+        ButtonText += " Volunteer";
+        InitializeComponent();
+
+        //Getting the volunteer / creating a new one
+        try
+        {
+            CurrentVolunteer = (id == 0)
+                ? new BO.Volunteer()
+                : s_bl.Volunteer.GetVolunteerDetails(id);
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+        
+    }
+
+    #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    #endregion
 
     #region Dependency Properties
 
@@ -33,36 +58,14 @@ public partial class VolunteerWindow : Window
         DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public static readonly DependencyProperty ButtonTextProperty =
-        DependencyProperty.Register("ButtonTextProperty",
+        DependencyProperty.Register("ButtonText",
         typeof(string),
         typeof(VolunteerWindow),
         new PropertyMetadata(null));
     #endregion
 
-    public VolunteerWindow(int id = 0)
-    {
-        ButtonText = id == 0
-            ? "Add"
-            : "Update";
-
-        ButtonText += " Volunteer";
-        InitializeComponent();
-
-        //Getting the volunteer / creating a new one
-        try
-        {
-            CurrentVolunteer = (id == 0)
-                ? new BO.Volunteer()
-                : s_bl.Volunteer.GetVolunteerDetails(id);
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-    
-        
-    }
-
+    #region Events
+    #region Regular Events
     private void OnSubmitBtnClick(object sender, RoutedEventArgs e)
     {
         try
@@ -83,4 +86,7 @@ public partial class VolunteerWindow : Window
             MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+    #endregion
+    
+    #endregion
 }
