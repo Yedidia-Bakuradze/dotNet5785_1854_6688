@@ -32,7 +32,7 @@
                 <!-- Id -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Id,Mode=TwoWay}"  Width="200" 
+                    <TextBox Text="{Binding CurrentVolunteer.Id,Mode=OneTime}"  Width="200" 
                              IsReadOnly="{Binding Path= CurrentVolunteer.Id,
                                 Converter={StaticResource ConvertIntToReadOnlyTrueKey}}"/>
                 </StackPanel>
@@ -56,6 +56,7 @@
                 </StackPanel>
 
                 <!-- Password -->
+                <!-- TODO: Issue #22-->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Password:" Width="200" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding CurrentVolunteer.Password}" Width="200"/>

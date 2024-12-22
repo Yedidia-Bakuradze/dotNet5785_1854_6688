@@ -57,6 +57,8 @@
                   MouseDoubleClick="OnDoubleTappedVolunteerInList"
                   >
             <DataGrid.Columns>
+                
+                <!--Is Active indicator-->
                 <DataGridTemplateColumn Header="Is Active" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -73,15 +75,19 @@
                 <DataGridTextColumn Header="Calls Expired" Binding="{Binding TotalCallsExpiredByVolunteer}" Width="120"/>
                 <DataGridTextColumn Header="Current Call Id" Binding="{Binding CallId}" Width="100"/>
                 <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="100"/>
+                
+                <!--Delete volunteer btn-->
                 <DataGridTemplateColumn Header="Delete" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Tag="{Binding Id}" />
+                            <Button Content="Delete" Click="OnDeleteVolunteerInList" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        
+        <!-- Create new Volunteer Btn-->
         <Button Content="Create New Volunteer"
                 Grid.Row="2"
                 HorizontalAlignment="Center"

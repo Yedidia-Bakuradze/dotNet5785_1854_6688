@@ -68,6 +68,41 @@ public partial class VolunteerListWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnAddVolunteer(object sender, RoutedEventArgs e) => new VolunteerWindow().Show();
+
+    /// <summary>
+    /// This method is invoked when the user requests to remove a volunteer from the list
+    /// The method would ask his final premission and try to delete the volunteer
+    /// If the volunteer is now allowed to be delete, the system will show a message box which tells the user the reason for not being able to delete the volunteer
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnDeleteVolunteerInList(object sender, RoutedEventArgs e)
+    {
+        MessageBoxResult answer = MessageBox.Show(
+$@"
+Are you sure that you want to delete user number: {SelectedVolunteer?.Id} with the following values
+- Id: {SelectedVolunteer?.Id}
+- FullName: {SelectedVolunteer?.FullName}
+- IsActive: {SelectedVolunteer?.IsActive}
+- TotalCallsDoneByVolunteer: {SelectedVolunteer?.TotalCallsDoneByVolunteer}
+- TotalCallsCancelByVolunteer: {SelectedVolunteer?.TotalCallsCancelByVolunteer}
+- TotalCallsExpiredByVoluntee: {SelectedVolunteer?.TotalCallsExpiredByVolunteer}
+- CallId: {SelectedVolunteer?.CallId}
+- TypeOfCall: {SelectedVolunteer?.TypeOfCall}
+",
+$"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
+        if (answer == MessageBoxResult.Yes)
+        {
+            try
+            {
+                s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer!.Id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
     #endregion
 
     #region Window Evenets
@@ -97,4 +132,6 @@ public partial class VolunteerListWindow : Window
         ? s_bl.Volunteer.GetVolunteers(null, null)!
         : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall);
     #endregion
+
+
 }

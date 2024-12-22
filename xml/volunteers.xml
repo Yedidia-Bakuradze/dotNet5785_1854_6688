@@ -15,20 +15,6 @@
     <Longitude>34.768982</Longitude>
   </Volunteer>
   <Volunteer>
-    <Id>109567890</Id>
-    <Role>Volunteer</Role>
-    <FullName>Jane Doe</FullName>
-    <PhoneNumber>0502345678</PhoneNumber>
-    <Email>jane.doe@example.com</Email>
-    <MaxDistanceToCall>29</MaxDistanceToCall>
-    <RangeType>AirDistance</RangeType>
-    <IsActive>true</IsActive>
-    <Password>Qwerty!234</Password>
-    <FullCurrentAddress>2 Herzl St, Tel Aviv</FullCurrentAddress>
-    <Latitude>32.0633922</Latitude>
-    <Longitude>34.7697593</Longitude>
-  </Volunteer>
-  <Volunteer>
     <Id>876345678</Id>
     <Role>Volunteer</Role>
     <FullName>Michael Johnson</FullName>
@@ -265,20 +251,6 @@
     <FullCurrentAddress>19 Shabazi St, Tel Aviv</FullCurrentAddress>
     <Latitude>32.0620528</Latitude>
     <Longitude>34.7645904</Longitude>
-  </Volunteer>
-  <Volunteer>
-    <Id>109901234</Id>
-    <Role>Volunteer</Role>
-    <FullName>Patricia Harris</FullName>
-    <PhoneNumber>0520123456</PhoneNumber>
-    <Email>patricia.harris@example.com</Email>
-    <MaxDistanceToCall>14</MaxDistanceToCall>
-    <RangeType>AirDistance</RangeType>
-    <IsActive>true</IsActive>
-    <Password>Login!@#345</Password>
-    <FullCurrentAddress>20 Florentin St, Tel Aviv</FullCurrentAddress>
-    <Latitude>32.0561926</Latitude>
-    <Longitude>34.7688602</Longitude>
   </Volunteer>
   <Volunteer>
     <Id>321012345</Id>
