@@ -10,11 +10,7 @@ public partial class VolunteerListWindow : Window
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public static BO.CallType FilterByCallTypes { get; set; } = BO.CallType.Undefined;
 
-    private BO.Volunteer? _selectedVolunteer;
-    public BO.Volunteer? SelectedVolunteer {
-        get => _selectedVolunteer;
-        set => _selectedVolunteer = (BO.Volunteer?)value;
-    }
+    public BO.VolunteerInList? SelectedVolunteer { get; set; }
 
     /// <summary>
     /// This method sets the current list of volunteers to get the filtered / unfiltered volunteers by the select call type
