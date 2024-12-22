@@ -8,6 +8,6 @@
         <local:CallStatusCollection x:Key="CallStatusCollectionKey"/>
         <local:UserRoleCollection x:Key="UserRoleCollectionKey"/>
         <local:TypeOfRangeCollection x:Key="TypeOfRangeCollectionKey"/>
-        <local:ConvertIdToReadOnly x:Key="ConvertIdToReadOnlyKey"/>
+        <local:ConvertIntToReadOnlyTrue x:Key="ConvertIntToReadOnlyTrueKey"/>
     </Application.Resources>
 </Application>
