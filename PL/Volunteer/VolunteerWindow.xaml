@@ -32,7 +32,9 @@
                 <!-- Id -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Id}" Width="200" IsReadOnly="True"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Id,Mode=TwoWay}"  Width="200" 
+                             IsReadOnly="{Binding Path= CurrentVolunteer.Id,
+                                Converter={StaticResource ConvertIdToReadOnlyKey}}"/>
                 </StackPanel>
 
                 <!-- Full Name -->
