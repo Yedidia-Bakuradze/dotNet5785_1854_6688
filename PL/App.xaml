@@ -10,5 +10,6 @@
         <local:TypeOfRangeCollection x:Key="TypeOfRangeCollectionKey"/>
         <local:ConvertIntToReadOnlyTrue x:Key="ConvertIntToReadOnlyTrueKey"/>
         <local:ConvertStatusToReadOnlyTrue x:Key="ConvertStatusToReadOnlyTrueKey"/>
+        <local:ConvertBooleanToVisibility x:Key="ConvertBooleanToVisibilityKey"/>
     </Application.Resources>
 </Application>

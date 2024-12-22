@@ -56,10 +56,10 @@
                 </StackPanel>
 
                 <!-- Password -->
-                <!-- TODO: Issue #22-->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Password:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Password}" Width="200"/>
+                    <CheckBox IsChecked="{Binding PasswordVisibility}" Content="{Binding PasswordVisibility}" Width="200" VerticalAlignment="Center"/>
+                    <TextBox  Visibility="{Binding PasswordVisibility, Converter={StaticResource ConvertBooleanToVisibilityKey}}" Text="{Binding CurrentVolunteer.Password}" Width="200"/>
                 </StackPanel>
 
                 <!-- Full Current Address -->

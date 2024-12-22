@@ -46,6 +46,15 @@ public partial class VolunteerWindow : Window
     }
 
     /// <summary>
+    /// This propety managers whether we show the user the password field or not, to prevemt unnessery update
+    /// </summary>
+    public bool PasswordVisibility
+    {
+        get => (bool)GetValue(PasswordVisibilityPropety);
+        set => SetValue(PasswordVisibilityPropety, value);
+    }
+
+    /// <summary>
     /// The current volunteer which is shown on the UI
     /// </summary>
     public BO.Volunteer? CurrentVolunteer
@@ -58,14 +67,20 @@ public partial class VolunteerWindow : Window
         DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public static readonly DependencyProperty ButtonTextProperty =
-        DependencyProperty.Register("ButtonText",
-        typeof(string),
-        typeof(VolunteerWindow),
-        new PropertyMetadata(null));
+        DependencyProperty.Register("ButtonText",typeof(string),typeof(VolunteerWindow),new PropertyMetadata(null));
+
+    public static readonly DependencyProperty PasswordVisibilityPropety =
+        DependencyProperty.Register("PasswordVisibility", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(null));
     #endregion
 
     #region Events
     #region Regular Events
+    /// <summary>
+    /// This method request to update or create new volunteer entity based on the parameters given by the user in the UI
+    /// If it faileds, the system would pop up a message box telling whats wrong
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnSubmitBtnClick(object sender, RoutedEventArgs e)
     {
         try
@@ -77,7 +92,7 @@ public partial class VolunteerWindow : Window
             }
             else if (ButtonText == "Update")
             {
-                s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer);
+                s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer,PasswordVisibility);
                 MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
