@@ -5,5 +5,8 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <local:CallTypesCollection x:Key="CallTypesCollectionKey"/>
+        <local:CallStatusCollection x:Key="CallStatusCollectionKey"/>
+        <local:UserRoleCollection x:Key="UserRoleCollectionKey"/>
+        <local:TypeOfRangeCollection x:Key="TypeOfRangeCollectionKey"/>
     </Application.Resources>
 </Application>
