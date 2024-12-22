@@ -32,6 +32,6 @@ public partial class VolunteerInList : Window
 
     private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        IEnumerable<VolunteerInList> VolunteerList = (IEnumerable<VolunteerInList>)((FilterByCallTypes == BO.CallType.Undefined) ? s_bl.Volunteer.GetVolunteers(null, null)! : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall));
+        IEnumerable<VolunteerInList> VolunteerList = (FilterByCallTypes == BO.CallType.Undefined) ? s_bl.Volunteer.GetVolunteers(null, null)! : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall);
     }
 }
