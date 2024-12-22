@@ -19,6 +19,7 @@ namespace PL.Volunteer
     /// </summary>
     public partial class VolunteerWindow : Window
     {
+        private static BlApi.IBl s_bl = BlApi.Factory.Get();
         public string ButtonText
         {
             get => (string)GetValue(ButtonTextProperty);
