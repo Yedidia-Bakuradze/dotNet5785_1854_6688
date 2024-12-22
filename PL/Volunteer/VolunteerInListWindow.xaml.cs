@@ -9,7 +9,13 @@ public partial class VolunteerListWindow : Window
 {
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public static BO.CallType FilterByCallTypes { get; set; } = BO.CallType.Undefined;
-    
+
+    private BO.Volunteer? _selectedVolunteer;
+    public BO.Volunteer? SelectedVolunteer {
+        get => _selectedVolunteer;
+        set => _selectedVolunteer = (BO.Volunteer?)value;
+    }
+
     /// <summary>
     /// This method sets the current list of volunteers to get the filtered / unfiltered volunteers by the select call type
     /// </summary>
@@ -70,4 +76,14 @@ public partial class VolunteerListWindow : Window
     /// <param name="e"></param>
     private void OnWindowClosed(object sender, EventArgs e) => s_bl.Volunteer.RemoveObserver(VolunteerListObserver);
 
+    private void OnDoubleTappedVolunteerInList(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (SelectedVolunteer is not null)
+            new VolunteerWindow(SelectedVolunteer.Id).Show();
+    }
+
+    private void OnAddVolunteer(object sender, RoutedEventArgs e)
+    {
+        new VolunteerWindow().Show();
+    }
 }
