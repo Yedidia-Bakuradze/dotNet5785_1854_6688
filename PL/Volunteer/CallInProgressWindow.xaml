@@ -1,0 +1,94 @@
+﻿<Window x:Class="PL.Volunteer.CallInProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Volunteer"
+        mc:Ignorable="d"
+        Title="Call In Progress" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Call In Progress Details"
+               Grid.Row="1" Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <!-- Id -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.Id}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Call Id -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Call Id:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.CallId}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Type Of Call -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Type Of Call:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.TypeOfCall}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Description -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Description:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.Description}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Email Address -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Email Address:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.EmailAddress}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Opening Time -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Opening Time:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.OpenningTime}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Last Time For Closing The Call -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Last Time For Closing The Call:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.LastTimeForClosingTheCall}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Entry Time -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Entry Time:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.EntryTime}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Distance From Assigned Volunteer -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Distance From Assigned Volunteer:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.DistanceFromAssignedVolunteer}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Status -->
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Status:" Width="200" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentCallInProgress.Status}" Width="200" IsReadOnly="True"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

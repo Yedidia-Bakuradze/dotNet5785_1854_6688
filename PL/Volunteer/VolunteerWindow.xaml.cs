@@ -101,7 +101,19 @@ public partial class VolunteerWindow : Window
             MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-    #endregion
     
+    /// <summary>
+    /// This method is invoked when the user wants to open the call in progress window to watch its details
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnShowCurrentCallInProgress(object sender, RoutedEventArgs e)
+    {
+        if(CurrentVolunteer?.CurrentCall != null)
+            new CallInProgressWindow(CurrentVolunteer.CurrentCall).Show();
+    }
     #endregion
+
+    #endregion
+
 }
