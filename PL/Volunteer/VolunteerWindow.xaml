@@ -119,10 +119,10 @@
                 </StackPanel>
 
                 <!-- Current Call -->
-                <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
                     <TextBlock Text="Current Call:" Width="200" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding CurrentVolunteer.CurrentCall.Status, Mode=OneWay}" Width="200" IsReadOnly="True"/>
-                    <Button Content="{Binding CurrentVolunteer.CurrentCall.Status}" Click="OnShowCurrentCallInProgress"/>
+                    <Button Content="Show Call" Click="OnShowCurrentCallInProgress"/>
                 </StackPanel>
                 
                 <!-- Submit Button-->
