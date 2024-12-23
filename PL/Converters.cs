@@ -38,3 +38,16 @@ class ConvertBooleanToVisibility : IValueConverter
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => ((Visibility)value) == Visibility.Visible;
 }
+class ConvertVolunteerEnditingModeToReadOnlyValue: IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return (string)value == "Add Volunteer";
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((bool)value)
+            return "Add Volunteer";
+        return "Update Volunteer";
+    }
+}

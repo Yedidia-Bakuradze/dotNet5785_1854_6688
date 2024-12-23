@@ -85,12 +85,12 @@ public partial class VolunteerWindow : Window
     {
         try
         {
-            if (ButtonText == "Add")
+            if (ButtonText == "Add Volunteer")
             {
                 s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
                 MessageBox.Show("Volunteer added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            else if (ButtonText == "Update")
+            else if (ButtonText == "Update Volunteer")
             {
                 s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer,PasswordVisibility);
                 MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);

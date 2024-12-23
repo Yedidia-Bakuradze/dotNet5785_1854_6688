@@ -11,5 +11,6 @@
         <local:ConvertIntToReadOnlyTrue x:Key="ConvertIntToReadOnlyTrueKey"/>
         <local:ConvertStatusToReadOnlyTrue x:Key="ConvertStatusToReadOnlyTrueKey"/>
         <local:ConvertBooleanToVisibility x:Key="ConvertBooleanToVisibilityKey"/>
+        <local:ConvertVolunteerEnditingModeToReadOnlyValue x:Key="ConvertVolunteerEnditingModeToReadOnlyValueKey"/>
     </Application.Resources>
 </Application>
