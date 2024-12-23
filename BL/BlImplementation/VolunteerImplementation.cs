@@ -180,15 +180,19 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
         //Convert to VolunteerInList entities
         IEnumerable<BO.VolunteerInList> volunteerInLists = from volunteer in volunteers
+                                                           let currentAssignment = s_dal.Assignment
+                                                                    .ReadAll((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
+                                                                    .OrderBy(ass => ass.Id)
+                                                                    .ToList()
+                                                                    .LastOrDefault()
+                                                           let currentCall = s_dal.Call.Read(call => call.Id == currentAssignment?.CallId)
                                                            select new BO.VolunteerInList
                                                            {
                                                                Id = volunteer.Id,
                                                                FullName = volunteer.FullName,
                                                                IsActive = volunteer.IsActive,
-                                                               CallId = s_dal.Assignment
-                                                                    .Read((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
-                                                                    ?.CallId
-
+                                                               CallId = currentAssignment?.CallId,
+                                                               TypeOfCall = currentCall != null ? (BO.CallType)currentCall!.Type : BO.CallType.Undefined
                                                            };
         //Sort the given above enumerable
         if (sortByField is null)
@@ -249,6 +253,39 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
 
         return volunteerInLists.ToList();
+    }
+
+    /// <summary>
+    /// This method returns filtered and sorted list of VolunteerInList given the parameters which the user insereted
+    /// It has been requiered from us to do so in order to provide the PL layer a filter list of values
+    /// </summary>
+    /// <param name="filterField">The requested field to filter it by the second value parameter</param>
+    /// <param name="filterValue">The value which we want the filter field to have</param>
+    /// <param name="sortByField">Optional: Field which it would sort by</param>
+    /// <returns>Filtered and optionlly sorted VolunteerInLists</returns>
+    public IEnumerable<BO.VolunteerInList> GetFilteredVolunteers(BO.VolunteerInListField filterField, object filterValue, BO.VolunteerInListField? sortByField)
+    {
+        switch (filterField)
+        {
+            case VolunteerInListField.Id:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer)=> volunteer.Id == (int)filterValue);
+            case VolunteerInListField.FullName:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.FullName == (string)filterValue);
+            case VolunteerInListField.IsActive:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.IsActive == (bool)filterValue);
+            case VolunteerInListField.TotalCallsDoneByVolunteer:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsDoneByVolunteer == (int)filterValue);
+            case VolunteerInListField.TotalCallsCancelByVolunteer:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsCancelByVolunteer == (int)filterValue);
+            case VolunteerInListField.TotalCallsExpiredByVolunteer:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsExpiredByVolunteer == (int)filterValue);
+            case VolunteerInListField.CallId:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.CallId == (int)filterValue);
+            case VolunteerInListField.TypeOfCall:
+                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TypeOfCall == (BO.CallType)filterValue);
+            default:
+                throw new BlInvalidOperationException($"Bl: The value {filterField} is not a valid VolunteerInList field");
+        }
     }
 
     /// <summary>

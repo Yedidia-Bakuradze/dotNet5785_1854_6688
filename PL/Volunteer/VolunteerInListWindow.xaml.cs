@@ -130,7 +130,7 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
     private void RefereshVolunteerList()
         => VolunteerList = (FilterByCallTypes == BO.CallType.Undefined)
         ? s_bl.Volunteer.GetVolunteers(null, null)!
-        : s_bl.Volunteer.GetVolunteers(null, BO.VolunteerInListField.TypeOfCall);
+        : s_bl.Volunteer.GetFilteredVolunteers(BO.VolunteerInListField.TypeOfCall, FilterByCallTypes,null);
     #endregion
 
 

@@ -24,6 +24,16 @@ public interface IVolunteer :IObservable //Stage 5
     IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByStatus, BO.VolunteerInListField? sortByField);
 
     /// <summary>
+    /// This method returns filtered and sorted list of VolunteerInList given the parameters which the user insereted
+    /// It has been requiered from us to do so in order to provide the PL layer a filter list of values
+    /// </summary>
+    /// <param name="filterField">The requested field to filter it by the second value parameter</param>
+    /// <param name="filterValue">The value which we want the filter field to have</param>
+    /// <param name="sortByField">Optional: Field which it would sort by</param>
+    /// <returns>Filtered and optionlly sorted VolunteerInLists</returns>
+    IEnumerable<BO.VolunteerInList> GetFilteredVolunteers(BO.VolunteerInListField filterField, object filterValue, BO.VolunteerInListField? sortByField);
+
+    /// <summary>
     /// This method accepts an id value, calls the Read method from DAL, using the returned value it creates a new BO.Volunteer entity,
     /// also, the method adds a related call to the volunteer in the BO.CallInProgress field, adds to the created BO.Volunteer entity and retuns it.
     /// If such volunteer hasn't been found, the system will throw an exception which would be taken care of in the BL layer and which then will throw an exception to the upper layer
