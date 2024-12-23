@@ -69,7 +69,6 @@
 
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150"/>
-                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="75"/>
                 <DataGridTextColumn Header="Calls Done" Binding="{Binding TotalCallsDoneByVolunteer}" Width="100"/>
                 <DataGridTextColumn Header="Calls Cancelled" Binding="{Binding TotalCallsCancelByVolunteer}" Width="120"/>
                 <DataGridTextColumn Header="Calls Expired" Binding="{Binding TotalCallsExpiredByVolunteer}" Width="120"/>
