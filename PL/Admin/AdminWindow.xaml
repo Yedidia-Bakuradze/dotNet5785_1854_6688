@@ -26,7 +26,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
-        <Style x:Key="LeftBottomBtnAction" TargetType="Border">
+        <Style x:Key="LeftBottomBtnActionStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="10,0,0,0"/>
             <Setter Property="Background" Value="#46A3EF"/>
             <Setter Property="BorderBrush" Value="Black"/>
@@ -38,8 +38,35 @@
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+        <Style x:Key="MiddleBottomBtnActionStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style x:Key="ClearBtnStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style x:Key="LeftConfigBtnStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0,10,10,0"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style x:Key="RightConfigBtnStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="10,0,0,10"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
     </Window.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color="#2798D5" Offset="0"/>
+                <GradientStop Color="#C25C9E" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="115"/>
             <ColumnDefinition Width="*"/>
@@ -49,7 +76,6 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="115"/>
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="14"/>
             <RowDefinition Height="65"/>
@@ -62,39 +88,35 @@
         </Grid.RowDefinitions>
 
         <!--Manage Clock btn-->
-        <Button Grid.Column="0"
-                Grid.Row="3"
-                Content="Manage Clock"
-                />
+        <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="3">
+            <Button Content="Manage Clock" Style="{StaticResource ClearBtnStyle}"/>
+        </Border>
         
         <!--Manage Risk Range btn-->
-        <Button Grid.Column="0"
-                Grid.Row="5"
-                Content="Manage Clock"
-                />
+        <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="5">
+            <Button Style="{StaticResource ClearBtnStyle}" Content="Manage Risk Range"/>
+        </Border>
+        
         <!--Manage Display Actions btn-->
-        <Button Grid.Column="6"
-                Grid.Row="3"
-                Content="Display Actions"
-                />
+        <Border Grid.Column="6" Grid.Row="3" Style="{StaticResource RightConfigBtnStyle}">
+            <Button Style="{StaticResource ClearBtnStyle}" Content="Display Actions"/>
+        </Border>
 
         <!--The Clock-->
-        <Border
-            Grid.Column="3"
-            Grid.Row="1"
-            CornerRadius="10"
-            Background="Aquamarine"
-            />
-        <TextBlock Grid.Column="3"
-                   Grid.Row="1"
-                   Text="12:12:00 12/12/2024"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   FontSize="31"
-                   />
-        <Grid Grid.Row="7"
-              Grid.Column="2" Grid.ColumnSpan="3"
-              >
+        <Border Grid.Column="3" Grid.Row="1" CornerRadius="10" Background="#7E76B5">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="275" ShadowDepth="2" BlurRadius="4"/>
+            </Border.Effect>
+            <TextBlock 
+                       Text="12:12:00 12/12/2024"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="31"
+                       Foreground="White"
+                       />
+        </Border>
+        
+        <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -104,19 +126,28 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Style="{StaticResource LeftBottomBtnAction}" Grid.Column="0">
-                <Button Content="Expired" BorderThickness="0" Background="Transparent"/>
+            <Border Style="{StaticResource LeftBottomBtnActionStyle}" Grid.Column="0">
+                <Button Content="Expired" Style="{StaticResource ClearBtnStyle}"/>
             </Border>
-            <Button Grid.Column="1" Content="Open In Risk"/>
-            <Button Grid.Column="2" Content="Open"/>
-            <Button Grid.Column="3" Content="In Progress"/>
-            <Button Grid.Column="4" Content="In Progress Risk"/>
+
+            <Border Style="{StaticResource MiddleBottomBtnActionStyle}" Grid.Column="1" Background="#5386C5">
+                <Button Content="Open In Risk" Style="{StaticResource ClearBtnStyle}"/>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#6081C0">
+                <Button Content="Open" Style="{StaticResource ClearBtnStyle}"/>
+            </Border>
+
+            <Border Grid.Column="3" Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#6E7CBB">
+                <Button Content="In Progress" Style="{StaticResource ClearBtnStyle}"/>
+            </Border>
+
+            <Border Grid.Column="4"  Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#7977B7">
+                <Button Content="In Progress Risk" Style="{StaticResource ClearBtnStyle}"/>
+            </Border>
 
             <Border Style="{StaticResource RightBottomBtnAction}" Grid.Column="5">
-                <Button Grid.Column="5" Content="Closed"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        />
+                <Button Grid.Column="5" Content="Closed" Style="{StaticResource ClearBtnStyle}"/>
             </Border>
         </Grid>
 
@@ -125,6 +156,7 @@
                 Grid.Column="2" Grid.ColumnSpan="3"
                 Grid.Row="3" Grid.RowSpan="3"
                 CornerRadius="10"
+                Visibility="Hidden"
                 >
             <Grid>
                 <Grid.ColumnDefinitions>
