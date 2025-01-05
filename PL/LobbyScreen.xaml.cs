@@ -21,16 +21,26 @@ public partial class LobbyScreen : Window
 {
     public string IdField { get; set; }
     public string passwordField { get; set; }
+
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
 
     public LobbyScreen()
     {
-        s_bl.Volunteer.Login(IdField, passwordField);
+
         InitializeComponent();
+
     }
 
     private void Login_Button(object sender, RoutedEventArgs e)
     {
+        try
+        {
+            s_bl.Volunteer.Login(IdField!, passwordField);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
         MessageBox.Show(IdField);
     }
 

@@ -297,14 +297,19 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>The type of user</returns>
     public string Login(string id, string? password)
     {
+        if (!int.TryParse(id, out int validId))
+        {
+            throw new BO.BlInvalidEntityDetails($"BL Error: Invalid id value");
+        }
+
         string? hashedPassword = password is null
             ? null
             : VolunteerManager.GetSHA256HashedPassword(password);
-        
+
         DO.Volunteer volunteer = s_dal.Volunteer
-            .Read((DO.Volunteer volunteer) => volunteer.Id == int.Parse(id) && volunteer.Password == hashedPassword)
+            .Read((DO.Volunteer volunteer) => volunteer.Id == validId && volunteer.Password == hashedPassword)
             ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with email address: {id} and password: {password} doesn't exsits");
-        
+
         return volunteer.Role.ToString();
     }
 
