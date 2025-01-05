@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PL.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,21 +36,29 @@ public partial class LobbyScreen : Window
     {
         try
         {
-             string role = s_bl.Volunteer.Login(IdField!, passwordField);
+            string role = s_bl.Volunteer.Login(IdField!, passwordField);
             if (role == "Volunteer")
             {
                 // TODO: send to volunteer page
             }
-            if(role == "Admin")
+            else if (role == "Admin")
             {
-                //TODO: give option to choose between the pages
+                MessageBoxResult result = MessageBox.Show("Do you want to go to the admin page?", "Choose Page", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    new AdminWindow().Show();
+                    this.Close();
+                }
+                else if (result == MessageBoxResult.No)
+                {
+                    // TODO: send to volunteer page
+                }
             }
         }
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
         }
-        
     }
 
 
