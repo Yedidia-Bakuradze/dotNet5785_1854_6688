@@ -7,76 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        Closed="OnWindowClosed"
-        Loaded="OnWindowLoaded"
         >
     <Grid>
-        <!-- Grid confugurations-->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="15"/>
-        </Grid.ColumnDefinitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="10"/>
-        </Grid.RowDefinitions>
-
-        <!-- The System ClockRegin-->
-        <Grid Grid.Row="1"
-              Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Label Content="{Binding CurrentTime}"
-                   Grid.Row="0"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="1">
-                <Button Content="Add Second" Click="OnClockForwardOneSecondUpdate" Height="40"/>
-                <Button Content="Add Minute" Click="OnClockForwardOneMinuteUpdate" Height="40"/>
-                <Button Content="Add Hour" Click="OnClockForwardOneHourUpdate" Height="40"/>
-                <Button Content="Add Day" Click="OnClockForwardOneDayUpdate"  Height="40"/>
-                <Button Content="Add Year" Click="OnClockForwardOneYearUpdate"  Height="40"/>
-            </StackPanel>
-        </Grid>
-        
-        <!-- The Risk Range Regin-->
-        <Grid Grid.Row="1"
-              Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="40"/>
-            </Grid.RowDefinitions>
-            <TextBox Grid.Row="0"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center"
-                     Text="{Binding CurrentRiskRange}" 
-                     >
-            </TextBox>
-            <Button Grid.Row="1"
-                    Content="Update Risk Range"
-                    Click="OnRiskRagneUpdate"
-                    />
-        </Grid>
-        
-        <!-- The Footer-->
-        <Grid Grid.Row="2"
-              Grid.Column="1"
-              Grid.ColumnSpan="2">
-            <StackPanel Width="250"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        >
-                <Button Click="OnShowListOfVolunteerInList" Content="Show List of Volunteer in list" Height="30"/>
-                <Button Click="OnSystemInitialize" Content="Initialize Db" Height="30"/>
-                <Button Click="OnSyetmReset" Content="Reset Db" Height="30"/>
-            </StackPanel>
-        </Grid>
+        <TextBlock Text="Still On Main Window Pall"/>
     </Grid>
 </Window>
