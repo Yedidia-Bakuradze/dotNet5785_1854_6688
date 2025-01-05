@@ -35,13 +35,21 @@ public partial class LobbyScreen : Window
     {
         try
         {
-            s_bl.Volunteer.Login(IdField!, passwordField);
+             string role = s_bl.Volunteer.Login(IdField!, passwordField);
+            if (role == "Volunteer")
+            {
+                // TODO: send to volunteer page
+            }
+            if(role == "Admin")
+            {
+                //TODO: give option to choose between the pages
+            }
         }
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
         }
-        MessageBox.Show(IdField);
+        
     }
 
 
