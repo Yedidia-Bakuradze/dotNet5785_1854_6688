@@ -5,78 +5,170 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Admin"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800"
+        Title="AdminWindow" Height="475" Width="850"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
+    <Window.Resources>
+        <!-- Style for the clock management grid -->
+        <Style x:Key="ActionBtnStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#EFEFEF"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="CriticalBtnStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#FF0000"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="LeftBottomBtnAction" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10,0,0,0"/>
+            <Setter Property="Background" Value="#46A3EF"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style x:Key="RightBottomBtnAction" TargetType="Border">
+            <Setter Property="CornerRadius" Value="0,10,0,0"/>
+            <Setter Property="Background" Value="#8B71B1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <!-- Grid confugurations-->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="115"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="94.5"/>
+            <ColumnDefinition Width="351"/>
+            <ColumnDefinition Width="94.5"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="115"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="14"/>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="62"/>
         </Grid.RowDefinitions>
 
-        <!-- The System ClockRegin-->
-        <Grid Grid.Row="1"
-          Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Label Content="{Binding CurrentTime}"
-               Grid.Row="0"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="1">
-                <Button Content="Add Second" Click="OnClockForwardOneSecondUpdate" Height="40"/>
-                <Button Content="Add Minute" Click="OnClockForwardOneMinuteUpdate" Height="40"/>
-                <Button Content="Add Hour" Click="OnClockForwardOneHourUpdate" Height="40"/>
-                <Button Content="Add Day" Click="OnClockForwardOneDayUpdate"  Height="40"/>
-                <Button Content="Add Year" Click="OnClockForwardOneYearUpdate"  Height="40"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- The Risk Range Regin-->
-        <Grid Grid.Row="1"
-          Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="40"/>
-            </Grid.RowDefinitions>
-            <TextBox Grid.Row="0"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center"
-                 Text="{Binding CurrentRiskRange}" 
-                 >
-            </TextBox>
-            <Button Grid.Row="1"
-                Content="Update Risk Range"
-                Click="OnRiskRagneUpdate"
+        <!--Manage Clock btn-->
+        <Button Grid.Column="0"
+                Grid.Row="3"
+                Content="Manage Clock"
                 />
+        
+        <!--Manage Risk Range btn-->
+        <Button Grid.Column="0"
+                Grid.Row="5"
+                Content="Manage Clock"
+                />
+        <!--Manage Display Actions btn-->
+        <Button Grid.Column="6"
+                Grid.Row="3"
+                Content="Display Actions"
+                />
+
+        <!--The Clock-->
+        <Border
+            Grid.Column="3"
+            Grid.Row="1"
+            CornerRadius="10"
+            Background="Aquamarine"
+            />
+        <TextBlock Grid.Column="3"
+                   Grid.Row="1"
+                   Text="12:12:00 12/12/2024"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="31"
+                   />
+        <Grid Grid.Row="7"
+              Grid.Column="2" Grid.ColumnSpan="3"
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource LeftBottomBtnAction}" Grid.Column="0">
+                <Button Content="Expired" BorderThickness="0" Background="Transparent"/>
+            </Border>
+            <Button Grid.Column="1" Content="Open In Risk"/>
+            <Button Grid.Column="2" Content="Open"/>
+            <Button Grid.Column="3" Content="In Progress"/>
+            <Button Grid.Column="4" Content="In Progress Risk"/>
+
+            <Border Style="{StaticResource RightBottomBtnAction}" Grid.Column="5">
+                <Button Grid.Column="5" Content="Closed"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        />
+            </Border>
         </Grid>
 
-        <!-- The Footer-->
-        <Grid Grid.Row="2"
-          Grid.Column="1"
-          Grid.ColumnSpan="2">
-            <StackPanel Width="250"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    >
-                <Button Click="OnShowListOfVolunteerInList" Content="Show List of Volunteer in list" Height="30"/>
-                <Button Click="OnSystemInitialize" Content="Initialize Db" Height="30"/>
-                <Button Click="OnSyetmReset" Content="Reset Db" Height="30"/>
-            </StackPanel>
-        </Grid>
+        <!--Clock Managment-->
+        <Border Background="White"
+                Grid.Column="2" Grid.ColumnSpan="3"
+                Grid.Row="3" Grid.RowSpan="3"
+                CornerRadius="10"
+                >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnStyle}" >
+                    <Button Content="Add a Second"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="OnClockForwardOneSecondUpdate"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnStyle}" >
+                    <Button Content="Add a Minute" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneMinuteUpdate"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnStyle}" >
+                    <Button Content="Add a Hour" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneHourUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnStyle}" >
+                    <Button Content="Add a Day" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneDayUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnStyle}" >
+                    <Button Content="Add a Year" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneYearUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnStyle}" >
+                    <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"/>
+                </Border>
+
+            </Grid>
+        </Border>
     </Grid>
 </Window>

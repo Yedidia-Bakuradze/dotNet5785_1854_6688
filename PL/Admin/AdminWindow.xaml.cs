@@ -124,4 +124,9 @@ public partial class AdminWindow : Window
         s_bl.Admin.DbReset();
     }
     #endregion
+
+    private void OnClockResetAction(object sender, RoutedEventArgs e)
+    {
+        MessageBox.Show("implement OnClockResetAction");
+    }
 }
