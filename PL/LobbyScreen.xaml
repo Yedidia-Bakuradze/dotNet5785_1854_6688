@@ -19,13 +19,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Margin="0,10,0,10">
-            <TextBlock Text="ID" Margin="0,10,0,5" FontSize="12"/>
-            <TextBox Width="200" Height="30" Margin="0,0,0,10"/>
+            <TextBlock Text="ID" Margin="0,10,0,0" FontSize="12"/>
+            <TextBox Text="{Binding IdField}" Width="200" Height="30" Margin="0,0,0,10"/>
 
-            <TextBlock Text="Password" Margin="0,10,0,5" FontSize="12"/>
-            <PasswordBox Width="200" Height="30" Margin="0,0,0,10"/>
+            <TextBlock Text="Password" Margin="0,10,0,0" FontSize="12"/>
+            <TextBox Text="{Binding passwordField}" Width="200" Height="30" Margin="0,0,0,10"/>
 
-            <Button Content="Login" Width="100" Height="30" Margin="0,10,0,0">
+            <Button Click="Login_Button" Content="Login" Width="100" Height="30" Margin="0,10,0,0">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Control.Template">

@@ -289,21 +289,21 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     }
 
     /// <summary>
-    /// Logs into an account using the past username (Email address) and password
+    /// Logs into an account using the past id (Email address) and password
     /// If such a user doesn't exists or the credentials aren't correct, then method will throw an exception
     /// </summary>
-    /// <param name="username">User's username value</param>
+    /// <param name="id">User's id value</param>
     /// <param name="password">User's password value</param>
     /// <returns>The type of user</returns>
-    public string Login(string username, string? password)
+    public string Login(string id, string? password)
     {
         string? hashedPassword = password is null
             ? null
             : VolunteerManager.GetSHA256HashedPassword(password);
         
         DO.Volunteer volunteer = s_dal.Volunteer
-            .Read((DO.Volunteer volunteer) => volunteer.Email == username && volunteer.Password == hashedPassword)
-            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with email address: {username} and password: {password} doesn't exsits");
+            .Read((DO.Volunteer volunteer) => volunteer.Id == int.Parse(id) && volunteer.Password == hashedPassword)
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with email address: {id} and password: {password} doesn't exsits");
         
         return volunteer.Role.ToString();
     }
