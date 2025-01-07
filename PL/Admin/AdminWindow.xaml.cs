@@ -181,7 +181,7 @@ public partial class AdminWindow : Window
     /// <param name="e"></param>
     private void OnClockResetAction(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show("implement OnClockResetAction");
+        s_bl.Admin.DbReset();
     }
     #endregion
 
