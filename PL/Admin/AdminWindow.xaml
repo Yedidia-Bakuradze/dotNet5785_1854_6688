@@ -12,41 +12,75 @@
         >
     <Window.Resources>
         <!-- Style for the clock management grid -->
-        <Style x:Key="ActionBtnStyle" TargetType="Border">
+        <Style x:Key="ActionBtnBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Background" Value="#EFEFEF"/>
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
-        <Style x:Key="CriticalBtnStyle" TargetType="Border">
+        <Style x:Key="CriticalBtnBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Background" Value="#FF0000"/>
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
-        <Style x:Key="LeftBottomBtnActionStyle" TargetType="Border">
+        <Style x:Key="LeftBottomOperationBtnBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="10,0,0,0"/>
             <Setter Property="Background" Value="#46A3EF"/>
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style x:Key="RightBottomBtnAction" TargetType="Border">
+        <Style x:Key="RightBottomOperationBtnBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="0,10,0,0"/>
             <Setter Property="Background" Value="#8B71B1"/>
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="90"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style x:Key="MiddleBottomBtnActionStyle" TargetType="Border">
+        <Style x:Key="MiddleBottomOperationBtnBorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="0"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style x:Key="ClearBtnStyle" TargetType="Button">
+        <Style x:Key="ClearBottomBtnBtnStyle" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
-
+        <Style x:Key="ClearSideBtnBtnStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
         <Style x:Key="LeftConfigBtnStyle" TargetType="Border">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="CornerRadius" Value="0,10,10,0"/>
@@ -89,17 +123,17 @@
 
         <!--Manage Clock btn-->
         <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="3">
-            <Button Content="Manage Clock" Style="{StaticResource ClearBtnStyle}"/>
+            <Button Content="Manage Clock" Style="{StaticResource ClearSideBtnBtnStyle}"/>
         </Border>
         
         <!--Manage Risk Range btn-->
         <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="5">
-            <Button Style="{StaticResource ClearBtnStyle}" Content="Manage Risk Range"/>
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Manage Risk Range"/>
         </Border>
         
         <!--Manage Display Actions btn-->
         <Border Grid.Column="6" Grid.Row="3" Style="{StaticResource RightConfigBtnStyle}">
-            <Button Style="{StaticResource ClearBtnStyle}" Content="Display Actions"/>
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Display Actions"/>
         </Border>
 
         <!--The Clock-->
@@ -126,28 +160,28 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Style="{StaticResource LeftBottomBtnActionStyle}" Grid.Column="0">
-                <Button Content="Expired" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Style="{StaticResource LeftBottomOperationBtnBorderStyle}" Grid.Column="0">
+                <Button Content="Expired" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
-            <Border Style="{StaticResource MiddleBottomBtnActionStyle}" Grid.Column="1" Background="#5386C5">
-                <Button Content="Open In Risk" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Grid.Column="1" Background="#5386C5">
+                <Button Content="{Binding OpenInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
-            <Border Grid.Column="2" Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#6081C0">
-                <Button Content="Open" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Grid.Column="2" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6081C0">
+                <Button Content="{Binding OpenBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
-            <Border Grid.Column="3" Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#6E7CBB">
-                <Button Content="In Progress" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Grid.Column="3" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6E7CBB">
+                <Button Content="{Binding InProgressBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
-            <Border Grid.Column="4"  Style="{StaticResource MiddleBottomBtnActionStyle}" Background="#7977B7">
-                <Button Content="In Progress Risk" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Grid.Column="4"  Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#7977B7">
+                <Button Content="{Binding InProgressInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
-            <Border Style="{StaticResource RightBottomBtnAction}" Grid.Column="5">
-                <Button Grid.Column="5" Content="Closed" Style="{StaticResource ClearBtnStyle}"/>
+            <Border Style="{StaticResource RightBottomOperationBtnBorderStyle}" Grid.Column="5">
+                <Button Grid.Column="5" Content="{Binding ClosedBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
         </Grid>
 
@@ -178,25 +212,25 @@
                     <RowDefinition Height="10"/>
                 </Grid.RowDefinitions>
                 
-                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnStyle}" >
+                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Add a Second"
                             Background="Transparent"
                             BorderThickness="0"
                             Click="OnClockForwardOneSecondUpdate"/>
                 </Border>
-                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnStyle}" >
+                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Add a Minute" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneMinuteUpdate"/>
                 </Border>
-                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnStyle}" >
+                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Add a Hour" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneHourUpdate"/>
                 </Border>
-                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnStyle}" >
+                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Add a Day" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneDayUpdate"/>
                 </Border>
-                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnStyle}" >
+                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Add a Year" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneYearUpdate"/>
                 </Border>
-                <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnStyle}" >
+                <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnBorderStyle}" >
                     <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"/>
                 </Border>
 
