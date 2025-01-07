@@ -8,6 +8,7 @@ public partial class AdminWindow : Window
     public AdminWindow()
     {
         InitializeComponent();
+        UpdateAllBottomButtonTexts();
     }
 
     #region Dependency Propeties
@@ -16,58 +17,58 @@ public partial class AdminWindow : Window
         get { return (DateTime)GetValue(CurrentTimeProperty); }
         set { SetValue(CurrentTimeProperty, value); }
     }
-    public static readonly DependencyProperty CurrentTimeProperty =
-        DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
-    
+    private static readonly DependencyProperty CurrentTimeProperty =
+        DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(AdminWindow));
+
     public TimeSpan CurrentRiskRange
     {
         get => (TimeSpan)GetValue(CurrentRiskRangeProperty);
         set => SetValue(CurrentRiskRangeProperty, value);
     }
-    public static readonly DependencyProperty CurrentRiskRangeProperty
-        = DependencyProperty.Register("CurrentRiskRange", typeof(TimeSpan), typeof(MainWindow));
+    private static readonly DependencyProperty CurrentRiskRangeProperty
+        = DependencyProperty.Register("CurrentRiskRange", typeof(TimeSpan), typeof(AdminWindow));
 
     //Bottom buttons' text dependecy variables
     public string ExpieredBtnText {
         get => (string)GetValue(ExpieredBtnTextProperty); 
         set => SetValue(ExpieredBtnTextProperty,value);
     }
-    public static readonly DependencyProperty ExpieredBtnTextProperty = 
+    private static readonly DependencyProperty ExpieredBtnTextProperty = 
         DependencyProperty.Register("ExpieredBtnText",typeof(string),typeof(AdminWindow));
     
     public string OpenInRiskBtnText {
         get => (string)GetValue(OpenInRiskBtnTextProperty); 
         set => SetValue(OpenInRiskBtnTextProperty,value);
     }
-    public static readonly DependencyProperty OpenInRiskBtnTextProperty = 
+    private static readonly DependencyProperty OpenInRiskBtnTextProperty = 
         DependencyProperty.Register("OpenInRiskBtnText",typeof(string),typeof(AdminWindow));
     
     public string OpenBtnText {
         get => (string)GetValue(OpenBtnTextProperty); 
         set => SetValue(OpenBtnTextProperty,value);
     }
-    public static readonly DependencyProperty OpenBtnTextProperty = 
+    private static readonly DependencyProperty OpenBtnTextProperty = 
         DependencyProperty.Register("OpenBtnText",typeof(string),typeof(AdminWindow));
     
     public string InProgressBtnText {
         get => (string)GetValue(InProgressBtnTextProperty); 
         set => SetValue(InProgressBtnTextProperty,value);
     }
-    public static readonly DependencyProperty InProgressBtnTextProperty = 
+    private static readonly DependencyProperty InProgressBtnTextProperty = 
         DependencyProperty.Register("InProgressBtnText",typeof(string),typeof(AdminWindow));
     
     public string InProgressInRiskBtnText {
         get => (string)GetValue(InProgressInRiskBtnTextProperty); 
         set => SetValue(InProgressInRiskBtnTextProperty,value);
     }
-    public static readonly DependencyProperty InProgressInRiskBtnTextProperty = 
+    private static readonly DependencyProperty InProgressInRiskBtnTextProperty = 
         DependencyProperty.Register("InProgressInRiskBtnText",typeof(string),typeof(AdminWindow));
     
     public string ClosedBtnText {
         get => (string)GetValue(ClosedBtnTextProperty); 
         set => SetValue(ClosedBtnTextProperty,value);
     }
-    public static readonly DependencyProperty ClosedBtnTextProperty = 
+    private static readonly DependencyProperty ClosedBtnTextProperty = 
         DependencyProperty.Register("ClosedBtnText", typeof(string), typeof(AdminWindow));
 
 
@@ -120,7 +121,6 @@ public partial class AdminWindow : Window
         //Show the configuration variables' values
         CurrentTime = s_bl.Admin.GetClock();
         CurrentRiskRange = s_bl.Admin.GetRiskRange();
-
         //Adds the methods to invoke when the clock is changed
         s_bl.Admin.AddClockObserver(clockObserver);
         s_bl.Admin.AddConfigObserver(configObserver);
@@ -184,6 +184,21 @@ public partial class AdminWindow : Window
         s_bl.Admin.DbReset();
     }
     #endregion
+
+    #endregion
+
+
+    #region Other Methods
+
+    private void UpdateAllBottomButtonTexts()
+    {
+        ExpieredBtnText = "Expiered";
+        OpenBtnText = "Open";
+        OpenInRiskBtnText = "Risky & Open";
+        ClosedBtnText = "Closed";
+        InProgressBtnText = "In Progress";
+        InProgressInRiskBtnText = "Risky & In Progress";
+    }
 
     #endregion
 }

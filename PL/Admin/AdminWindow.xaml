@@ -142,7 +142,7 @@
                 <DropShadowEffect Color="Black" Direction="275" ShadowDepth="2" BlurRadius="4"/>
             </Border.Effect>
             <TextBlock 
-                       Text="12:12:00 12/12/2024"
+                       Text="{Binding CurrentTime}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="31"
@@ -161,7 +161,7 @@
             </Grid.ColumnDefinitions>
 
             <Border Style="{StaticResource LeftBottomOperationBtnBorderStyle}" Grid.Column="0">
-                <Button Content="Expired" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding ExpieredBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
             </Border>
 
             <Border Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Grid.Column="1" Background="#5386C5">
@@ -190,7 +190,7 @@
                 Grid.Column="2" Grid.ColumnSpan="3"
                 Grid.Row="3" Grid.RowSpan="3"
                 CornerRadius="10"
-                Visibility="Hidden"
+                Visibility="Visible"
                 >
             <Grid>
                 <Grid.ColumnDefinitions>
