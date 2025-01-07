@@ -187,7 +187,6 @@ public partial class AdminWindow : Window
 
     #endregion
 
-
     #region Other Methods
 
     private void UpdateAllBottomButtonTexts()
