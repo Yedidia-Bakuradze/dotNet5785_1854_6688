@@ -13,5 +13,6 @@
         <local:ConvertBooleanToVisibility x:Key="ConvertBooleanToVisibilityKey"/>
         <local:ConvertVolunteerEnditingModeToReadOnlyValue x:Key="ConvertVolunteerEnditingModeToReadOnlyValueKey"/>
         <local:ConvertCallInProgressToVisibility x:Key="ConvertCallInProgressToVisibilityKey"/>
+        <local:ConvertOperationSubScreenModeToVisibility x:Key="ConvertOperationSubScreenModeToVisibilityKey"/>
     </Application.Resources>
 </Application>

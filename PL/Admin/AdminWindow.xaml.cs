@@ -29,48 +29,61 @@ public partial class AdminWindow : Window
         = DependencyProperty.Register("CurrentRiskRange", typeof(TimeSpan), typeof(AdminWindow));
 
     //Bottom buttons' text dependecy variables
-    public string ExpieredBtnText {
-        get => (string)GetValue(ExpieredBtnTextProperty); 
-        set => SetValue(ExpieredBtnTextProperty,value);
+    public string ExpieredBtnText
+    {
+        get => (string)GetValue(ExpieredBtnTextProperty);
+        set => SetValue(ExpieredBtnTextProperty, value);
     }
-    private static readonly DependencyProperty ExpieredBtnTextProperty = 
-        DependencyProperty.Register("ExpieredBtnText",typeof(string),typeof(AdminWindow));
-    
-    public string OpenInRiskBtnText {
-        get => (string)GetValue(OpenInRiskBtnTextProperty); 
-        set => SetValue(OpenInRiskBtnTextProperty,value);
+    private static readonly DependencyProperty ExpieredBtnTextProperty =
+        DependencyProperty.Register("ExpieredBtnText", typeof(string), typeof(AdminWindow));
+
+    public string OpenInRiskBtnText
+    {
+        get => (string)GetValue(OpenInRiskBtnTextProperty);
+        set => SetValue(OpenInRiskBtnTextProperty, value);
     }
-    private static readonly DependencyProperty OpenInRiskBtnTextProperty = 
-        DependencyProperty.Register("OpenInRiskBtnText",typeof(string),typeof(AdminWindow));
-    
-    public string OpenBtnText {
-        get => (string)GetValue(OpenBtnTextProperty); 
-        set => SetValue(OpenBtnTextProperty,value);
+    private static readonly DependencyProperty OpenInRiskBtnTextProperty =
+        DependencyProperty.Register("OpenInRiskBtnText", typeof(string), typeof(AdminWindow));
+
+    public string OpenBtnText
+    {
+        get => (string)GetValue(OpenBtnTextProperty);
+        set => SetValue(OpenBtnTextProperty, value);
     }
-    private static readonly DependencyProperty OpenBtnTextProperty = 
-        DependencyProperty.Register("OpenBtnText",typeof(string),typeof(AdminWindow));
-    
-    public string InProgressBtnText {
-        get => (string)GetValue(InProgressBtnTextProperty); 
-        set => SetValue(InProgressBtnTextProperty,value);
+    private static readonly DependencyProperty OpenBtnTextProperty =
+        DependencyProperty.Register("OpenBtnText", typeof(string), typeof(AdminWindow));
+
+    public string InProgressBtnText
+    {
+        get => (string)GetValue(InProgressBtnTextProperty);
+        set => SetValue(InProgressBtnTextProperty, value);
     }
-    private static readonly DependencyProperty InProgressBtnTextProperty = 
-        DependencyProperty.Register("InProgressBtnText",typeof(string),typeof(AdminWindow));
-    
-    public string InProgressInRiskBtnText {
-        get => (string)GetValue(InProgressInRiskBtnTextProperty); 
-        set => SetValue(InProgressInRiskBtnTextProperty,value);
+    private static readonly DependencyProperty InProgressBtnTextProperty =
+        DependencyProperty.Register("InProgressBtnText", typeof(string), typeof(AdminWindow));
+
+    public string InProgressInRiskBtnText
+    {
+        get => (string)GetValue(InProgressInRiskBtnTextProperty);
+        set => SetValue(InProgressInRiskBtnTextProperty, value);
     }
-    private static readonly DependencyProperty InProgressInRiskBtnTextProperty = 
-        DependencyProperty.Register("InProgressInRiskBtnText",typeof(string),typeof(AdminWindow));
-    
-    public string ClosedBtnText {
-        get => (string)GetValue(ClosedBtnTextProperty); 
-        set => SetValue(ClosedBtnTextProperty,value);
+    private static readonly DependencyProperty InProgressInRiskBtnTextProperty =
+        DependencyProperty.Register("InProgressInRiskBtnText", typeof(string), typeof(AdminWindow));
+
+    public string ClosedBtnText
+    {
+        get => (string)GetValue(ClosedBtnTextProperty);
+        set => SetValue(ClosedBtnTextProperty, value);
     }
-    private static readonly DependencyProperty ClosedBtnTextProperty = 
+    private static readonly DependencyProperty ClosedBtnTextProperty =
         DependencyProperty.Register("ClosedBtnText", typeof(string), typeof(AdminWindow));
 
+    public OperationSubScreenMode CurrentOperationSelected
+    {
+        get => (OperationSubScreenMode)GetValue(CurrentOperationSelectedProperty);
+        set => SetValue(CurrentOperationSelectedProperty, value);
+    }
+    private static readonly DependencyProperty CurrentOperationSelectedProperty
+        = DependencyProperty.Register("CurrentOperationSelected", typeof(OperationSubScreenMode), typeof(AdminWindow));
 
     #endregion
 
@@ -139,7 +152,7 @@ public partial class AdminWindow : Window
         s_bl.Admin.RemoveConfigObserver(configObserver);
     }
     #endregion
-    
+
     #region Other Events Methods
     /// <summary>
     /// This method is triggered when the user clicks on the Show List of Volunteer in List and it opens a new window which shows the volunteer is list
@@ -173,7 +186,7 @@ public partial class AdminWindow : Window
             return;
         s_bl.Admin.DbReset();
     }
-    
+
     /// <summary>
     /// This method is trigged when the user resets the system clock
     /// </summary>
@@ -200,4 +213,19 @@ public partial class AdminWindow : Window
     }
 
     #endregion
+
+    private void OnShowClockManagerClick(object sender, RoutedEventArgs e) =>
+        CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.ClockManager)
+            ? OperationSubScreenMode.Closed
+            : OperationSubScreenMode.ClockManager;
+
+    private void OnShowRiskRangeManagerClick(object sender, RoutedEventArgs e)
+       => CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.RiskRangeManager)
+            ? OperationSubScreenMode.Closed
+            : OperationSubScreenMode.RiskRangeManager;
+
+    private void OnShowActionManagerClick(object sender, RoutedEventArgs e)
+        => CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.ActionManger)
+            ? OperationSubScreenMode.Closed
+            : OperationSubScreenMode.ActionManger;
 }

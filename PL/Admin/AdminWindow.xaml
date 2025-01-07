@@ -123,17 +123,17 @@
 
         <!--Manage Clock btn-->
         <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="3">
-            <Button Content="Manage Clock" Style="{StaticResource ClearSideBtnBtnStyle}"/>
+            <Button Content="Manage Clock" Style="{StaticResource ClearSideBtnBtnStyle}" Click="OnShowClockManagerClick"/>
         </Border>
         
         <!--Manage Risk Range btn-->
         <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="5">
-            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Manage Risk Range"/>
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Manage Risk Range" Click="OnShowRiskRangeManagerClick"/>
         </Border>
         
         <!--Manage Display Actions btn-->
         <Border Grid.Column="6" Grid.Row="3" Style="{StaticResource RightConfigBtnStyle}">
-            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Display Actions"/>
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Display Actions" Click="OnShowActionManagerClick"/>
         </Border>
 
         <!--The Clock-->
@@ -190,7 +190,7 @@
                 Grid.Column="2" Grid.ColumnSpan="3"
                 Grid.Row="3" Grid.RowSpan="3"
                 CornerRadius="10"
-                Visibility="Visible"
+                Visibility="Hidden"
                 >
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -233,6 +233,114 @@
                 <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnBorderStyle}" >
                     <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"/>
                 </Border>
+
+            </Grid>
+        </Border>
+
+
+        <!--Risk Range Managment-->
+        <Border Background="White"
+        Grid.Column="2" Grid.ColumnSpan="3"
+        Grid.Row="3" Grid.RowSpan="3"
+        CornerRadius="10"
+        Visibility="Hidden"
+        >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="40.5"/>
+                    <ColumnDefinition Width="175.5"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="175.5"/>
+                    <ColumnDefinition Width="40.5"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="3" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius ="10" Margin="5,0,0,0" Background="#D2D2D2">
+                    <TextBox Text="{Binding CurrentRiskRange}" FontSize="31" Background="Transparent" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Update Risk Range" FontSize="16" Background="Transparent" BorderThickness="0"/>
+                </Border>
+                <Border Grid.Column="5" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource CriticalBtnBorderStyle}" >
+                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" />
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!--Action Managment-->
+        <Border Background="White"
+        Grid.Column="2" Grid.ColumnSpan="3"
+        Grid.Row="3" Grid.RowSpan="3"
+        CornerRadius="10"
+        Visibility="Visible"
+        >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Show Volunteers List" Background="Transparent" BorderThickness="0"
+                            FontSize="22"
+                            />
+                </Border>
+                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Show Calls List" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Initialize Database" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="System Reset" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                
+                <!--TODO: Add a binding to start / stop to have the proper value needed to be displayed-->
+                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Start Simulator" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+
+                <Grid Grid.Column="3" Grid.Row="6" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource CriticalBtnBorderStyle}" >
+                        <Button Content="Set Speed:" FontSize="18" Background="Transparent" BorderThickness="0" />
+                    </Border>
+                    
+                    <!--TODO: Add a binding to the speed that been set for the simulator-->
+                    <TextBox Grid.Column="1" Text="3" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                </Grid>
 
             </Grid>
         </Border>

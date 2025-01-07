@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Buffers;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -23,6 +24,18 @@ class ConvertStatusToReadOnlyTrue : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
+/// <summary>
+/// This convertor converts between an enum value which is made for managing the sub-screen in the Admin's widnow to a Visibitiy value
+/// </summary>
+class ConvertOperationSubScreenModeToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture){
+        if ((OperationSubScreenMode)value == OperationSubScreenMode.Closed)
+            return Visibility.Hidden;
+        return Visibility.Visible;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => OperationSubScreenMode.Closed;
+}
 
 class ConvertBooleanToVisibility : IValueConverter
 {
@@ -38,6 +51,7 @@ class ConvertBooleanToVisibility : IValueConverter
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => ((Visibility)value) == Visibility.Visible;
 }
+
 class ConvertVolunteerEnditingModeToReadOnlyValue: IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
