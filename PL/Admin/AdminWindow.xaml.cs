@@ -10,11 +10,6 @@ public partial class AdminWindow : Window
         InitializeComponent();
     }
 
-
-
-
-
-
     #region Dependency Propeties
     public DateTime CurrentTime
     {
@@ -78,7 +73,7 @@ public partial class AdminWindow : Window
 
     #endregion
 
-
+    #region Observers
     /// <summary>
     /// Triggered when user clicks the update risk range button and it updates the risk range variable with the current modified value
     /// </summary>
@@ -102,8 +97,9 @@ public partial class AdminWindow : Window
         CurrentRiskRange = s_bl.Admin.GetRiskRange();
 
     }
+    #endregion
 
-    #region Event Methods
+    #region Event
 
     #region Clock Update Methods
     private void OnClockForwardOneSecondUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.UpdateClock(BO.TimeUnit.Second);
