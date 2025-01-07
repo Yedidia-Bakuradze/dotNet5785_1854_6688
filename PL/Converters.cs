@@ -26,15 +26,65 @@ class ConvertStatusToReadOnlyTrue : IValueConverter
 
 /// <summary>
 /// This convertor converts between an enum value which is made for managing the sub-screen in the Admin's widnow to a Visibitiy value
+/// Specificlly for the Clock Manager Sub-Screen view
 /// </summary>
-class ConvertOperationSubScreenModeToVisibility : IValueConverter
+class ConvertForClockManagerOperationSubScreenModeToVisibility : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture){
-        if ((OperationSubScreenMode)value == OperationSubScreenMode.Closed)
-            return Visibility.Hidden;
-        return Visibility.Visible;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((OperationSubScreenMode)value == OperationSubScreenMode.ClockManager)
+            return Visibility.Visible;
+        return Visibility.Hidden;
+
     }
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => OperationSubScreenMode.Closed;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((bool)value)
+            return OperationSubScreenMode.ClockManager;
+        return OperationSubScreenMode.Closed;
+    }
+}
+
+/// <summary>
+/// This convertor converts between an enum value which is made for managing the sub-screen in the Admin's widnow to a Visibitiy value
+/// Specificlly for the RiskRange Manager Sub-Screen view
+/// </summary>
+class ConvertForRiskRangeManagerOperationSubScreenModeToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((OperationSubScreenMode)value == OperationSubScreenMode.RiskRangeManager)
+            return Visibility.Visible;
+        return Visibility.Hidden;
+
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((bool)value)
+            return OperationSubScreenMode.RiskRangeManager;
+        return OperationSubScreenMode.Closed;
+    }
+}
+
+/// <summary>
+/// This convertor converts between an enum value which is made for managing the sub-screen in the Admin's widnow to a Visibitiy value
+/// Specificlly for the Action Manager Sub-Screen view
+/// </summary>
+class ConvertForActionManagerOperationSubScreenModeToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((OperationSubScreenMode)value == OperationSubScreenMode.ActionManger)
+            return Visibility.Visible;
+        return Visibility.Hidden;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((bool)value)
+            return OperationSubScreenMode.ActionManger;
+        return OperationSubScreenMode.Closed;
+    }
 }
 
 class ConvertBooleanToVisibility : IValueConverter
