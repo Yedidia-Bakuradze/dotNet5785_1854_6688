@@ -197,6 +197,46 @@ public partial class AdminWindow : Window
     {
         s_bl.Admin.DbReset();
     }
+  
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are expiered
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnExpieredCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Expiered);
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are open
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>private void OnOpenInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.OpenAndRisky);
+    private void OnOpenCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Open);
+
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are open and risky
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnOpenInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.OpenAndRisky);
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are in progress and risky
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnInProgressInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.InProgressAndRisky);
+
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are in progress 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnInProgressCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.InProgress);
+
+    /// <summary>
+    /// This method is invoked when the user wants to pop up a screen filled with calls that are closed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
     #endregion
 
     #endregion
@@ -249,46 +289,10 @@ public partial class AdminWindow : Window
             ? OperationSubScreenMode.Closed
             : OperationSubScreenMode.ActionManger;
 
-    #endregion
     /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are expiered
+    /// This method pops up the CallInList window showing all the calls if the past parameter is null, otherwise it would show the calls with the past parameter's status value
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnExpieredCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Expiered);
-    /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are open
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>private void OnOpenInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.OpenAndRisky);
-    private void OnOpenCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Open);
-
-    /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are open and risky
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnOpenInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.OpenAndRisky);
-    /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are in progress and risky
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnInProgressInRiskCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.InProgressAndRisky);
-
-    /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are in progress 
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnInProgressCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.InProgress);
-
-    /// <summary>
-    /// This method is invoked when the user wants to pop up a screen filled with calls that are closed
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
-
+    /// <param name="callStatus"></param>
     private void ShowListOfCalls(CallStatus? callStatus) => MessageBox.Show(callStatus.ToString()??"No Filter");//TODO: new CallInListWindow(callStatus).Show();
+    #endregion
 }
