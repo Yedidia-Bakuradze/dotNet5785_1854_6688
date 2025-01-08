@@ -161,27 +161,27 @@
             </Grid.ColumnDefinitions>
 
             <Border Style="{StaticResource LeftBottomOperationBtnBorderStyle}" Grid.Column="0">
-                <Button Content="{Binding ExpieredBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding ExpieredBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnExpieredCallsRequestClick"/>
             </Border>
 
             <Border Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Grid.Column="1" Background="#5386C5">
-                <Button Content="{Binding OpenInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding OpenInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnOpenInRiskCallsRequestClick"/>
             </Border>
 
             <Border Grid.Column="2" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6081C0">
-                <Button Content="{Binding OpenBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding OpenBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnOpenCallsRequestClick"/>
             </Border>
 
             <Border Grid.Column="3" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6E7CBB">
-                <Button Content="{Binding InProgressBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding InProgressBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnInProgressCallsRequestClick"/>
             </Border>
 
             <Border Grid.Column="4"  Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#7977B7">
-                <Button Content="{Binding InProgressInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Content="{Binding InProgressInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnInProgressInRiskCallsRequestClick"/>
             </Border>
 
             <Border Style="{StaticResource RightBottomOperationBtnBorderStyle}" Grid.Column="5">
-                <Button Grid.Column="5" Content="{Binding ClosedBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}"/>
+                <Button Grid.Column="5" Content="{Binding ClosedBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnClosedCallsRequestClick"/>
             </Border>
         </Grid>
 
