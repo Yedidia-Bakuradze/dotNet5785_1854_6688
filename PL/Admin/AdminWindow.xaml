@@ -190,8 +190,7 @@
                 Grid.Column="2" Grid.ColumnSpan="3"
                 Grid.Row="3" Grid.RowSpan="3"
                 CornerRadius="10"
-                Visibility="{Binding CurrentOperationSelected,Converter={StaticResource ConvertForClockManagerOperationSubScreenModeToVisibilityKey}}"
-                >
+                Visibility="{Binding Path=CurrentOperationSelected, Converter={StaticResource ConvertForClockManagerOperationSubScreenModeToVisibilityKey}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>

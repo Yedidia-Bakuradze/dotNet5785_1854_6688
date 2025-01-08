@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using BO;
+using System.Windows;
 
 namespace PL.Admin;
 
@@ -202,30 +203,52 @@ public partial class AdminWindow : Window
 
     #region Other Methods
 
+    /// <summary>
+    /// Initializes the bottom button's texts including the count of number of assisiated calls
+    /// </summary>
     private void UpdateAllBottomButtonTexts()
     {
-        ExpieredBtnText = "Expiered";
-        OpenBtnText = "Open";
-        OpenInRiskBtnText = "Risky & Open";
-        ClosedBtnText = "Closed";
-        InProgressBtnText = "In Progress";
-        InProgressInRiskBtnText = "Risky & In Progress";
+        ExpieredBtnText = $"Expiered\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Expiered.GetHashCode()]}";
+        OpenBtnText = $"Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Open.GetHashCode()]}";
+        OpenInRiskBtnText = $"Risky & Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.OpenAndRisky.GetHashCode()]}";
+        ClosedBtnText = $"Closed\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Closed.GetHashCode()]}";
+        InProgressBtnText = $"In Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgress.GetHashCode()]}";
+        InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()  ]}";
     }
 
-    #endregion
-
+    /// <summary>
+    /// This method is triggered when the user requests to pop up the Clock managment view, it would replace the old view with the current
+    /// Or would close the screen if the same button been pressed twis
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnShowClockManagerClick(object sender, RoutedEventArgs e) =>
         CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.ClockManager)
             ? OperationSubScreenMode.Closed
             : OperationSubScreenMode.ClockManager;
 
+    /// <summary>
+    /// This method is triggered when the user requests to pop up the Risk Range managment view, it would replace the old view with the current
+    /// Or would close the screen if the same button been pressed twis
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnShowRiskRangeManagerClick(object sender, RoutedEventArgs e)
        => CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.RiskRangeManager)
             ? OperationSubScreenMode.Closed
             : OperationSubScreenMode.RiskRangeManager;
 
+    /// <summary>
+    /// This method is triggered when the user requests to pop up the Syetm Actions managment view, it would replace the old view with the current
+    /// Or would close the screen if the same button been pressed twis
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnShowActionManagerClick(object sender, RoutedEventArgs e)
         => CurrentOperationSelected = (CurrentOperationSelected == OperationSubScreenMode.ActionManger)
             ? OperationSubScreenMode.Closed
             : OperationSubScreenMode.ActionManger;
+
+    #endregion
+
 }
