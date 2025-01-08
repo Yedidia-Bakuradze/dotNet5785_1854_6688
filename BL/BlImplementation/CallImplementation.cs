@@ -454,10 +454,10 @@ internal class CallImplementation : ICall
                     (key, group) => new { Status = key, Count = group.ToList().Count }
                     );
 
-        int[] statusCount = groupedCallAndStatuses
-                           .Select(call => call.Count)
-                           .ToArray();
-        
+        int maxStatusValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
+        int[] statusCount = new int[maxStatusValue + 1];
+
+        groupedCallAndStatuses.ToList().ForEach(item => statusCount[(int)item.Status] = item.Count);
         return statusCount;
     }
 
