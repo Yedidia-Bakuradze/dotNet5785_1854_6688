@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using Helpers;
 
 internal class CallImplementation : ICall
@@ -262,9 +263,9 @@ internal class CallImplementation : ICall
             switch (filterField)
             {
                 case BO.CallInListFields.Id:
-                    callsInlist = from call in callsInlist
+                    callsInlist = (IEnumerable<CallInList>)(from call in callsInlist
                                   where call.Id == Convert.ToInt32(filterValue)
-                                  select call;
+                                  select call).ToList();
                     break;
                 case BO.CallInListFields.CallId:
                     callsInlist = from call in callsInlist
@@ -453,10 +454,10 @@ internal class CallImplementation : ICall
                     (key, group) => new { Status = key, Count = group.ToList().Count }
                     );
 
-        int[] statusCount = groupedCallAndStatuses
-                           .Select(call => call.Count)
-                           .ToArray();
-        
+        int maxStatusValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
+        int[] statusCount = new int[maxStatusValue + 1];
+
+        groupedCallAndStatuses.ToList().ForEach(item => statusCount[(int)item.Status] = item.Count);
         return statusCount;
     }
 

@@ -5,78 +5,343 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Admin"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800"
+        Title="AdminWindow" Height="475" Width="850"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
+    <Window.Resources>
+        <!-- Style for the clock management grid -->
+        <Style x:Key="ActionBtnBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#EFEFEF"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="CriticalBtnBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#FF0000"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="LeftBottomOperationBtnBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10,0,0,0"/>
+            <Setter Property="Background" Value="#46A3EF"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RightBottomOperationBtnBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="0,10,0,0"/>
+            <Setter Property="Background" Value="#8B71B1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="90"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MiddleBottomOperationBtnBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="0"
+                                      ShadowDepth="0.5"
+                                      BlurRadius="4"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ClearBottomBtnBtnStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="ClearSideBtnBtnStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="LeftConfigBtnStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0,10,10,0"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style x:Key="RightConfigBtnStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="10,0,0,10"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <!-- Grid confugurations-->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color="#2798D5" Offset="0"/>
+                <GradientStop Color="#C25C9E" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="115"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="94.5"/>
+            <ColumnDefinition Width="351"/>
+            <ColumnDefinition Width="94.5"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="115"/>
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="14"/>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="62"/>
         </Grid.RowDefinitions>
 
-        <!-- The System ClockRegin-->
-        <Grid Grid.Row="1"
-          Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Label Content="{Binding CurrentTime}"
-               Grid.Row="0"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
-            <StackPanel Grid.Row="1">
-                <Button Content="Add Second" Click="OnClockForwardOneSecondUpdate" Height="40"/>
-                <Button Content="Add Minute" Click="OnClockForwardOneMinuteUpdate" Height="40"/>
-                <Button Content="Add Hour" Click="OnClockForwardOneHourUpdate" Height="40"/>
-                <Button Content="Add Day" Click="OnClockForwardOneDayUpdate"  Height="40"/>
-                <Button Content="Add Year" Click="OnClockForwardOneYearUpdate"  Height="40"/>
-            </StackPanel>
+        <!--Manage Clock btn-->
+        <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="3">
+            <Button Content="Manage Clock" Style="{StaticResource ClearSideBtnBtnStyle}" Click="OnShowClockManagerClick"/>
+        </Border>
+        
+        <!--Manage Risk Range btn-->
+        <Border Style="{StaticResource LeftConfigBtnStyle}" Grid.Column="0" Grid.Row="5">
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Manage Risk Range" Click="OnShowRiskRangeManagerClick"/>
+        </Border>
+        
+        <!--Manage Display Actions btn-->
+        <Border Grid.Column="6" Grid.Row="3" Style="{StaticResource RightConfigBtnStyle}">
+            <Button Style="{StaticResource ClearSideBtnBtnStyle}" Content="Display Actions" Click="OnShowActionManagerClick"/>
+        </Border>
+
+        <!--The Clock-->
+        <Border Grid.Column="3" Grid.Row="1" CornerRadius="10" Background="#7E76B5">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="275" ShadowDepth="2" BlurRadius="4"/>
+            </Border.Effect>
+            <TextBlock 
+                       Text="{Binding CurrentTime}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="31"
+                       Foreground="White"
+                       />
+        </Border>
+        
+        <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource LeftBottomOperationBtnBorderStyle}" Grid.Column="0">
+                <Button Content="{Binding ExpieredBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnExpieredCallsRequestClick"/>
+            </Border>
+
+            <Border Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Grid.Column="1" Background="#5386C5">
+                <Button Content="{Binding OpenInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnOpenInRiskCallsRequestClick"/>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6081C0">
+                <Button Content="{Binding OpenBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnOpenCallsRequestClick"/>
+            </Border>
+
+            <Border Grid.Column="3" Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#6E7CBB">
+                <Button Content="{Binding InProgressBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnInProgressCallsRequestClick"/>
+            </Border>
+
+            <Border Grid.Column="4"  Style="{StaticResource MiddleBottomOperationBtnBorderStyle}" Background="#7977B7">
+                <Button Content="{Binding InProgressInRiskBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnInProgressInRiskCallsRequestClick"/>
+            </Border>
+
+            <Border Style="{StaticResource RightBottomOperationBtnBorderStyle}" Grid.Column="5">
+                <Button Grid.Column="5" Content="{Binding ClosedBtnText}" Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnClosedCallsRequestClick"/>
+            </Border>
         </Grid>
 
-        <!-- The Risk Range Regin-->
-        <Grid Grid.Row="1"
-          Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="40"/>
-            </Grid.RowDefinitions>
-            <TextBox Grid.Row="0"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center"
-                 Text="{Binding CurrentRiskRange}" 
-                 >
-            </TextBox>
-            <Button Grid.Row="1"
-                Content="Update Risk Range"
-                Click="OnRiskRagneUpdate"
-                />
-        </Grid>
+        <!--Clock Managment-->
+        <Border Background="White"
+                Grid.Column="2" Grid.ColumnSpan="3"
+                Grid.Row="3" Grid.RowSpan="3"
+                CornerRadius="10"
+                Visibility="{Binding Path=CurrentOperationSelected, Converter={StaticResource ConvertForClockManagerOperationSubScreenModeToVisibilityKey}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Add a Second"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="OnClockForwardOneSecondUpdate"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Add a Minute" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneMinuteUpdate"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Add a Hour" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneHourUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Add a Day" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneDayUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Add a Year" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneYearUpdate"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnBorderStyle}" >
+                    <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"/>
+                </Border>
 
-        <!-- The Footer-->
-        <Grid Grid.Row="2"
-          Grid.Column="1"
-          Grid.ColumnSpan="2">
-            <StackPanel Width="250"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    >
-                <Button Click="OnShowListOfVolunteerInList" Content="Show List of Volunteer in list" Height="30"/>
-                <Button Click="OnSystemInitialize" Content="Initialize Db" Height="30"/>
-                <Button Click="OnSyetmReset" Content="Reset Db" Height="30"/>
-            </StackPanel>
-        </Grid>
+            </Grid>
+        </Border>
+
+
+        <!--Risk Range Managment-->
+        <Border Background="White"
+        Grid.Column="2" Grid.ColumnSpan="3"
+        Grid.Row="3" Grid.RowSpan="3"
+        CornerRadius="10"
+        Visibility="{Binding CurrentOperationSelected, Converter={StaticResource ConvertForRiskRangeManagerOperationSubScreenModeToVisibilityKey}}"
+        >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="40.5"/>
+                    <ColumnDefinition Width="175.5"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="175.5"/>
+                    <ColumnDefinition Width="40.5"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="3" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius ="10" Margin="5,0,0,0" Background="#D2D2D2">
+                    <TextBox Text="{Binding CurrentRiskRange}" FontSize="31" Background="Transparent" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Update Risk Range" FontSize="16" Background="Transparent" BorderThickness="0"/>
+                </Border>
+                <Border Grid.Column="5" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource CriticalBtnBorderStyle}" >
+                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" />
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!--Action Managment-->
+        <Border Background="White"
+        Grid.Column="2" Grid.ColumnSpan="3"
+        Grid.Row="3" Grid.RowSpan="3"
+        CornerRadius="10"
+        Visibility="{Binding CurrentOperationSelected, Converter={StaticResource ConvertForActionManagerOperationSubScreenModeToVisibilityKey}}"
+        >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="216"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="52"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Show Volunteers List" Background="Transparent" BorderThickness="0"
+                            FontSize="22"
+                            />
+                </Border>
+                <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Show Calls List" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Initialize Database" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="System Reset" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+                
+                <!--TODO: Add a binding to start / stop to have the proper value needed to be displayed-->
+                <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
+                    <Button Content="Start Simulator" FontSize="22" Background="Transparent" BorderThickness="0" />
+                </Border>
+
+                <Grid Grid.Column="3" Grid.Row="6" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource CriticalBtnBorderStyle}" >
+                        <Button Content="Set Speed:" FontSize="18" Background="Transparent" BorderThickness="0" />
+                    </Border>
+                    
+                    <!--TODO: Add a binding to the speed that been set for the simulator-->
+                    <TextBox Grid.Column="1" Text="3" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                </Grid>
+
+            </Grid>
+        </Border>
     </Grid>
 </Window>
