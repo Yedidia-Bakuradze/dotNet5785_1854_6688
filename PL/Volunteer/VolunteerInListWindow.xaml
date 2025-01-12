@@ -30,7 +30,7 @@
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="90"/>
         </Grid.RowDefinitions>
         
         
@@ -106,9 +106,9 @@
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
                     Height="34"
-                      ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
-                      SelectedValue="{Binding Path=FilterByCallTypes}"
-                      SelectionChanged="OnFilterCallTypeChange"/>
+                      ItemsSource="{Binding Source={StaticResource VolunteerInListFieldKey}}"
+                      SelectedValue="{Binding Path=SortByField}"
+                      SelectionChanged="OnSortingValueChanged"/>
             </StackPanel>
             <!-- Add Button-->
             <Border Style="{StaticResource RoundedAddButton }"
@@ -117,31 +117,33 @@
             </Border>
             
             <!--Filter Action-->
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                 
-                <!--Filter Pararmeter-->
-                <StackPanel Grid.Column="0">
-                    <Label HorizontalAlignment="Left" Content="Filter By"
-                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                    <ComboBox 
-                        Height="34"
-                      ItemsSource="{Binding Source={}}"
-                      SelectedValue="{Binding SelectedVolunteer}"
-                      SelectionChanged=""/>
-                </StackPanel>
+                    <!--Filter Pararmeter-->
+                    <StackPanel Grid.Column="0">
+                        <Label HorizontalAlignment="Left" Content="Filter By"
+                           FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                        <ComboBox 
+                            Height="34"
+                            ItemsSource="{Binding Source={StaticResource VolunteerInListFieldKey}}"
+                            SelectedValue="{Binding FilterByField}"/>
+                    </StackPanel>
                 
-                <!--Filter's value parameter-->
-                <StackPanel Grid.Column="2">
-                    <Label HorizontalAlignment="Left" Content="Value"
-                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                    <TextBox Height="34"/>
-                </StackPanel>
-            </Grid>
+                    <!--Filter's value parameter-->
+                    <StackPanel Grid.Column="2">
+                        <Label HorizontalAlignment="Left" Content="Value"
+                           FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                        <TextBox Height="34" Text="{Binding FilterByValue}"/>
+                    </StackPanel>
+                </Grid>
+                <Button Height="20" Content="Filter Now" Click="OnFilterValueChanged"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

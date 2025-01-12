@@ -200,7 +200,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         if (sortByField is null)
             return (from volunteer in volunteerInLists
                    orderby volunteer.Id
-                   select volunteer).ToList();
+                   select volunteer);
         //Issue #16: Refactor
         switch (sortByField)
         {
@@ -254,7 +254,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
         }
 
-        return volunteerInLists.ToList();
+        return volunteerInLists;
     }
 
     /// <summary>
@@ -267,6 +267,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>Filtered and optionlly sorted VolunteerInLists</returns>
     public IEnumerable<BO.VolunteerInList> GetFilteredVolunteers(BO.VolunteerInListField? filterField, object? filterValue, BO.VolunteerInListField? sortByField)
     {
+        filterField = filterField is null || filterValue is null ? null : filterField;
         switch (filterField)
         {
 
@@ -286,7 +287,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     bool isActive;
                     if (!bool.TryParse(filterValue!.ToString(), out isActive))
                         throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a boolean");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.IsActive == (bool)filterValue!);
+                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.IsActive == isActive!);
                 }
             case VolunteerInListField.TotalCallsDoneByVolunteer:
                 {

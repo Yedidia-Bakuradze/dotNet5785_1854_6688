@@ -5,14 +5,13 @@ namespace PL.Volunteer;
 
 public partial class VolunteerListWindow : Window
 {
-    public VolunteerListWindow()
-    {
-        InitializeComponent();
-    }
+    public VolunteerListWindow() => InitializeComponent();
 
     #region Regular Propeties
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-    public static BO.CallType FilterByCallTypes { get; set; } = BO.CallType.Undefined;
+    public static BO.VolunteerInListField? SortByField { get; set; }
+    public static BO.VolunteerInListField? FilterByField{ get; set; }
+    public static string? FilterByValue{ get; set; }
     public BO.VolunteerInList? SelectedVolunteer { get; set; }
     #endregion
 
@@ -45,12 +44,19 @@ public partial class VolunteerListWindow : Window
 
     #region Regular Events
     /// <summary>
-    /// This method triggred when the user changed his selection of a call type and it filters the voluteers by the selected value
+    /// This method triggred when the user changed his selection of parameter to sort by the volunteers
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnFilterCallTypeChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefereshVolunteerList();
+    private void OnSortingValueChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefereshVolunteerList();
     
+    /// <summary>
+    /// This method triggred when the user changed his selection of filters to filter the volunteers
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnFilterValueChanged(object sender, RoutedEventArgs e) => RefereshVolunteerList();
+
     /// <summary>
     /// This method opens the Volunteer's window and show its details for editing
     /// </summary>
@@ -128,10 +134,16 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
     /// This method requests from the BL layer list of volunteers by the past parameters
     /// </summary>
     private void RefereshVolunteerList()
-        => VolunteerList = (FilterByCallTypes == BO.CallType.Undefined)
-        ? s_bl.Volunteer.GetVolunteers(null, null)!
-        : s_bl.Volunteer.GetFilteredVolunteers(BO.VolunteerInListField.TypeOfCall, FilterByCallTypes,null);
+    {
+        try
+        {
+            VolunteerList = s_bl.Volunteer.GetFilteredVolunteers(FilterByField, FilterByValue, SortByField);
+        }
+        catch(Exception e)
+        {
+            MessageBox.Show(e.Message);
+        }
+    }
     #endregion
-
 
 }
