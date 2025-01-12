@@ -13,6 +13,7 @@
             <GradientStop Color="#2798D5" Offset="1.0" />
         </LinearGradientBrush>
     </Window.Background>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
