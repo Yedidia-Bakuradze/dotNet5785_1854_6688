@@ -1,7 +1,9 @@
 ﻿using System.Buffers;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace PL;
 
@@ -157,6 +159,42 @@ class ConvertForActionManagerOperationSubScreenModeToBtnVisibility : IValueConve
 #endregion
 #endregion
 
+#region Volunteer List's Convertors
+
+/// <summary>
+/// This converter converts the IsActive and CallId values of the VolunteerInList entity to a nice background color
+/// </summary>
+class ConvertIsActiveAndCallIdToBackgroundColor : IMultiValueConverter
+{
+    /// <summary>
+    /// This convert returns the background color for each user based on its activies in the firm
+    /// </summary>
+    /// <param name="values">1st value: IsActive, 2nd value: CallId</param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    {
+        bool isActive = (bool)values[0];
+        int? callId =(int?)values[1];
+        if (isActive)
+        {
+            //Active and doesn't have a call
+            if(callId is null)
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2ED280"));
+            return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6CBDDB"));
+
+            //Active and has a call
+        }
+        //Not active and no call
+        return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5454"));
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [false, null];
+}
+
+#endregion
 class ConvertBooleanToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

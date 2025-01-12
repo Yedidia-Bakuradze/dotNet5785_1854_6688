@@ -62,7 +62,7 @@
                     <!-- Background Color Change-->
                     <Setter Property="Background">
                         <Setter.Value>
-                            <MultiBinding Converter="{StaticResource RowColorConverter}">
+                            <MultiBinding Converter="{StaticResource }">
                                 <Binding Path="IsActive"/>
                                 <Binding Path="CallId"/>
                             </MultiBinding>
