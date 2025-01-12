@@ -25,6 +25,13 @@ internal class CallStatusCollection : IEnumerable
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
 
+internal class VolunteerInListField : IEnumerable
+{
+    static readonly IEnumerable<BO.VolunteerInListField> s_enums =
+    (Enum.GetValues(typeof(BO.VolunteerInListField)) as IEnumerable<BO.VolunteerInListField>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
 internal class TypeOfRangeCollection : IEnumerable
 {
     static readonly IEnumerable<BO.TypeOfRange> s_enums =
