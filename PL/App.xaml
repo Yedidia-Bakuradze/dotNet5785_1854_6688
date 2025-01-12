@@ -20,6 +20,6 @@
         <local:ConvertForRiskRangeManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForRiskRangeManagerOperationSubScreenModeToBtnVisibilityKey"/>
         <local:ConvertForActionManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForActionManagerOperationSubScreenModeToBtnVisibilityKey"/>
         <local:ConvertIsActiveAndCallIdToBackgroundColor x:Key="ConvertIsActiveAndCallIdToBackgroundColorKey"/>
-        <local:CallStatusCollection x:Key="CallStatusCollectionKey"/>
+        <local:VolunteerInListField x:Key="VolunteerInListFieldKey"/>
     </Application.Resources>
 </Application>
