@@ -12,49 +12,38 @@
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
+    <Window.Resources>
+        <!-- Add btn's style-->
+        <Style x:Key="RoundedAddButton" TargetType="Border">
+            <Setter Property="CornerRadius" Value="100"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color="#2798D5" Offset="0"/>
+                <GradientStop Color="#C25C9E" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Stretch"
-              Height="auto"
-              Grid.Row="0"
-              VerticalAlignment="Stretch"
-              Width="auto"
-              >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0"
-                   Grid.Column="0"
-                   Content="Select a Type of Call"
-                   FontSize="18"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Stretch"
-                   >
-            </Label>
-            <ComboBox Grid.Row="0"
-                      Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      SelectedValue="{Binding Path=FilterByCallTypes, Mode=TwoWay}"
-                      SelectionChanged="OnFilterCallTypeChange"
-                      >
-            </ComboBox>
-        </Grid>
-        <DataGrid Grid.Row="1"
+        
+        
+        <!-- The upper part-->
+        <DataGrid Grid.Row="0"
        	          EnableRowVirtualization="True"
                   SelectedItem="{Binding SelectedVolunteer}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  Margin="10"
                   RowDetailsVisibilityMode="VisibleWhenSelected"
                   ItemsSource="{Binding VolunteerList}"
                   MouseDoubleClick="OnDoubleTappedVolunteerInList"
+                  Background="Transparent"
                   >
             <!-- Row Styling-->
             <DataGrid.RowStyle>
@@ -99,13 +88,60 @@
             </DataGrid.Columns>
         </DataGrid>
         
-        <!-- Create new Volunteer Btn-->
-        <Button Content="Create New Volunteer"
-                Grid.Row="2"
-                HorizontalAlignment="Center"
-                Height="50"
-                Width="200"
-                Click="OnAddVolunteer"
-                />
+        <!-- The bottom part-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sort Action-->
+            <StackPanel Grid.Column="5">
+                <Label HorizontalAlignment="Left" Content="Select a Type of Call"
+                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                <ComboBox
+                    Height="34"
+                      ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
+                      SelectedValue="{Binding Path=FilterByCallTypes}"
+                      SelectionChanged="OnFilterCallTypeChange"/>
+            </StackPanel>
+            <!-- Add Button-->
+            <Border Style="{StaticResource RoundedAddButton }"
+                    Grid.Column="3">
+                <Button Content="+" Background="Transparent" BorderThickness="0" FontSize="18" Click="OnAddVolunteer"/>
+            </Border>
+            
+            <!--Filter Action-->
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!--Filter Pararmeter-->
+                <StackPanel Grid.Column="0">
+                    <Label HorizontalAlignment="Left" Content="Filter By"
+                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                    <ComboBox 
+                        Height="34"
+                      ItemsSource="{Binding Source={}}"
+                      SelectedValue="{Binding SelectedVolunteer}"
+                      SelectionChanged=""/>
+                </StackPanel>
+                
+                <!--Filter's value parameter-->
+                <StackPanel Grid.Column="2">
+                    <Label HorizontalAlignment="Left" Content="Value"
+                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                    <TextBox Height="34"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
