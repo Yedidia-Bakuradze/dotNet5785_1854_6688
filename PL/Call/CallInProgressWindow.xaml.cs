@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-namespace PL.Volunteer;
+namespace PL.Call;
 
 public partial class CallInProgressWindow : Window
 {
@@ -8,13 +8,14 @@ public partial class CallInProgressWindow : Window
         CurrentCallInProgress = callInProgress;
         InitializeComponent();
     }
-    
+
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
     #endregion
 
     #region Dependency Property
-    public BO.CallInProgress CurrentCallInProgress{
+    public BO.CallInProgress CurrentCallInProgress
+    {
         get => (BO.CallInProgress)GetValue(CurrentCallInProgressProperty);
         set => SetValue(CurrentCallInProgressProperty, value);
     }

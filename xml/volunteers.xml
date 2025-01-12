@@ -211,20 +211,6 @@
     <Longitude>34.7694594</Longitude>
   </Volunteer>
   <Volunteer>
-    <Id>109456789</Id>
-    <Role>Volunteer</Role>
-    <FullName>Susan Martin</FullName>
-    <PhoneNumber>0526789012</PhoneNumber>
-    <Email>susan.martin@example.com</Email>
-    <MaxDistanceToCall>10</MaxDistanceToCall>
-    <RangeType>AirDistance</RangeType>
-    <IsActive>true</IsActive>
-    <Password>Secure!@#123</Password>
-    <FullCurrentAddress>16 Nahalat Binyamin St, Tel Aviv</FullCurrentAddress>
-    <Latitude>32.0678115</Latitude>
-    <Longitude>34.7700182</Longitude>
-  </Volunteer>
-  <Volunteer>
     <Id>987456789</Id>
     <Role>Volunteer</Role>
     <FullName>Charles Jackson</FullName>
