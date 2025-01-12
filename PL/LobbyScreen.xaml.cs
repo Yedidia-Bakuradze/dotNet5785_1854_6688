@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-
 namespace PL;
 
 /// <summary>
@@ -14,7 +13,7 @@ public partial class LobbyScreen : Window
 
     public LobbyScreen()
     {
-        InitialiseComponent();
+        InitializeComponent();
     }
 
     private void Login_Button(object sender, RoutedEventArgs e)

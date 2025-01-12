@@ -62,7 +62,7 @@
                     <!-- Background Color Change-->
                     <Setter Property="Background">
                         <Setter.Value>
-                            <MultiBinding Converter="{StaticResource }">
+                            <MultiBinding Converter="{StaticResource ConvertIsActiveAndCallIdToBackgroundColorKey}">
                                 <Binding Path="IsActive"/>
                                 <Binding Path="CallId"/>
                             </MultiBinding>
@@ -87,7 +87,7 @@
                 <DataGridTextColumn Header="Calls Expired" Binding="{Binding TotalCallsExpiredByVolunteer}" Width="120"/>
                 <DataGridTextColumn Header="Current Call Id" Binding="{Binding CallId}" Width="100"/>
                 <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="100"/>
-                
+
                 <!--Delete volunteer btn-->
                 <DataGridTemplateColumn Header="Delete" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
@@ -97,9 +97,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-            <DataGrid.Items>
-                <MenuItem />
-            </DataGrid.Items>
         </DataGrid>
         
         <!-- Create new Volunteer Btn-->

@@ -1,7 +1,5 @@
-﻿using System.Buffers;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -191,7 +189,7 @@ class ConvertIsActiveAndCallIdToBackgroundColor : IMultiValueConverter
         return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5454"));
     }
 
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [false, null];
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [false, 0];
 }
 
 #endregion

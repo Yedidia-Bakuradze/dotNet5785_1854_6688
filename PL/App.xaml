@@ -16,9 +16,9 @@
         <local:ConvertForClockManagerOperationSubScreenModeToVisibility x:Key="ConvertForClockManagerOperationSubScreenModeToVisibilityKey"/>
         <local:ConvertForRiskRangeManagerOperationSubScreenModeToVisibility x:Key="ConvertForRiskRangeManagerOperationSubScreenModeToVisibilityKey"/>
         <local:ConvertForActionManagerOperationSubScreenModeToVisibility x:Key="ConvertForActionManagerOperationSubScreenModeToVisibilityKey"/>
-
         <local:ConvertForClockManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForClockManagerOperationSubScreenModeToBtnVisibilityKey"/>
         <local:ConvertForRiskRangeManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForRiskRangeManagerOperationSubScreenModeToBtnVisibilityKey"/>
         <local:ConvertForActionManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForActionManagerOperationSubScreenModeToBtnVisibilityKey"/>
+        <local:ConvertIsActiveAndCallIdToBackgroundColor x:Key="ConvertIsActiveAndCallIdToBackgroundColorKey"/>
     </Application.Resources>
 </Application>
