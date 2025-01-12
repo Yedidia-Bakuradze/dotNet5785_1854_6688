@@ -56,8 +56,21 @@
                   ItemsSource="{Binding VolunteerList}"
                   MouseDoubleClick="OnDoubleTappedVolunteerInList"
                   >
+            <!-- Row Styling-->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <!-- Background Color Change-->
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource RowColorConverter}">
+                                <Binding Path="IsActive"/>
+                                <Binding Path="CallId"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
-                
                 <!--Is Active indicator-->
                 <DataGridTemplateColumn Header="Is Active" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
@@ -84,6 +97,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.Items>
+                <MenuItem />
+            </DataGrid.Items>
         </DataGrid>
         
         <!-- Create new Volunteer Btn-->
