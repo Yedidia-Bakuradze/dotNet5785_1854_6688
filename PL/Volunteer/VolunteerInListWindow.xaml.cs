@@ -5,7 +5,11 @@ namespace PL.Volunteer;
 
 public partial class VolunteerListWindow : Window
 {
-    public VolunteerListWindow() => InitializeComponent();
+    public VolunteerListWindow()
+    {
+        InitializeComponent();
+        RefereshVolunteerList();
+    }
 
     #region Regular Propeties
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
