@@ -115,7 +115,7 @@ public partial class AdminWindow : Window
     }
     #endregion
 
-    #region Event
+    #region Events
 
     #region Clock Update Methods
     private void OnClockForwardOneSecondUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.UpdateClock(BO.TimeUnit.Second);
@@ -198,7 +198,7 @@ public partial class AdminWindow : Window
     {
         s_bl.Admin.DbReset();
     }
-  
+
     /// <summary>
     /// This method is invoked when the user wants to pop up a screen filled with calls that are expiered
     /// </summary>
@@ -231,6 +231,7 @@ public partial class AdminWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnInProgressCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.InProgress);
+    private void OnShowListOfCalls(object sender, RoutedEventArgs e) => ShowListOfCalls(null);
 
     /// <summary>
     /// This method is invoked when the user wants to pop up a screen filled with calls that are closed
@@ -238,6 +239,10 @@ public partial class AdminWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
+    private void OnSimulatorStarted(object sender, RoutedEventArgs e) => MessageBox.Show("Simulator not implemented");
+
+    private void OnSpeedSet(object sender, RoutedEventArgs e) => MessageBox.Show("Simulator not implemented");
+
     #endregion
 
     #endregion
@@ -254,7 +259,7 @@ public partial class AdminWindow : Window
         OpenInRiskBtnText = $"Risky & Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.OpenAndRisky.GetHashCode()]}";
         ClosedBtnText = $"Closed\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Closed.GetHashCode()]}";
         InProgressBtnText = $"In Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgress.GetHashCode()]}";
-        InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()  ]}";
+        InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()]}";
     }
 
     /// <summary>
@@ -294,18 +299,7 @@ public partial class AdminWindow : Window
     /// This method pops up the CallInList window showing all the calls if the past parameter is null, otherwise it would show the calls with the past parameter's status value
     /// </summary>
     /// <param name="callStatus"></param>
-    private void ShowListOfCalls(CallStatus? callStatus) => MessageBox.Show(callStatus.ToString()??"No Filter");//TODO: new CallInListWindow(callStatus).Show();
+    private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(callStatus).Show();
     #endregion
 
-    private void OnShowListOfCalls(object sender, RoutedEventArgs e) => new CallInListWindow().Show();
-
-    private void OnSimulatorStarted(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void OnSpeedSet(object sender, RoutedEventArgs e)
-    {
-
-    }
 }

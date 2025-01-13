@@ -5,13 +5,15 @@ namespace PL.Call;
 public partial class CallInListWindow : Window
 {
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public CallInListWindow() {
+    public CallInListWindow(BO.CallStatus? requstedCallByStatus = null) {
+        RequestedSpecialMode = requstedCallByStatus;
         InitializeComponent();
         RefreshList();
     }
 
     #region Regular Propeties
     public BO.CallInProgress? SelectedCall { get; set; }
+    public BO.CallStatus? RequestedSpecialMode{ get; set; }
     public string? FilterByValue { get; set; }
     public BO.CallInListFields? FilterByField { get; set; }
     public BO.CallInListFields? SortByField { get; set; }
@@ -70,5 +72,14 @@ public partial class CallInListWindow : Window
 
     }
 
-    private void RefreshList() => ListOfCalls = s_bl.Call.GetListOfCalls(FilterByField,FilterByValue,SortByField);
+    private void RefreshList() => ListOfCalls
+        = s_bl.Call
+        .GetListOfCalls(
+            FilterByField,
+            FilterByValue,
+            SortByField,
+            RequestedSpecialMode is null
+                ? null
+                : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!,null)
+            );
 }

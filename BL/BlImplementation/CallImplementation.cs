@@ -227,7 +227,7 @@ internal class CallImplementation : ICall
     /// <param name="filterValue">The value to filter by. Optional.</param>
     /// <param name="sortingField">The field by which to sort the calls. Optional.</param>
     /// <returns>An IEnumerable of CallInList objects representing the filtered and sorted list of calls.</returns>
-    public IEnumerable<BO.CallInList> GetListOfCalls(IEnumerable<BO.CallInList>? source =null,BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null)
+    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null, IEnumerable<BO.CallInList>? source = null)
     {
         // Retrieve all calls and assignments from the database
         List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
@@ -235,8 +235,8 @@ internal class CallImplementation : ICall
 
         // Build the initial list of CallInList objects based on the calls and their assignments
         IEnumerable<BO.CallInList> callsInlist = source is not null
-            ? source
-            :
+                                                ? source
+                                                :
                                                 from call in calls
                                                  let callsAssignments = assignments
                                                      .Where(ass => ass.CallId == call.Id)
