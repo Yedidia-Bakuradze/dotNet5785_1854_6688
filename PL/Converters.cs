@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -222,6 +223,18 @@ class ConvertStatusToBackgroundColor : IValueConverter
                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5900"));
 
         }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallStatus.Open;
+}
+
+class ConvertStatusToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((BO.CallStatus)value == BO.CallStatus.InProgress || (BO.CallStatus)value == BO.CallStatus.InProgressAndRisky)
+            return Visibility.Visible;
+        return Visibility.Hidden;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallStatus.Open;
