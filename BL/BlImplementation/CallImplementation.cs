@@ -572,6 +572,8 @@ internal class CallImplementation : ICall
         try
         {
             s_dal.Assignment.Update(newAssignment);
+            //Notifies all observers that a call has been added
+            CallManager.Observers.NotifyListUpdated();
         }
         catch(DO.DalDoesNotExistException ex)
         {
