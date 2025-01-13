@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Navigation;
 
 namespace PL;
 
@@ -192,6 +193,39 @@ class ConvertIsActiveAndCallIdToBackgroundColor : IMultiValueConverter
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [false, 0];
 }
 
+#endregion
+
+
+#region Call List Window Convertors
+class ConvertStatusToBackgroundColor : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        switch ((BO.CallStatus)value)
+        {
+            case BO.CallStatus.Open:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1AE751"));
+            case BO.CallStatus.InProgress:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF9500"));
+            case BO.CallStatus.Closed:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FC4C4E"));
+
+            case BO.CallStatus.Expiered:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#828282"));
+
+            case BO.CallStatus.OpenAndRisky:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C8E71A"));
+
+            case BO.CallStatus.InProgressAndRisky:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5900"));
+            default:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5900"));
+
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallStatus.Open;
+}
 #endregion
 class ConvertBooleanToVisibility : IValueConverter
 {

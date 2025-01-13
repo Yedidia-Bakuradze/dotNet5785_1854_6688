@@ -21,5 +21,6 @@
         <local:ConvertForActionManagerOperationSubScreenModeToBtnVisibility x:Key="ConvertForActionManagerOperationSubScreenModeToBtnVisibilityKey"/>
         <local:ConvertIsActiveAndCallIdToBackgroundColor x:Key="ConvertIsActiveAndCallIdToBackgroundColorKey"/>
         <local:VolunteerInListField x:Key="VolunteerInListFieldKey"/>
+        <local:ConvertStatusToBackgroundColor x:Key="ConvertStatusToBackgroundColorKey"/>
     </Application.Resources>
 </Application>
