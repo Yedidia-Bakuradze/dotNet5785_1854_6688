@@ -31,6 +31,12 @@ internal class VolunteerInListField : IEnumerable
     (Enum.GetValues(typeof(BO.VolunteerInListField)) as IEnumerable<BO.VolunteerInListField>)!;
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+internal class CallInListField : IEnumerable
+{
+    static readonly IEnumerable<BO.CallInListFields> s_enums =
+    (Enum.GetValues(typeof(BO.CallInListFields)) as IEnumerable<BO.CallInListFields>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
 
 internal class TypeOfRangeCollection : IEnumerable
 {
