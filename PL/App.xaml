@@ -23,5 +23,6 @@
         <local:VolunteerInListField x:Key="VolunteerInListFieldKey"/>
         <local:ConvertStatusToBackgroundColor x:Key="ConvertStatusToBackgroundColorKey"/>
         <local:CallInListField x:Key="CallInListFieldKey"/>
+        <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey"/>
     </Application.Resources>
 </Application>
