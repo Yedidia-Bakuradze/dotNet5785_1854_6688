@@ -35,7 +35,7 @@ public partial class CallInListWindow : Window
     #endregion
 
     #region Events
-    private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) => MessageBox.Show("new CallWindow().Show()");
+    private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) => new CallWindow(SelectedCall!.CallId).Show();
 
     private void OnDeleteCurrentAssignment(object sender, RoutedEventArgs e)
     {
@@ -78,8 +78,6 @@ public partial class CallInListWindow : Window
     #endregion
 
     #region Methods
-    #endregion
-
     private void RefreshList() => ListOfCalls
         = s_bl.Call
         .GetListOfCalls(
@@ -90,4 +88,6 @@ public partial class CallInListWindow : Window
                 ? null
                 : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!,null)
             );
+    #endregion
+
 }
