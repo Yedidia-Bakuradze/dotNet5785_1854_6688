@@ -15,13 +15,13 @@ public class VolunteerInList
     public bool IsActive { get; set; }
 
     // Total number of calls done by the volunteer
-    public int TotalCallsDoneByVolunteer { get; }
+    public int TotalCallsDoneByVolunteer { get => AssignmentManager.GetNumOfHandledCallsByVolunteerId(Id,TypeOfEndingCall.Treated); }
 
     // Total number of calls cancelled by the volunteer
-    public int TotalCallsCancelByVolunteer { get; }
+    public int TotalCallsCancelByVolunteer { get => AssignmentManager.GetNumOfHandledCallsByVolunteerId(Id, TypeOfEndingCall.SelfCanceled); }
 
     // Total number of calls expired by the volunteer
-    public int TotalCallsExpiredByVolunteer { get;}
+    public int TotalCallsExpiredByVolunteer { get => AssignmentManager.GetNumOfHandledCallsByVolunteerId(Id, TypeOfEndingCall.CancellationExpired); }
 
     // Identifier of the current call assigned to the volunteer
     public int? CallId { get; set; }
