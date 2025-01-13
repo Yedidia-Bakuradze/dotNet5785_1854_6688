@@ -295,4 +295,16 @@ public partial class AdminWindow : Window
     /// <param name="callStatus"></param>
     private void ShowListOfCalls(CallStatus? callStatus) => MessageBox.Show(callStatus.ToString()??"No Filter");//TODO: new CallInListWindow(callStatus).Show();
     #endregion
+
+    private void OnShowListOfCalls(object sender, RoutedEventArgs e) => MessageBox.Show("Unimplemented");
+
+    private void OnSimulatorStarted(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void OnSpeedSet(object sender, RoutedEventArgs e)
+    {
+
+    }
 }

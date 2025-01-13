@@ -150,6 +150,7 @@
                        />
         </Border>
         
+        <!--Bottom Buttons-->
         <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -308,22 +309,26 @@
 
                 <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Show Volunteers List" Background="Transparent" BorderThickness="0"
-                            FontSize="22"
+                            FontSize="22" Click="OnShowListOfVolunteerInList"
                             />
                 </Border>
                 <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Show Calls List" FontSize="22" Background="Transparent" BorderThickness="0" />
+                    <Button Content="Show Calls List" FontSize="22" Background="Transparent" BorderThickness="0"
+                            Click="OnShowListOfCalls" />
                 </Border>
                 <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Initialize Database" FontSize="22" Background="Transparent" BorderThickness="0" />
+                    <Button Content="Initialize Database" FontSize="22" Background="Transparent" BorderThickness="0"
+                            Click="OnSystemInitialize"/>
                 </Border>
                 <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="System Reset" FontSize="22" Background="Transparent" BorderThickness="0" />
+                    <Button Content="System Reset" FontSize="22" Background="Transparent" BorderThickness="0"
+                            Click="OnSyetmReset"/>
                 </Border>
                 
                 <!--TODO: Add a binding to start / stop to have the proper value needed to be displayed-->
                 <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Start Simulator" FontSize="22" Background="Transparent" BorderThickness="0" />
+                    <Button Content="Start Simulator" FontSize="22" Background="Transparent" BorderThickness="0"
+                            Click="OnSimulatorStarted"/>
                 </Border>
 
                 <Grid Grid.Column="3" Grid.Row="6" >
@@ -333,7 +338,8 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" Style="{StaticResource CriticalBtnBorderStyle}" >
-                        <Button Content="Set Speed:" FontSize="18" Background="Transparent" BorderThickness="0" />
+                        <Button Content="Set Speed:" FontSize="18" Background="Transparent" BorderThickness="0"
+                                Click="OnSpeedSet"/>
                     </Border>
                     
                     <!--TODO: Add a binding to the speed that been set for the simulator-->
