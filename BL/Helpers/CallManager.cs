@@ -112,7 +112,7 @@ internal static class CallManager
             FullAddressCall = call.CallAddress,
             Latitude = call.Latitude,
             Longitude = call.Longitude,
-            OpeningTime = call.CallStartTime,
+            OpeningTime = AdminManager.Now,
             Description = call.Description,
             DeadLine = call.CallDeadLine
         };

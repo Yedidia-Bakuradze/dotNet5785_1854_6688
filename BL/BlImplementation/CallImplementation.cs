@@ -184,7 +184,8 @@ internal class CallImplementation : ICall
     public BO.Call GetDetielsOfCall(int callId)
     {
         // Fetch the call details from the data layer (DAL) by the given call ID.
-        DO.Call call = s_dal.Call.Read(call => call.Id == callId)!;
+        DO.Call call = s_dal.Call.Read(call => call.Id == callId)
+            ?? throw new BlDoesNotExistException($"BL: Call with id {callId} doesn't exists");
 
         // Fetch all assignments related to the call ID.
         List<DO.Assignment> res = s_dal.Assignment.ReadAll(ass => ass.CallId == callId).ToList();
