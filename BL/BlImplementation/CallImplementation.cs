@@ -258,7 +258,7 @@ internal class CallImplementation : ICall
                                                  };
 
         // Filtering the list based on the specified filter field and value
-        if (filterField != null)
+        if (filterField != null && filterValue != null)
         {
             switch (filterField)
             {

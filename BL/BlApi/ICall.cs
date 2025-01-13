@@ -12,7 +12,7 @@ public interface ICall :IObservable //Stage 5
     /// <param name="parameter">The field to filter the calls by</param>
     /// <param name="value">The value to filter the calls by</param>
     /// <param name="parameter1">The second field to filter the calls by</param>
-    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? parameter = null, object? value = null, BO.CallInListFields? parameter1 = null);
+    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortFiled= null);
 
     /// <summary>
     /// Get the details of a specific call
