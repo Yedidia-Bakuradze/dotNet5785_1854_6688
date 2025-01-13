@@ -1,4 +1,5 @@
 ﻿using BO;
+using PL.Call;
 using System.Windows;
 
 namespace PL.Admin;
@@ -296,7 +297,7 @@ public partial class AdminWindow : Window
     private void ShowListOfCalls(CallStatus? callStatus) => MessageBox.Show(callStatus.ToString()??"No Filter");//TODO: new CallInListWindow(callStatus).Show();
     #endregion
 
-    private void OnShowListOfCalls(object sender, RoutedEventArgs e) => MessageBox.Show("Unimplemented");
+    private void OnShowListOfCalls(object sender, RoutedEventArgs e) => new CallInListWindow().Show();
 
     private void OnSimulatorStarted(object sender, RoutedEventArgs e)
     {

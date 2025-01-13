@@ -1,0 +1,147 @@
+﻿<Window x:Class="PL.Call.CallInListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Call"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Title="CallInList"
+        Height="450"
+        Width="1200"
+        Closed="OnWindowClosed"
+        Loaded="OnWindowLoaded"
+        >
+    <Window.Resources>
+        <!-- Add btn's style-->
+        <Style x:Key="RoundedAddButton" TargetType="Border">
+            <Setter Property="CornerRadius" Value="100"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color="#2798D5" Offset="0"/>
+                <GradientStop Color="#C25C9E" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="90"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- The upper part-->
+        <DataGrid Grid.Row="0"
+       	          EnableRowVirtualization="True"
+                  SelectedItem="{Binding SelectedCall}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  ItemsSource="{Binding ListOfCalls}"
+                  MouseDoubleClick="OnShowCallEntityWindow"
+                  Background="Transparent"
+                  >
+            <!-- Row Styling-->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <!-- Background Color Change-->
+                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ConvertStatusToBackgroundColorKey}}"/>
+                </Style>
+            </DataGrid.RowStyle>
+            
+            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding CallId}" Width="50"/>
+                <DataGridTextColumn Header="Assingment Id" Binding="{Binding Id}" Width="150"/>
+                <DataGridTextColumn Header="Volunteer's Name" Binding="{Binding LastVolunteerName}" Width="100"/>
+                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="100"/>
+                <DataGridTextColumn Header="Opened At" Binding="{Binding OpenningTime}" Width="120"/>
+                <DataGridTextColumn Header="Time To End" Binding="{Binding TimeToEnd}" Width="120"/>
+                <DataGridTextColumn Header="Time Passed" Binding="{Binding TimeElapsed}" Width="100"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                <DataGridTextColumn Header="Num of Allocations" Binding="{Binding TotalAlocations}" Width="100"/>
+
+                <!--Delete volunteer btn-->
+                <DataGridTemplateColumn Header="Delete Call" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Click="OnDeleteCurrentAssignment" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!--Delete volunteer btn-->
+                <DataGridTemplateColumn Header="Delete Assignment" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Visibility="{Binding Status, Converter={StaticResource ConvertStatusToVisibilityKey}}" Content="Delete" Click="OnDeleteCall" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            
+        </DataGrid>
+
+        <!-- The bottom part-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sort Action-->
+            <StackPanel Grid.Column="5">
+                <Label HorizontalAlignment="Left" Content="Select a Type of Call"
+                       FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                <ComboBox
+                    Height="34"
+                      ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
+                      SelectedValue="{Binding Path=SortByField}"
+                      SelectionChanged="OnSortingChanged"/>
+            </StackPanel>
+            <!-- Add Button-->
+            <Border Style="{StaticResource RoundedAddButton }"
+                    Grid.Column="3">
+                <Button Content="+" Background="Transparent" BorderThickness="0" FontSize="18" Click="OnAddCall"/>
+            </Border>
+
+            <!--Filter Action-->
+            <StackPanel Grid.Column="1">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Filter Pararmeter-->
+                    <StackPanel Grid.Column="0">
+                        <Label HorizontalAlignment="Left" Content="Filter By"
+                           FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                        <ComboBox 
+                            Height="34"
+                            ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
+                            SelectedValue="{Binding FilterByField}"/>
+                    </StackPanel>
+
+                    <!--Filter's value parameter-->
+                    <StackPanel Grid.Column="2">
+                        <Label HorizontalAlignment="Left" Content="Value"
+                           FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
+                        <TextBox Height="34" Text="{Binding FilterByValue}"/>
+                    </StackPanel>
+                </Grid>
+                <Button Height="20" Content="Filter Now" Click="OnFilterSet"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
