@@ -54,18 +54,6 @@
                     <TextBox Text="{Binding CurrentCall.CallAddress}" Width="200"/>
                 </StackPanel>
 
-                <!-- Latitude -->
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Latitude:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentCall.Latitude, Mode=OneWay}" Width="200" IsReadOnly="True"/>
-                </StackPanel>
-
-                <!-- Longitude -->
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Longitude:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentCall.Longitude, Mode=OneWay}" Width="200" IsReadOnly="True"/>
-                </StackPanel>
-
                 <!-- Call Start Time -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Call Start Time:" Width="200" VerticalAlignment="Center"/>
