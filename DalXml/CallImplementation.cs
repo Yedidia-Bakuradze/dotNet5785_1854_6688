@@ -115,7 +115,7 @@ internal class CallImplementation : ICall
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
         Call? res = Read(newCall.Id)
             ?? throw new DalDoesNotExistException($"Call entity with Id of {newCall.Id} hasn't been found");
-        Delete(res.Id);
+        Calls.Remove(res);
         Calls.Add(newCall);
 
         XMLTools.SaveListToXMLSerializer<Call>(Calls, Config.callFileName);
