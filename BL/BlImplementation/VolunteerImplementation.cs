@@ -128,7 +128,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
             ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
 
-        DO.Assignment? volunteerAssignment = s_dal.Assignment.ReadAll(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding != null).LastOrDefault();
+        DO.Assignment? volunteerAssignment = s_dal.Assignment
+            .ReadAll(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding == null)
+            .LastOrDefault();
         BO.CallInProgress? volunteerCallInProgress = null;
 
         //If there is an assingment - there is a call to create
@@ -141,9 +143,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             //Calculate the distance
             double distance = -1.0;
             if (volunteer.FullCurrentAddress != null)
-            {
                 distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!, volunteerCall.FullAddressCall, volunteer.RangeType);
-            }
 
             //Create the CallInProgress intance for the Volunteer's field
             volunteerCallInProgress = new BO.CallInProgress
@@ -183,7 +183,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         //Convert to VolunteerInList entities
         IEnumerable<BO.VolunteerInList> volunteerInLists = from volunteer in volunteers
                                                            let currentAssignment = s_dal.Assignment
-                                                                    .ReadAll((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
+                                                                    .ReadAll((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding is null)
                                                                     .OrderBy(ass => ass.Id)
                                                                     .LastOrDefault()
                                                            let currentCall = currentAssignment == null ? null :s_dal.Call.Read(call => call.Id == currentAssignment?.CallId)

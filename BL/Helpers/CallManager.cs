@@ -50,7 +50,7 @@ internal static class CallManager
         DO.Call res = s_dal.Call.Read(call => call.Id == callID)
             ?? throw new DO.DalDoesNotExistException("Call Does not exist");
 
-        DO.Assignment? resAssignments = s_dal.Assignment.Read(ass => ass.CallId == callID);
+        DO.Assignment? resAssignments = s_dal.Assignment.ReadAll(ass => ass.CallId == callID).LastOrDefault();
 
         //If there is not assingment - no one took the call therefor the call is open
         if(resAssignments == null )
@@ -63,9 +63,9 @@ internal static class CallManager
         //If there is such assignment containing the CallId - Check if expiered or in progress
         if (resAssignments.TypeOfEnding == null)
         {
+            if ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
             if (res.DeadLine <= AdminManager.Now) return BO.CallStatus.Expiered;
             if (res.DeadLine > AdminManager.Now) return BO.CallStatus.InProgress;
-            if ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
         }
         
         return BO.CallStatus.Closed;
