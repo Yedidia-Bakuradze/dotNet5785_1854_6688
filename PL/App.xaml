@@ -22,5 +22,6 @@
         <local:ConvertIsActiveAndCallIdToBackgroundColor x:Key="ConvertIsActiveAndCallIdToBackgroundColorKey"/>
         <local:VolunteerInListField x:Key="VolunteerInListFieldKey"/>
         <local:ConvertStatusToBackgroundColor x:Key="ConvertStatusToBackgroundColorKey"/>
+        <local:CallInListField x:Key="CallInListFieldKey"/>
     </Application.Resources>
 </Application>
