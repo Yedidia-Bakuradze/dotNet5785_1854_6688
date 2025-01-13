@@ -56,11 +56,12 @@ internal class CallImplementation : ICall
         try
         {
             // Check if there are any assignments related to the call
-            if (s_dal.Assignment.ReadAll((DO.Assignment ass) => ass.CallId == requestId) == null)
-            {
-                throw new BO.BlAlreadyExistsException("BL Exception:", new DO.DalAlreadyExistsException("DAL Exception:"));
-            }
-            
+            if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == requestId).Any(assignment => assignment.VolunteerId != 0))
+                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it has a record with other volunteers");
+
+            if (CallManager.GetStatus(requestId) != CallStatus.Open && CallManager.GetStatus(requestId) != CallStatus.OpenAndRisky)
+                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it's status is not open");
+
             // Attempt to delete the call
             s_dal.Call.Delete(requestId);
 
