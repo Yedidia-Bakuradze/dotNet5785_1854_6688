@@ -29,7 +29,5 @@
 		<CallId>4</CallId>
 		<VolunteerId>332461854</VolunteerId>
 		<TimeOfStarting>2025-01-01T11:53:53</TimeOfStarting>
-		<TimeOfEnding>05/01/2025 11:53:53</TimeOfEnding>
-		<TypeOfEnding>AdminCanceled</TypeOfEnding>
 	</Assignment>
 </ArrayOfAssignment>

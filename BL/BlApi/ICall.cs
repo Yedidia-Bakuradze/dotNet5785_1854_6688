@@ -9,9 +9,9 @@ public interface ICall :IObservable //Stage 5
     /// <summary>
     /// Get a list of calls based on specified parameters
     /// </summary>
-    /// <param name="parameter">The field to filter the calls by</param>
-    /// <param name="value">The value to filter the calls by</param>
-    /// <param name="parameter1">The second field to filter the calls by</param>
+    /// <param name="filterField">The field to filter the calls by</param>
+    /// <param name="filterValue">The value to filter the calls by</param>
+    /// <param name="sortFiled">The sorting field to sort the calls by</param>
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortFiled= null);
 
     /// <summary>

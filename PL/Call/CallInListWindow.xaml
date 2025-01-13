@@ -42,7 +42,7 @@
                   IsReadOnly="True"
                   RowDetailsVisibilityMode="VisibleWhenSelected"
                   ItemsSource="{Binding ListOfCalls}"
-                  MouseDoubleClick="OnShowCallEntityWindow"
+                  MouseDoubleClick="OnShowCallWindow"
                   Background="Transparent"
                   >
             <!-- Row Styling-->

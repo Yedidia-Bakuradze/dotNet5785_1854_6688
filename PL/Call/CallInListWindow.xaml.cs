@@ -4,7 +4,11 @@ namespace PL.Call;
 
 public partial class CallInListWindow : Window
 {
-    public CallInListWindow() => InitializeComponent();
+    private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    public CallInListWindow() {
+        InitializeComponent();
+        RefreshList();
+    }
 
     #region Regular Propeties
     public BO.CallInProgress? SelectedCall { get; set; }
@@ -32,7 +36,7 @@ public partial class CallInListWindow : Window
     #region Methods
     #endregion
 
-    private void OnShowCallEntityWindow(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
 
     }
@@ -57,18 +61,14 @@ public partial class CallInListWindow : Window
 
     }
 
-    private void OnFilterSet(object sender, RoutedEventArgs e)
-    {
+    private void OnFilterSet(object sender, RoutedEventArgs e) => RefreshList();
 
-    }
-
-    private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-    {
-
-    }
+    private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
 
     private void OnAddCall(object sender, RoutedEventArgs e)
     {
 
     }
+
+    private void RefreshList() => ListOfCalls = s_bl.Call.GetListOfCalls(FilterByField,FilterByValue,SortByField);
 }
