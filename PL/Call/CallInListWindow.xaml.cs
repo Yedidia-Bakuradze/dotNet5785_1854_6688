@@ -5,14 +5,16 @@ namespace PL.Call;
 public partial class CallInListWindow : Window
 {
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public CallInListWindow(BO.CallStatus? requstedCallByStatus = null) {
+    public CallInListWindow(BO.CallStatus? requstedCallByStatus = null,int userId = 332461854) {
         RequestedSpecialMode = requstedCallByStatus;
+        UserId = userId;
         InitializeComponent();
         RefreshList();
     }
 
     #region Regular Propeties
-    public BO.CallInProgress? SelectedCall { get; set; }
+    public BO.CallInList? SelectedCall { get; set; }
+    public int UserId { get; set; }
     public BO.CallStatus? RequestedSpecialMode{ get; set; }
     public string? FilterByValue { get; set; }
     public BO.CallInListFields? FilterByField { get; set; }
@@ -33,44 +35,50 @@ public partial class CallInListWindow : Window
     #endregion
 
     #region Events
-    #endregion
-
-    #region Methods
-    #endregion
-
-    private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-
-    }
+    private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) => MessageBox.Show("new CallWindow().Show()");
 
     private void OnDeleteCurrentAssignment(object sender, RoutedEventArgs e)
     {
-
+        try
+        {
+            if (SelectedCall is null)
+                throw new Exception("PL: The selected call is null");
+            s_bl.Call.CancelAssignement(UserId,SelectedCall!.CallId);
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
     }
 
     private void OnDeleteCall(object sender, RoutedEventArgs e)
     {
-
+        try
+        {
+            if (SelectedCall is null)
+                throw new Exception("PL: The selected call is null");
+            s_bl.Call.DeleteCallRequest(SelectedCall.CallId);
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
     }
 
-    private void OnWindowClosed(object sender, EventArgs e)
-    {
+    private void OnWindowClosed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(RefreshList);
 
-    }
-
-    private void OnWindowLoaded(object sender, RoutedEventArgs e)
-    {
-
-    }
+    private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefreshList);
 
     private void OnFilterSet(object sender, RoutedEventArgs e) => RefreshList();
 
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
 
-    private void OnAddCall(object sender, RoutedEventArgs e)
-    {
+    private void OnAddCall(object sender, RoutedEventArgs e) => MessageBox.Show("new CallWindow().Show();");
 
-    }
+    #endregion
+
+    #region Methods
+    #endregion
 
     private void RefreshList() => ListOfCalls
         = s_bl.Call

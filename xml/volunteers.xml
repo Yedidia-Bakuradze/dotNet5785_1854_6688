@@ -2,7 +2,7 @@
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
     <Id>332461854</Id>
-    <Role>Volunteer</Role>
+    <Role>Admin</Role>
     <FullName>Yedidia Bakuradze</FullName>
     <PhoneNumber>0535002312</PhoneNumber>
     <Email>yedidia@gmail.com</Email>

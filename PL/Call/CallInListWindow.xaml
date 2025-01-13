@@ -69,7 +69,7 @@
                 <DataGridTemplateColumn Header="Delete Call" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Click="OnDeleteCurrentAssignment" />
+                            <Button Content="Delete" Click="OnDeleteCall" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -78,7 +78,7 @@
                 <DataGridTemplateColumn Header="Delete Assignment" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Visibility="{Binding Status, Converter={StaticResource ConvertStatusToVisibilityKey}}" Content="Delete" Click="OnDeleteCall" />
+                            <Button Visibility="{Binding Status, Converter={StaticResource ConvertStatusToVisibilityKey}}" Content="Delete" Click="OnDeleteCurrentAssignment" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
