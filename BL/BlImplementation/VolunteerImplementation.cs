@@ -128,7 +128,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
             ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
 
-        DO.Assignment? volunteerAssignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id);
+        DO.Assignment? volunteerAssignment = s_dal.Assignment.ReadAll(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding != null).LastOrDefault();
         BO.CallInProgress? volunteerCallInProgress = null;
 
         //If there is an assingment - there is a call to create
@@ -185,9 +185,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                                                            let currentAssignment = s_dal.Assignment
                                                                     .ReadAll((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id)
                                                                     .OrderBy(ass => ass.Id)
-                                                                    .ToList()
                                                                     .LastOrDefault()
-                                                           let currentCall = s_dal.Call.Read(call => call.Id == currentAssignment?.CallId)
+                                                           let currentCall = currentAssignment == null ? null :s_dal.Call.Read(call => call.Id == currentAssignment?.CallId)
                                                            select new BO.VolunteerInList
                                                            {
                                                                Id = volunteer.Id,
@@ -382,6 +381,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         //Checks what fields are requested to be modified - The role is modifable by only the manager
         if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
             throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+
+        //Checks if the user tries to be inactive while running a call
+        if(volunteer.IsActive == false && volunteer.CurrentCall is not null)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Volunteer cannot deactivate while having an active call, please close the current call and try again");
 
         //Update the cordinates
         if(volunteer.FullCurrentAddress != null)
