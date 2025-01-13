@@ -24,5 +24,8 @@
         <local:ConvertStatusToBackgroundColor x:Key="ConvertStatusToBackgroundColorKey"/>
         <local:CallInListField x:Key="CallInListFieldKey"/>
         <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey"/>
+        <local:ConvertStatusToVisibilityLevelOne x:Key="ConvertStatusToVisibilityLevelOneKey"/>
+        <local:ConvertStatusToVisibilityLevelTwo x:Key="ConvertStatusToVisibilityLevelTwoKey"/>
+        <local:ConvertStatusToVisibilityLevelThree x:Key="ConvertStatusToVisibilityLevelThreeKey"/>
     </Application.Resources>
 </Application>

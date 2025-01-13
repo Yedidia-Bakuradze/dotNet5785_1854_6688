@@ -1,4 +1,5 @@
-﻿<Window x:Class="PL.Call.CallWindow"
+﻿
+    <Window x:Class="PL.Call.CallWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -39,19 +40,40 @@
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Type Of Call:" Width="200" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
-                              SelectedItem="{Binding CurrentCall.TypeOfCall}" Width="200"/>
+                              SelectedItem="{Binding CurrentCall.TypeOfCall}" Width="200">
+                        <ComboBox.IsReadOnly>
+                            <MultiBinding Converter="{StaticResource ConvertStatusToVisibilityLevelOneKey}">
+                                <Binding Path="CurrentCall.Status"/>
+                                <Binding Path="ButtonText"/>
+                            </MultiBinding>
+                        </ComboBox.IsReadOnly>
+                    </ComboBox>
                 </StackPanel>
 
                 <!-- Description -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Description:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentCall.Description}" Width="200"/>
+                    <TextBox Text="{Binding CurrentCall.Description}" Width="200">
+                        <TextBox.IsReadOnly>
+                            <MultiBinding Converter="{StaticResource ConvertStatusToVisibilityLevelOneKey}">
+                                <Binding Path="CurrentCall.Status"/>
+                                <Binding Path="ButtonText"/>
+                            </MultiBinding>
+                        </TextBox.IsReadOnly>
+                    </TextBox>
                 </StackPanel>
 
                 <!-- Call Address -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Call Address:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentCall.CallAddress}" Width="200"/>
+                    <TextBox Text="{Binding CurrentCall.CallAddress}" Width="200">
+                        <TextBox.IsReadOnly>
+                            <MultiBinding Converter="{StaticResource ConvertStatusToVisibilityLevelOneKey}">
+                                <Binding Path="CurrentCall.Status"/>
+                                <Binding Path="ButtonText"/>
+                            </MultiBinding>
+                        </TextBox.IsReadOnly>
+                    </TextBox>
                 </StackPanel>
 
                 <!-- Call Start Time -->
@@ -63,14 +85,31 @@
                 <!-- Call Deadline -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Call Deadline:" Width="200" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding CurrentCall.CallDeadLine}" Width="200"/>
+                    <StackPanel Orientation="Horizontal">
+                        <DatePicker Text="{Binding CurrentCall.CallDeadLine}" Width="200">
+                            <DatePicker.IsEnabled>
+                                <MultiBinding Converter="{StaticResource ConvertStatusToVisibilityLevelTwoKey}">
+                                    <Binding Path="CurrentCall.Status"/>
+                                    <Binding Path="ButtonText"/>
+                                </MultiBinding>
+                            </DatePicker.IsEnabled>
+                        </DatePicker>
+                        <TextBox Text="{Binding HourSet}" Width="200">
+                            <TextBox.IsReadOnly>
+                                <MultiBinding Converter="{StaticResource ConvertStatusToVisibilityLevelThreeKey}">
+                                    <Binding Path="CurrentCall.Status"/>
+                                    <Binding Path="ButtonText"/>
+                                </MultiBinding>
+                            </TextBox.IsReadOnly>
+                        </TextBox>
+                    </StackPanel>
                 </StackPanel>
 
                 <!-- Status -->
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Status:" Width="200" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource CallStatusCollectionKey}}"
-                              SelectedItem="{Binding CurrentCall.Status}" Width="200"/>
+                              SelectedItem="{Binding CurrentCall.Status}" Width="200" IsEnabled="False"/>
                 </StackPanel>
 
                 <!-- My Assignments -->
@@ -80,7 +119,7 @@
                 </StackPanel>
 
                 <!-- Submit Button-->
-                <Button Content="Submit" Click="OnSubmitBtnClick"/>
+                <Button Content="{Binding ButtonText}" Click="OnSubmitBtnClick"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

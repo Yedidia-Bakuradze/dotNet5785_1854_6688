@@ -73,7 +73,7 @@ public partial class CallInListWindow : Window
 
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
 
-    private void OnAddCall(object sender, RoutedEventArgs e) => MessageBox.Show("new CallWindow().Show();");
+    private void OnAddCall(object sender, RoutedEventArgs e) => new CallWindow(-1).Show();
 
     #endregion
 

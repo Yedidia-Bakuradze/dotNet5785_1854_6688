@@ -196,7 +196,6 @@ class ConvertIsActiveAndCallIdToBackgroundColor : IMultiValueConverter
 
 #endregion
 
-
 #region Call List Window Convertors
 class ConvertStatusToBackgroundColor : IValueConverter
 {
@@ -240,6 +239,39 @@ class ConvertStatusToVisibility : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallStatus.Open;
 }
 #endregion
+
+
+internal class ConvertStatusToVisibilityLevelOne : IMultiValueConverter
+{
+    public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (((BO.CallStatus)value[0] == BO.CallStatus.Open || (BO.CallStatus)value[0] == BO.CallStatus.OpenAndRisky))
+            return false;
+
+        return (string)value[1] != "Add Call";
+    }
+    public object []ConvertBack(object value, Type []targetType, object parameter, CultureInfo culture) => [];
+}
+
+internal class ConvertStatusToVisibilityLevelTwo : IMultiValueConverter
+{
+    public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (((BO.CallStatus)(value[0]) != BO.CallStatus.Expiered || (BO.CallStatus)(value[0]) == BO.CallStatus.Closed))
+            return true;
+        return (string)value[1] == "Add Call";
+    }
+    public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture) => [];
+}
+internal class ConvertStatusToVisibilityLevelThree : IMultiValueConverter
+{
+    public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return !(bool)(new ConvertStatusToVisibilityLevelTwo().Convert(value, targetType, parameter, culture));
+    }
+    public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture) => [];
+}
+
 class ConvertBooleanToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
