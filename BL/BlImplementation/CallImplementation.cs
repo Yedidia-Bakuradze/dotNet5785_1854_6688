@@ -552,7 +552,7 @@ internal class CallImplementation : ICall
         DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
             ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
 
-        if (assignment.CallId != VolunteerId)
+        if (assignment.VolunteerId != VolunteerId &&  (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
             throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
 
         //Check that the call is not ended (Cancled, Expiered or completed)
@@ -564,7 +564,7 @@ internal class CallImplementation : ICall
         //Update the Dal entity with current system time and Closed status
         DO.Assignment newAssignment = assignment with
         {
-            TypeOfEnding = DO.TypeOfEnding.Treated,
+            TypeOfEnding = (assignment.VolunteerId != VolunteerId)? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
             TimeOfEnding = AdminManager.Now,
         };
 
