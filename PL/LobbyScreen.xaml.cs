@@ -30,7 +30,7 @@ namespace PL
                 else if (role == "Volunteer")
                 {
                     MessageBox.Show("Welcome, Volunteer!");
-                    new VolunteerLobbyWindow().Show();
+                    new VolunteerLobbyWindow(int.Parse(IdField)).Show();
                 }
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace PL
         private void Volunteer_Button_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Volunteer selected!");
-            new VolunteerLobbyWindow().Show();
+            new VolunteerLobbyWindow(int.Parse(IdField)).Show();
             RoleSelection.Visibility = Visibility.Collapsed;
             MainContent.Visibility = Visibility.Visible;
         }

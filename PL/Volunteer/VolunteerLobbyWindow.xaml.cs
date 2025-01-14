@@ -20,7 +20,7 @@ namespace PL.Volunteer
     public partial class VolunteerLobbyWindow : Window
     {
         private readonly static BlApi.IBl s_bl = BlApi.Factory.Get();
-        public VolunteerLobbyWindow(int volunteerId = 332461854)
+        public VolunteerLobbyWindow(int volunteerId)
         {
             try
             {

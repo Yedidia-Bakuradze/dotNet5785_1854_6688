@@ -99,20 +99,6 @@
     <Longitude>34.7680766</Longitude>
   </Volunteer>
   <Volunteer>
-    <Id>323456789</Id>
-    <Role>Volunteer</Role>
-    <FullName>Jessica Garcia</FullName>
-    <PhoneNumber>0508901234</PhoneNumber>
-    <Email>jessica.garcia@example.com</Email>
-    <MaxDistanceToCall>10</MaxDistanceToCall>
-    <RangeType>AirDistance</RangeType>
-    <IsActive>true</IsActive>
-    <Password>Admin!23456</Password>
-    <FullCurrentAddress>8 Jabotinsky St, Tel Aviv</FullCurrentAddress>
-    <Latitude>32.0826326</Latitude>
-    <Longitude>34.8040512</Longitude>
-  </Volunteer>
-  <Volunteer>
     <Id>123456789</Id>
     <Role>Volunteer</Role>
     <FullName>Robert Miller</FullName>
