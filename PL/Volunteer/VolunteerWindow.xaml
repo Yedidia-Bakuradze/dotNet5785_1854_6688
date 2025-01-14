@@ -30,12 +30,20 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Margin="10">
                 <!-- Id -->
-                <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding CurrentVolunteer.Role,Converter=ConvertRoleToVisibilityKey}">
                     <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding CurrentVolunteer.Id,Mode=TwoWay}"
                              IsEnabled="{Binding Path= ButtonText,Converter={StaticResource ConvertVolunteerEnditingModeToReadOnlyValueKey}}"
                              Width="200" 
                              />
+                </StackPanel>
+
+                <!-- Role -->
+                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding CurrentVolunteer.Role,Converter=ConvertRoleToVisibilityKey}">
+                    <TextBlock Text="Role:" Width="200" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding Source = {StaticResource UserRoleCollectionKey}}"
+                              SelectedItem="{Binding CurrentVolunteer.Role}"
+                              Width="200"/>
                 </StackPanel>
 
                 <!-- Full Name -->
@@ -67,14 +75,6 @@
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Full Current Address:" Width="200" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding CurrentVolunteer.FullCurrentAddress}" Width="200"/>
-                </StackPanel>
-
-                <!-- Role -->
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Role:" Width="200" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Source = {StaticResource UserRoleCollectionKey}}"
-                              SelectedItem="{Binding CurrentVolunteer.Role}"
-                              Width="200"/>
                 </StackPanel>
 
                 <!-- Is Active -->

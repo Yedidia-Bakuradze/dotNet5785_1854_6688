@@ -8,7 +8,7 @@ namespace PL.Volunteer;
 /// </summary>
 public partial class VolunteerWindow : Window
 {
-    public VolunteerWindow(int id = 0)
+    public VolunteerWindow(int id)
     {
         ButtonText = id == 0
             ? "Add"

@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
-using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Navigation;
 
 namespace PL;
 
@@ -309,6 +307,17 @@ class ConvertCallInProgressToVisibility : IValueConverter
         return Visibility.Visible;
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+}
+
+class ConvertRoleToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return (BO.UserRole)value == BO.UserRole.Admin
+            ? Visibility.Visible
+            : Visibility.Hidden;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
 
 class ConvertCallInProgressToVisibilityReverese: IValueConverter
