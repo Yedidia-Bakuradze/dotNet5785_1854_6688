@@ -252,7 +252,6 @@ internal class ConvertStatusToVisibilityLevelOne : IMultiValueConverter
     }
     public object []ConvertBack(object value, Type []targetType, object parameter, CultureInfo culture) => [];
 }
-
 internal class ConvertStatusToVisibilityLevelTwo : IMultiValueConverter
 {
     public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
