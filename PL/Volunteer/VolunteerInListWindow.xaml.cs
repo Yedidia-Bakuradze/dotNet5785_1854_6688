@@ -69,7 +69,7 @@ public partial class VolunteerListWindow : Window
     private void OnDoubleTappedVolunteerInList(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (SelectedVolunteer is not null)
-            new VolunteerWindow(SelectedVolunteer.Id).Show();
+            new VolunteerWindow(SelectedVolunteer.Id,BO.UserRole.Admin).Show();
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public partial class VolunteerListWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnAddVolunteer(object sender, RoutedEventArgs e) => new VolunteerWindow(0).Show();
+    private void OnAddVolunteer(object sender, RoutedEventArgs e) => new VolunteerWindow(0, BO.UserRole.Admin).Show();
 
     /// <summary>
     /// This method is invoked when the user requests to remove a volunteer from the list

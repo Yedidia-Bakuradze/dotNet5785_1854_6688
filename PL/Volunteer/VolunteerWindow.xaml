@@ -30,16 +30,16 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Margin="10">
                 <!-- Id -->
-                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding CurrentVolunteer.Role,Converter=ConvertRoleToVisibilityKey}">
+                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding UserRoleIndicator ,Converter= {StaticResource ConvertRoleToVisibilityKey}}">
                     <TextBlock Text="Id:" Width="200" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding CurrentVolunteer.Id,Mode=TwoWay}"
-                             IsEnabled="{Binding Path= ButtonText,Converter={StaticResource ConvertVolunteerEnditingModeToReadOnlyValueKey}}"
+                             Visibility="{Binding UserRoleIndicator ,Converter= {StaticResource ConvertRoleToVisibilityKey}}"
                              Width="200" 
                              />
                 </StackPanel>
 
                 <!-- Role -->
-                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding CurrentVolunteer.Role,Converter=ConvertRoleToVisibilityKey}">
+                <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding UserRoleIndicator ,Converter={StaticResource ConvertRoleToVisibilityKey}}">
                     <TextBlock Text="Role:" Width="200" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding Source = {StaticResource UserRoleCollectionKey}}"
                               SelectedItem="{Binding CurrentVolunteer.Role}"

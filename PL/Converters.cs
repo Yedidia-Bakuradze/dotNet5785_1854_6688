@@ -312,11 +312,7 @@ class ConvertCallInProgressToVisibility : IValueConverter
 class ConvertRoleToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return (BO.UserRole)value == BO.UserRole.Admin
-            ? Visibility.Visible
-            : Visibility.Hidden;
-    }
+        => (BO.UserRole)value == BO.UserRole.Volunteer ? Visibility.Hidden : Visibility.Visible;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
 
