@@ -414,7 +414,7 @@ static public class Initialization
             Call newCall = new Call
             {
                 Id = -1, //A dummy id, it would be replaced with a proper id in the CRUD method
-                Type = (s_rand.Next(0,1) == 0) ? CallType.FoodDelivery : CallType.FoodPreparation,
+                Type = (DO.CallType)(s_rand.Next(0,10)),
                 FullAddressCall = s_addresses[position],
                 Latitude = s_latitudes[position],
                 Longitude = s_longitudes[position],

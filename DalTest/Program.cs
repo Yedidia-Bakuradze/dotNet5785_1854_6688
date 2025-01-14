@@ -597,7 +597,7 @@ Please Choose The Operation That You Would Like To Use:
                             isValid = Enum.TryParse(input, out callType);
                             if (!isValid)
                             {
-                                Console.WriteLine($"Error! Please provide a proper Type Of Call value ({CallType.FoodDelivery},{CallType.FoodPreparation})");
+                                Console.WriteLine($"Enter new Type Of Call from these options  {Enum.GetValues(typeof(DO.CallType))}");
                             }
                         } while (!isValid);
 
@@ -908,7 +908,7 @@ ID: {result.Id}
                             //Request for a new Type Of Call value 
                             do
                             {
-                                Console.WriteLine($"Enter new Type Of Call from these options ({DO.CallType.FoodPreparation},{DO.CallType.FoodDelivery})");
+                                Console.WriteLine($"Enter new Type Of Call from these options {Enum.GetValues(typeof(DO.CallType))}");
                                 Console.Write(">>> ");
 
                                 input = Console.ReadLine() ?? "";
