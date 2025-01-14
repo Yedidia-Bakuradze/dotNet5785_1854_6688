@@ -92,7 +92,7 @@
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
                     Height="34"
-                      ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
+                      ItemsSource="{Binding Source={StaticResource OpenCallInListFieldKey}}"
                       SelectedValue="{Binding Path=SortByField}"
                       SelectionChanged="OnSortingChanged"/>
             </StackPanel>

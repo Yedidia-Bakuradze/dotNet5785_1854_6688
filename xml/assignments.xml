@@ -1,11 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignment>
-  <Assignment>
-    <Id>81</Id>
-    <CallId>3</CallId>
-    <VolunteerId>332461854</VolunteerId>
-    <TimeOfStarting>2025-01-14T17:29:22</TimeOfStarting>
-    <TimeOfEnding />
-    <TypeOfEnding />
-  </Assignment>
-</ArrayOfAssignment>
+<ArrayOfAssignment/>

@@ -27,7 +27,7 @@ public partial class OpenCallListWindow : Window
         set => SetValue(ListOfCallsProperty, value);
     }
 
-    private static DependencyProperty ListOfCallsProperty =
+    private static readonly DependencyProperty ListOfCallsProperty =
         DependencyProperty.Register("ListOfCalls", typeof(IEnumerable<BO.OpenCallInList>), typeof(OpenCallListWindow), new PropertyMetadata(null));
 
 
@@ -39,6 +39,16 @@ public partial class OpenCallListWindow : Window
     private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefreshList);
     private void OnFilterSet(object sender, RoutedEventArgs e) => RefreshList();
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
+    private void OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if(SelectedCall is not null)
+            new OpenCallWindow(SelectedCall!.CallId).Show();
+    }
+    private void OnSelectCallTodo(object sender, RoutedEventArgs e)
+    {
+        s_bl.Call.SelectCallToDo(UserId, SelectedCall!.CallId);
+        this.Close();
+    }
 
     #endregion
 
@@ -52,10 +62,6 @@ public partial class OpenCallListWindow : Window
             );
     #endregion
 
-    private void OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => MessageBox.Show($" Vale: {SelectedCall}\nnew OpenCallWindow().Show()");
 
-    private void OnSelectCallTodo(object sender, RoutedEventArgs e)
-    {
-        s_bl.Call.SelectCallToDo(UserId, SelectedCall!.CallId);
-    }
+
 }

@@ -28,5 +28,6 @@
         <local:ConvertStatusToVisibilityLevelTwo x:Key="ConvertStatusToVisibilityLevelTwoKey"/>
         <local:ConvertStatusToVisibilityLevelThree x:Key="ConvertStatusToVisibilityLevelThreeKey"/>
         <local:ConvertCallInProgressToVisibilityReverese x:Key="ConvertCallInProgressToVisibilityRevereseKey"/>
+        <local:OpenCallInListField x:Key="OpenCallInListFieldKey"/>
     </Application.Resources>
 </Application>
