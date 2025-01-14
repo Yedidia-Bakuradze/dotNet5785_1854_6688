@@ -142,6 +142,7 @@ private void clockObserver()
         //Adds the methods to invoke when the clock is changed
         s_bl.Admin.AddClockObserver(clockObserver);
         s_bl.Admin.AddConfigObserver(configObserver);
+        s_bl.Call.AddObserver(UpdateAllBottomButtonTexts);
     }
 
     /// <summary>
