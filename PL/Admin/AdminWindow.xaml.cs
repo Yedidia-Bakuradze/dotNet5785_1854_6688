@@ -300,6 +300,10 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="callStatus"></param>
     private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(callStatus).Show();
+    private void OnRiskRagneReset(object sender, RoutedEventArgs e) {
+        s_bl.Admin.SetRiskRange(TimeSpan.Zero);
+        configObserver();
+    }
+    
     #endregion
-
 }

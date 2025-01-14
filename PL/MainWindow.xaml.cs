@@ -9,7 +9,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         //Loads the lobby window instead
-        new VolunteerLobbyWindow().Show();
+        new AdminWindow().Show();
+        //new VolunteerLobbyWindow().Show();
         this.Close();
     }
 }

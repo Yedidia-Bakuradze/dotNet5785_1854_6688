@@ -74,7 +74,13 @@ internal class AdminImplementation : IAdmin
     {
         return Helpers.AdminManager.RiskRange;
     }
-
+    /// <summary>
+    /// This method resets the risk range value in the BL layer
+    /// </summary>
+    public void ResetRiskRange()
+    {
+        AdminManager.RiskRange = TimeSpan.Zero;
+    }
     /// <summary>
     /// This method accepts a new risk range value and updates the current system risk range value in the BL layer with it
     /// </summary>

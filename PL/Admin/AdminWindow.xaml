@@ -274,7 +274,7 @@
                     <Button Content="Update Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" Click="OnRiskRagneUpdate"/>
                 </Border>
                 <Border Grid.Column="5" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource CriticalBtnBorderStyle}" >
-                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" />
+                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" Click="OnRiskRagneReset"/>
                 </Border>
 
             </Grid>
