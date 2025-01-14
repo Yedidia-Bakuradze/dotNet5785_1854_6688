@@ -26,6 +26,7 @@ namespace PL.Volunteer
             {
                 CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
                 WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
+                HeaderText = $"Welcome {CurrentVolunteer.FullName}";
                 DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(volunteerId,null,null).Count()} calls open Would you like to take one?";
             }
             catch(Exception ex)
@@ -63,6 +64,15 @@ namespace PL.Volunteer
 
         private static readonly DependencyProperty WarrningSelectCallTextProperty
             = DependencyProperty.Register("WarrningSelectCallText", typeof(string), typeof(VolunteerLobbyWindow));
+
+        public string HeaderText
+        {
+            get => (string)GetValue(HeaderTextProperty);
+            set => SetValue(HeaderTextProperty, value);
+        }
+
+        private static readonly DependencyProperty HeaderTextProperty
+            = DependencyProperty.Register("HeaderText", typeof(string), typeof(VolunteerLobbyWindow));
 
         #endregion
 
