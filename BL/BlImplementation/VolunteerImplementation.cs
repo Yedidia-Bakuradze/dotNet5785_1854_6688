@@ -348,7 +348,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
         DO.Volunteer volunteer = s_dal.Volunteer
             .Read((DO.Volunteer volunteer) => volunteer.Id == validId && volunteer.Password == hashedPassword)
-            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with email address: {id} and password: {password} doesn't exsits");
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id: {id} doesn't exsits");
 
         return volunteer.Role.ToString();
     }
