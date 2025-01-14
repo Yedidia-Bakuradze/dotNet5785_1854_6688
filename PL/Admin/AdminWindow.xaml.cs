@@ -95,12 +95,15 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.SetRiskRange(CurrentRiskRange);
+    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e) { 
+        s_bl.Admin.SetRiskRange(CurrentRiskRange);
+        configObserver();
+    }
 
-    /// <summary>
-    /// This method is invoked when the clock is changed
-    /// </summary>
-    private void clockObserver()
+/// <summary>
+/// This method is invoked when the clock is changed
+/// </summary>
+private void clockObserver()
     {
         CurrentTime = s_bl.Admin.GetClock();
     }
