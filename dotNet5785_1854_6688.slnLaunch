@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "PL\\PL.csproj",
+        "Action": "Start",
+        "DebugTarget": "PL"
+      },
+      {
+        "Path": "BlTest\\BlTest.csproj",
+        "Action": "Start",
+        "DebugTarget": "BlTest"
+      }
+    ]
+  }
+]

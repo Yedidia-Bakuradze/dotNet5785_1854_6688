@@ -22,12 +22,10 @@ namespace PL.Volunteer
         private readonly static BlApi.IBl s_bl = BlApi.Factory.Get();
         public VolunteerLobbyWindow(int volunteerId = 332461854)
         {
+            VolunteerId = volunteerId;
             try
             {
-                CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
-                WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-                HeaderText = $"Welcome {CurrentVolunteer.FullName}";
-                DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(volunteerId,null,null).Count()} calls open Would you like to take one?";
+                RefershWindowDetails();
             }
             catch(Exception ex)
             {
@@ -77,17 +75,10 @@ namespace PL.Volunteer
         #endregion
 
         #region Regular Propeties
+        public int VolunteerId { get; set; }
         #endregion
 
         #region Events
-        #endregion
-
-        #region Methods
-        #endregion
-
-
-
-
         private void OnSelectCall(object sender, RoutedEventArgs e)
         {
 
@@ -108,14 +99,22 @@ namespace PL.Volunteer
 
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closed(object sender, EventArgs e) => s_bl.Volunteer.RemoveObserver(RefershWindowDetails);
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Volunteer.AddObserver(RefershWindowDetails);
+        #endregion
+
+        #region Methods
+        private void RefershWindowDetails()
         {
-
+            CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+            WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
+            HeaderText = $"Welcome {CurrentVolunteer.FullName}";
+            DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
         }
+        #endregion
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
 
-        }
+
     }
 }
