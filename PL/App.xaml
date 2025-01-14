@@ -30,5 +30,6 @@
         <local:ConvertCallInProgressToVisibilityReverese x:Key="ConvertCallInProgressToVisibilityRevereseKey"/>
         <local:OpenCallInListField x:Key="OpenCallInListFieldKey"/>
         <local:ConvertRoleToVisibility x:Key="ConvertRoleToVisibilityKey"/>
+        <local:ClosedCallInListField x:Key="ClosedCallInListFieldKey"/>
     </Application.Resources>
 </Application>

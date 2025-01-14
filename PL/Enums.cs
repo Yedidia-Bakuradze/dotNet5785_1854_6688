@@ -45,6 +45,13 @@ internal class OpenCallInListField : IEnumerable
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
 
+internal class ClosedCallInListField : IEnumerable
+{
+    static readonly IEnumerable<BO.ClosedCallInListFields> s_enums =
+    (Enum.GetValues(typeof(BO.ClosedCallInListFields)) as IEnumerable<BO.ClosedCallInListFields>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
 internal class TypeOfRangeCollection : IEnumerable
 {
     static readonly IEnumerable<BO.TypeOfRange> s_enums =
