@@ -95,12 +95,15 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e) => s_bl.Admin.SetRiskRange(CurrentRiskRange);
+    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e) { 
+        s_bl.Admin.SetRiskRange(CurrentRiskRange);
+        configObserver();
+    }
 
-    /// <summary>
-    /// This method is invoked when the clock is changed
-    /// </summary>
-    private void clockObserver()
+/// <summary>
+/// This method is invoked when the clock is changed
+/// </summary>
+private void clockObserver()
     {
         CurrentTime = s_bl.Admin.GetClock();
     }
@@ -139,6 +142,7 @@ public partial class AdminWindow : Window
         //Adds the methods to invoke when the clock is changed
         s_bl.Admin.AddClockObserver(clockObserver);
         s_bl.Admin.AddConfigObserver(configObserver);
+        s_bl.Call.AddObserver(UpdateAllBottomButtonTexts);
     }
 
     /// <summary>
@@ -152,6 +156,7 @@ public partial class AdminWindow : Window
         MessageBox.Show("The window is closed");
         s_bl.Admin.RemoveClockObserver(clockObserver);
         s_bl.Admin.RemoveConfigObserver(configObserver);
+        s_bl.Call.RemoveObserver(UpdateAllBottomButtonTexts);
     }
     #endregion
 
@@ -300,6 +305,10 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="callStatus"></param>
     private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(callStatus).Show();
+    private void OnRiskRagneReset(object sender, RoutedEventArgs e) {
+        s_bl.Admin.SetRiskRange(TimeSpan.Zero);
+        configObserver();
+    }
+    
     #endregion
-
 }
