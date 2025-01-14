@@ -1,4 +1,4 @@
-﻿<Window x:Class="PL.Call.ClosedCallList"
+﻿<Window x:Class="PL.Call.ClosedCallListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -49,13 +49,14 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <!-- Background Color Change-->
-                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ConvertStatusToBackgroundColorKey}}"/>
+                    <Setter Property="Background"
+                            Value="{Binding TypeOfClosedCall, Converter={StaticResource ConvertTypeOfEndingToBackgroundColorKey}}"/>
                 </Style>
             </DataGrid.RowStyle>
 
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding CallId}" Width="50"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="150"/>
                 <DataGridTextColumn Header="Call Address" Binding="{Binding CallAddress}" Width="100"/>
                 <DataGridTextColumn Header="Openning Time" Binding="{Binding CallStartTime}" Width="100"/>
@@ -84,7 +85,7 @@
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
                     Height="34"
-                      ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
+                      ItemsSource="{Binding Source={StaticResource ClosedCallInListFieldKey}}"
                       SelectedValue="{Binding Path=SortFiled}"
                       SelectionChanged="OnSortingValueChanged"/>
             </StackPanel>
@@ -111,7 +112,7 @@
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                         <ComboBox 
                             Height="34"
-                            ItemsSource="{Binding Source={StaticResource ClosedCallInListFieldKey}}"
+                            ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
                             SelectedValue="{Binding FilterValue}"
                             SelectionChanged="OnFilterValueChanged"/>
                     </StackPanel>
