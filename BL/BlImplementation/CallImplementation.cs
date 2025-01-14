@@ -501,6 +501,7 @@ internal class CallImplementation : ICall
             TypeOfEnding = null,
         };
         s_dal.Assignment.Create(newAssignment);
+        CallManager.Observers.NotifyListUpdated();
     }
 
     /// <summary>

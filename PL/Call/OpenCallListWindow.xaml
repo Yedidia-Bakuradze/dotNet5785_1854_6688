@@ -42,8 +42,8 @@
                   IsReadOnly="True"
                   RowDetailsVisibilityMode="VisibleWhenSelected"
                   ItemsSource="{Binding ListOfCalls}"
-                  MouseDoubleClick="OnShowCallWindow"
                   Background="Transparent"
+                  SelectionChanged="OnSelectionChanged"
                   >
             <!-- Row Styling-->
             <DataGrid.RowStyle>
@@ -67,11 +67,11 @@
                 <DataGridTemplateColumn Header="Select Call" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Click="OnSelectCall" />
+                            <Button Content="Take" Click="OnSelectCallTodo"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-               </DataGrid.Columns>
+            </DataGrid.Columns>
         </DataGrid>
 
         <!-- The bottom part-->
@@ -110,10 +110,8 @@
                     <StackPanel Grid.Column="0">
                         <Label HorizontalAlignment="Left" Content="Filter By"
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                        <ComboBox 
-                            Height="34"
-                            ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
-                            SelectedValue="{Binding FilterByField}" IsReadOnly="True" IsEnabled="False"/>
+                        <TextBox Height="34" Background="White" Text="Call Type" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                   FontSize="20"/>
                     </StackPanel>
 
                     <!--Filter's value parameter-->

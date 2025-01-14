@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PL.Call;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,10 +80,7 @@ namespace PL.Volunteer
         #endregion
 
         #region Events
-        private void OnSelectCall(object sender, RoutedEventArgs e)
-        {
-
-        }
+        private void OnSelectCall(object sender, RoutedEventArgs e) => new OpenCallListWindow(VolunteerId).Show();
 
         private void OnCancelCall(object sender, RoutedEventArgs e)
         {
