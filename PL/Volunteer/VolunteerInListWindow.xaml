@@ -68,7 +68,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150"/>
                 <DataGridTextColumn Header="Calls Done" Binding="{Binding TotalCallsDoneByVolunteer}" Width="100"/>
