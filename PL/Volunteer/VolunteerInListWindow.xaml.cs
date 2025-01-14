@@ -77,7 +77,7 @@ public partial class VolunteerListWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnAddVolunteer(object sender, RoutedEventArgs e) => new VolunteerWindow().Show();
+    private void OnAddVolunteer(object sender, RoutedEventArgs e) => new VolunteerWindow(0).Show();
 
     /// <summary>
     /// This method is invoked when the user requests to remove a volunteer from the list
