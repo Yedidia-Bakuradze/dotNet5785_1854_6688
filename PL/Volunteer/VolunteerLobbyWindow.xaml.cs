@@ -84,12 +84,25 @@ namespace PL.Volunteer
 
         private void OnCancelCall(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                s_bl.Call.CancelAssignement(VolunteerId,CurrentVolunteer.CurrentCall!.CallId);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
         private void OnFinishCall(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                s_bl.Call.FinishAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.CallId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void OnShowSettingsWindow(object sender, RoutedEventArgs e)

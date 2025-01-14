@@ -102,6 +102,7 @@ internal class CallImplementation : ICall
                 TypeOfEnding = DO.TypeOfEnding.Treated,
                 TimeOfEnding = AdminManager.Now
             });
+            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
