@@ -684,7 +684,7 @@ Press 0: To Exit
         if (RequestBooleanAnswer("Do You Want to Filter the Values? (yes / no): "))
         {
             //Issue #20: Not enough CallTypes 
-            Console.Write($"Enter the Value Which You Want To Filter the Results By ({BO.CallType.FoodPreparation},{BO.CallType.FoodDelivery}): ");
+            Console.Write($"Enter new Type Of Call from these options  {Enum.GetValues(typeof(BO.CallType))}");
             string input = Console.ReadLine() ?? "";
             if (Enum.TryParse(input, out BO.CallType tmp))
                 throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
@@ -729,7 +729,7 @@ Choose One Of the Presented Options:
         if (RequestBooleanAnswer("Do You Want to Filter the Values? (yes / no): "))
         {
             //Issue #20: Not enough CallTypes 
-            Console.Write($"Enter the Value Which You Want To Filter the Results By ({BO.CallType.FoodPreparation},{BO.CallType.FoodDelivery}): ");
+            Console.Write($"Enter new Type Of Call from these options  {Enum.GetValues(typeof(BO.CallType))}`");
             string input = Console.ReadLine() ?? "";
             if (Enum.TryParse(input, out BO.CallType tmp))
                 throw new BO.BlInputValueUnConvertableException($"Bl: The value {input}, is not a valid CallType value");
