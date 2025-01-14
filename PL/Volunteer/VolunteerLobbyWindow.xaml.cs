@@ -23,5 +23,25 @@ namespace PL.Volunteer
         {
             InitializeComponent();
         }
+
+        private void OnSelectCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnCancelCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnFinishCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnShowSettingsWindow(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -5,8 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="VolunteerLobbyWindow" Height="450" Width="800">
+        Title="VolunteerLobbyWindow" Height="475" Width="910">
+    <Window.Resources>
+        <Style x:Key="ClearBottomBtnBtnStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style x:Key="ActionBtnBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-100"
+                                      ShadowDepth="1"
+                                      BlurRadius="3"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color="#2798D5" Offset="0"/>
+                <GradientStop Color="#C25C9E" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="235"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="22"/>
+            <RowDefinition Height="39"/>
+            <RowDefinition Height="39"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <!--Header-->
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                   Text="Hello Yedidia" FontSize="32" Foreground="White"/>
         
+        <!--Description-->
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="310" HorizontalAlignment="Left" TextWrapping="Wrap"
+                   Text="Currently there are 82 calls open Would you like to take one?" FontSize="20" Foreground="White"/>
+
+        <!--Settings Button-->
+        <Border Grid.Column="1" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}">
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowSettingsWindow"/>
+        </Border>
+
+        <!--Select Call Button-->
+        <TextBlock Grid.Column="3" Grid.Row="5" TextWrapping="Wrap" Foreground="#FFA600" Visibility="Hidden"
+                   Text="Only online volunteers can take calls   Please activate this user in the settings to select a call"/>
+        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Visibility="Hidden">
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Select a Call" FontSize="20" Click="OnSelectCall"/>
+        </Border>
+
+        <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}" Background="#FF6262" Visibility="Visible">
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Cancel a Call" FontSize="20" Click="OnCancelCall"/>
+        </Border>
+        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Background="#68E78E" Visibility="Visible">
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Finish the Call" FontSize="20" Click="OnFinishCall"/>
+        </Border>
+
     </Grid>
 </Window>
