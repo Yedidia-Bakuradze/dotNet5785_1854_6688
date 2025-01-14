@@ -102,7 +102,7 @@
 
             <!-- Sort Action-->
             <StackPanel Grid.Column="5">
-                <Label HorizontalAlignment="Left" Content="Select a Type of Call"
+                <Label HorizontalAlignment="Left" Content="Select a field to sort by"
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
                     Height="34"
