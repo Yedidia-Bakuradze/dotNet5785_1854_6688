@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Volunteer>
+    <Id>332461854</Id>
+    <Role>Volunteer</Role>
+    <FullName>Yedidia Bakuradze</FullName>
+    <PhoneNumber>0535002312</PhoneNumber>
+    <Email>yedidia@gmail.com</Email>
+    <MaxDistanceToCall>3.4</MaxDistanceToCall>
+    <RangeType>AirDistance</RangeType>
+    <IsActive>true</IsActive>
+    <Password>1e5c0847e9d2d9d6e5e3f8d66ed93b062a7c139baa12da548f58544fe18cd98f</Password>
+    <FullCurrentAddress>Ha Tothan 3 Jerusalem Israel</FullCurrentAddress>
+    <Latitude>31.8323803</Latitude>
+    <Longitude>35.2411291</Longitude>
+  </Volunteer>
+</ArrayOfVolunteer>

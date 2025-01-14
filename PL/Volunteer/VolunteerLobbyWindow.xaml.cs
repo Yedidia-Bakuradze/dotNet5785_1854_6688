@@ -19,9 +19,93 @@ namespace PL.Volunteer
     /// </summary>
     public partial class VolunteerLobbyWindow : Window
     {
-        public VolunteerLobbyWindow()
+        private readonly static BlApi.IBl s_bl = BlApi.Factory.Get();
+        public VolunteerLobbyWindow(int volunteerId = 332461854)
         {
+            try
+            {
+                CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
+                WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
+                DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(volunteerId,null,null).Count()} calls open Would you like to take one?";
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                this.Close();
+            }
             InitializeComponent();
+        }
+
+        #region Dependecy Propeties
+        public BO.Volunteer CurrentVolunteer 
+        {
+            get => (BO.Volunteer)GetValue(CurrentVolunteerProperty);
+            set => SetValue(CurrentVolunteerProperty,value);
+        }
+
+        private static readonly DependencyProperty CurrentVolunteerProperty
+            = DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerLobbyWindow));
+        
+        public string DescriptionText
+        {
+            get => (string)GetValue(DescriptionTextProperty);
+            set => SetValue(DescriptionTextProperty, value);
+        }
+
+        private static readonly DependencyProperty DescriptionTextProperty
+            = DependencyProperty.Register("DescriptionText", typeof(string), typeof(VolunteerLobbyWindow));
+
+        public string WarrningSelectCallText
+        {
+            get => (string)GetValue(WarrningSelectCallTextProperty);
+            set => SetValue(WarrningSelectCallTextProperty, value);
+        }
+
+        private static readonly DependencyProperty WarrningSelectCallTextProperty
+            = DependencyProperty.Register("WarrningSelectCallText", typeof(string), typeof(VolunteerLobbyWindow));
+
+        #endregion
+
+        #region Regular Propeties
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Methods
+        #endregion
+
+
+
+
+        private void OnSelectCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnCancelCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnFinishCall(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnShowSettingsWindow(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
