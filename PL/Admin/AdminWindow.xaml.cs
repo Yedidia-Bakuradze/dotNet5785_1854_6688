@@ -156,6 +156,7 @@ private void clockObserver()
         MessageBox.Show("The window is closed");
         s_bl.Admin.RemoveClockObserver(clockObserver);
         s_bl.Admin.RemoveConfigObserver(configObserver);
+        s_bl.Call.RemoveObserver(UpdateAllBottomButtonTexts);
     }
     #endregion
 
