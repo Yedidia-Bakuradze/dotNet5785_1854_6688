@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Net.Mail;
+using System.Net;
 namespace Helpers;
 
-internal static class Tools
+public static class Tools
 {
     /// <summary>
     /// Given the generic value T, this method will generate a stirng containing every field and its value for the given "val" instance
@@ -13,7 +15,7 @@ internal static class Tools
     public static string ToStringProperty<T>(this T val)
     {
         string msg = "";
-        if(val == null)
+        if (val == null)
             throw new BO.BlUnWantedNullValueException("Internal Error: Cann't represent string for null values");
         else
         {
@@ -25,10 +27,10 @@ internal static class Tools
                 msg += $"{field.Name}:";
 
                 //Type of field (IEnumerable / Simple field)
-                if(fieldValue is IEnumerable && fieldValue is not string)
+                if (fieldValue is IEnumerable && fieldValue is not string)
                 {
                     msg += " [";
-                    foreach(var element in (IEnumerable)fieldValue)
+                    foreach (var element in (IEnumerable)fieldValue)
                     {
                         msg += $" {element}";
                     }
@@ -42,4 +44,52 @@ internal static class Tools
         }
         return msg;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="toEmail"></param>
+    /// <param name="subject"></param>
+    /// <param name="body"></param>
+    public static void SendEmail(string toEmail, string subject, string body)
+    {
+        try
+        {
+            using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) 
+            {
+                
+                smtpClient.Credentials = new NetworkCredential("meircrombie@gmail.com", "syby zvun cxab gokx");
+                smtpClient.EnableSsl = true; 
+
+                
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress("meircrombie@gmail.com"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true
+                };
+
+                mailMessage.To.Add(toEmail);
+
+                smtpClient.Send(mailMessage);
+                Console.WriteLine($"Email sent successfully to {toEmail}");
+            }
+        }
+        catch (SmtpException smtpEx)
+        {
+            Console.WriteLine($"SMTP Error: {smtpEx.Message}");
+            if (smtpEx.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {smtpEx.InnerException.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"General Error: {ex.Message}");
+        }
+    }
+
 }
+
+
+
