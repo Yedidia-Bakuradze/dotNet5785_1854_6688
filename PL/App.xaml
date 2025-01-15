@@ -35,5 +35,6 @@
         <local:ConvertTypeOfEndingToBackgroundColor x:Key="ConvertTypeOfEndingToBackgroundColorKey"/>
         <local:ConvertActiveStatusToVisibility x:Key="ConvertActiveStatusToVisibilityKey"/>
         <local:ConvertActiveStatusToVisibilityReveresed x:Key="ConvertActiveStatusToVisibilityReveresedKey"/>
+        <local:ConvertRoleToColor x:Key="ConvertRoleToColorKey"/>
     </Application.Resources>
 </Application>

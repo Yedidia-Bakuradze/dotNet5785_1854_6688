@@ -181,11 +181,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Volunteer" HorizontalContentAlignment="Right" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityReveresedKey}}"/>
+                        <Label Grid.Column="0" Content="Volunteer" HorizontalContentAlignment="Right" FontSize="11" Foreground="#1FBCFF" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityReveresedKey}}"/>
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="X" Background="Red"/>
+                            <Button Style="{StaticResource BinaryBtnBtn}" Content="X" Background="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToColorKey}}"/>
                         </Border>
-                        <Label Grid.Column="2" Content="Admin" HorizontalContentAlignment="Left" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityKey}}"/>
+                        <Label Grid.Column="2" Content="Admin" HorizontalContentAlignment="Left" FontSize="11" Foreground="#FF00EE" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityKey}}"/>
                     </Grid>
                 </StackPanel>
                 <!--Is Active-->
@@ -196,11 +196,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityKey}}"/>
+                        <Label Grid.Column="0" Content="Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="#04FF64" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityKey}}"/>
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="Red"/>
+                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="#04FF47"/>
                         </Border>
-                        <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityReveresedKey}}"/>
+                        <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="#FF7676" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityReveresedKey}}"/>
                     </Grid>
                 </StackPanel>
                 <!--Call In Progress-->
@@ -211,11 +211,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Call Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="0" Content="Call Active" HorizontalContentAlignment="Right" Foreground="#E3AC46" FontSize="11" />
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="Red"/>
+                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="#ED4DD8"/>
                         </Border>
-                        <Label Grid.Column="2" Content="{Binding CallStatus}" HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="2" Content="{Binding CallStatus}" HorizontalContentAlignment="Left" Foreground="#E3AC46"  FontSize="11" />
                     </Grid>
                 </StackPanel>
             </StackPanel>
