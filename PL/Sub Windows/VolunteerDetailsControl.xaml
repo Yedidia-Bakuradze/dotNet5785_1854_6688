@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="PL.Sub_Windows.VolunteerDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PL.Sub_Windows"
+             mc:Ignorable="d" 
+             d:DesignHeight="381" d:DesignWidth="297"
+             DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+             >
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+    </UserControl.Resources>
+    <Border Background="White" CornerRadius="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label Content="Id"/>
+                <Label Content="Full name"/>
+                <Label Content="Phone number"/>
+                <Label Content="Email"/>
+                <Label Content="Password"/>
+                <Label Content="Current address"/>
+                <Label Content="Role"/>
+                <Label Content="Is Active"/>
+                <Label Content="Max Distance"/>
+                <Label Content="Type of Range"/>
+                <Label Content="Finished Calls"/>
+                <Label Content="Canceled Calls"/>
+                <Label Content="Expired Calls"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label Content="{Binding CurrentVolunteer.Id}"/>
+                <Label Content="{Binding CurrentVolunteer.FullName}"/>
+                <Label Content="{Binding CurrentVolunteer.PhoneNumber}"/>
+                <Label Content="{Binding CurrentVolunteer.Email}"/>
+                <Label Content="{Binding CurrentVolunteer.Password}"/>
+                <Label Content="{Binding CurrentVolunteer.FullCurrentAddress}"/>
+                <Label Content="{Binding CurrentVolunteer.Role}"/>
+                <Label Content="{Binding IsActive}"/>
+                <Label Content="{Binding CurrentVolunteer.MaxDistanceToCall}"/>
+                <Label Content="{Binding CurrentVolunteer.RangeType}"/>
+                <Label Content="{Binding CurrentVolunteer.NumOfHandledCalls}"/>
+                <Label Content="{Binding CurrentVolunteer.NumOfCanceledCalls}"/>
+                <Label Content="{Binding CurrentVolunteer.NumOfExpiredCalls}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
