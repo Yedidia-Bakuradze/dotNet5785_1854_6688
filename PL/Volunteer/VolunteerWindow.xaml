@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="Volunteer" Height="565" Width="762"
+        Title="Volunteer" Height="640" Width="762"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Loaded="OnWindowLoaded"
+        Closed="Window_Closed"
         >
     <Window.Resources>
         <Style x:Key="SubmitBtnBorder" TargetType="Border">
@@ -201,15 +203,45 @@
                         <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
                     </Grid>
                 </StackPanel>
+                <!--Call In Progress-->
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,11,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Call Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="White"/>
+                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
+                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="Red"/>
+                        </Border>
+                        <Label Grid.Column="2" Content="In " HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
+                    </Grid>
+                </StackPanel>
             </StackPanel>
 
 
             <!--Submit-->
             <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource SubmitBtnBorder}">
-                <Button Style="{StaticResource SubmitBtnBtn}"/>
+                <Button Style="{StaticResource SubmitBtnBtn}" Click="OnShowCurrentCallInProgress"/>
             </Border>
                 
         </Grid>
+
+        <!-- Divider-->
+        <Border Grid.Column="1" Background="White" BorderThickness="0"/>
         
+        <!-- Right Side-->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="24"/>
+            </Grid.RowDefinitions>
+            <ContentControl Content="{Binding VolunteerDetailsUserControl}" Grid.Row="1"/>
+            <ContentControl Content="{Binding VolunteerMapDetailsUserControl}" Grid.Row="3"/>
+        </Grid>
     </Grid>
 </Window>

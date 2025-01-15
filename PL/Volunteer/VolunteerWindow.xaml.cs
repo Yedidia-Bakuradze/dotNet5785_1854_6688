@@ -1,5 +1,7 @@
 ﻿using PL.Call;
+using PL.Sub_Windows;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PL.Volunteer;
 
@@ -10,30 +12,20 @@ public partial class VolunteerWindow : Window
 {
     public VolunteerWindow(int id, BO.UserRole windowRole)
     {
+        VolunteerId = id;
         UserRoleIndicator = windowRole;
         ButtonText = id == 0
             ? "Add"
             : "Update";
 
         ButtonText += " Volunteer";
-
-        //Getting the volunteer / creating a new one
-        try
-        {
-            CurrentVolunteer = (id == 0)
-                ? new BO.Volunteer()
-                : s_bl.Volunteer.GetVolunteerDetails(id);
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-        
+        RefereshScreen();
         InitializeComponent();
     }
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    public int VolunteerId { get; set; }
     #endregion
 
     #region Dependency Properties
@@ -82,6 +74,24 @@ public partial class VolunteerWindow : Window
 
     public static readonly DependencyProperty PasswordVisibilityPropety =
         DependencyProperty.Register("PasswordVisibility", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(null));
+
+
+    public UserControl VolunteerDetailsUserControl
+    {  
+        get => (UserControl)(GetValue(VolunteerDetailsUserControlPropperty));
+        set => SetValue(VolunteerDetailsUserControlPropperty,value);
+    }
+
+    private static readonly DependencyProperty VolunteerDetailsUserControlPropperty =
+        DependencyProperty.Register("VolunteerDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
+    public UserControl VolunteerMapDetailsUserControl
+    {
+        get => (UserControl)(GetValue(VolunteerMapDetailsUserControlPropperty));
+        set => SetValue(VolunteerMapDetailsUserControlPropperty, value);
+    }
+
+    private static readonly DependencyProperty VolunteerMapDetailsUserControlPropperty =
+        DependencyProperty.Register("VolunteerMapDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
     #endregion
 
     #region Events
@@ -125,6 +135,27 @@ public partial class VolunteerWindow : Window
     }
     #endregion
 
+    private void RefereshScreen()
+    {
+        CurrentVolunteer = (VolunteerId == 0)
+                ? new BO.Volunteer()
+                : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+
+
+        VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
+        //VolunteerMapDetailsUserControl = new VolunteerMapDetailsUserControl(CurrentVolunteer);
+    }
     #endregion
 
+    private void OnWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Volunteer.AddObserver(RefereshScreen);
+        s_bl.Call.AddObserver(RefereshScreen);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.Volunteer.RemoveObserver(RefereshScreen);
+        s_bl.Call.RemoveObserver(RefereshScreen);
+    }
 }
