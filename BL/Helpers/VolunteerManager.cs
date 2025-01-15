@@ -220,7 +220,7 @@ internal static class VolunteerManager
     /// <returns>Boolean value whether its valid or not</returns>
     private static bool IsMaxDistnaceValid(double? distance)
     {
-        return (distance == null) ? true : distance >= 0.0;
+        return distance == null || distance >= 0.0;
     }
 
     /// <summary>
