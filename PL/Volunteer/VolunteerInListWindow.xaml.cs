@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace PL.Volunteer;
 
@@ -8,14 +9,14 @@ public partial class VolunteerListWindow : Window
     public VolunteerListWindow()
     {
         InitializeComponent();
-        RefereshVolunteerList();
+        VolunteerListObserver();
     }
 
     #region Regular Propeties
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public static BO.VolunteerInListField? SortByField { get; set; }
-    public static BO.VolunteerInListField? FilterByField{ get; set; }
-    public static string? FilterByValue{ get; set; }
+    public static BO.VolunteerInListField? FilterByField { get; set; }
+    public static string? FilterByValue { get; set; }
     public BO.VolunteerInList? SelectedVolunteer { get; set; }
     #endregion
 
@@ -52,15 +53,7 @@ public partial class VolunteerListWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnSortingValueChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefereshVolunteerList();
     
-    /// <summary>
-    /// This method triggred when the user changed his selection of filters to filter the volunteers
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnFilterValueChanged(object sender, RoutedEventArgs e) => RefereshVolunteerList();
-
     /// <summary>
     /// This method opens the Volunteer's window and show its details for editing
     /// </summary>
@@ -113,6 +106,15 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
             }
         }
     }
+    private void OnResetParameters(object sender, RoutedEventArgs e)
+    {
+        SortByField = null;
+        FilterByField = null;
+        FilterByValue = null;
+        SelectedVolunteer = null;
+        RefereshVolunteerList();
+    }
+    private void OnApplyFiltersAndSort(object sender, RoutedEventArgs e) => RefereshVolunteerList();
     #endregion
 
     #region Window Evenets
