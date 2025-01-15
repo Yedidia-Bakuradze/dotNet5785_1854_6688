@@ -8,14 +8,14 @@ namespace PL.Volunteer;
 /// </summary>
 public partial class VolunteerWindow : Window
 {
-    public VolunteerWindow(int id = 0)
+    public VolunteerWindow(int id, BO.UserRole windowRole)
     {
+        UserRoleIndicator = windowRole;
         ButtonText = id == 0
             ? "Add"
             : "Update";
 
         ButtonText += " Volunteer";
-        InitializeComponent();
 
         //Getting the volunteer / creating a new one
         try
@@ -29,6 +29,7 @@ public partial class VolunteerWindow : Window
             MessageBox.Show(ex.Message);
         }
         
+        InitializeComponent();
     }
 
     #region Regular Propeties
@@ -63,6 +64,15 @@ public partial class VolunteerWindow : Window
         get => (BO.Volunteer?)GetValue(CurrentVolunteerProperty);
         set => SetValue(CurrentVolunteerProperty, value);
     }
+
+    public BO.UserRole UserRoleIndicator 
+    {
+        get => (BO.UserRole)GetValue(UserRoleIndicatorPropety);
+        set => SetValue(UserRoleIndicatorPropety,value);
+    }
+
+    private static readonly DependencyProperty UserRoleIndicatorPropety =
+        DependencyProperty.Register("UserRoleIndicator", typeof(BO.UserRole), typeof(VolunteerWindow));
 
     public static readonly DependencyProperty CurrentVolunteerProperty =
         DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));

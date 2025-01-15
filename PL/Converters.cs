@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
-using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Navigation;
 
 namespace PL;
 
@@ -309,6 +307,40 @@ class ConvertCallInProgressToVisibility : IValueConverter
         return Visibility.Visible;
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+}
+
+class ConvertRoleToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => (BO.UserRole)value == BO.UserRole.Volunteer ? Visibility.Hidden : Visibility.Visible;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
+}
+
+
+class ConvertTypeOfEndingToBackgroundColor : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+
+        switch ((BO.TypeOfEndingCall?)value)
+        {
+            case BO.TypeOfEndingCall.Treated:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1AE751"));
+            case BO.TypeOfEndingCall.SelfCanceled:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FC4C4E"));
+            case BO.TypeOfEndingCall.AdminCanceled:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5900"));
+            case BO.TypeOfEndingCall.CancellationExpired:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C8E71A"));
+            default:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#828282"));
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 class ConvertCallInProgressToVisibilityReverese: IValueConverter
