@@ -100,10 +100,10 @@ public partial class AdminWindow : Window
         configObserver();
     }
 
-/// <summary>
-/// This method is invoked when the clock is changed
-/// </summary>
-private void clockObserver()
+    /// <summary>
+    /// This method is invoked when the clock is changed
+    /// </summary>
+    private void clockObserver()
     {
         CurrentTime = s_bl.Admin.GetClock();
     }

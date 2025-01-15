@@ -266,66 +266,116 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>Filtered and optionlly sorted VolunteerInLists</returns>
     public IEnumerable<BO.VolunteerInList> GetFilteredVolunteers(BO.VolunteerInListField? filterField, object? filterValue, BO.VolunteerInListField? sortByField)
     {
-        filterField = filterField is null || filterValue is null ? null : filterField;
-        switch (filterField)
-        {
+        // קבלת כל המתנדבים
+        var volunteers = GetVolunteers(null, null);
 
-            case null:
-                return GetVolunteers(null, sortByField);
-            case VolunteerInListField.Id:
-                {
-                    int volunteerId;
-                    if (!Int32.TryParse(filterValue!.ToString(), out volunteerId))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a number");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer)=> volunteer.Id == volunteerId);
-                }
-            case VolunteerInListField.FullName:
-                return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.FullName == (string)filterValue!);
-            case VolunteerInListField.IsActive:
-                {
-                    bool isActive;
-                    if (!bool.TryParse(filterValue!.ToString(), out isActive))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a boolean");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.IsActive == isActive!);
-                }
-            case VolunteerInListField.TotalCallsDoneByVolunteer:
-                {
-                    int totalCallsDoneByVolunteer;
-                    if (!Int32.TryParse(filterValue!.ToString(), out totalCallsDoneByVolunteer))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a number");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsDoneByVolunteer == totalCallsDoneByVolunteer);
-                }
-            case VolunteerInListField.TotalCallsCancelByVolunteer:
-                {
-                    int totalCallsCancelByVolunteer;
-                    if (!Int32.TryParse(filterValue!.ToString(), out totalCallsCancelByVolunteer))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a number");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsCancelByVolunteer == totalCallsCancelByVolunteer);
-                }
-            case VolunteerInListField.TotalCallsExpiredByVolunteer:
-                {
-                    int totalCallsExpiredByVolunteer;
-                    if (!Int32.TryParse(filterValue!.ToString(), out totalCallsExpiredByVolunteer))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a number");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TotalCallsExpiredByVolunteer == totalCallsExpiredByVolunteer);
-                }
-            case VolunteerInListField.CallId:
-                {
-                    int callId;
-                    if (!Int32.TryParse(filterValue!.ToString(), out callId))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a number");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.CallId == callId);
-                }
-            case VolunteerInListField.TypeOfCall:
-                {
-                    BO.CallType typeOfCall;
-                    if (!Enum.TryParse(filterValue!.ToString(), out typeOfCall))
-                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid CallType");
-                    return GetVolunteers(null, sortByField).Where((BO.VolunteerInList volunteer) => volunteer.TypeOfCall == typeOfCall);
-                }
-            default:
-                throw new BlInvalidOperationException($"Bl: The value {filterField} is not a valid VolunteerInList field");
+        // סינון לפי שדה מסוים
+        if (filterField != null && filterValue != null)
+        {
+            switch (filterField)
+            {
+                case VolunteerInListField.Id:
+                    if (int.TryParse(filterValue.ToString(), out int volunteerId))
+                    {
+                        volunteers = volunteers.Where(vol => vol.Id == volunteerId);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by Id.");
+                    }
+                    break;
+
+                case VolunteerInListField.FullName:
+                    volunteers = volunteers.Where(vol =>
+                        !string.IsNullOrEmpty(vol.FullName) &&
+                        vol.FullName.Equals(filterValue.ToString(), StringComparison.OrdinalIgnoreCase));
+                    break;
+
+                case VolunteerInListField.IsActive:
+                    if (bool.TryParse(filterValue.ToString(), out bool isActive))
+                    {
+                        volunteers = volunteers.Where(vol => vol.IsActive == isActive);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid boolean for filtering by IsActive.");
+                    }
+                    break;
+
+                case VolunteerInListField.TotalCallsDoneByVolunteer:
+                    if (int.TryParse(filterValue.ToString(), out int totalCallsDone))
+                    {
+                        volunteers = volunteers.Where(vol => vol.TotalCallsDoneByVolunteer == totalCallsDone);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsDoneByVolunteer.");
+                    }
+                    break;
+
+                case VolunteerInListField.TotalCallsCancelByVolunteer:
+                    if (int.TryParse(filterValue.ToString(), out int totalCallsCanceled))
+                    {
+                        volunteers = volunteers.Where(vol => vol.TotalCallsCancelByVolunteer == totalCallsCanceled);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsCancelByVolunteer.");
+                    }
+                    break;
+
+                case VolunteerInListField.TotalCallsExpiredByVolunteer:
+                    if (int.TryParse(filterValue.ToString(), out int totalCallsExpired))
+                    {
+                        volunteers = volunteers.Where(vol => vol.TotalCallsExpiredByVolunteer == totalCallsExpired);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsExpiredByVolunteer.");
+                    }
+                    break;
+
+                default:
+                    throw new BlInvalidOperationException($"Bl: The filter field {filterField} is not supported.");
+            }
         }
+
+        // מיון לפי שדה מסוים
+        if (sortByField != null)
+        {
+            switch (sortByField)
+            {
+                case VolunteerInListField.Id:
+                    volunteers = volunteers.OrderBy(vol => vol.Id);
+                    break;
+
+                case VolunteerInListField.FullName:
+                    volunteers = volunteers.OrderBy(vol => vol.FullName);
+                    break;
+
+                case VolunteerInListField.IsActive:
+                    volunteers = volunteers.OrderBy(vol => vol.IsActive);
+                    break;
+
+                case VolunteerInListField.TotalCallsDoneByVolunteer:
+                    volunteers = volunteers.OrderBy(vol => vol.TotalCallsDoneByVolunteer);
+                    break;
+
+                case VolunteerInListField.TotalCallsCancelByVolunteer:
+                    volunteers = volunteers.OrderBy(vol => vol.TotalCallsCancelByVolunteer);
+                    break;
+
+                case VolunteerInListField.TotalCallsExpiredByVolunteer:
+                    volunteers = volunteers.OrderBy(vol => vol.TotalCallsExpiredByVolunteer);
+                    break;
+
+                default:
+                    throw new BlInvalidOperationException($"Bl: The sort field {sortByField} is not supported.");
+            }
+        }
+
+        // החזרת הרשימה המסוננת והממוינת
+        return volunteers;
     }
 
     /// <summary>

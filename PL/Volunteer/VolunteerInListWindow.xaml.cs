@@ -147,7 +147,7 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
         {
             MessageBox.Show(e.Message);
         }
-    }
+        }
     #endregion
 
 }

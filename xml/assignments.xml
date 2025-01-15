@@ -640,4 +640,12 @@
     <TimeOfEnding>1/14/2025 10:54:33 AM</TimeOfEnding>
     <TypeOfEnding>Treated</TypeOfEnding>
   </Assignment>
+  <Assignment>
+    <Id>81</Id>
+    <CallId>1</CallId>
+    <VolunteerId>434567890</VolunteerId>
+    <TimeOfStarting>2025-01-15T10:54:33</TimeOfStarting>
+    <TimeOfEnding />
+    <TypeOfEnding />
+  </Assignment>
 </ArrayOfAssignment>
