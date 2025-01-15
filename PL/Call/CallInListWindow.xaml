@@ -131,7 +131,7 @@
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
                     Height="34"
-                      ItemsSource="{Binding Source={StaticResource VolunteerInListFieldKey}}"
+                      ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
                       SelectedValue="{Binding Path=SortByField}"/>
             </StackPanel>
 
@@ -166,7 +166,7 @@
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                         <ComboBox 
                             Height="34"
-                            ItemsSource="{Binding Source={StaticResource VolunteerInListFieldKey}}"
+                            ItemsSource="{Binding Source={StaticResource CallInListFieldKey}}"
                             SelectedValue="{Binding FilterByField}"/>
                     </StackPanel>
 
