@@ -117,7 +117,6 @@ public partial class VolunteerLobbyWindow : Window
         DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
     }
 
-
     #endregion
 
     private void OnShowHistory(object sender, RoutedEventArgs e) => new ClosedCallListWindow(VolunteerId).Show();
