@@ -248,7 +248,7 @@ internal class CallImplementation : ICall
                                                  let firstAssignment = callsAssignments.FirstOrDefault()
                                                  select new BO.CallInList
                                                  {
-                                                     Id = firstAssignment?.Id ?? 0, // Default to 0 if no assignment exists
+                                                     Id = firstAssignment?.Id, // Default to 0 if no assignment exists
                                                      CallId = call.Id,
                                                      Status = CallManager.GetStatus(call.Id),
                                                      OpenningTime = call.OpeningTime,
