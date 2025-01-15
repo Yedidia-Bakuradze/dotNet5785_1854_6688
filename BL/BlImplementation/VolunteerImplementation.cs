@@ -45,7 +45,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             }
 
             (double? lat, double? lng) = (null, null);
-            if(volunteer.FullCurrentAddress != null)
+            if(volunteer.FullCurrentAddress != null && volunteer.FullCurrentAddress != "")
             {
                 (lat,lng) = Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
             }

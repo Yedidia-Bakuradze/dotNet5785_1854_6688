@@ -205,7 +205,7 @@ internal static class VolunteerManager
     private static bool IsStreetAddressValid(string? streetAddress)
     {
         //If the user doesn't have a registered address - its ok because its optional
-        if (streetAddress == null)
+        if (streetAddress == null || streetAddress == "")
             return true;
 
         //If the user has any address - check if it has a valid cordinates
