@@ -174,83 +174,46 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns></returns>
     public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByActiveStatus, BO.VolunteerInListField? sortByField)
     {
-
-        //Get filtered or unfiltered enumerable of Volunteers
-        IEnumerable<DO.Volunteer> volunteers = (filterByActiveStatus == null)
+        // Get filtered or unfiltered enumerable of Volunteers
+        var volunteers = (filterByActiveStatus == null)
             ? s_dal.Volunteer.ReadAll()
-            : s_dal.Volunteer.ReadAll((DO.Volunteer volunteer) => volunteer.IsActive == (bool)filterByActiveStatus);
+            : s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive == filterByActiveStatus);
 
-        //Convert to VolunteerInList entities
-        IEnumerable<BO.VolunteerInList> volunteerInLists = from volunteer in volunteers
-                                                           let currentAssignment = s_dal.Assignment
-                                                                    .ReadAll((DO.Assignment assignemnt) => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding is null)
-                                                                    .OrderBy(ass => ass.Id)
-                                                                    .LastOrDefault()
-                                                           let currentCall = currentAssignment == null ? null :s_dal.Call.Read(call => call.Id == currentAssignment?.CallId)
-                                                           select new BO.VolunteerInList
-                                                           {
-                                                               Id = volunteer.Id,
-                                                               FullName = volunteer.FullName,
-                                                               IsActive = volunteer.IsActive,
-                                                               CallId = currentAssignment?.CallId,
-                                                               TypeOfCall = currentCall != null ? (BO.CallType)currentCall!.Type : BO.CallType.Undefined
-                                                           };
-        //Sort the given above enumerable
-        if (sortByField is null)
-            return (from volunteer in volunteerInLists
-                   orderby volunteer.Id
-                   select volunteer);
-        //Issue #16: Refactor
-        switch (sortByField)
+        // Convert to VolunteerInList entities
+        var volunteerInLists = from volunteer in volunteers
+                               let currentAssignment = s_dal.Assignment
+                                   .ReadAll(assignemnt => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding == null)
+                                   .OrderBy(ass => ass.Id)
+                                   .LastOrDefault()
+                               let currentCall = currentAssignment == null ? null : s_dal.Call.Read(call => call.Id == currentAssignment.CallId)
+                               select new BO.VolunteerInList
+                               {
+                                   Id = volunteer.Id,
+                                   FullName = volunteer.FullName,
+                                   IsActive = volunteer.IsActive,
+                                   CallId = currentAssignment?.CallId,
+                                   TypeOfCall = currentCall != null ? (BO.CallType)currentCall.Type : BO.CallType.Undefined
+                               };
+
+        // Sort the enumerable based on the specified field
+        if (sortByField != null)
         {
-            case BO.VolunteerInListField.Id:
-                {
-                    volunteers = from volunteer in volunteers
-                                    orderby volunteer.Id
-                                    select volunteer;
-                    break;
-                }
-            case BO.VolunteerInListField.FullName:
-                {
-                    volunteers = from volunteer in volunteers
-                                    orderby volunteer.FullName
-                                    select volunteer;
-                    break;
-                }
-            case BO.VolunteerInListField.IsActive:
-                    volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.IsActive
-                                    select volunteer;
-                    break;
-            case VolunteerInListField.TotalCallsDoneByVolunteer:
-                volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.TotalCallsDoneByVolunteer
-                                    select volunteer;
-                break;
-            case VolunteerInListField.TotalCallsCancelByVolunteer:
-                volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.TotalCallsCancelByVolunteer
-                                    select volunteer;
-                break;
-            case VolunteerInListField.TotalCallsExpiredByVolunteer:
-                volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.TotalCallsExpiredByVolunteer
-                                    select volunteer;
-                break;
-            case VolunteerInListField.CallId:
-                volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.CallId
-                                    select volunteer;
-                break;
-            case VolunteerInListField.TypeOfCall:
-                volunteerInLists = from volunteer in volunteerInLists
-                                    orderby volunteer.TypeOfCall
-                                    select volunteer;
-                break;
-            case null:
-                throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field null value");
-            default:
-                    throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}");
+            volunteerInLists = sortByField switch
+            {
+                BO.VolunteerInListField.Id => volunteerInLists.OrderBy(volunteer => volunteer.Id),
+                BO.VolunteerInListField.FullName => volunteerInLists.OrderBy(volunteer => volunteer.FullName),
+                BO.VolunteerInListField.IsActive => volunteerInLists.OrderBy(volunteer => volunteer.IsActive),
+                BO.VolunteerInListField.TotalCallsDoneByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsDoneByVolunteer),
+                BO.VolunteerInListField.TotalCallsCancelByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsCancelByVolunteer),
+                BO.VolunteerInListField.TotalCallsExpiredByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsExpiredByVolunteer),
+                BO.VolunteerInListField.CallId => volunteerInLists.OrderBy(volunteer => volunteer.CallId),
+                BO.VolunteerInListField.TypeOfCall => volunteerInLists.OrderBy(volunteer => volunteer.TypeOfCall),
+                _ => throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}")
+            };
+        }
+        else
+        {
+            volunteerInLists = volunteerInLists.OrderBy(volunteer => volunteer.Id);
         }
 
         return volunteerInLists;
