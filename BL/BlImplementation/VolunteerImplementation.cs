@@ -392,9 +392,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             throw new BO.BlInvalidEntityDetails($"BL Error: Invalid id value");
         }
 
-        string? hashedPassword = password is null
-            ? null
-            : VolunteerManager.GetSHA256HashedPassword(password);
+        string? hashedPassword = password;
+        //is null
+        //    ? null
+        //    : VolunteerManager.GetSHA256HashedPassword(password);
 
         DO.Volunteer volunteer = s_dal.Volunteer
             .Read((DO.Volunteer volunteer) => volunteer.Id == validId && volunteer.Password == hashedPassword)
