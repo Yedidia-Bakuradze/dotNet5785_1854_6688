@@ -138,12 +138,12 @@
             <!-- Reset Parameter Button-->
             <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#FDD1FF"
                     Grid.Column="3">
-                <Button Content="Reset" Background="Transparent" BorderThickness="0" FontSize="11" Click="Button_Click"/>
+                <Button Content="Reset" Background="Transparent" BorderThickness="0" FontSize="11" Click="OnResetParameters"/>
             </Border>
             <!-- Filter By Parameter Button-->
             <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#EEFFD6"
                     Grid.Column="7">
-                <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0" Click="Button_Click_1"/>
+                <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0" Click="OnApplyFilterAndSort"/>
             </Border>
             <!-- Add Button-->
             <Border Style="{StaticResource RoundedAddButton }"

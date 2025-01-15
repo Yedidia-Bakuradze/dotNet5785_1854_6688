@@ -74,6 +74,15 @@ public partial class CallInListWindow : Window
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
 
     private void OnAddCall(object sender, RoutedEventArgs e) => new CallWindow(-1).Show();
+    private void OnResetParameters(object sender, RoutedEventArgs e)
+    {
+        SortByField = null;
+        FilterByField = null;
+        FilterByValue = null;
+        SelectedCall = null;
+        RefreshList();
+    }
+    private void OnApplyFilterAndSort(object sender, RoutedEventArgs e) => RefreshList();
 
     #endregion
 
@@ -90,13 +99,4 @@ public partial class CallInListWindow : Window
             );
     #endregion
 
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void Button_Click_1(object sender, RoutedEventArgs e)
-    {
-
-    }
 }
