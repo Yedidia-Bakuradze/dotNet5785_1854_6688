@@ -1,8 +1,9 @@
 ﻿using System.Windows;
 using Microsoft.Web.WebView2.Core;
-
+using Microsoft.Web.WebView2.Wpf;
+using System.Windows.Controls;
 namespace PL.Sub_Windows;
-public partial class VolunteerMapDetailsControl : Window
+public partial class VolunteerMapDetailsControl : UserControl
 {
     private const string GOOGLE_MAPS_API_KEY = "AIzaSyAzbe6J2zmObUxADHW0yfmaJ-9thYaD_mE"; // Replace with your API key
     private readonly double sourceLat = 40.7128; // New York City coordinates
