@@ -8,12 +8,14 @@ namespace PL
     {
         public string IdField { get; set; } = "";
         public string passwordField { get; set; } = "";
+        public Visibility IsRoleSelectionVisible { get; set; } = Visibility.Collapsed;
 
         private static BlApi.IBl s_bl = BlApi.Factory.Get();
 
         public LobbyScreen()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         private void Login_Button(object sender, RoutedEventArgs e)
@@ -23,8 +25,9 @@ namespace PL
                 string role = s_bl.Volunteer.Login(IdField, passwordField);
                 if (role == "Admin")
                 {
-                    MainContent.Visibility = Visibility.Collapsed;
-                    RoleSelection.Visibility = Visibility.Visible;
+                    IsRoleSelectionVisible = Visibility.Visible;
+                    // Force UI to update (using Data Binding only)
+                    Dispatcher.Invoke(() => { DataContext = null; DataContext = this; });
                 }
                 else if (role == "Volunteer")
                 {
@@ -42,16 +45,12 @@ namespace PL
         {
             MessageBox.Show("Admin selected!");
             new AdminWindow().Show();
-            RoleSelection.Visibility = Visibility.Collapsed;
-            MainContent.Visibility = Visibility.Visible;
         }
 
         private void Volunteer_Button_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Volunteer selected!");
             new VolunteerLobbyWindow(int.Parse(IdField)).Show();
-            RoleSelection.Visibility = Visibility.Collapsed;
-            MainContent.Visibility = Visibility.Visible;
         }
     }
 }
