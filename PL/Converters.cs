@@ -239,6 +239,18 @@ class ConvertStatusToVisibility : IValueConverter
 #endregion
 
 
+internal class ConvertActiveStatusToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? Visibility.Visible : Visibility.Hidden;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => false;
+}
+
+internal class ConvertActiveStatusToVisibilityReveresed : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value == false ? Visibility.Visible : Visibility.Hidden;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => false;
+}
+
 internal class ConvertStatusToVisibilityLevelOne : IMultiValueConverter
 {
     public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
@@ -313,6 +325,13 @@ class ConvertRoleToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         => (BO.UserRole)value == BO.UserRole.Volunteer ? Visibility.Hidden : Visibility.Visible;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
+}
+
+class ConvertRoleToVisibilityReveresed : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => (BO.UserRole)value == BO.UserRole.Admin ? Visibility.Hidden : Visibility.Visible;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
 

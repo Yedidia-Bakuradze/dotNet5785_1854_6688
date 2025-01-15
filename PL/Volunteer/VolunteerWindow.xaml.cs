@@ -1,4 +1,5 @@
-﻿using PL.Call;
+﻿using BO;
+using PL.Call;
 using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,7 @@ public partial class VolunteerWindow : Window
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
     public int VolunteerId { get; set; }
+    public string? CallStatus { get; set; }
     #endregion
 
     #region Dependency Properties
@@ -135,18 +137,6 @@ public partial class VolunteerWindow : Window
     }
     #endregion
 
-    private void RefereshScreen()
-    {
-        CurrentVolunteer = (VolunteerId == 0)
-                ? new BO.Volunteer()
-                : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-
-
-        VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
-        //VolunteerMapDetailsUserControl = new VolunteerMapDetailsUserControl(CurrentVolunteer);
-    }
-    #endregion
-
     private void OnWindowLoaded(object sender, RoutedEventArgs e)
     {
         s_bl.Volunteer.AddObserver(RefereshScreen);
@@ -158,4 +148,17 @@ public partial class VolunteerWindow : Window
         s_bl.Volunteer.RemoveObserver(RefereshScreen);
         s_bl.Call.RemoveObserver(RefereshScreen);
     }
+    #endregion
+    #region Methods
+    private void RefereshScreen()
+    {
+        CurrentVolunteer = (VolunteerId == 0)
+                ? new BO.Volunteer()
+                : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+        CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
+
+        VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
+        //VolunteerMapDetailsUserControl = new VolunteerMapDetailsUserControl(CurrentVolunteer);
+    }
+    #endregion
 }

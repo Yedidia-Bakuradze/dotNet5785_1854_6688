@@ -181,11 +181,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Volunteer" HorizontalContentAlignment="Right" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="0" Content="Volunteer" HorizontalContentAlignment="Right" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityReveresedKey}}"/>
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
                             <Button Style="{StaticResource BinaryBtnBtn}" Content="X" Background="Red"/>
                         </Border>
-                        <Label Grid.Column="2" Content="Admin" HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="2" Content="Admin" HorizontalContentAlignment="Left" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityKey}}"/>
                     </Grid>
                 </StackPanel>
                 <!--Is Active-->
@@ -196,15 +196,15 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="0" Content="Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityKey}}"/>
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
                             <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="Red"/>
                         </Border>
-                        <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="White" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityReveresedKey}}"/>
                     </Grid>
                 </StackPanel>
                 <!--Call In Progress-->
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,11,0,0">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,11,0,0" Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="70"/>
@@ -215,7 +215,7 @@
                         <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
                             <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="Red"/>
                         </Border>
-                        <Label Grid.Column="2" Content="In " HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="2" Content="{Binding CallStatus}" HorizontalContentAlignment="Left" FontSize="11" Foreground="White"/>
                     </Grid>
                 </StackPanel>
             </StackPanel>
