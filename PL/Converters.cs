@@ -383,3 +383,11 @@ class ConvertRoleToColor : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
+
+
+class ConvertRoleToReadOnly : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (BO.UserRole)value == BO.UserRole.Admin;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
+}

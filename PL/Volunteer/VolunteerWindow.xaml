@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="Volunteer" Height="640" Width="762"
+        Title="Volunteer" Height="793" Width="762"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Loaded="OnWindowLoaded"
         Closed="Window_Closed"
@@ -58,26 +58,15 @@
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="206"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Height" Value="23"/>
-            
-        </Style>
-        <Style x:Key="InputFieldBorder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <Style x:Key="EnumComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="Red"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Width" Value="206"/>
             <Setter Property="Height" Value="23"/>
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect Color="Black"
-                                      Direction="-90"
-                                      ShadowDepth="1"
-                                      BlurRadius="4"
-                                      />
-                </Setter.Value>
-            </Setter>
-
         </Style>
     </Window.Resources>
     <Grid>
@@ -101,30 +90,26 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="43"/>
             </Grid.RowDefinitions>
-            
+
+
+            <TextBlock Text="{Binding CurrentVolunteer.FullName }" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20"/>
             <!-- Fields-->
             <StackPanel HorizontalAlignment="Center" Grid.Row="1">
                 
                 <!--Id-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Id:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.Id}" IsReadOnly="{Binding UserRoleIndicator,Converter={StaticResource ConvertRoleToReadOnlyKey}}"/>
                 </StackPanel>
                 <!--Name-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Volunteer name:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.FullName}"/>
                 </StackPanel>
                 <!--Email-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Email address:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.Email}"/>
                 </StackPanel>
                 <!--Password-->
                 <StackPanel HorizontalAlignment="Left">
@@ -133,45 +118,33 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Password:" FontSize="11" Foreground="White"/>
+                        <Label Grid.Column="0" Content="Password:" FontSize="11" Foreground="#EEB600" />
                         <StackPanel Orientation="Horizontal" Grid.Column="1" >
-                            <Label Content="Modified Password" FontSize="11" Foreground="White"/>
-                            <Border Style="{StaticResource BinaryBtnBorder}">
-                                <Button Style="{StaticResource BinaryBtnBtn}" Background="#EEB600" Height="13" Width="13"/>
-                            </Border>
+                            <Label Content="Modified Password" FontSize="11" Foreground="#EEB600"/>
+                            <Button Style="{StaticResource BinaryBtnBtn}" Height="13" Width="13" Click="OnPasswordVisibilityChanged" Background="#EEB600"/>
                         </StackPanel>
                     </Grid>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding NewPassword}" IsReadOnly="{Binding PasswordVisibility}" Background="#EEB600"/>
                 </StackPanel>
                 <!--Full Address-->
                 <StackPanel HorizontalAlignment="Left">
-                    <Label Content="Full address:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <Label Content="Full address:" FontSize="11" Foreground="#EEB600"/>
+                     <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.FullCurrentAddress}" />
                 </StackPanel>
                 <!--Max Distance-->
                 <StackPanel HorizontalAlignment="Left">
-                    <Label Content="Max Distance:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <Label Content="Max Distance:" FontSize="11" Foreground="#EEB600"/>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.MaxDistanceToCall}"/>
                 </StackPanel>
                 <!--Phone Number-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Phone number:" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                     <TextBox HorizontalAlignment="Left" Text="{Binding CurrentVolunteer.PhoneNumber}"/>
                 </StackPanel>
                 <!--Type of range-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Type of Range" FontSize="11" Foreground="White"/>
-                    <Border Style="{StaticResource InputFieldBorder}" >
-                        <TextBox HorizontalAlignment="Left"/>
-                    </Border>
+                    <ComboBox Style="{StaticResource EnumComboBox}" HorizontalAlignment="Left" ItemsSource="{StaticResource TypeOfRangeCollectionKey}" SelectedItem="{Binding CurrentVolunteer.RangeType}" />
                 </StackPanel>
                 <!--Role-->
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,11,0,0">
@@ -182,8 +155,8 @@
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="Volunteer" HorizontalContentAlignment="Right" FontSize="11" Foreground="#1FBCFF" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityReveresedKey}}"/>
-                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="X" Background="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToColorKey}}"/>
+                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}" Background="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToColorKey}}"  >
+                            <Button Style="{StaticResource BinaryBtnBtn}" Click="OnRoleChanged"/>
                         </Border>
                         <Label Grid.Column="2" Content="Admin" HorizontalContentAlignment="Left" FontSize="11" Foreground="#FF00EE" Visibility="{Binding CurrentVolunteer.Role,Converter={StaticResource ConvertRoleToVisibilityKey}}"/>
                     </Grid>
@@ -197,8 +170,8 @@
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="Active" HorizontalContentAlignment="Right" FontSize="11" Foreground="#04FF64" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityKey}}"/>
-                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="#04FF47"/>
+                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}" Background="#04FF47">
+                            <Button Style="{StaticResource BinaryBtnBtn}" Click="OnActiveValueChanged"/>
                         </Border>
                         <Label Grid.Column="2" Content="Not Active" HorizontalContentAlignment="Left" FontSize="11" Foreground="#FF7676" Visibility="{Binding CurrentVolunteer.IsActive,Converter={StaticResource ConvertActiveStatusToVisibilityReveresedKey}}"/>
                     </Grid>
@@ -212,8 +185,8 @@
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="Call Active" HorizontalContentAlignment="Right" Foreground="#E3AC46" FontSize="11" />
-                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}">
-                            <Button Style="{StaticResource BinaryBtnBtn}" Content="Y" Background="#ED4DD8"/>
+                        <Border Grid.Column="1" Style="{StaticResource BinaryBtnBorder}"  Background="#ED4DD8">
+                            <Button Style="{StaticResource BinaryBtnBtn}"/>
                         </Border>
                         <Label Grid.Column="2" Content="{Binding CallStatus}" HorizontalContentAlignment="Left" Foreground="#E3AC46"  FontSize="11" />
                     </Grid>
@@ -223,7 +196,7 @@
 
             <!--Submit-->
             <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource SubmitBtnBorder}">
-                <Button Style="{StaticResource SubmitBtnBtn}" Click="OnShowCurrentCallInProgress"/>
+                <Button Style="{StaticResource SubmitBtnBtn}" Click="OnSubmitBtnClick"/>
             </Border>
                 
         </Grid>
@@ -240,7 +213,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
-            <ContentControl Content="{Binding VolunteerDetailsUserControl}" Grid.Row="1"/>
+            <ContentControl Margin="5" Content="{Binding VolunteerDetailsUserControl}" Grid.Row="1"/>
             <ContentControl Content="{Binding VolunteerMapDetailsUserControl}" Grid.Row="3"/>
         </Grid>
     </Grid>

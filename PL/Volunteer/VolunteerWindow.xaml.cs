@@ -53,9 +53,9 @@ public partial class VolunteerWindow : Window
     /// <summary>
     /// The current volunteer which is shown on the UI
     /// </summary>
-    public BO.Volunteer? CurrentVolunteer
+    public BO.Volunteer CurrentVolunteer
     {
-        get => (BO.Volunteer?)GetValue(CurrentVolunteerProperty);
+        get => (BO.Volunteer)GetValue(CurrentVolunteerProperty);
         set => SetValue(CurrentVolunteerProperty, value);
     }
 
@@ -77,6 +77,13 @@ public partial class VolunteerWindow : Window
     public static readonly DependencyProperty PasswordVisibilityPropety =
         DependencyProperty.Register("PasswordVisibility", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(null));
 
+    public string? NewPassword
+    {
+        get => (string?)GetValue(NewPasswordProperty);
+        set => SetValue(NewPasswordProperty,value);
+    }
+    public static readonly DependencyProperty NewPasswordProperty =
+    DependencyProperty.Register("NewPassword", typeof(string), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public UserControl VolunteerDetailsUserControl
     {  
@@ -84,7 +91,7 @@ public partial class VolunteerWindow : Window
         set => SetValue(VolunteerDetailsUserControlPropperty,value);
     }
 
-    private static readonly DependencyProperty VolunteerDetailsUserControlPropperty =
+    public static readonly DependencyProperty VolunteerDetailsUserControlPropperty =
         DependencyProperty.Register("VolunteerDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
     public UserControl VolunteerMapDetailsUserControl
     {
@@ -92,7 +99,7 @@ public partial class VolunteerWindow : Window
         set => SetValue(VolunteerMapDetailsUserControlPropperty, value);
     }
 
-    private static readonly DependencyProperty VolunteerMapDetailsUserControlPropperty =
+    public static readonly DependencyProperty VolunteerMapDetailsUserControlPropperty =
         DependencyProperty.Register("VolunteerMapDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
     #endregion
 
@@ -115,6 +122,8 @@ public partial class VolunteerWindow : Window
             }
             else if (ButtonText == "Update Volunteer")
             {
+                if (PasswordVisibility)
+                    CurrentVolunteer.Password = NewPassword;
                 s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer,PasswordVisibility);
                 MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -132,7 +141,7 @@ public partial class VolunteerWindow : Window
     /// <param name="e"></param>
     private void OnShowCurrentCallInProgress(object sender, RoutedEventArgs e)
     {
-        if(CurrentVolunteer?.CurrentCall != null)
+        if(CurrentVolunteer.CurrentCall != null)
             new CallInProgressWindow(CurrentVolunteer.CurrentCall).Show();
     }
     #endregion
@@ -161,4 +170,21 @@ public partial class VolunteerWindow : Window
         //VolunteerMapDetailsUserControl = new VolunteerMapDetailsUserControl(CurrentVolunteer);
     }
     #endregion
+
+    private void OnActiveValueChanged(object sender, RoutedEventArgs e) => CurrentVolunteer!.IsActive = !CurrentVolunteer.IsActive;
+
+    private void OnRoleChanged(object sender, RoutedEventArgs e) => CurrentVolunteer!.Role = CurrentVolunteer.Role == BO.UserRole.Admin ? BO.UserRole.Volunteer : BO.UserRole.Admin;
+
+    private void OnPasswordVisibilityChanged(object sender, RoutedEventArgs e)
+    {
+        PasswordVisibility = !PasswordVisibility;
+        if (PasswordVisibility)
+        {
+            NewPassword = CurrentVolunteer.Password;
+        }
+        else
+        {
+            NewPassword = null;
+        }
+    }
 }
