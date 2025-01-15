@@ -23,7 +23,7 @@ namespace PL
                 string role = s_bl.Volunteer.Login(IdField, passwordField);
                 if (role == "Admin")
                 {
-                    new AdminWindow().Show();
+                    
                     MainContent.Visibility = Visibility.Collapsed;
                     RoleSelection.Visibility = Visibility.Visible;
                 }
