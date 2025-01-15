@@ -136,8 +136,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
-            <ContentControl Margin="5" Content="{Binding VolunteerDetailsUserControl}" Grid.Row="1"/>
-            <ContentControl Content="{Binding VolunteerMapDetailsUserControl}" Grid.Row="3"/>
+            <ContentControl Margin="5" Content="{Binding CallDetailsControler}" Grid.Row="1"/>
+            <ContentControl Content="{Binding CallMapDetailsControler}" Grid.Row="3"/>
         </Grid>
     </Grid>
 </Window>

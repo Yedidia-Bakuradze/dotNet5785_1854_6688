@@ -8,20 +8,51 @@ public partial class CallInListWindow : Window
     public CallInListWindow(int userId,BO.CallStatus? requstedCallByStatus = null) {
         RequestedSpecialMode = requstedCallByStatus;
         UserId = userId;
-        InitializeComponent();
         RefreshList();
+        InitializeComponent();
     }
 
     #region Regular Propeties
-    public BO.CallInList? SelectedCall { get; set; }
     public int UserId { get; set; }
     public BO.CallStatus? RequestedSpecialMode{ get; set; }
-    public string? FilterByValue { get; set; }
-    public BO.CallInListFields? FilterByField { get; set; }
-    public BO.CallInListFields? SortByField { get; set; }
     #endregion
-
     #region Dependecy Propeties
+    public BO.CallInList? SelectedCall
+    {
+        get => (BO.CallInList?)GetValue(SelectedCallProperty);
+        set => SetValue(SelectedCallProperty, value);
+    }
+
+    public static readonly DependencyProperty SelectedCallProperty =
+        DependencyProperty.Register("SelectedCall", typeof(BO.CallInList), typeof(CallInListWindow), new PropertyMetadata(null));
+
+    public string? FilterByValue
+    {
+        get => (string?)GetValue(FilterByValueProperty);
+        set => SetValue(FilterByValueProperty, value);
+    }
+
+    public static readonly DependencyProperty FilterByValueProperty =
+        DependencyProperty.Register("FilterByValue", typeof(string), typeof(CallInListWindow), new PropertyMetadata(null));
+
+    public BO.CallInListFields? FilterByField
+    {
+        get => (BO.CallInListFields?)GetValue(FilterByFieldProperty);
+        set => SetValue(FilterByFieldProperty, value);
+    }
+
+    public static readonly DependencyProperty FilterByFieldProperty =
+        DependencyProperty.Register("FilterByField", typeof(BO.CallInListFields?), typeof(CallInListWindow), new PropertyMetadata(null));
+
+    public BO.CallInListFields? SortByField
+    {
+        get => (BO.CallInListFields?)GetValue(SortByFieldProperty);
+        set => SetValue(SortByFieldProperty, value);
+    }
+
+    public static readonly DependencyProperty SortByFieldProperty =
+        DependencyProperty.Register("SortByField", typeof(BO.CallInListFields?), typeof(CallInListWindow), new PropertyMetadata(null));
+
     public IEnumerable<BO.CallInList> ListOfCalls
     {
         get => (IEnumerable<BO.CallInList>)GetValue(ListOfCallsProperty);

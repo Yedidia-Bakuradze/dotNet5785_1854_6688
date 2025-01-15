@@ -11,6 +11,7 @@ public partial class CallWindow : Window
     const string UpdateMode = "Update Call";
     public CallWindow(int callId)
     {
+        CallId = callId;
         if(callId == -1)
         {
             CurrentCall = new BO.Call();
@@ -18,10 +19,9 @@ public partial class CallWindow : Window
         }
         else
         {
-            CurrentCall = s_bl.Call.GetDetielsOfCall(callId);
+            Referesh();
             ButtonText = UpdateMode;
         }
-        Referesh();
         InitializeComponent();
     }
     #region Dependecy Propeties
