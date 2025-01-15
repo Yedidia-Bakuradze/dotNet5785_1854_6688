@@ -11,7 +11,7 @@ namespace PL
         public Visibility IsRoleSelectionVisible { get; set; } = Visibility.Collapsed;
 
         private static BlApi.IBl s_bl = BlApi.Factory.Get();
-
+        public int UserId { get; set; }
         public LobbyScreen()
         {
             InitializeComponent();
@@ -23,6 +23,7 @@ namespace PL
             try
             {
                 string role = s_bl.Volunteer.Login(IdField, passwordField);
+                UserId = int.Parse(IdField);
                 if (role == "Admin")
                 {
                     IsRoleSelectionVisible = Visibility.Visible;
@@ -43,13 +44,11 @@ namespace PL
 
         private void Admin_Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Admin selected!");
-            new AdminWindow().Show();
+            new AdminWindow(UserId).Show();
         }
 
         private void Volunteer_Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Volunteer selected!");
             new VolunteerLobbyWindow(int.Parse(IdField)).Show();
         }
     }

@@ -5,7 +5,7 @@ namespace PL.Call;
 public partial class CallInListWindow : Window
 {
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public CallInListWindow(BO.CallStatus? requstedCallByStatus = null,int userId = 332461854) {
+    public CallInListWindow(int userId,BO.CallStatus? requstedCallByStatus = null) {
         RequestedSpecialMode = requstedCallByStatus;
         UserId = userId;
         InitializeComponent();
