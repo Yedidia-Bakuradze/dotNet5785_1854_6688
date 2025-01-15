@@ -14,13 +14,49 @@ public partial class VolunteerListWindow : Window
 
     #region Regular Propeties
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-    public static BO.VolunteerInListField? SortByField { get; set; }
-    public static BO.VolunteerInListField? FilterByField { get; set; }
-    public static string? FilterByValue { get; set; }
-    public BO.VolunteerInList? SelectedVolunteer { get; set; }
     #endregion
 
     #region Dependency Properties
+    public BO.VolunteerInListField? SortByField
+    {
+        get => (BO.VolunteerInListField?)GetValue(SortByFieldProperty);
+        set => SetValue(SortByFieldProperty,value);
+    }
+    public static readonly DependencyProperty SortByFieldProperty =
+        DependencyProperty.Register("SortByField",
+            typeof(BO.VolunteerInListField?),
+            typeof(VolunteerListWindow),
+            new PropertyMetadata(null));
+    public BO.VolunteerInListField? FilterByField
+    {
+        get => (BO.VolunteerInListField?)GetValue(FilterByFieldProperty);
+        set => SetValue(FilterByFieldProperty, value);
+    }
+    public static readonly DependencyProperty FilterByFieldProperty =
+        DependencyProperty.Register("FilterByField",
+            typeof(BO.VolunteerInListField?),
+            typeof(VolunteerListWindow),
+            new PropertyMetadata(null));
+    public string? FilterByValue
+    {
+        get => (string?)GetValue(FilterByValueProperty);
+        set => SetValue(FilterByValueProperty, value);
+    }
+    public static readonly DependencyProperty FilterByValueProperty =
+        DependencyProperty.Register("FilterByValue",
+            typeof(string),
+            typeof(VolunteerListWindow),
+            new PropertyMetadata(null));
+    public BO.VolunteerInList? SelectedVolunteer
+    {
+        get => (BO.VolunteerInList?)GetValue(SelectedVolunteerProperty);
+        set => SetValue(SelectedVolunteerProperty, value);
+    }
+    public static readonly DependencyProperty SelectedVolunteerProperty =
+        DependencyProperty.Register("SelectedVolunteer",
+            typeof(BO.VolunteerInList),
+            typeof(VolunteerListWindow),
+            new PropertyMetadata(null));
     /// <summary>
     /// The property which is the source of the volunteers in the window
     /// </summary>
