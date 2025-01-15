@@ -6,7 +6,7 @@
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              xmlns:local="clr-namespace:PL.Sub_Windows"
              mc:Ignorable="d" 
-             d:DesignHeight="381" d:DesignWidth="297"
+             d:DesignHeight="264" d:DesignWidth="381"
              DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
              >
     <UserControl.Resources>
@@ -28,6 +28,7 @@
                 <Label Content="Call Start Time"/>
                 <Label Content="Call Deadline"/>
                 <Label Content="Status"/>
+                <Label Content="Take times"/>
             </StackPanel>
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Label Content="{Binding CurrentCall.Id}"/>
@@ -37,6 +38,7 @@
                 <Label Content="{Binding CurrentCall.CallStartTime}"/>
                 <Label Content="{Binding CurrentCall.CallDeadLine}"/>
                 <Label Content="{Binding CurrentCall.Status}"/>
+                <Label Content="{Binding Count}"/>
             </StackPanel>
         </Grid>
     </Border>

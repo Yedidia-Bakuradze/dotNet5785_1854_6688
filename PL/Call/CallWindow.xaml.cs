@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PL.Sub_Windows;
+using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PL.Call;
 
@@ -19,6 +21,7 @@ public partial class CallWindow : Window
             CurrentCall = s_bl.Call.GetDetielsOfCall(callId);
             ButtonText = UpdateMode;
         }
+        Referesh();
         InitializeComponent();
     }
     #region Dependecy Propeties
@@ -39,10 +42,27 @@ public partial class CallWindow : Window
     }
     private static readonly DependencyProperty ButtonTextProperty =
         DependencyProperty.Register("ButtonText",typeof(string),typeof(CallWindow));
+
+
+    public UserControl CallDetailsControler 
+    {
+        get => (UserControl)GetValue(CallDetailsControlerProperty);
+        set => SetValue(CallDetailsControlerProperty,value);
+    }
+    private static readonly DependencyProperty CallDetailsControlerProperty =
+        DependencyProperty.Register("CallDetailsControler", typeof(UserControl), typeof(CallWindow));
+    public UserControl CallMapDetailsControler
+    {
+        get => (UserControl)GetValue(CallMapDetailsControlerProperty);
+        set => SetValue(CallMapDetailsControlerProperty, value);
+    }
+    private static readonly DependencyProperty CallMapDetailsControlerProperty =
+        DependencyProperty.Register("CallMapDetailsControler", typeof(UserControl), typeof(CallWindow));
     #endregion
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    public int CallId { get; set; }
     public string HourSet { get; set; } = "";
     #endregion
 
@@ -67,7 +87,7 @@ public partial class CallWindow : Window
             else
                 s_bl.Call.UpdateCall(CurrentCall);
             MessageBox.Show($@"Call Has been {ButtonText} Succecfully");
-            Close();
+
         }
         catch(Exception ex)
         {
@@ -79,6 +99,21 @@ public partial class CallWindow : Window
     #endregion
 
     #region Method
+    private void Referesh()
+    {
+        try
+        {
+        CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
+        CallDetailsControler = new CallDetailsControl(CurrentCall);
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            Close();
+        }
+    }
     #endregion
 
+    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Referesh);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Referesh);
 }

@@ -17,11 +17,13 @@ namespace PL.Sub_Windows;
 
 public partial class CallDetailsControl : UserControl
 {
-    public CallDetailsControl(BO.Call volunteer)
+    public CallDetailsControl(BO.Call call)
     {
-        CurrentCall = volunteer;
+        CurrentCall = call;
+        Count = call.MyAssignments?.Count() ?? 0;
         InitializeComponent();
     }
 
     public BO.Call? CurrentCall { get; set; }
+    public int Count { get; set; }
 }
