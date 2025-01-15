@@ -8,7 +8,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="VolunteerInList"
         Height="450"
-        Width="800"
+        Width="970"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
@@ -18,6 +18,31 @@
             <Setter Property="CornerRadius" Value="100"/>
             <Setter Property="Height" Value="50"/>
             <Setter Property="Width" Value="50"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ParameterModificationBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Width" Value="72"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>           
             <Setter Property="Background" Value="White"/>
         </Style>
     </Window.Resources>
@@ -61,14 +86,14 @@
             </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <!--Is Active indicator-->
-                <DataGridTemplateColumn Header="Is Active" Width="Auto">
+                <DataGridTemplateColumn Header="Is Active" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsEnabled="False" IsChecked="{Binding Path=IsActive}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="100"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150"/>
                 <DataGridTextColumn Header="Calls Done" Binding="{Binding TotalCallsDoneByVolunteer}" Width="100"/>
                 <DataGridTextColumn Header="Calls Cancelled" Binding="{Binding TotalCallsCancelByVolunteer}" Width="120"/>
@@ -77,7 +102,7 @@
                 <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="100"/>
 
                 <!--Delete volunteer btn-->
-                <DataGridTemplateColumn Header="Delete" Width="Auto">
+                <DataGridTemplateColumn Header="Delete" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="Delete" Click="OnDeleteVolunteerInList" />
@@ -93,25 +118,39 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="70"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="335"/>
                 <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sort Action-->
-            <StackPanel Grid.Column="5">
+            <StackPanel Grid.Column="9">
                 <Label HorizontalAlignment="Left" Content="Select a field to sort by"
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
-                    Height="34"
+                    Height="34" Width="335"
                       ItemsSource="{Binding Source={StaticResource VolunteerInListFieldKey}}"
-                      SelectedValue="{Binding Path=SortByField}"
-                      SelectionChanged="OnSortingValueChanged"/>
+                      SelectedValue="{Binding Path=SortByField}"/>
             </StackPanel>
+            
+            <!-- Reset Parameter Button-->
+            <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#FDD1FF"
+                    Grid.Column="3">
+                <Button Content="Reset" Background="Transparent" BorderThickness="0" FontSize="11" Click="OnResetParameters"/>
+            </Border>
+            <!-- Filter By Parameter Button-->
+            <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#EEFFD6"
+                    Grid.Column="7">
+                <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0" Click="OnApplyFiltersAndSort"/>
+            </Border>
             <!-- Add Button-->
             <Border Style="{StaticResource RoundedAddButton }"
-                    Grid.Column="3">
+                    Grid.Column="5">
                 <Button Content="+" Background="Transparent" BorderThickness="0" FontSize="18" Click="OnAddVolunteer"/>
             </Border>
             
@@ -141,7 +180,6 @@
                         <TextBox Height="34" Text="{Binding FilterByValue}"/>
                     </StackPanel>
                 </Grid>
-                <Button Height="20" Content="Filter Now" Click="OnFilterValueChanged"/>
             </StackPanel>
         </Grid>
     </Grid>
