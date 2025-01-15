@@ -229,10 +229,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>Filtered and optionlly sorted VolunteerInLists</returns>
     public IEnumerable<BO.VolunteerInList> GetFilteredVolunteers(BO.VolunteerInListField? filterField, object? filterValue, BO.VolunteerInListField? sortByField)
     {
-        // קבלת כל המתנדבים
         var volunteers = GetVolunteers(null, null);
 
-        // סינון לפי שדה מסוים
         if (filterField != null && filterValue != null)
         {
             switch (filterField)
@@ -303,7 +301,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             }
         }
 
-        // מיון לפי שדה מסוים
         if (sortByField != null)
         {
             switch (sortByField)
@@ -337,7 +334,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             }
         }
 
-        // החזרת הרשימה המסוננת והממוינת
         return volunteers;
     }
 
