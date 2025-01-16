@@ -29,7 +29,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <Style x:Key="ParameterModificationBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Height" Value="34"/>

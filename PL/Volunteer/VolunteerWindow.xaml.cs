@@ -1,5 +1,8 @@
-﻿using PL.Call;
+﻿using BO;
+using PL.Call;
+using PL.Sub_Windows;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PL.Volunteer;
 
@@ -10,30 +13,21 @@ public partial class VolunteerWindow : Window
 {
     public VolunteerWindow(int id, BO.UserRole windowRole)
     {
+        VolunteerId = id;
         UserRoleIndicator = windowRole;
         ButtonText = id == 0
             ? "Add"
             : "Update";
 
         ButtonText += " Volunteer";
-
-        //Getting the volunteer / creating a new one
-        try
-        {
-            CurrentVolunteer = (id == 0)
-                ? new BO.Volunteer()
-                : s_bl.Volunteer.GetVolunteerDetails(id);
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-        
+        RefereshScreen();
         InitializeComponent();
     }
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    public int VolunteerId { get; set; }
+    public string? CallStatus { get; set; }
     #endregion
 
     #region Dependency Properties
@@ -59,9 +53,9 @@ public partial class VolunteerWindow : Window
     /// <summary>
     /// The current volunteer which is shown on the UI
     /// </summary>
-    public BO.Volunteer? CurrentVolunteer
+    public BO.Volunteer CurrentVolunteer
     {
-        get => (BO.Volunteer?)GetValue(CurrentVolunteerProperty);
+        get => (BO.Volunteer)GetValue(CurrentVolunteerProperty);
         set => SetValue(CurrentVolunteerProperty, value);
     }
 
@@ -82,6 +76,31 @@ public partial class VolunteerWindow : Window
 
     public static readonly DependencyProperty PasswordVisibilityPropety =
         DependencyProperty.Register("PasswordVisibility", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(null));
+
+    public string? NewPassword
+    {
+        get => (string?)GetValue(NewPasswordProperty);
+        set => SetValue(NewPasswordProperty,value);
+    }
+    public static readonly DependencyProperty NewPasswordProperty =
+    DependencyProperty.Register("NewPassword", typeof(string), typeof(VolunteerWindow), new PropertyMetadata(null));
+
+    public UserControl VolunteerDetailsUserControl
+    {  
+        get => (UserControl)(GetValue(VolunteerDetailsUserControlPropperty));
+        set => SetValue(VolunteerDetailsUserControlPropperty,value);
+    }
+
+    public static readonly DependencyProperty VolunteerDetailsUserControlPropperty =
+        DependencyProperty.Register("VolunteerDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
+    public UserControl VolunteerMapDetailsUserControl
+    {
+        get => (UserControl)(GetValue(VolunteerMapDetailsUserControlPropperty));
+        set => SetValue(VolunteerMapDetailsUserControlPropperty, value);
+    }
+
+    public static readonly DependencyProperty VolunteerMapDetailsUserControlPropperty =
+        DependencyProperty.Register("VolunteerMapDetailsUserControl", typeof(UserControl), typeof(VolunteerWindow));
     #endregion
 
     #region Events
@@ -103,6 +122,8 @@ public partial class VolunteerWindow : Window
             }
             else if (ButtonText == "Update Volunteer")
             {
+                if (PasswordVisibility)
+                    CurrentVolunteer.Password = NewPassword;
                 s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer,PasswordVisibility);
                 MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -120,11 +141,51 @@ public partial class VolunteerWindow : Window
     /// <param name="e"></param>
     private void OnShowCurrentCallInProgress(object sender, RoutedEventArgs e)
     {
-        if(CurrentVolunteer?.CurrentCall != null)
+        if(CurrentVolunteer.CurrentCall != null)
             new CallInProgressWindow(CurrentVolunteer.CurrentCall).Show();
     }
     #endregion
 
+    private void OnWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Volunteer.AddObserver(RefereshScreen);
+        s_bl.Call.AddObserver(RefereshScreen);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.Volunteer.RemoveObserver(RefereshScreen);
+        s_bl.Call.RemoveObserver(RefereshScreen);
+    }
+    #endregion
+    #region Methods
+    private void RefereshScreen()
+    {
+        CurrentVolunteer = (VolunteerId == 0)
+                ? new BO.Volunteer()
+                : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+        CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
+
+        VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
+        //TOOD: Fix it in a way that no x:Name would be used
+        //VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl((double)CurrentVolunteer.Latitude!,(double)CurrentVolunteer.Longitude!,null,null);
+    }
     #endregion
 
+    private void OnActiveValueChanged(object sender, RoutedEventArgs e) => CurrentVolunteer!.IsActive = !CurrentVolunteer.IsActive;
+
+    private void OnRoleChanged(object sender, RoutedEventArgs e) => CurrentVolunteer!.Role = CurrentVolunteer.Role == BO.UserRole.Admin ? BO.UserRole.Volunteer : BO.UserRole.Admin;
+
+    private void OnPasswordVisibilityChanged(object sender, RoutedEventArgs e)
+    {
+        PasswordVisibility = !PasswordVisibility;
+        if (PasswordVisibility)
+        {
+            NewPassword = CurrentVolunteer.Password;
+        }
+        else
+        {
+            NewPassword = null;
+        }
+    }
 }

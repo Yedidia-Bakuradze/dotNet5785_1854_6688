@@ -7,12 +7,14 @@ namespace PL.Admin;
 public partial class AdminWindow : Window
 {
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-    public AdminWindow()
+    public AdminWindow(int adminId)
     {
+        AdminId = adminId;
         InitializeComponent();
         UpdateAllBottomButtonTexts();
     }
 
+    public int AdminId { get; set; }
     #region Dependency Propeties
     public DateTime CurrentTime
     {
@@ -304,7 +306,7 @@ public partial class AdminWindow : Window
     /// This method pops up the CallInList window showing all the calls if the past parameter is null, otherwise it would show the calls with the past parameter's status value
     /// </summary>
     /// <param name="callStatus"></param>
-    private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(callStatus).Show();
+    private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(AdminId, callStatus).Show();
     private void OnRiskRagneReset(object sender, RoutedEventArgs e) {
         s_bl.Admin.SetRiskRange(TimeSpan.Zero);
         configObserver();
