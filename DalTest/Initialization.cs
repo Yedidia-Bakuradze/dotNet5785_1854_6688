@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using System.Data;
 
 static public class Initialization
 {
@@ -462,7 +463,7 @@ static public class Initialization
     private static void createVolunteers()
     {
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 95; i++)
         {
             Console.WriteLine($"Volunteer Number {i + 1} has been created!");
             Volunteer newVolunteer = new Volunteer
@@ -480,10 +481,6 @@ static public class Initialization
                 Latitude = s_latitudes[i % (s_latitudes.Length - 1)],
                 Longitude = s_longitudes[i % (s_longitudes.Length - 1)]
             };
-            if (local_ids.Count > 0)
-            {
-                local_ids.Remove(newVolunteer.Id);
-            }
             try
             {
                 s_dal?.Volunteer?.Create(newVolunteer);
