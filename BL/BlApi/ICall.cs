@@ -1,5 +1,5 @@
 ﻿namespace BlApi;
-public interface ICall :IObservable //Stage 5
+public interface ICall : IObservable //Stage 5
 {
     /// <summary>
     /// Get the total number of calls by their status
@@ -12,7 +12,7 @@ public interface ICall :IObservable //Stage 5
     /// <param name="filterField">The field to filter the calls by</param>
     /// <param name="filterValue">The value to filter the calls by</param>
     /// <param name="sortFiled">The sorting field to sort the calls by</param>
-    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortFiled= null, IEnumerable<BO.CallInList>? source = null);
+    public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortFiled = null, IEnumerable<BO.CallInList>? source = null);
 
     /// <summary>
     /// Get the details of a specific call
@@ -74,5 +74,9 @@ public interface ICall :IObservable //Stage 5
     /// <param name="VolunteerId">The ID of the volunteer</param>
     /// <param name="callId">The ID of the call</param>
     public void SelectCallToDo(int VolunteerId, int callId);
+
+
+    public void CancleCallSendEmail(BO.CallInList c);
+    public void AddCallSendEmail(BO.Call c);
 
 }

@@ -586,39 +586,39 @@ internal class CallImplementation : ICall
     }
     public void AddCallSendEmail(BO.Call c)
     {
-        // קריאת כל המתנדבים וסינון רק המתנדבים הפעילים
+        // Retrieve all volunteers and filter only the active ones
         var listVolunteer = s_dal.Volunteer.ReadAll()
             .Where(volunteer => volunteer.IsActive)
             .ToList();
 
-        // נושא וגוף המייל
-        string subject = "נפתחה קריאה חדשה לטיפול במיקום שלך";
+        // Subject and body of the email
+        string subject = "A new call has opened near your location";
         string body = $@"
-                 שלום רב,
-                 <br>
-                 נפתחה קריאה חדשה הקרובה למיקומך:
-                 <br>
-                 <br>
-                 לפרטים נוספים, היכנס למערכת כדי לצפות בפרטי הקריאה.
-                 <br><br>
-                 בברכה,<br>
-                 צוות המערכת
-                 Nurit@Hadas
-                 ";
+             Hello,
+             <br>
+             A new call has been opened near your location:
+             <br>
+             <br>
+             For more details, log into the system to view the call details.
+             <br><br>
+             Best regards,<br>
+             The System Team
+             Nurit@Hadas
+             ";
 
-        // מעבר על כל המתנדבים
+        // Iterate over all volunteers
         foreach (var volunteer in listVolunteer)
         {
-            // חישוב המרחק בין הכתובת של הקריאה לכתובת של המתנדב
+            // Calculate the distance between the call address and the volunteer's address
             double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
                 c.CallAddress,
                 volunteer.FullCurrentAddress!,
                 (DO.TypeOfRange)volunteer.RangeType);
 
-            // בדיקה אם המרחק קטן מהמרחק המקסימלי שהמתנדב מוכן לכסות
+            // Check if the distance is less than or equal to the maximum distance the volunteer is willing to cover
             if (distance <= volunteer.MaxDistanceToCall)
             {
-                // שליחת מייל למתנדב
+                // Send an email to the volunteer
                 Tools.SendEmail(volunteer.Email, subject, body);
             }
         }
@@ -626,21 +626,21 @@ internal class CallImplementation : ICall
 
     public void CancleCallSendEmail(BO.CallInList c)
     {
-        string subject = "הקצאת הקריאה שלך בוטלה";
-        string body = "שלום הקצאת הקיראה שלך בוטלה עי ידי המנהל";
+        string subject = "Your call assignment has been canceled";
+        string body = "Hello, your call assignment has been canceled by the manager";
 
         var listAss = s_dal.Assignment.ReadAll()
             .Where(a => a.CallId == c.CallId)
             .ToList();
         var assignment = listAss.FirstOrDefault();
 
-        // הנחה: s_dal.Volunteer.ReadAll() מחזיר אוסף של מתנדבים
+        // Assumption: s_dal.Volunteer.ReadAll() returns a collection of volunteers
         var matchingVolunteers = s_dal.Volunteer.ReadAll()
-            .Where(v => v.Id == assignment!.VolunteerId) // סינון לפי תעודת זהות
+            .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
             .ToList();
 
         var volunteer = matchingVolunteers.FirstOrDefault();
         Tools.SendEmail(volunteer!.Email, subject, body);
-
     }
+
 }

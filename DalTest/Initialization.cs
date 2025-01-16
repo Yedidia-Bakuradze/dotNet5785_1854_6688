@@ -40,27 +40,21 @@ static public class Initialization
     "Julie Hayes", "Adam Myers", "Victoria Ford", "Nathan Hamilton", "Megan Graham"
 };
     static string[] s_emails = new string[] {
-    "john.smith@example.com", "jane.doe@example.com", "michael.johnson@example.com", "emily.davis@example.com", "david.brown@example.com",
-    "sarah.wilson@example.com", "james.jones@example.com", "jessica.garcia@example.com", "robert.miller@example.com", "mary.martinez@example.com",
-    "william.anderson@example.com", "linda.taylor@example.com", "richard.thomas@example.com", "barbara.hernandez@example.com", "joseph.moore@example.com",
-    "susan.martin@example.com", "charles.jackson@example.com", "margaret.thompson@example.com", "christopher.white@example.com", "patricia.harris@example.com",
-    "daniel.lewis@example.com", "jennifer.clark@example.com", "matthew.robinson@example.com", "elizabeth.walker@example.com", "anthony.hall@example.com",
-    "karen.allen@example.com", "mark.young@example.com", "nancy.king@example.com", "paul.wright@example.com", "betty.scott@example.com",
-    "steven.green@example.com", "sandra.adams@example.com", "andrew.baker@example.com", "ashley.gonzalez@example.com", "joshua.nelson@example.com",
-    "kimberly.carter@example.com", "kevin.mitchell@example.com", "donna.perez@example.com", "brian.roberts@example.com", "carol.turner@example.com",
-    "edward.phillips@example.com", "michelle.campbell@example.com", "ronald.parker@example.com", "amanda.evans@example.com", "timothy.edwards@example.com",
-    "melissa.collins@example.com", "jason.stewart@example.com", "deborah.sanchez@example.com", "jeffrey.morris@example.com", "stephanie.rogers@example.com",
-    "ryan.reed@example.com", "rebecca.cook@example.com", "jacob.morgan@example.com", "laura.bell@example.com", "gary.murphy@example.com",
-    "sharon.bailey@example.com", "nicholas.rivera@example.com", "cynthia.cooper@example.com", "eric.richardson@example.com", "kathleen.cox@example.com",
-    "stephen.howard@example.com", "amy.ward@example.com", "jonathan.torres@example.com", "angela.peterson@example.com", "larry.gray@example.com",
-    "helen.ramirez@example.com", "scott.james@example.com", "anna.watson@example.com", "frank.brooks@example.com", "ruth.kelly@example.com",
-    "justin.sanders@example.com", "brenda.price@example.com", "brandon.bennett@example.com", "pamela.wood@example.com", "samuel.barnes@example.com",
-    "nicole.ross@example.com", "gregory.henderson@example.com", "katherine.coleman@example.com", "benjamin.jenkins@example.com", "christine.perry@example.com",
-    "patrick.powell@example.com", "samantha.long@example.com", "raymond.patterson@example.com", "janet.hughes@example.com", "jack.flores@example.com",
-    "maria.washington@example.com", "dennis.butler@example.com", "heather.simmons@example.com", "jerry.foster@example.com", "diane.gonzales@example.com",
-    "tyler.bryant@example.com", "rachel.alexander@example.com", "aaron.russell@example.com", "catherine.griffin@example.com", "henry.diaz@example.com",
-    "julie.hayes@example.com", "adam.myers@example.com", "victoria.ford@example.com", "nathan.hamilton@example.com", "megan.graham@example.com"
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com",
+    "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com"
 };
+
     static string[] s_addresses = new string[] {
         "1 Rothschild Blvd, Tel Aviv",
         "2 Herzl St, Tel Aviv",
