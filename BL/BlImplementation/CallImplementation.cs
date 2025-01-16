@@ -556,7 +556,7 @@ internal class CallImplementation : ICall
         DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
             ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
 
-        if (assignment.VolunteerId != VolunteerId &&  (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+        if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
             throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
 
         //Check that the call is not ended (Cancled, Expiered or completed)
@@ -568,7 +568,7 @@ internal class CallImplementation : ICall
         //Update the Dal entity with current system time and Closed status
         DO.Assignment newAssignment = assignment with
         {
-            TypeOfEnding = (assignment.VolunteerId != VolunteerId)? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+            TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
             TimeOfEnding = AdminManager.Now,
         };
 
@@ -578,10 +578,69 @@ internal class CallImplementation : ICall
             //Notifies all observers that a call has been added
             CallManager.Observers.NotifyListUpdated();
         }
-        catch(DO.DalDoesNotExistException ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
         }
 
     }
+    public void AddCallSendEmail(BO.Call c)
+    {
+        // Retrieve all volunteers and filter only the active ones
+        var listVolunteer = s_dal.Volunteer.ReadAll()
+            .Where(volunteer => volunteer.IsActive)
+            .ToList();
+
+        // Subject and body of the email
+        string subject = "A new call has opened near your location";
+        string body = $@"
+             Hello,
+             <br>
+             A new call has been opened near your location:
+             <br>
+             <br>
+             For more details, log into the system to view the call details.
+             <br><br>
+             Best regards,<br>
+             The System Team
+             Meir@Yedidia
+             ";
+
+        // Iterate over all volunteers
+        foreach (var volunteer in listVolunteer)
+        {
+            // Calculate the distance between the call address and the volunteer's address
+            double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
+                c.CallAddress,
+                volunteer.FullCurrentAddress!,
+                (DO.TypeOfRange)volunteer.RangeType);
+
+            // Check if the distance is less than or equal to the maximum distance the volunteer is willing to cover
+            if (distance <= volunteer.MaxDistanceToCall)
+            {
+                // Send an email to the volunteer
+                Tools.SendEmail(volunteer.Email, subject, body);
+            }
+        }
+    }
+
+    public void CancleCallSendEmail(BO.CallInList c)
+    {
+        string subject = "Your call assignment has been canceled";
+        string body = "Hello, your call assignment has been canceled by the manager";
+
+        var listAss = s_dal.Assignment.ReadAll()
+            .Where(a => a.CallId == c.CallId)
+            .ToList();
+        var assignment = listAss.FirstOrDefault();
+
+        // Assumption: s_dal.Volunteer.ReadAll() returns a collection of volunteers
+        var matchingVolunteers = s_dal.Volunteer.ReadAll()
+            .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
+            .ToList();
+
+        var volunteer = matchingVolunteers.FirstOrDefault();
+        Tools.SendEmail(volunteer!.Email, subject, body);
+    }
+
 }
