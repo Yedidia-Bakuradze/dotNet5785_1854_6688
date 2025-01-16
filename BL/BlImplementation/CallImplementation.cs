@@ -556,7 +556,7 @@ internal class CallImplementation : ICall
         DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
             ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
 
-        if (assignment.VolunteerId != VolunteerId &&  (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+        if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
             throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
 
         //Check that the call is not ended (Cancled, Expiered or completed)
@@ -568,7 +568,7 @@ internal class CallImplementation : ICall
         //Update the Dal entity with current system time and Closed status
         DO.Assignment newAssignment = assignment with
         {
-            TypeOfEnding = (assignment.VolunteerId != VolunteerId)? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+            TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
             TimeOfEnding = AdminManager.Now,
         };
 
@@ -578,10 +578,69 @@ internal class CallImplementation : ICall
             //Notifies all observers that a call has been added
             CallManager.Observers.NotifyListUpdated();
         }
-        catch(DO.DalDoesNotExistException ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
         }
+
+    }
+    public void AddCallSendEmail(BO.Call c)
+    {
+        // קריאת כל המתנדבים וסינון רק המתנדבים הפעילים
+        var listVolunteer = s_dal.Volunteer.ReadAll()
+            .Where(volunteer => volunteer.IsActive)
+            .ToList();
+
+        // נושא וגוף המייל
+        string subject = "נפתחה קריאה חדשה לטיפול במיקום שלך";
+        string body = $@"
+                 שלום רב,
+                 <br>
+                 נפתחה קריאה חדשה הקרובה למיקומך:
+                 <br>
+                 <br>
+                 לפרטים נוספים, היכנס למערכת כדי לצפות בפרטי הקריאה.
+                 <br><br>
+                 בברכה,<br>
+                 צוות המערכת
+                 Nurit@Hadas
+                 ";
+
+        // מעבר על כל המתנדבים
+        foreach (var volunteer in listVolunteer)
+        {
+            // חישוב המרחק בין הכתובת של הקריאה לכתובת של המתנדב
+            double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
+                c.CallAddress,
+                volunteer.FullCurrentAddress!,
+                (DO.TypeOfRange)volunteer.RangeType);
+
+            // בדיקה אם המרחק קטן מהמרחק המקסימלי שהמתנדב מוכן לכסות
+            if (distance <= volunteer.MaxDistanceToCall)
+            {
+                // שליחת מייל למתנדב
+                Tools.SendEmail(volunteer.Email, subject, body);
+            }
+        }
+    }
+
+    public void CancleCallSendEmail(BO.CallInList c)
+    {
+        string subject = "הקצאת הקריאה שלך בוטלה";
+        string body = "שלום הקצאת הקיראה שלך בוטלה עי ידי המנהל";
+
+        var listAss = s_dal.Assignment.ReadAll()
+            .Where(a => a.CallId == c.CallId)
+            .ToList();
+        var assignment = listAss.FirstOrDefault();
+
+        // הנחה: s_dal.Volunteer.ReadAll() מחזיר אוסף של מתנדבים
+        var matchingVolunteers = s_dal.Volunteer.ReadAll()
+            .Where(v => v.Id == assignment!.VolunteerId) // סינון לפי תעודת זהות
+            .ToList();
+
+        var volunteer = matchingVolunteers.FirstOrDefault();
+        Tools.SendEmail(volunteer!.Email, subject, body);
 
     }
 }
