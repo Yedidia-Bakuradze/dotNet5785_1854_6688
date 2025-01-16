@@ -603,7 +603,7 @@ internal class CallImplementation : ICall
              <br><br>
              Best regards,<br>
              The System Team
-             Nurit@Hadas
+             Meir@Yedidia
              ";
 
         // Iterate over all volunteers

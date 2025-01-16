@@ -97,7 +97,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!--Delete volunteer btn-->
+                <!--Delete Assignment btn-->
                 <DataGridTemplateColumn Header="Delete Assignment" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
