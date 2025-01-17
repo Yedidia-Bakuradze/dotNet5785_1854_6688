@@ -2,6 +2,7 @@
 using BlApi;
 using BO;
 using Helpers;
+using System.Reflection.Metadata.Ecma335;
 
 internal class CallImplementation : ICall
 {
@@ -34,6 +35,10 @@ internal class CallImplementation : ICall
         (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
             throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
+
+        //Cordinates are updated
+        call.Latitude = (double)lat!;
+        call.Longitude= (double)lng!;
 
         //Create new Dal entity
         DO.Call newCall = CallManager.ConvertFromBdToD(call);
