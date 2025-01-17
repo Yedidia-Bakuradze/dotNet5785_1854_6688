@@ -10,9 +10,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         //Loads the lobby window instead
-        new AdminWindow(332461854).Show();
-        //new LobbyScreen().Show();
-        //new VolunteerLobbyWindow(199089079).Show();
+        //new VolunteerMapDetailsControl().Show();
+        //new AdminWindow(332461854).Show();
+        new LobbyScreen().Show();
+        // VolunteerLobbyWindow(199089079).Show();
         this.Close();
     }
 }

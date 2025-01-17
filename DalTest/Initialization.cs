@@ -1,10 +1,12 @@
-﻿
-namespace DalTest;
+﻿namespace DalTest;
 using DalApi;
 using DO;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
+using System.Data;
 
 static public class Initialization
 {
@@ -62,7 +64,6 @@ static public class Initialization
     "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com", "meirandesti770@gmail.com"
 
 };
-
     static string[] s_addresses = new string[] {
         "1 Rothschild Blvd, Tel Aviv",
         "2 Herzl St, Tel Aviv",
@@ -244,8 +245,8 @@ static public class Initialization
 31.7682148,
 31.7836425,
     };
-    static List<int> s_ids = new List<int> {
-361760259, 944163344, 790288914, 860684307, 491841060,
+    static List<int> local_ids = new List<int>{
+214736688, 944163344, 790288914, 860684307, 491841060,
 271797797, 224678953, 876357682, 580422707, 736016437,
 015710262, 294855739, 927177279, 840073795, 911761997,
 118710888, 990811754, 075926642, 333341816, 855673984,
@@ -264,9 +265,7 @@ static public class Initialization
 345474001, 768008658, 337571798, 972331482, 534362595,
 526282728, 353412075, 878776301, 260592621, 821537263,
 937634798, 000832501, 942607862, 481880573, 383577087
-
 };
-
     static string[] s_phoneNumbers = new string[] {
     "0501234567", "0502345678", "0503456789", "0504567890", "0505678901",
     "0506789012", "0507890123", "0508901234", "0509012345", "0500123456",
@@ -354,19 +353,20 @@ static public class Initialization
             : listOfCalls.Count();
 
         //For each volunteer we would assign couple of calls to him
-        for (int i = 20; i < iterations; i++) {
-            Console.WriteLine($"Assignment Number {i -20 + 1} has been created!");
+        for (int i = 20; i < iterations; i++)
+        {
+            Console.WriteLine($"Assignment Number {i - 20 + 1} has been created!");
             currentVolunteer = listOfVolunteers[i];
             currentCall = listOfCalls[i];
-            if(currentVolunteer.Id == -1 || i == 99)
+            if (currentVolunteer.Id == -1 || i == 99)
                 Console.WriteLine("");
-                //Calculates the delta time between the opening and closing time of the call    
-                TimeSpan delta = (currentCall.DeadLine != null)
-                ? (TimeSpan) (currentCall.DeadLine - currentCall.OpeningTime)
-                : s_dal!.Config!.Clock.AddDays(31) - currentCall.OpeningTime;
+            //Calculates the delta time between the opening and closing time of the call    
+            TimeSpan delta = (currentCall.DeadLine != null)
+            ? (TimeSpan)(currentCall.DeadLine - currentCall.OpeningTime)
+            : s_dal!.Config!.Clock.AddDays(31) - currentCall.OpeningTime;
 
             //Sets the start and end date based on the delta time that has been calculated   
-            DateTime start = currentCall.OpeningTime.AddDays(s_rand.Next(0,delta.Days));
+            DateTime start = currentCall.OpeningTime.AddDays(s_rand.Next(0, delta.Days));
 
             //Calculates the delta time between the selected start time and the closing time of the call
             delta = (currentCall.DeadLine != null)
@@ -393,7 +393,7 @@ static public class Initialization
             {
                 s_dal?.Assignment?.Create(newAssignment);
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.Message);
             }
@@ -404,12 +404,12 @@ static public class Initialization
     /// </summary>
     private static void createCalls()
     {
-        for (int i = 0;i < 100;i++)
+        for (int i = 0; i < 100; i++)
         {
-            Console.WriteLine($"Call Number {i+1} has been created!");
+            Console.WriteLine($"Call Number {i + 1} has been created!");
             DateTime start = s_dal!.Config!.Clock.AddDays(s_rand.Next(-31, -5));
             int deltaDays = (s_dal.Config!.Clock - start).Days;
-            int position = s_rand.Next(0, s_addresses.Length-1);
+            int position = s_rand.Next(0, s_addresses.Length - 1);
             DateTime end = (i < 30 && i >= 20)
                 ? start.AddDays(s_rand.Next(1, deltaDays)) // Expired
                 : start.AddDays(s_rand.Next(deltaDays, 31)); // Still open
@@ -418,78 +418,74 @@ static public class Initialization
             Call newCall = new Call
             {
                 Id = -1, //A dummy id, it would be replaced with a proper id in the CRUD method
-                Type = (DO.CallType)(s_rand.Next(0,10)),
+                Type = (DO.CallType)(s_rand.Next(0, 10)),
                 FullAddressCall = s_addresses[position],
                 Latitude = s_latitudes[position],
                 Longitude = s_longitudes[position],
                 OpeningTime = start,
-                Description = s_descriptions[i%10],
+                Description = s_descriptions[i % 10],
                 DeadLine = end
             };
             try
             {
                 s_dal?.Call?.Create(newCall);
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.Message);
             }
         }
     }
+
+    /// <summary>
+    /// This method accepts a string value and converts it into a hashed value using SHA256 algorithm
+    /// </summary>
+    /// <param name="originalPassword">The password before hashing</param>
+    /// <returns>The password after hashing</returns>
+    internal static string GetSHA256HashedPasswordDal(string originalPassword)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            //Converts the chars into bytes and hashes them
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
+
+            //Converts back the hashed bytes into a hex value 
+            StringBuilder builder = new StringBuilder();
+            string hashedPassword = "";
+            bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));
+            return hashedPassword;
+        }
+    }
+
     /// <summary>
     /// Creates new dummy Volunteer instances for the database
     /// </summary>
     private static void createVolunteers()
     {
-        List<int> local_ids = new List<int>{
-214736688, 944163344, 790288914, 860684307, 491841060,
-271797797, 224678953, 876357682, 580422707, 736016437,
-015710262, 294855739, 927177279, 840073795, 911761997,
-118710888, 990811754, 075926642, 333341816, 855673984,
-413444225, 360970891, 215679150, 759492275, 186128062,
-809069248, 501516488, 582273744, 049649882, 171489503,
-193270501, 198615270, 186333423, 967340787, 885527796,
-601071350, 151475969, 979327756, 250928918, 461081366,
-649428760, 810525477, 055389993, 628431660, 870258480,
-764220208, 302384953, 260045125, 800511305, 943180109,
-968639823, 059680090, 760189787, 650388325, 958198632,
-360225643, 343223152, 056988017, 635802994, 735323511,
-557495165, 332568963, 411161987, 494704521, 120118161,
-484477351, 951549864, 074755497, 396699563, 945629103,
-642446769, 590795191, 145500088, 682482104, 400611257,
-199089079, 848194494, 260202437, 222769093, 485817803,
-345474001, 768008658, 337571798, 972331482, 534362595,
-526282728, 353412075, 878776301, 260592621, 821537263,
-937634798, 000832501, 942607862, 481880573, 383577087
-};
-        for (int i = 0; i < 100; i++)
+
+        for (int i = 0; i < 95; i++)
         {
-            Console.WriteLine($"Volunteer Number {i+1} has been created!");
+            Console.WriteLine($"Volunteer Number {i + 1} has been created!");
             Volunteer newVolunteer = new Volunteer
             {
-                Id = (local_ids.Count >=1)
-                ? local_ids[s_rand.Next(0, local_ids.Count -1)]
-                : s_rand.Next(200000000, 400000000),
+                Id = local_ids[i],
                 Role = (i == 0) ? UserRole.Admin : UserRole.Volunteer,
                 FullName = s_names[i],
                 PhoneNumber = s_phoneNumbers[i],
                 Email = s_emails[i],
-                MaxDistanceToCall = s_rand.Next(1,30),
+                MaxDistanceToCall = s_rand.Next(1, 30),
                 RangeType = TypeOfRange.AirDistance,
-                IsActive = (i == 76) ? false : true,
-                Password = s_passwords[i % (s_passwords.Length-1)],
-                FullCurrentAddress = s_addresses[i % (s_addresses.Length-1)],
-                Latitude = s_latitudes[i % (s_latitudes.Length-1)],
-                Longitude = s_longitudes[i % (s_longitudes.Length-1)]
+                IsActive = (i == 76 || i == 74 || i == 75) ? false : true,
+                Password = GetSHA256HashedPasswordDal(s_passwords[i % (s_passwords.Length - 1)]),
+                FullCurrentAddress = s_addresses[i % (s_addresses.Length - 1)],
+                Latitude = s_latitudes[i % (s_latitudes.Length - 1)],
+                Longitude = s_longitudes[i % (s_longitudes.Length - 1)]
             };
-            if(local_ids.Count > 0) {
-                local_ids.Remove(newVolunteer.Id);
-            }
             try
             {
                 s_dal?.Volunteer?.Create(newVolunteer);
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.Message);
             }
@@ -510,7 +506,7 @@ static public class Initialization
     {
         //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
         s_dal = DalApi.Factory.Get; // stage 4
-        
+
         //Assignment of the interfaces
         //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
         //s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!"); // Stage 1
@@ -532,7 +528,7 @@ static public class Initialization
             createCalls();
             createAssignments();
         }
-        catch(DalUnGeneratedDependedList error)
+        catch (DalUnGeneratedDependedList error)
         {
             Console.WriteLine(error.Message);
         }
