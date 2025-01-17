@@ -64,3 +64,4 @@ internal class TypeOfRangeCollection : IEnumerable
 /// This enum is made for the admin's sub-screen to show the desired operations screeen
 /// </summary>
 public enum OperationSubScreenMode { Closed,ClockManager,RiskRangeManager,ActionManger}
+public enum TypeOfMap { Pin, Route }

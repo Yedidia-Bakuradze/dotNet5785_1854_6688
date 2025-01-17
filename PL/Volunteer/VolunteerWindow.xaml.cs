@@ -167,6 +167,7 @@ public partial class VolunteerWindow : Window
         CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
 
         VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
+        VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl();
         //TOOD: Fix it in a way that no x:Name would be used
         //VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl((double)CurrentVolunteer.Latitude!,(double)CurrentVolunteer.Longitude!,null,null);
     }
