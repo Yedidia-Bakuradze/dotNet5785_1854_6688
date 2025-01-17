@@ -3,6 +3,7 @@ using PL.Call;
 using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Converters;
 
 namespace PL.Volunteer;
 
@@ -167,9 +168,13 @@ public partial class VolunteerWindow : Window
         CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
 
         VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
-        VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl();
-        //TOOD: Fix it in a way that no x:Name would be used
-        //VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl((double)CurrentVolunteer.Latitude!,(double)CurrentVolunteer.Longitude!,null,null);
+
+        if(CurrentVolunteer.FullCurrentAddress != "" && CurrentVolunteer.FullCurrentAddress is not null)
+        {
+            List<(double, double)> listOfPoints = new List<(double, double)>();
+            listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+            VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl(TypeOfMap.Pin, CurrentVolunteer.RangeType , listOfPoints);
+        }
     }
     #endregion
 
