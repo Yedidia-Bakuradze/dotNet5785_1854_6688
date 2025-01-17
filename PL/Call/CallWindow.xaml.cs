@@ -104,8 +104,11 @@ public partial class CallWindow : Window
     {
         try
         {
-        CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
-        CallDetailsControler = new CallDetailsControl(CurrentCall);
+            CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
+            CallDetailsControler = new CallDetailsControl(CurrentCall);
+            List<(double, double)> listOfPoints = new();
+            listOfPoints.Add((CurrentCall.Latitude, CurrentCall.Longitude));
+            CallMapDetailsControler = new VolunteerMapDetailsControl(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfPoints);
         }
         catch(Exception ex)
         {

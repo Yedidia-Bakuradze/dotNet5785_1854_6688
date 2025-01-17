@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <Id>2</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>Ha-Va'ad ha-Le'umi St 21, Jerusalem</FullAddressCall>
+    <Latitude>31.7648461</Latitude>
+    <Longitude>35.1901441</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <Description>New Cordinates</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
+</ArrayOfCall>
