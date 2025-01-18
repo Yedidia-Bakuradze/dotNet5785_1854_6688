@@ -278,7 +278,7 @@ internal static class VolunteerManager
     /// <returns>The distance in KM</returns>
     private static double CalculatedWalkingDistance(string origin, string destanation)
     {
-        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}&destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.walking}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
+        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.walking}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
         XElement root = HttpGetXmlReponse(requestUri);
 
         //Issue 13: Fix the possible null value
