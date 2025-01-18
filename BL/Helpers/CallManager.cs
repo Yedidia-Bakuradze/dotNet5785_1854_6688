@@ -63,6 +63,8 @@ internal static class CallManager
         //If there is such assignment containing the CallId - Check if expiered or in progress
         if (resAssignments.TypeOfEnding == null)
         {
+            if(res.DeadLine is null)
+                return BO.CallStatus.InProgress;
             if ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
             if (res.DeadLine <= AdminManager.Now) return BO.CallStatus.Expiered;
             if (res.DeadLine > AdminManager.Now) return BO.CallStatus.InProgress;
