@@ -10,4 +10,33 @@
     <Description>New Cordinates</Description>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>3</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>Paran 16, Jerusalem</FullAddressCall>
+    <Latitude>31.8005415</Latitude>
+    <Longitude>35.2251634</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <Description>Second call</Description>
+    <DeadLine>2045-03-12T12:22:00</DeadLine>
+  </Call>
+  <Call>
+    <Id>4</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>Nili 2-20, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <Description>Second</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>5</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>HaSlav 14-20, Jerusalem</FullAddressCall>
+    <Latitude>31.7297592</Latitude>
+    <Longitude>35.1879242</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

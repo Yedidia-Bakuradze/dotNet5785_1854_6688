@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Reflection.Metadata;
+using System.Windows;
+using System.Windows.Controls;
+using System.Xml.Linq;
 namespace PL.Sub_Windows;
 using System;
 using System.Windows;
@@ -9,14 +12,15 @@ public partial class DisplayMapContent : UserControl
     public int RangeHtml { get; set; }
     public (double, double) Source { get; set; }
     public (double, double) Dest { get; set; }
-    public List<(double,double)> ListOfPoints { get; set; }
+    public List<(double, double)> ListOfPoints { get; set; }
     public string LoadedFunction { get; set; }
     public TypeOfMap Type { get; set; }
-    public DisplayMapContent(TypeOfMap type,BO.TypeOfRange range,IEnumerable<(double,double)>listOfPoints)
+    public DisplayMapContent(TypeOfMap type, BO.TypeOfRange range, IEnumerable<(double, double)> listOfPoints)
     {
         ListOfPoints = listOfPoints.ToList();
         LoadedFunction = type == TypeOfMap.Pin ? "ShowPinLocations" : "ShowRoute";
-        RangeHtml = range.GetHashCode();
+        //RangeHtml = range.GetHashCode();
+        RangeHtml = 0;
         Source = listOfPoints.FirstOrDefault();
         Type = type;
         InitializeComponent();
@@ -51,7 +55,7 @@ public partial class DisplayMapContent : UserControl
             MessageBox.Show($"WebView2 initialization error: {ex.Message}");
         }
     }
-    private string LoadHtmlForPins() => 
+    private string LoadHtmlForPins() =>
         @"<!DOCTYPE html>
 <html>
   <head>
@@ -93,109 +97,134 @@ public partial class DisplayMapContent : UserControl
   </head>
   <body>
     <div id='infoPanel'>
-      <div id='distance'>Select travel mode...</div>
     </div>
     <div id='map'></div>
 
     <!--Route Calculation-->
     <script>
-      let map;
+     let map;
       let directionsService;
       let directionsRenderer;
 
       // Define your coordinates here
-      const startCoords = { lat:" + Source.Item1 + ", lng: " + Source.Item2 + @" }; // New York
-      const endCoords =   { lat:" + Dest.Item1 + ", lng: " + Dest.Item2 + @" }; // Boston
+      const startCoords = { lat: 40.7128, lng: -74.006 }; // New York
+      const endCoords = { lat: 42.3601, lng: -71.0589 }; // Boston
 
-      function ShowRoute() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: startCoords,
-          zoom: 12,
-        });
-
-        directionsService = new google.maps.DirectionsService();
-        directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(map);
-
-        calculateRoute(" + RangeHtml + @");
+      function generateColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+          // Use HSL to generate evenly distributed colors
+          const hue = (i * 360) / count;
+          colors.push(`hsl(${hue}, 100%, 50%)`);
+        }
+        return colors;
       }
 
-      function calculateRoute(mode) {
-        // Clear previous highlighting
-        document.getElementById('distance').innerHTML = '';
+        function ShowRoute(mode = "+RangeHtml+@") {
+        // Define multiple coordinates with names
+        const locations = ["+GetHtmlCordinatesList()+@"]
 
-        let travelMode;
-        switch (mode) {
-          case 0:
-            // Calculate air distance using Haversine formula
-            const R = 6371; // Earth's radius in km
-            const lat1 = (startCoords.lat * Math.PI) / 180;
-            const lat2 = (endCoords.lat * Math.PI) / 180;
-            const dLat = ((endCoords.lat - startCoords.lat) * Math.PI) / 180;
-            const dLon = ((endCoords.lng - startCoords.lng) * Math.PI) / 180;
+        // Define colors for different routes
+        const routeColors = generateColors(locations.length - 1);
 
-            const a =
-              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1) *
-                Math.cos(lat2) *
-                Math.sin(dLon / 2) *
-                Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const distance = R * c;
+        // Initialize map
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: locations[0],
+          zoom: 12,
+          disableDefaultUI: true, // Removes all default UI elements
+          zoomControl: false, // Explicitly disable zoom controls
+          mapTypeControl: false, // Disable map type selector
+          scaleControl: false, // Disable scale bar
+          streetViewControl: false, // Disable Street View
+          rotateControl: false, // Disable rotate control
+          fullscreenControl: false, // Disable fullscreen control
+        });
+        directionsService = new google.maps.DirectionsService();
 
-            // Draw straight line
-            const flightPath = new google.maps.Polyline({
-              path: [startCoords, endCoords],
-              geodesic: true,
-              strokeColor: '#FF0000',
-              strokeOpacity: 1.0,
-              strokeWeight: 2,
-            });
+        // Add markers for each location
+        locations.forEach((location, index) => {
+          new google.maps.Marker({
+            position: location,
+            map: map,
+            label: index === 0 ? 'S' : `D${index}`,
+            title: location.name,
+          });
+        });
+        if (mode === 0)
+        {
+            // Clear existing routes
+            if (directionsRenderer)
+            {
+                directionsRenderer.setMap(null);
+            }
+
+            // Calculate and draw air routes to each destination
+            for (let i = 1; i < locations.length; i++)
+            {
+                // Calculate air distance using Haversine formula
+                const R = 6371; // Earth's radius in km
+                const lat1 = (locations[0].lat * Math.PI) / 180;
+                const lat2 = (locations[i].lat * Math.PI) / 180;
+                const dLat =
+                  ((locations[i].lat - locations[0].lat) * Math.PI) / 180;
+                const dLon =
+                  ((locations[i].lng - locations[0].lng) * Math.PI) / 180;
+
+                const a =
+                  Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1) *
+                    Math.cos(lat2) *
+                    Math.sin(dLon / 2) *
+                    Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                const distance = R * c;
+
+                // Draw straight line
+                const flightPath = new google.maps.Polyline({
+                      path: [locations[0], locations[i]],
+                      geodesic: true,
+                      strokeColor: routeColors[i - 1],
+                      strokeOpacity: 1.0,
+                      strokeWeight: 2,
+                    });
 
             flightPath.setMap(map);
-
-            document.getElementById(
-              'distance'
-            ).innerHTML = `<div class='selected-mode'>Air Travel:</div>
-         <div>Distance: ${distance.toFixed(2)} km</div>`;
-            return;
-          case 1:
-            travelMode = google.maps.TravelMode.DRIVING;
-            break;
-          case 2:
-            travelMode = google.maps.TravelMode.WALKING;
-            break;
-          default:
-            alert('Invalid mode');
+        }
             return;
         }
 
-        const request = {
-          origin: startCoords,
-          destination: endCoords,
-          travelMode: travelMode,
-        };
+        // Calculate routes from start to each destination
+        for (let i = 1; i < locations.length; i++)
+{
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+            map: map,
+            suppressMarkers: true,
+            polylineOptions:
+    {
+    strokeColor: routeColors[i - 1],
+              strokeWeight: 4,
+            },
+          });
 
-        directionsService.route(request, (result, status) => {
-          if (status === 'OK') {
-            directionsRenderer.setDirections(result);
-            const route = result.routes[0];
-            const distanceText = route.legs[0].distance.text;
-            const durationText = route.legs[0].duration.text;
+const request = {
+            origin: locations[0],
+            destination: locations[i],
+            travelMode:
+mode == 1
+  ? google.maps.TravelMode.DRIVING
+  : google.maps.TravelMode.WALKING,
+          };
 
-            document.getElementById(
-              'distance'
-            ).innerHTML = `<div class='selected-mode'>${
-              travelMode === google.maps.TravelMode.DRIVING
-                ? 'Driving:'
-                : 'Walking:'
-            }</div>
-             <div>Distance: ${distanceText}</div>
-             <div>Duration: ${durationText}</div>`;
-          } else {
-            alert('Directions request failed');
-          }
-        });
+directionsService.route(request, (result, status) => {
+    if (status === 'OK')
+    {
+        directionsRenderer.setDirections(result);
+        const route = result.routes[0];
+        const distance = route.legs[0].distance.text;
+        const duration = route.legs[0].duration.text;
+    }
+});
+        }
       }
       //Show Pin Location
       function ShowPinLocations() {
