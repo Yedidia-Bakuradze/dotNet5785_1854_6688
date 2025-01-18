@@ -2,7 +2,7 @@
 
 namespace BO;
 public enum UserRole { Admin, Volunteer, Undefined };
-public enum TypeOfRange { AirDistance, WalkingDistance, DrivingDistance };
+public enum TypeOfRange { AirDistance, DrivingDistance , WalkingDistance };
 public enum TypeOfEndingCall { Treated, SelfCanceled, AdminCanceled, CancellationExpired, Undefined };
 //Issue #20: Not enough CallTypes 
 public enum CallType
