@@ -3,7 +3,7 @@ namespace PL.Sub_Windows;
 using System;
 using System.Windows;
 
-public partial class VolunteerMapDetailsControl : UserControl
+public partial class DisplayMapContent : UserControl
 {
     private const string GOOGLE_MAPS_API_KEY = "AIzaSyAzbe6J2zmObUxADHW0yfmaJ-9thYaD_mE";
     public int RangeHtml { get; set; }
@@ -12,7 +12,7 @@ public partial class VolunteerMapDetailsControl : UserControl
     public List<(double,double)> ListOfPoints { get; set; }
     public string LoadedFunction { get; set; }
     public TypeOfMap Type { get; set; }
-    public VolunteerMapDetailsControl(TypeOfMap type,BO.TypeOfRange range,IEnumerable<(double,double)>listOfPoints)
+    public DisplayMapContent(TypeOfMap type,BO.TypeOfRange range,IEnumerable<(double,double)>listOfPoints)
     {
         ListOfPoints = listOfPoints.ToList();
         LoadedFunction = type == TypeOfMap.Pin ? "ShowPinLocations" : "ShowRoute";
@@ -23,26 +23,25 @@ public partial class VolunteerMapDetailsControl : UserControl
         InitializeWebBrowser();
     }
 
-    private string GetHtmlCordinatesList()
-    {
-        return string.Join(",", ListOfPoints.Select(point => $"{{lat: {point.Item1}, lng: {point.Item2}}}"));
-    }
+    private string GetHtmlCordinatesList() => string.Join(",", ListOfPoints.Select(point => $"{{lat: {point.Item1}, lng: {point.Item2}}}"));
 
     private async void InitializeWebBrowser()
     {
         try
         {
-            await webView.EnsureCoreWebView2Async();
             switch (Type)
             {
                 case TypeOfMap.Pin:
                     {
+                        await webView.EnsureCoreWebView2Async();
                         webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
                         break;
                     }
                 case TypeOfMap.Route:
                     {
                         Dest = ListOfPoints[1];
+                        await webView.EnsureCoreWebView2Async();
+                        webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
                         break;
                     }
             }
@@ -52,9 +51,8 @@ public partial class VolunteerMapDetailsControl : UserControl
             MessageBox.Show($"WebView2 initialization error: {ex.Message}");
         }
     }
-    private string LoadHtmlForPins()
-    {
-        return @"<!DOCTYPE html>
+    private string LoadHtmlForPins() => 
+        @"<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8' />
@@ -227,5 +225,4 @@ public partial class VolunteerMapDetailsControl : UserControl
     ></script>
   </body>
 </html>";
-    }
 }

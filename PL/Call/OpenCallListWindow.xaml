@@ -8,7 +8,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="CallInList"
         Height="450"
-        Width="900"
+        Width="1100"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
@@ -32,7 +32,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="90"/>
         </Grid.RowDefinitions>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
         <!-- The upper part-->
         <DataGrid Grid.Row="0"
@@ -125,6 +128,9 @@
                 </Grid>
                 <Button Height="20" Content="Filter Now" Click="OnFilterSet"/>
             </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <ContentControl Content="{Binding OpenCallsMap}"/>
         </Grid>
     </Grid>
 </Window>

@@ -173,7 +173,7 @@ public partial class VolunteerWindow : Window
         {
             List<(double, double)> listOfPoints = new List<(double, double)>();
             listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
-            VolunteerMapDetailsUserControl = new VolunteerMapDetailsControl(TypeOfMap.Pin, CurrentVolunteer.RangeType , listOfPoints);
+            VolunteerMapDetailsUserControl = new DisplayMapContent(TypeOfMap.Pin, CurrentVolunteer.RangeType , listOfPoints);
         }
     }
     #endregion

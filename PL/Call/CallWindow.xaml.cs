@@ -97,6 +97,8 @@ public partial class CallWindow : Window
 
 
     }
+    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Referesh);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Referesh);
     #endregion
 
     #region Method
@@ -108,7 +110,7 @@ public partial class CallWindow : Window
             CallDetailsControler = new CallDetailsControl(CurrentCall);
             List<(double, double)> listOfPoints = new();
             listOfPoints.Add((CurrentCall.Latitude, CurrentCall.Longitude));
-            CallMapDetailsControler = new VolunteerMapDetailsControl(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfPoints);
+            CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfPoints);
         }
         catch(Exception ex)
         {
@@ -117,7 +119,4 @@ public partial class CallWindow : Window
         }
     }
     #endregion
-
-    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Referesh);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Referesh);
 }
