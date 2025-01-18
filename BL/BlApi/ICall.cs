@@ -79,4 +79,6 @@ public interface ICall : IObservable //Stage 5
     public void CancleCallSendEmail(BO.CallInList c);
     public void AddCallSendEmail(BO.Call c);
 
+
+    public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId);
 }

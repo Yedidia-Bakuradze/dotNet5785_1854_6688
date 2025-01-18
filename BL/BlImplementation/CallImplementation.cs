@@ -648,4 +648,10 @@ internal class CallImplementation : ICall
         Tools.SendEmail(volunteer!.Email, subject, body);
     }
 
+    public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId)
+    {
+        return from call in GetOpenCallsForVolunteer(volunteerId,null,null)
+               let currentCall = s_dal.Call.Read(call.CallId)
+               select (currentCall.Latitude, currentCall.Longitude);
+    }
 }
