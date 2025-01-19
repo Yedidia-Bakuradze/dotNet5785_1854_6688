@@ -6,7 +6,7 @@
     <FullName>Yedidia Bakuradze</FullName>
     <PhoneNumber>0535002312</PhoneNumber>
     <Email>yedidia@gmail.com</Email>
-    <MaxDistanceToCall>4.2</MaxDistanceToCall>
+    <MaxDistanceToCall>30</MaxDistanceToCall>
     <RangeType>WalkingDistance</RangeType>
     <IsActive>true</IsActive>
     <Password>98d8d1ba348d133b221eeab45e8ed241cf8cd968d7916b71a85fd8085450ebac</Password>

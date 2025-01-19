@@ -390,10 +390,11 @@ internal class CallImplementation : ICall
         DO.Volunteer volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
             ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
 
-        
+
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         List<BO.OpenCallInList> openCalls = s_dal.Call
             .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
+            .Where(call => volunteer.MaxDistanceToCall is null || volunteer.FullCurrentAddress is null || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress,call.FullAddressCall,volunteer.RangeType) <= volunteer.MaxDistanceToCall)
             .Select(call => new BO.OpenCallInList
             {
                 CallId = call.Id,  // ID of the call
