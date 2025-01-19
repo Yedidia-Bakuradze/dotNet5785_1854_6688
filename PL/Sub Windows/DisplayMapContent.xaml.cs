@@ -18,7 +18,22 @@ public partial class DisplayMapContent : UserControl
     public DisplayMapContent(TypeOfMap type, BO.TypeOfRange range, IEnumerable<(double, double)> listOfPoints)
     {
         ListOfPoints = listOfPoints.ToList();
-        LoadedFunction = type == TypeOfMap.Pin ? "ShowPinLocations" : "ShowRoute";
+
+        switch (type)
+        {
+            case TypeOfMap.Pin:
+                LoadedFunction = "ShowPinLocations";
+                break;
+            case TypeOfMap.Route:
+                LoadedFunction = "ShowRoute";
+                break;
+            case TypeOfMap.MultipleTypeOfRoutes:
+                LoadedFunction = "ShowMultipleRoutes";
+                break;
+            default:
+                LoadedFunction = "ShowMultipleRoutes";
+                break;
+        }
         RangeHtml = range.GetHashCode();
         Source = listOfPoints.FirstOrDefault();
         Type = type;
@@ -244,6 +259,141 @@ directionsService.route(request, (result, status) => {
             label: String.fromCharCode(65 + index),
           });
         });
+      }
+
+
+function ShowMultipleRoutes() {
+        const locations = ["+GetHtmlCordinatesList()+@"];
+
+        // Initialize map
+        map = new google.maps.Map(document.getElementById(""map""), {
+          center: locations[0],
+          zoom: 4,
+          disableDefaultUI: true,
+          zoomControl: false,
+          mapTypeControl: false,
+          scaleControl: false,
+          streetViewControl: false,
+          rotateControl: false,
+          fullscreenControl: false,
+        });
+
+        // Colors for different modes
+        const routeColors = {
+          air: ""#4169E1"", // Royal Blue
+          driving: ""#228B22"", // Forest Green
+          walking: ""#8B4513"", // Saddle Brown
+        };
+        // Calculate air distance
+        const R = 6371; // Earth's radius in km
+        const lat1 = (locations[0].lat * Math.PI) / 180;
+        const lat2 = (locations[1].lat * Math.PI) / 180;
+        const dLat = ((locations[1].lat - locations[0].lat) * Math.PI) / 180;
+        const dLon = ((locations[1].lng - locations[0].lng) * Math.PI) / 180;
+
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(lat1) *
+            Math.cos(lat2) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const airDistance = R * c;
+
+        // Draw air route
+        const flightPath = new google.maps.Polyline({
+          path: [locations[0], locations[1]],
+          geodesic: true,
+          strokeColor: routeColors.air,
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+        });
+        flightPath.setMap(map);
+
+        // Add markers
+        locations.forEach((location, index) => {
+          new google.maps.Marker({
+            position: location,
+            map: map,
+            label: index === 0 ? ""S"" : ""D"",
+          });
+        });
+
+        // Calculate driving and walking routes
+        directionsService = new google.maps.DirectionsService();
+
+        // Driving route
+        const drivingRenderer = new google.maps.DirectionsRenderer({
+          map: map,
+          suppressMarkers: true,
+          polylineOptions: {
+            strokeColor: routeColors.driving,
+            strokeWeight: 4,
+          },
+        });
+
+        // Walking route
+        const walkingRenderer = new google.maps.DirectionsRenderer({
+          map: map,
+          suppressMarkers: true,
+          polylineOptions: {
+            strokeColor: routeColors.walking,
+            strokeWeight: 4,
+          },
+        });
+
+        // Request driving route
+        directionsService.route(
+          {
+            origin: locations[0],
+            destination: locations[1],
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === ""OK"") {
+              drivingRenderer.setDirections(result);
+              const drivingDistance = result.routes[0].legs[0].distance.text;
+              const drivingDuration = result.routes[0].legs[0].duration.text;
+
+              document.getElementById(
+                ""infoPanel""
+              ).innerHTML += `<div style=""color:${routeColors.driving}"">
+          Driving Distance: ${drivingDistance}<br>
+          Duration: ${drivingDuration}
+         </div><br>`;
+            }
+          }
+        );
+
+        // Request walking route
+        directionsService.route(
+          {
+            origin: locations[0],
+            destination: locations[1],
+            travelMode: google.maps.TravelMode.WALKING,
+          },
+          (result, status) => {
+            if (status === ""OK"") {
+              walkingRenderer.setDirections(result);
+              const walkingDistance = result.routes[0].legs[0].distance.text;
+              const walkingDuration = result.routes[0].legs[0].duration.text;
+
+              document.getElementById(
+                ""infoPanel""
+              ).innerHTML += `<div style=""color:${routeColors.walking}"">
+          Walking Distance: ${walkingDistance}<br>
+          Duration: ${walkingDuration}
+         </div><br>`;
+            }
+          }
+        );
+
+        // Add air distance to info panel
+        document.getElementById(""infoPanel"").innerHTML = `<div style=""color:${
+          routeColors.air
+        }"">
+      Air Distance: ${airDistance.toFixed(2)} km
+     </div><br>`;
       }
     </script>
     <script
