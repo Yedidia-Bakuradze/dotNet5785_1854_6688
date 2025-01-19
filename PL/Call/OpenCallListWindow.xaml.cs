@@ -105,22 +105,29 @@ public partial class OpenCallListWindow : Window
     #region Methods
     private void RefreshList()
     {
-        var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-        ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
-        List<(double, double)> listOfCordinates = s_bl.Call
-            .ConvertOpenCallsToCordinates(ListOfCalls)
-            .ToList<(double,double)>();
-
-        if (volunteer.FullCurrentAddress is not null)
+        try
         {
-            listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
-            if (listOfCordinates.Count() != 0)
-                OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType,listOfCordinates);
+            var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+            ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
+            List<(double, double)> listOfCordinates = s_bl.Call
+                .ConvertOpenCallsToCordinates(ListOfCalls)
+                .ToList<(double,double)>();
+
+            if (volunteer.FullCurrentAddress is not null)
+            {
+                listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
+                if (listOfCordinates.Count() != 0)
+                    OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType,listOfCordinates);
+                else
+                    OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
+            }
             else
-                OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
+                OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
+        }catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            Close();
         }
-        else
-            OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
     }
     #endregion
 }

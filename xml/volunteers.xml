@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Volunteer>
-    <Id>332461854</Id>
-    <Role>Admin</Role>
-    <FullName>Yedidia Bakuradze</FullName>
-    <PhoneNumber>0535002312</PhoneNumber>
-    <Email>spamtrash840@gmail.com</Email>
-    <MaxDistanceToCall>10000</MaxDistanceToCall>
-    <RangeType>WalkingDistance</RangeType>
-    <IsActive>true</IsActive>
-    <Password>98d8d1ba348d133b221eeab45e8ed241cf8cd968d7916b71a85fd8085450ebac</Password>
-    <FullCurrentAddress>Karmei HaNadiv, HaTe'ena 10, Kiryat Malachi</FullCurrentAddress>
-    <Latitude>31.726399</Latitude>
-    <Longitude>34.737636</Longitude>
-  </Volunteer>
+	<Volunteer>
+		<Id>332461854</Id>
+		<Role>Admin</Role>
+		<FullName>Yedidia Bakuradze</FullName>
+		<PhoneNumber>0535002312</PhoneNumber>
+		<Email>spamtrash840@gmail.com</Email>
+		<MaxDistanceToCall>49</MaxDistanceToCall>
+		<RangeType>AirDistance</RangeType>
+		<IsActive>true</IsActive>
+		<Password>98d8d1ba348d133b221eeab45e8ed241cf8cd968d7916b71a85fd8085450ebac</Password>
+		<FullCurrentAddress>Karmei HaNadiv, HaTe'ena 10, Kiryat Malachi</FullCurrentAddress>
+		<Latitude>31.726399</Latitude>
+		<Longitude>34.737636</Longitude>
+	</Volunteer>
 </ArrayOfVolunteer>

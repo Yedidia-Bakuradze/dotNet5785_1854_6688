@@ -491,7 +491,7 @@ internal class CallImplementation : ICall
         DO.Assignment? callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
 
         //Check if call already been taken
-        if (callAssignment != null)
+        if (callAssignment != null && callAssignment.TypeOfEnding is not null)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
 
         //Check if there is time to complete the call

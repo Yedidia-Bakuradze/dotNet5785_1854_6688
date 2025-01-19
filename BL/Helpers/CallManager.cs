@@ -51,26 +51,35 @@ internal static class CallManager
             ?? throw new DO.DalDoesNotExistException("Call Does not exist");
 
         DO.Assignment? resAssignments = s_dal.Assignment.ReadAll(ass => ass.CallId == callID).LastOrDefault();
+        
+        if (res.DeadLine <= AdminManager.Now)
+            return BO.CallStatus.Expiered;
 
+        if (resAssignments is not null && resAssignments.TypeOfEnding == DO.TypeOfEnding.Treated)
+            return BO.CallStatus.Closed;
+
+        if (resAssignments is not null && resAssignments.TypeOfEnding is not null)
+        {
+            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
+                ? BO.CallStatus.OpenAndRisky
+                : BO.CallStatus.Open;
+        }
+
+        if(resAssignments is not null && resAssignments.TypeOfEnding is null)
+        {
+            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
+                ? BO.CallStatus.InProgressAndRisky
+                : BO.CallStatus.InProgress;
+        }
+        
         //If there is not assingment - no one took the call therefor the call is open
-        if(resAssignments == null )
+        if(resAssignments is null)
         {
             return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
                     ? BO.CallStatus.OpenAndRisky
                     : BO.CallStatus.Open;
         }
-
-        //If there is such assignment containing the CallId - Check if expiered or in progress
-        if (resAssignments.TypeOfEnding == null)
-        {
-            if(res.DeadLine is null)
-                return BO.CallStatus.InProgress;
-            if ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange) return BO.CallStatus.InProgressAndRisky;
-            if (res.DeadLine <= AdminManager.Now) return BO.CallStatus.Expiered;
-            if (res.DeadLine > AdminManager.Now) return BO.CallStatus.InProgress;
-        }
-        
-        return BO.CallStatus.Closed;
+        throw new Exception("Brahhhh whatsha duing");
     }
 
     /// <summary>
