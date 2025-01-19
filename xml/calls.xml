@@ -1000,4 +1000,14 @@
     <Description>Feedback on food quality and service</Description>
     <DeadLine>2025-01-21T00:34:20</DeadLine>
   </Call>
+  <Call>
+    <Id>101</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>18 Lilienblum St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0620149</Latitude>
+    <Longitude>34.7692579</Longitude>
+    <OpeningTime>2025-01-19T22:32:12</OpeningTime>
+    <Description>bbbb</Description>
+    <DeadLine>2029-01-01T00:00:00</DeadLine>
+  </Call>
 </ArrayOfCall>
