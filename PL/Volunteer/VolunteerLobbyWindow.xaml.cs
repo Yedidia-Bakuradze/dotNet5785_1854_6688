@@ -140,10 +140,17 @@ public partial class VolunteerLobbyWindow : Window
 
     private void OnShowSettingsWindow(object sender, RoutedEventArgs e) => new VolunteerWindow(VolunteerId, BO.UserRole.Admin).Show();
 
-    private void Window_Closed(object sender, EventArgs e) => s_bl.Volunteer.RemoveObserver(RefershWindowDetails);
-
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Volunteer.AddObserver(RefershWindowDetails);
-    #endregion
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.Volunteer.RemoveObserver(RefershWindowDetails);
+        s_bl.Call.RemoveObserver(RefershWindowDetails);
+    }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Volunteer.AddObserver(RefershWindowDetails);
+        s_bl.Call.AddObserver(RefershWindowDetails);
+    }
+        #endregion
 
     #region Methods
     private void RefershWindowDetails()
