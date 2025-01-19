@@ -220,7 +220,7 @@ internal class CallImplementation : ICall
                 VolunteerName = s_dal.Volunteer.Read(vol => vol.Id == assignment.VolunteerId)?.FullName,  // Get the volunteer's full name based on the ID
                 EntryTime = assignment.TimeOfStarting,  // Set the start time of the assignment
                 FinishTime = assignment.TimeOfEnding,  // Set the finish time of the assignment
-                TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!  // Set the type of the closed call if found
+                TypeOfClosedCall = (BO.TypeOfEndingCall?)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding  // Set the type of the closed call if found
             }).ToList()  // Convert the assignments to a list of BO.CallAssignInList objects
         };
 
