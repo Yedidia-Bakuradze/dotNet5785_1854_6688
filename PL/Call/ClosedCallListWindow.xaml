@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Call"
+        xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        Title="CallInList"
+        Title="ClosedCallListWindow"
         Height="450"
-        Width="1200"
+        Width="970"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
@@ -18,6 +18,30 @@
             <Setter Property="CornerRadius" Value="100"/>
             <Setter Property="Height" Value="50"/>
             <Setter Property="Width" Value="50"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ParameterModificationBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Width" Value="72"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>
             <Setter Property="Background" Value="White"/>
         </Style>
     </Window.Resources>
@@ -36,33 +60,33 @@
 
         <!-- The upper part-->
         <DataGrid Grid.Row="0"
-       	          EnableRowVirtualization="True"
-                  SelectedItem="{Binding SelectedCall}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  RowDetailsVisibilityMode="VisibleWhenSelected"
-                  ItemsSource="{Binding ListOfCalls}"
-                  MouseDoubleClick="OnDoubleClick"
-                  Background="Transparent"
-                  >
+  	          EnableRowVirtualization="True"
+          SelectedItem="{Binding SelectedCall}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          RowDetailsVisibilityMode="VisibleWhenSelected"
+          ItemsSource="{Binding ListOfCalls}"
+          MouseDoubleClick="OnDoubleClick"
+          Background="Transparent"
+          >
             <!-- Row Styling-->
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <!-- Background Color Change-->
                     <Setter Property="Background"
-                            Value="{Binding TypeOfClosedCall, Converter={StaticResource ConvertTypeOfEndingToBackgroundColorKey}}"/>
+                    Value="{Binding TypeOfClosedCall, Converter={StaticResource ConvertTypeOfEndingToBackgroundColorKey}}"/>
                 </Style>
             </DataGrid.RowStyle>
 
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="150"/>
-                <DataGridTextColumn Header="Call Address" Binding="{Binding CallAddress}" Width="100"/>
-                <DataGridTextColumn Header="Openning Time" Binding="{Binding CallStartTime}" Width="100"/>
-                <DataGridTextColumn Header="Started at" Binding="{Binding EnteryTime}" Width="120"/>
-                <DataGridTextColumn Header="Closed at" Binding="{Binding ClosingTime}" Width="120"/>
-                <DataGridTextColumn Header="Ended as" Binding="{Binding TypeOfClosedCall}" Width="100"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="0.5*"/>
+                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="*"/>
+                <DataGridTextColumn Header="Call Address" Binding="{Binding CallAddress}" Width="*"/>
+                <DataGridTextColumn Header="Openning Time" Binding="{Binding CallStartTime}" Width="*"/>
+                <DataGridTextColumn Header="Started at" Binding="{Binding EnteryTime}" Width="*"/>
+                <DataGridTextColumn Header="Closed at" Binding="{Binding ClosingTime}" Width="*"/>
+                <DataGridTextColumn Header="Ended as" Binding="{Binding TypeOfClosedCall}" Width="*"/>
             </DataGrid.Columns>
 
         </DataGrid>
@@ -73,22 +97,38 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="70"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="335"/>
                 <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sort Action-->
-            <StackPanel Grid.Column="5">
-                <Label HorizontalAlignment="Left" Content="Select a Filed to Sort by"
+            <StackPanel Grid.Column="9">
+                <Label HorizontalAlignment="Left" Content="Select a field to sort by"
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
-                    Height="34"
+                    Height="34" Width="335"
                       ItemsSource="{Binding Source={StaticResource ClosedCallInListFieldKey}}"
-                      SelectedValue="{Binding Path=SortFiled}"
-                      SelectionChanged="OnSortingValueChanged"/>
+                      SelectedValue="{Binding SortField}"/>
             </StackPanel>
+
+            <!-- Reset Parameter Button-->
+            <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#FDD1FF"
+                    Grid.Column="3">
+                <Button Content="Reset" Background="Transparent" BorderThickness="0" FontSize="11" Click="OnResetParameters"/>
+            </Border>
+            
+            <!-- Filter By Parameter Button-->
+            <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#EEFFD6"
+                    Grid.Column="7">
+                <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0"
+                        Click="OnFliterAndSort"/>
+            </Border>
 
             <!--Filter Action-->
             <StackPanel Grid.Column="1">
@@ -103,7 +143,9 @@
                     <StackPanel Grid.Column="0">
                         <Label HorizontalAlignment="Left" Content="Filter By"
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                        <TextBox Height="34" Text="Call Type" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16"/>
+                        <Label Height="34" Content="Call Type" Background="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                 FontSize="16"/>
+
                     </StackPanel>
 
                     <!--Filter's value parameter-->
@@ -113,8 +155,7 @@
                         <ComboBox 
                             Height="34"
                             ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
-                            SelectedValue="{Binding FilterValue}"
-                            SelectionChanged="OnFilterValueChanged"/>
+                            SelectedValue="{Binding FilterValue}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
