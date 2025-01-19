@@ -394,6 +394,7 @@ internal class CallImplementation : ICall
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         List<BO.OpenCallInList> openCalls = s_dal.Call
             .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
+            .AsParallel()
             .Where(call => volunteer.MaxDistanceToCall is null || volunteer.FullCurrentAddress is null || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress,call.FullAddressCall,volunteer.RangeType) <= volunteer.MaxDistanceToCall)
             .Select(call => new BO.OpenCallInList
             {
