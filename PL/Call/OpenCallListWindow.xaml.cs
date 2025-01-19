@@ -66,7 +66,7 @@ public partial class OpenCallListWindow : Window
     private void OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
         if(SelectedCall is not null)
-            new OpenCallWindow(SelectedCall!.CallId).Show();
+            new OpenCallWindow(SelectedCall!.CallId,VolunteerId).Show();
     }
     private void OnSelectCallTodo(object sender, RoutedEventArgs e)
     {
@@ -81,19 +81,21 @@ public partial class OpenCallListWindow : Window
 
     private void RefreshList()
     {
+        var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
         List<(double, double)> listOfCordinates = s_bl.Call
             .GetListOfOpenCallsForVolunteerCordinates(VolunteerId)
             .ToList<(double,double)>();
-        var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+
         if (volunteer.FullCurrentAddress is not null)
         {
             listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
-            OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType,listOfCordinates);
+            if (listOfCordinates.Count() != 0)
+                OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType,listOfCordinates);
+            else
+                OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
         }
         else
-        {
             OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
-        }
         ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(
                                     VolunteerId,
                                     FilterByValue,

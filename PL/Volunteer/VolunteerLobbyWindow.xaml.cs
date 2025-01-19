@@ -172,7 +172,7 @@ public partial class VolunteerLobbyWindow : Window
             RouteMap = null;
             CallDetailsContent = null;
             WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-            DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
+            //DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
         }
     }
 

@@ -47,22 +47,8 @@ public partial class DisplayMapContent : UserControl
     {
         try
         {
-            switch (Type)
-            {
-                case TypeOfMap.Pin:
-                    {
-                        await webView.EnsureCoreWebView2Async();
-                        webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
-                        break;
-                    }
-                case TypeOfMap.Route:
-                    {
-                        Dest = ListOfPoints[1];
-                        await webView.EnsureCoreWebView2Async();
-                        webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
-                        break;
-                    }
-            }
+            await webView.EnsureCoreWebView2Async();
+            webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
         }
         catch (Exception ex)
         {
@@ -119,10 +105,6 @@ public partial class DisplayMapContent : UserControl
      let map;
       let directionsService;
       let directionsRenderer;
-
-      // Define your coordinates here
-      const startCoords = { lat: 40.7128, lng: -74.006 }; // New York
-      const endCoords = { lat: 42.3601, lng: -71.0589 }; // Boston
 
       function generateColors(count) {
         const colors = [];
