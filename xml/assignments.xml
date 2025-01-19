@@ -1,2 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignment/>
+<ArrayOfAssignment>
+  <Assignment>
+    <Id>78</Id>
+    <CallId>6</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-19T04:26:45</TimeOfStarting>
+    <TimeOfEnding>19/01/2025 4:26:45</TimeOfEnding>
+    <TypeOfEnding>Treated</TypeOfEnding>
+  </Assignment>
+  <Assignment>
+    <Id>79</Id>
+    <CallId>5</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-19T04:26:45</TimeOfStarting>
+    <TimeOfEnding>19/01/2025 4:26:45</TimeOfEnding>
+    <TypeOfEnding>Treated</TypeOfEnding>
+  </Assignment>
+</ArrayOfAssignment>

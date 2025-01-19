@@ -8,7 +8,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="ClosedCallListWindow"
         Height="450"
-        Width="970"
+        Width="1100"
         Closed="OnWindowClosed"
         Loaded="OnWindowLoaded"
         >
@@ -52,63 +52,64 @@
                 <GradientStop Color="#C25C9E" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="90"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Table Contentx-->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="90"/>
+            </Grid.RowDefinitions>
+            <!-- The upper part-->
+            <DataGrid Grid.Row="0"
+  	              EnableRowVirtualization="True"
+                  SelectedItem="{Binding SelectedCall}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  ItemsSource="{Binding ListOfCalls}"
+                  Background="Transparent"
+              >
+                <!-- Row Styling-->
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <!-- Background Color Change-->
+                        <Setter Property="Background"
+                        Value="{Binding TypeOfClosedCall, Converter={StaticResource ConvertTypeOfEndingToBackgroundColorKey}}"/>
+                    </Style>
+                </DataGrid.RowStyle>
 
 
-        <!-- The upper part-->
-        <DataGrid Grid.Row="0"
-  	          EnableRowVirtualization="True"
-          SelectedItem="{Binding SelectedCall}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          RowDetailsVisibilityMode="VisibleWhenSelected"
-          ItemsSource="{Binding ListOfCalls}"
-          MouseDoubleClick="OnDoubleClick"
-          Background="Transparent"
-          >
-            <!-- Row Styling-->
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <!-- Background Color Change-->
-                    <Setter Property="Background"
-                    Value="{Binding TypeOfClosedCall, Converter={StaticResource ConvertTypeOfEndingToBackgroundColorKey}}"/>
-                </Style>
-            </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="0.5*"/>
+                    <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="*"/>
+                    <DataGridTextColumn Header="Call Address" Binding="{Binding CallAddress}" Width="*"/>
+                    <DataGridTextColumn Header="Openning Time" Binding="{Binding CallStartTime}" Width="*"/>
+                    <DataGridTextColumn Header="Started at" Binding="{Binding EnteryTime}" Width="*"/>
+                    <DataGridTextColumn Header="Closed at" Binding="{Binding ClosingTime}" Width="*"/>
+                    <DataGridTextColumn Header="Ended as" Binding="{Binding TypeOfClosedCall}" Width="*"/>
+                </DataGrid.Columns>
 
+            </DataGrid>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="0.5*"/>
-                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="*"/>
-                <DataGridTextColumn Header="Call Address" Binding="{Binding CallAddress}" Width="*"/>
-                <DataGridTextColumn Header="Openning Time" Binding="{Binding CallStartTime}" Width="*"/>
-                <DataGridTextColumn Header="Started at" Binding="{Binding EnteryTime}" Width="*"/>
-                <DataGridTextColumn Header="Closed at" Binding="{Binding ClosingTime}" Width="*"/>
-                <DataGridTextColumn Header="Ended as" Binding="{Binding TypeOfClosedCall}" Width="*"/>
-            </DataGrid.Columns>
-
-        </DataGrid>
-
-        <!-- The bottom part-->
-        <Grid Grid.Row="1">
+            <!-- The bottom part-->
+            <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="72"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="72"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="335"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sort Action-->
-            <StackPanel Grid.Column="9">
+            <StackPanel Grid.Column="7">
                 <Label HorizontalAlignment="Left" Content="Select a field to sort by"
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
                 <ComboBox
@@ -125,7 +126,7 @@
             
             <!-- Filter By Parameter Button-->
             <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#EEFFD6"
-                    Grid.Column="7">
+                    Grid.Column="5">
                 <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0"
                         Click="OnFliterAndSort"/>
             </Border>
@@ -159,6 +160,11 @@
                     </StackPanel>
                 </Grid>
             </StackPanel>
+        </Grid>
+            
+        </Grid>
+        <Grid Grid.Column="1">
+            <ContentControl Content="{Binding MapView}"/>
         </Grid>
     </Grid>
 </Window>
