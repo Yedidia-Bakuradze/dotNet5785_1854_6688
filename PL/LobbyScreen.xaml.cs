@@ -8,10 +8,9 @@ namespace PL
     {
         public string IdField { get; set; } = "";
         public string passwordField { get; set; } = "";
-        public Visibility IsRoleSelectionVisible { get; set; } = Visibility.Collapsed;
-
         private static BlApi.IBl s_bl = BlApi.Factory.Get();
         public int UserId { get; set; }
+        public bool IsLoggedIn { get; set; } = false;
         public LobbyScreen()
         {
             InitializeComponent();
@@ -26,7 +25,8 @@ namespace PL
                 UserId = int.Parse(IdField);
                 if (role == "Admin")
                 {
-                    IsRoleSelectionVisible = Visibility.Visible;
+                    
+                    IsLoggedIn = true;
                     // Force UI to update (using Data Binding only)
                     Dispatcher.Invoke(() => { DataContext = null; DataContext = this; });
                 }
