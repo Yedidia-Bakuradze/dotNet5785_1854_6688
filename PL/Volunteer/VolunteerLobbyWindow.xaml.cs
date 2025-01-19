@@ -114,7 +114,6 @@ public partial class VolunteerLobbyWindow : Window
 
     #region Events
     private void OnSelectCall(object sender, RoutedEventArgs e) => new OpenCallListWindow(VolunteerId).Show();
-
     private void OnCancelCall(object sender, RoutedEventArgs e)
     {
         try
@@ -137,9 +136,7 @@ public partial class VolunteerLobbyWindow : Window
             MessageBox.Show(ex.Message);
         }
     }
-
     private void OnShowSettingsWindow(object sender, RoutedEventArgs e) => new VolunteerWindow(VolunteerId, BO.UserRole.Admin).Show();
-
     private void Window_Closed(object sender, EventArgs e)
     {
         s_bl.Volunteer.RemoveObserver(RefershWindowDetails);
@@ -150,7 +147,8 @@ public partial class VolunteerLobbyWindow : Window
         s_bl.Volunteer.AddObserver(RefershWindowDetails);
         s_bl.Call.AddObserver(RefershWindowDetails);
     }
-        #endregion
+    private void OnShowHistory(object sender, RoutedEventArgs e) => new ClosedCallListWindow(VolunteerId).Show();
+    #endregion
 
     #region Methods
     private void RefershWindowDetails()
@@ -178,5 +176,4 @@ public partial class VolunteerLobbyWindow : Window
 
     #endregion
 
-    private void OnShowHistory(object sender, RoutedEventArgs e) => new ClosedCallListWindow(VolunteerId).Show();
 }

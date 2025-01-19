@@ -16,4 +16,12 @@
     <TimeOfEnding>16/01/2025 14:02:07</TimeOfEnding>
     <TypeOfEnding>Treated</TypeOfEnding>
   </Assignment>
+  <Assignment>
+    <Id>6</Id>
+    <CallId>8</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-16T14:02:07</TimeOfStarting>
+    <TimeOfEnding />
+    <TypeOfEnding />
+  </Assignment>
 </ArrayOfAssignment>

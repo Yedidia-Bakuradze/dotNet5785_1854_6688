@@ -65,7 +65,7 @@
                    Text="{Binding DescriptionText}" FontSize="20" Foreground="White"
                     Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource  ConvertCallInProgressToVisibilityRevereseKey}}"/>
         <ContentControl Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="381" HorizontalAlignment="Left"
-                        Content="{Binding CallDetailsContent}"/>
+                        Content="{Binding CallDetailsContent}" Margin="5"/>
         <!--Settings Button-->
         <Border Grid.Column="1" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}">
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowHistory"/>
@@ -78,14 +78,17 @@
         <TextBlock Grid.Column="2" Grid.Row="7" TextWrapping="Wrap" Foreground="#FFA600" Text="{Binding WarrningSelectCallText}"
                     Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource  ConvertCallInProgressToVisibilityRevereseKey}}"/>
 
-        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityRevereseKey}}" >
+        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}"
+                Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityRevereseKey}}" >
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Select a Call" FontSize="20" Click="OnSelectCall"/>
         </Border>
 
-        <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}" Background="#FF6262" Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
+        <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}" Background="#FF6262"
+                Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Cancel a Call" FontSize="20" Click="OnCancelCall"/>
         </Border>
-        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Background="#68E78E" Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
+        <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Background="#68E78E"
+                Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Finish the Call" FontSize="20" Click="OnFinishCall"/>
         </Border>
         <ContentControl Content="{Binding RouteMap}" Grid.Column="3" Grid.Row="3" Grid.RowSpan="2"/>

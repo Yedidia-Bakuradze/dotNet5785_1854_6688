@@ -57,4 +57,13 @@
     <OpeningTime>2025-01-16T14:02:07</OpeningTime>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>8</Id>
+    <Type>SpecialAssistance</Type>
+    <FullAddressCall>Sanur St 135, Mevo Horon</FullAddressCall>
+    <Latitude>31.851062</Latitude>
+    <Longitude>35.034695</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>
