@@ -69,7 +69,7 @@ public partial class ClosedCallListWindow : Window
 
     #region Events
     private void OnWindowClosed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(RefereshList);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefereshList);
+    private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefereshList);
     private void OnFilterValueChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefereshList();
     private void OnFliterAndSort(object sender, RoutedEventArgs e) => RefereshList();
     private void OnResetParameters(object sender, RoutedEventArgs e)
