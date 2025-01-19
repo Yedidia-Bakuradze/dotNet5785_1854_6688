@@ -24,4 +24,12 @@
     <TimeOfEnding>16/01/2025 14:02:07</TimeOfEnding>
     <TypeOfEnding>SelfCanceled</TypeOfEnding>
   </Assignment>
+  <Assignment>
+    <Id>77</Id>
+    <CallId>13</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-19T04:26:45</TimeOfStarting>
+    <TimeOfEnding>19/01/2025 4:26:45</TimeOfEnding>
+    <TypeOfEnding>SelfCanceled</TypeOfEnding>
+  </Assignment>
 </ArrayOfAssignment>
