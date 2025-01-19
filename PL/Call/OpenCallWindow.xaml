@@ -35,11 +35,13 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" >
                 <TextBlock Text="Type of Call:" VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding CurrentCall.TypeOfCall}" VerticalAlignment="Center" FontSize="16" Foreground="White"/>
+                <TextBlock Text="{Binding CurrentCall.TypeOfCall}"
+                           Margin="5,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="White"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal" >
                 <TextBlock Text="Call Description:" VerticalAlignment="Top" FontSize="16"/>
-                <TextBlock Text="{Binding CurrentCall.TypeOfCall}" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="16" Foreground="White"/>
+                <TextBlock Text="{Binding CurrentCall.Description}" TextWrapping="Wrap" FontSize="16"
+                           Margin="5,0,0,0" Foreground="White"/>
             </StackPanel>
 
         </Grid>

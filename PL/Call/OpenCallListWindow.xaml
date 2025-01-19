@@ -52,7 +52,7 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <!-- Background Color Change-->
-                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ConvertStatusToBackgroundColorKey}}"/>
+                    <Setter Property="Background" Value="{Binding TypeOfCall, Converter={StaticResource }}"/>
                 </Style>
             </DataGrid.RowStyle>
 
@@ -129,6 +129,7 @@
                 <Button Height="20" Content="Filter Now" Click="OnFilterSet"/>
             </StackPanel>
         </Grid>
+        <!-- Map View-->
         <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <ContentControl Content="{Binding OpenCallsMap}"/>
         </Grid>

@@ -37,5 +37,6 @@
         <local:ConvertActiveStatusToVisibilityReveresed x:Key="ConvertActiveStatusToVisibilityReveresedKey"/>
         <local:ConvertRoleToColor x:Key="ConvertRoleToColorKey"/>
         <local:ConvertRoleToReadOnly x:Key="ConvertRoleToReadOnlyKey"/>
+        <local:ConvertTypeOfCallToBackgroundColor x:Key="ConvertTypeOfCallToBackgroundColorKey"/>
     </Application.Resources>
 </Application>

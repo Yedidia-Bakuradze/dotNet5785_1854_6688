@@ -244,13 +244,11 @@ internal class ConvertActiveStatusToVisibility : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? Visibility.Visible : Visibility.Hidden;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => false;
 }
-
 internal class ConvertActiveStatusToVisibilityReveresed : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value == false ? Visibility.Visible : Visibility.Hidden;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => false;
 }
-
 internal class ConvertStatusToVisibilityLevelOne : IMultiValueConverter
 {
     public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
@@ -280,8 +278,7 @@ internal class ConvertStatusToVisibilityLevelThree : IMultiValueConverter
     }
     public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture) => [];
 }
-
-class ConvertBooleanToVisibility : IValueConverter
+internal class ConvertBooleanToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -295,8 +292,7 @@ class ConvertBooleanToVisibility : IValueConverter
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => ((Visibility)value) == Visibility.Visible;
 }
-
-class ConvertVolunteerEnditingModeToReadOnlyValue: IValueConverter
+internal class ConvertVolunteerEnditingModeToReadOnlyValue: IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -309,8 +305,7 @@ class ConvertVolunteerEnditingModeToReadOnlyValue: IValueConverter
         return "Update Volunteer";
     }
 }
-
-class ConvertCallInProgressToVisibility : IValueConverter
+internal class ConvertCallInProgressToVisibility : IValueConverter
 {
     public object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -320,23 +315,19 @@ class ConvertCallInProgressToVisibility : IValueConverter
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
-
-class ConvertRoleToVisibility : IValueConverter
+internal class ConvertRoleToVisibility : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         => (BO.UserRole)value == BO.UserRole.Volunteer ? Visibility.Hidden : Visibility.Visible;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
-
-class ConvertRoleToVisibilityReveresed : IValueConverter
+internal class ConvertRoleToVisibilityReveresed : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         => (BO.UserRole)value == BO.UserRole.Admin ? Visibility.Hidden : Visibility.Visible;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
-
-
-class ConvertTypeOfEndingToBackgroundColor : IValueConverter
+internal class ConvertTypeOfEndingToBackgroundColor : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -361,8 +352,7 @@ class ConvertTypeOfEndingToBackgroundColor : IValueConverter
         throw new NotImplementedException();
     }
 }
-
-class ConvertCallInProgressToVisibilityReverese: IValueConverter
+internal class ConvertCallInProgressToVisibilityReverese: IValueConverter
 {
     public object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -372,9 +362,7 @@ class ConvertCallInProgressToVisibilityReverese: IValueConverter
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
-
-
-class ConvertRoleToColor : IValueConverter
+internal class ConvertRoleToColor : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
         (BO.UserRole)value == BO.UserRole.Admin
@@ -383,11 +371,45 @@ class ConvertRoleToColor : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
 }
-
-
-class ConvertRoleToReadOnly : IValueConverter
+internal class ConvertRoleToReadOnly : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (BO.UserRole)value == BO.UserRole.Admin;
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
+}
+internal class ConvertTypeOfCallToBackgroundColor : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        switch ((BO.CallType)value)
+        {
+            case BO.CallType.Undefined:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF10EE"));
+            case BO.CallType.FlatTire:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FE00EE"));
+
+            case BO.CallType.BatteryJumpStart:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf231"));
+            case BO.CallType.LockedOut:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf231"));
+            case BO.CallType.OutOfFuel:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf412"));
+            case BO.CallType.CarStuck:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E4f231"));
+            case BO.CallType.ChildLockedInCar:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FEf231"));
+            case BO.CallType.TrafficDirection:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A3f231"));
+            case BO.CallType.TowingAssistance:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E1f231"));
+            case BO.CallType.MinorRoadRepair:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEEEE1"));
+            case BO.CallType.SpecialAssistance:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFAA1"));
+            default:
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A13411"));
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallType.OutOfFuel;
 }
