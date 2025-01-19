@@ -358,8 +358,6 @@ static public class Initialization
             Console.WriteLine($"Assignment Number {i - 20 + 1} has been created!");
             currentVolunteer = listOfVolunteers[i];
             currentCall = listOfCalls[i];
-            if (currentVolunteer.Id == -1 || i == 99)
-                Console.WriteLine("");
             //Calculates the delta time between the opening and closing time of the call    
             TimeSpan delta = (currentCall.DeadLine != null)
             ? (TimeSpan)(currentCall.DeadLine - currentCall.OpeningTime)
