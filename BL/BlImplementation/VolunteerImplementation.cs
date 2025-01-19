@@ -295,7 +295,26 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                         throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsExpiredByVolunteer.");
                     }
                     break;
-
+                case VolunteerInListField.CallId:
+                    if (int.TryParse(filterValue.ToString(), out int callId))
+                    {
+                        volunteers = volunteers.Where(vol => vol.CallId == callId);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsExpiredByVolunteer.");
+                    }
+                    break;
+                case VolunteerInListField.TypeOfCall:
+                    if (Enum.TryParse(filterValue.ToString(), out BO.CallType callType))
+                    {
+                        volunteers = volunteers.Where(vol => vol.TypeOfCall == callType);
+                    }
+                    else
+                    {
+                        throw new BlInputValueUnConvertableException($"Bl: The value {filterValue} is not a valid number for filtering by TotalCallsExpiredByVolunteer.");
+                    }
+                    break;
                 default:
                     throw new BlInvalidOperationException($"Bl: The filter field {filterField} is not supported.");
             }
