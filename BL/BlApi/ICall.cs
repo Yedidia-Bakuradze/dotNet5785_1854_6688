@@ -1,4 +1,6 @@
-﻿namespace BlApi;
+﻿using BO;
+
+namespace BlApi;
 public interface ICall : IObservable //Stage 5
 {
     /// <summary>
@@ -81,4 +83,6 @@ public interface ICall : IObservable //Stage 5
 
 
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId);
+
+    public IEnumerable<(double, double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList> listOfCalls);
 }
