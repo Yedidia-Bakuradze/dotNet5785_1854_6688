@@ -30,8 +30,6 @@ public partial class ClosedCallListWindow : Window
     private static readonly DependencyProperty ListOfCallsProperty =
         DependencyProperty.Register("ListOfCalls", typeof(IEnumerable<BO.ClosedCallInList>), typeof(ClosedCallListWindow));
 
-
-
     public UserControl MapView
     {
         get { return (UserControl)GetValue(MapViewProperty); }
@@ -40,8 +38,6 @@ public partial class ClosedCallListWindow : Window
 
     public static readonly DependencyProperty MapViewProperty =
         DependencyProperty.Register("MapView", typeof(UserControl), typeof(ClosedCallListWindow));
-
-
 
     public BO.CallType? FilterValue
     {
@@ -72,19 +68,15 @@ public partial class ClosedCallListWindow : Window
     #endregion
 
     #region Events
-
+    private void OnWindowClosed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(RefereshList);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefereshList);
     private void OnFilterValueChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefereshList();
-
-    private void OnWindowClosed(object sender, EventArgs e) => s_bl.Call.AddObserver(RefereshList);
-
-    private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(RefereshList);
     private void OnFliterAndSort(object sender, RoutedEventArgs e) => RefereshList();
     private void OnResetParameters(object sender, RoutedEventArgs e)
     {
         FilterValue = null;
         SortField = null;
     }
-
     #endregion
 
     #region Methods
@@ -93,14 +85,15 @@ public partial class ClosedCallListWindow : Window
         try
         {
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-        }catch(Exception ex)
+        }
+        catch(Exception ex)
         {
             MessageBox.Show(ex.Message);
             Close();
         }
         ListOfCalls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, FilterValue, SortField);
         List<(double, double)> listOfCordinates = s_bl.Call.ConvertClosedCallsIntoCordinates(ListOfCalls).ToList();
-        if(CurrentVolunteer.FullCurrentAddress is not null)
+        if(CurrentVolunteer?.FullCurrentAddress is not null)
         {
             listOfCordinates.Insert(0, ((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
             MapView = new DisplayMapContent(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfCordinates);
@@ -111,4 +104,5 @@ public partial class ClosedCallListWindow : Window
         }
     }
     #endregion
+
 }

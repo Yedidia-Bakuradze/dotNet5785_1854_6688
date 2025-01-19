@@ -10,7 +10,7 @@
         Height="450"
         Width="1100"
         Closed="OnWindowClosed"
-        Loaded="OnWindowLoaded"
+        Loaded="Window_Loaded"
         >
     <Window.Resources>
         <!-- Add btn's style-->
