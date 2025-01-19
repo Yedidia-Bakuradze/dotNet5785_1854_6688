@@ -1,18 +1,7 @@
 ﻿using PL.Call;
 using PL.Sub_Windows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PL.Volunteer;
 public partial class VolunteerLobbyWindow : Window
@@ -172,7 +161,7 @@ public partial class VolunteerLobbyWindow : Window
             RouteMap = null;
             CallDetailsContent = null;
             WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-            //DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
+            DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
         }
     }
 
