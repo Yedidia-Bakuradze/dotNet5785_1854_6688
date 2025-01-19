@@ -51,8 +51,16 @@ public partial class OpenCallListWindow : Window
 
     #region Events
     private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) => new CallWindow(SelectedCall!.CallId).Show();
-    private void OnWindowClosed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(RefreshList);
-    private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(RefreshList);
+    private void OnWindowClosed(object sender, EventArgs e)
+    {
+        s_bl.Call.RemoveObserver(RefreshList);
+        s_bl.Volunteer.AddObserver(RefreshList);
+    }
+    private void OnWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Call.AddObserver(RefreshList);
+        s_bl.Volunteer.AddObserver(RefreshList);
+    }
     private void OnFilterSet(object sender, RoutedEventArgs e) => RefreshList();
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
     private void OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -69,6 +77,8 @@ public partial class OpenCallListWindow : Window
     #endregion
 
     #region Methods
+    
+
     private void RefreshList()
     {
         List<(double, double)> listOfCordinates = s_bl.Call

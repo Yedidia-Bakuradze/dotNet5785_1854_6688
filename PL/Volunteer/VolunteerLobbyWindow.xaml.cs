@@ -1,4 +1,5 @@
 ﻿using PL.Call;
+using PL.Sub_Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,30 @@ public partial class VolunteerLobbyWindow : Window
 
     private static readonly DependencyProperty CurrentVolunteerProperty
         = DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerLobbyWindow));
-    
+
+
+
+    public UserControl CallDetailsContent
+    {
+        get { return (UserControl)GetValue(CallDetailsContentProperty); }
+        set { SetValue(CallDetailsContentProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for CallDetailsContent.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty CallDetailsContentProperty =
+        DependencyProperty.Register("CallDetailsContent", typeof(UserControl), typeof(VolunteerLobbyWindow));
+
+
+    public UserControl RouteMap
+    {
+        get { return (UserControl)GetValue(RouteMapProperty); }
+        set { SetValue(RouteMapProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for RouteMap.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty RouteMapProperty =
+        DependencyProperty.Register("RouteMap", typeof(UserControl), typeof(VolunteerLobbyWindow));
+
     public string DescriptionText
     {
         get => (string)GetValue(DescriptionTextProperty);
@@ -69,6 +93,19 @@ public partial class VolunteerLobbyWindow : Window
     private static readonly DependencyProperty HeaderTextProperty
         = DependencyProperty.Register("HeaderText", typeof(string), typeof(VolunteerLobbyWindow));
 
+
+
+    public string CallDetails
+    {
+        get { return (string)GetValue(CallDetailsProperty); }
+        set { SetValue(CallDetailsProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for CallDetails.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty CallDetailsProperty =
+        DependencyProperty.Register("CallDetails", typeof(string), typeof(VolunteerLobbyWindow));
+
+
     #endregion
 
     #region Regular Propeties
@@ -93,7 +130,7 @@ public partial class VolunteerLobbyWindow : Window
     {
         try
         {
-            s_bl.Call.FinishAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.CallId);
+            s_bl.Call.FinishAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.Id);
         }
         catch (Exception ex)
         {
@@ -112,9 +149,24 @@ public partial class VolunteerLobbyWindow : Window
     private void RefershWindowDetails()
     {
         CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-        WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
         HeaderText = $"Welcome {CurrentVolunteer.FullName}";
-        DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
+        if(CurrentVolunteer.CurrentCall is not null)
+        {
+
+            CallDetails = $"Route: {CurrentVolunteer.RangeType}\nETA: 31 Minutes";
+            List<(double, double)> listOfCorinates = new();
+            if(CurrentVolunteer.FullName is not null)
+                listOfCorinates.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+            var call = s_bl.Call.GetDetielsOfCall(CurrentVolunteer.CurrentCall.CallId);
+            listOfCorinates.Add((call.Latitude,call.Longitude));
+            RouteMap = new DisplayMapContent(TypeOfMap.Route,CurrentVolunteer.RangeType,listOfCorinates);
+            CallDetailsContent = new CallDetailsControl(call);
+        }
+        else
+        {
+            WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
+            DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count()} calls open Would you like to take one?";
+        }
     }
 
     #endregion

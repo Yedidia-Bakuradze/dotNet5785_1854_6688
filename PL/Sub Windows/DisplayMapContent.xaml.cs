@@ -19,8 +19,7 @@ public partial class DisplayMapContent : UserControl
     {
         ListOfPoints = listOfPoints.ToList();
         LoadedFunction = type == TypeOfMap.Pin ? "ShowPinLocations" : "ShowRoute";
-        //RangeHtml = range.GetHashCode();
-        RangeHtml = 0;
+        RangeHtml = range.GetHashCode();
         Source = listOfPoints.FirstOrDefault();
         Type = type;
         InitializeComponent();

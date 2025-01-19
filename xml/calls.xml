@@ -39,4 +39,22 @@
     <OpeningTime>2025-01-16T14:02:07</OpeningTime>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>6</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>HaMa'ayan 4-18, Efrat, Israel</FullAddressCall>
+    <Latitude>31.6571662</Latitude>
+    <Longitude>35.1517332</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>7</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>Sanur 135-134, Mevo Horon</FullAddressCall>
+    <Latitude>-8.7071782</Latitude>
+    <Longitude>115.2626236</Longitude>
+    <OpeningTime>2025-01-16T14:02:07</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

@@ -62,8 +62,10 @@
         
         <!--Description-->
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="310" HorizontalAlignment="Left" TextWrapping="Wrap"
-                   Text="{Binding DescriptionText}" FontSize="20" Foreground="White"/>
-
+                   Text="{Binding DescriptionText}" FontSize="20" Foreground="White"
+                    Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource  ConvertCallInProgressToVisibilityRevereseKey}}"/>
+        <ContentControl Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="381" HorizontalAlignment="Left"
+                        Content="{Binding CallDetailsContent}"/>
         <!--Settings Button-->
         <Border Grid.Column="1" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}">
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowHistory"/>
@@ -86,6 +88,6 @@
         <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}" Background="#68E78E" Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityKey}}">
             <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Finish the Call" FontSize="20" Click="OnFinishCall"/>
         </Border>
-
+        <ContentControl Content="{Binding RouteMap}" Grid.Column="3" Grid.Row="3" Grid.RowSpan="2"/>
     </Grid>
 </Window>
