@@ -315,6 +315,34 @@ In this stage, we made several enhancements and improvements to the Presentation
 
 These enhancements improve the overall functionality and user experience of the platform, making it more versatile and user-friendly.
 
+## 6th Stage: Post-Presentation Layer Enhancements
+
+### Background
+
+In this stage, we made several enhancements and improvements to the Presentation Layer (PL) and added new features to the platform.
+
+### Implementation Details
+
+**Volunteer Features**:
+
+- **Access to Calls**: Volunteers can now take calls, finish them, or cancel them directly from the UI.
+- **Settings and History**: Volunteers can view and modify their settings, and see their history of calls.
+
+**Admin Features**:
+
+- **Manage Entities**: Admins can add new calls, delete assignments, and manage every other entity in the system.
+
+**New Features**:
+
+- **Email Notifications**: Implemented an email sender using SMTP protocol to notify relevant volunteers when a new call is available nearby.
+- **Google Maps Integration**: Added a feature to display the distance between the volunteer and the call location using Google Maps. The user can choose between air, walking, and driving distances, providing a visual perspective of the calls relative to the volunteer's location.
+
+### Troubleshooting
+
+When running the program, you might encounter issues related to the WebView2 NuGet package. If you experience any problems, try uninstalling and then reinstalling the WebView2 package from the NuGet package manager. This should resolve any issues related to the WebView2 component.
+
+These enhancements improve the overall functionality and user experience of the platform, making it more versatile and user-friendly.
+
 ## Features
 
 - **Local Database Management**: Allows the user to add new entity records to the local database stored in a simple list structure.
