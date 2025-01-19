@@ -16,37 +16,57 @@ public partial class OpenCallListWindow : Window
     }
 
     #region Regular Propeties
-    public BO.OpenCallInList? SelectedCall { get; set; }
     public int VolunteerId { get; set; }
-    public BO.CallStatus? RequestedSpecialMode { get; set; }
-    public BO.CallType? FilterByValue { get; set; }
-    public BO.OpenCallFields? SortByField { get; set; }
     #endregion
 
     #region Dependecy Propeties
+    public BO.OpenCallFields? SortByField
+    {
+        get { return (BO.OpenCallFields?)GetValue(SortByFieldProperty); }
+        set { SetValue(SortByFieldProperty, value); }
+    }
+    public static readonly DependencyProperty SortByFieldProperty =
+        DependencyProperty.Register("SortByField", typeof(BO.OpenCallFields?), typeof(OpenCallListWindow));
+
+    public BO.CallType? FilterByValue
+    {
+        get { return (BO.CallType?)GetValue(FilterByValueProperty); }
+        set { SetValue(FilterByValueProperty, value); }
+    }
+    public static readonly DependencyProperty FilterByValueProperty =
+        DependencyProperty.Register("FilterByValue", typeof(BO.CallType?), typeof(OpenCallListWindow));
+
+    public BO.CallStatus? RequestedSpecialMode
+    {
+        get { return (BO.CallStatus?)GetValue(RequestedSpecialModeProperty); }
+        set { SetValue(RequestedSpecialModeProperty, value); }
+    }
+    public static readonly DependencyProperty RequestedSpecialModeProperty =
+        DependencyProperty.Register("RequestedSpecialMode", typeof(BO.CallStatus?), typeof(OpenCallListWindow));
+
+    public BO.OpenCallInList? SelectedCall
+    {
+        get { return (BO.OpenCallInList)GetValue(SelectedCallProperty); }
+        set { SetValue(SelectedCallProperty, value); }
+    }
+    public static readonly DependencyProperty SelectedCallProperty =
+        DependencyProperty.Register("SelectedCall", typeof(BO.OpenCallInList), typeof(OpenCallListWindow));
+
     public IEnumerable<BO.OpenCallInList> ListOfCalls
     {
         get => (IEnumerable<BO.OpenCallInList>)GetValue(ListOfCallsProperty);
         set => SetValue(ListOfCallsProperty, value);
     }
-
     private static readonly DependencyProperty ListOfCallsProperty =
         DependencyProperty.Register("ListOfCalls", typeof(IEnumerable<BO.OpenCallInList>), typeof(OpenCallListWindow), new PropertyMetadata(null));
-
-
 
     public UserControl OpenCallsMap
     {
         get { return (UserControl)GetValue(OpenCallsMapProperty); }
         set { SetValue(OpenCallsMapProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty OpenCallsMapProperty =
         DependencyProperty.Register("OpenCallsMap", typeof(UserControl), typeof(OpenCallListWindow));
-
-
-
     #endregion
 
     #region Events
@@ -71,14 +91,18 @@ public partial class OpenCallListWindow : Window
     private void OnSelectCallTodo(object sender, RoutedEventArgs e)
     {
         s_bl.Call.SelectCallToDo(VolunteerId, SelectedCall!.CallId);
-        this.Close();
+        Close();
+    }
+    private void OnFliterAndSort(object sender, RoutedEventArgs e) => RefreshList();
+    private void OnResetParameters(object sender, RoutedEventArgs e)
+    {
+        FilterByValue = null;
+        SortByField = null;
     }
 
     #endregion
 
     #region Methods
-    
-
     private void RefreshList()
     {
         var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
@@ -96,14 +120,7 @@ public partial class OpenCallListWindow : Window
         }
         else
             OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
-        ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(
-                                    VolunteerId,
-                                    FilterByValue,
-                                    SortByField
-                                    );
+        ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
     }
     #endregion
-
-
-
 }

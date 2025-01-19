@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Call"
+        xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        Title="CallInList"
+        Title="OpenCallListWinodw"
         Height="450"
         Width="1100"
         Closed="OnWindowClosed"
@@ -19,6 +19,30 @@
             <Setter Property="Height" Value="50"/>
             <Setter Property="Width" Value="50"/>
             <Setter Property="Background" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ParameterModificationBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Width" Value="72"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      Direction="-90"
+                                      ShadowDepth="1"
+                                      BlurRadius="2"
+                                      />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="White"/>
         </Style>
     </Window.Resources>
     <Grid>
@@ -28,18 +52,20 @@
                 <GradientStop Color="#C25C9E" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="90"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <!-- Table Contentx-->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="90"/>
+            </Grid.RowDefinitions>
 
-        <!-- The upper part-->
-        <DataGrid Grid.Row="0"
-       	          EnableRowVirtualization="True"
+            <!-- The upper part-->
+            <DataGrid Grid.Row="0"
+  	              EnableRowVirtualization="True"
                   SelectedItem="{Binding SelectedCall}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
@@ -48,89 +74,106 @@
                   Background="Transparent"
                   SelectionChanged="OnSelectionChanged"
                   >
-            <!-- Row Styling-->
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <!-- Background Color Change-->
-                    <Setter Property="Background" Value="{Binding TypeOfCall,Converter={StaticResource ConvertTypeOfCallToBackgroundColorKey}}"/>
-                </Style>
-            </DataGrid.RowStyle>
+                <!-- Row Styling-->
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <!-- Background Color Change-->
+                        <Setter Property="Background" Value="{Binding TypeOfCall,Converter={StaticResource ConvertTypeOfCallToBackgroundColorKey}}"/>
+                    </Style>
+                </DataGrid.RowStyle>
 
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="CallId" Binding="{Binding CallId}" Width="50"/>
-                <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="150"/>
-                <DataGridTextColumn Header="Volunteer's Name" Binding="{Binding LastVolunteerName}" Width="100"/>
-                <DataGridTextColumn Header="Call Address" Binding="{Binding CallFullAddress}" Width="100"/>
-                <DataGridTextColumn Header="Opened At" Binding="{Binding OpenningTime}" Width="120"/>
-                <DataGridTextColumn Header="Time To End" Binding="{Binding LastTimeForClosingTheCall}" Width="120"/>
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="100"/>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="CallId" Binding="{Binding CallId}" Width="0.4*"/>
+                    <DataGridTextColumn Header="Call Type" Binding="{Binding TypeOfCall}" Width="*"/>
+                    <DataGridTextColumn Header="Volunteer's Name" Binding="{Binding LastVolunteerName}" Width="*"/>
+                    <DataGridTextColumn Header="Call Address" Binding="{Binding CallFullAddress}" Width="*"/>
+                    <DataGridTextColumn Header="Opened At" Binding="{Binding OpenningTime}" Width="*"/>
+                    <DataGridTextColumn Header="Time To End" Binding="{Binding LastTimeForClosingTheCall}" Width="*"/>
+                    <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*"/>
 
-                <!--Delete volunteer btn-->
-                <DataGridTemplateColumn Header="Select Call" Width="Auto">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Take" Click="OnSelectCallTodo"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <!--Delete volunteer btn-->
+                    <DataGridTemplateColumn Header="Select Call" Width="0.65*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Take" Click="OnSelectCallTodo"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <!-- The bottom part-->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
-            </Grid.ColumnDefinitions>
+            <!-- The bottom part-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Sort Action-->
-            <StackPanel Grid.Column="5">
-                <Label HorizontalAlignment="Left" Content="Select a Type of Call"
+                <!-- Sort Action-->
+                <StackPanel Grid.Column="7">
+                    <Label HorizontalAlignment="Left" Content="Select a field to sort by"
                        FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                <ComboBox
-                    Height="34"
+                    <ComboBox
+                    Height="34" Width="335"
                       ItemsSource="{Binding Source={StaticResource OpenCallInListFieldKey}}"
-                      SelectedValue="{Binding Path=SortByField}"
-                      SelectionChanged="OnSortingChanged"/>
-            </StackPanel>
+                      SelectedValue="{Binding SortByField}"/>
+                </StackPanel>
 
-            <!--Filter Action-->
-            <StackPanel Grid.Column="1">
-                <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <!-- Reset Parameter Button-->
+                <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#FDD1FF"
+                    Grid.Column="3">
+                    <Button Content="Reset" Background="Transparent" BorderThickness="0" FontSize="11"
+                            Click="OnResetParameters"/>
+                </Border>
 
-                    <!--Filter Pararmeter-->
-                    <StackPanel Grid.Column="0">
-                        <Label HorizontalAlignment="Left" Content="Filter By"
+                <!-- Filter By Parameter Button-->
+                <Border Style="{StaticResource ParameterModificationBorderStyle}" Background="#EEFFD6"
+                    Grid.Column="5">
+                    <Button Content="Apply" FontSize="11" Background="Transparent" BorderThickness="0"
+                        Click="OnFliterAndSort"/>
+                </Border>
+
+                <!--Filter Action-->
+                <StackPanel Grid.Column="1">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Filter Pararmeter-->
+                        <StackPanel Grid.Column="0">
+                            <Label HorizontalAlignment="Left" Content="Filter By"
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                        <TextBox Height="34" Background="White" Text="Call Type" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                   FontSize="20"/>
-                    </StackPanel>
+                            <Label Height="34" Content="Call Type" Background="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                 FontSize="16"/>
 
-                    <!--Filter's value parameter-->
-                    <StackPanel Grid.Column="2">
-                        <Label HorizontalAlignment="Left" Content="Value"
+                        </StackPanel>
+
+                        <!--Filter's value parameter-->
+                        <StackPanel Grid.Column="2">
+                            <Label HorizontalAlignment="Left" Content="Value"
                            FontSize="14" Foreground="#F9D4FF" VerticalAlignment="Stretch"/>
-                        <ComboBox                             Height="34"
+                            <ComboBox 
+                            Height="34"
                             ItemsSource="{Binding Source={StaticResource CallTypesCollectionKey}}"
                             SelectedValue="{Binding FilterByValue}"/>
-                    </StackPanel>
-                </Grid>
-                <Button Height="20" Content="Filter Now" Click="OnFilterSet"/>
-            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
         </Grid>
-        <!-- Map View-->
-        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+        <Grid Grid.Column="1">
             <ContentControl Content="{Binding OpenCallsMap}"/>
         </Grid>
     </Grid>
