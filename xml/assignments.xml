@@ -1,2 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignment/>
+<ArrayOfAssignment>
+  <Assignment>
+    <Id>9</Id>
+    <CallId>5</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-16T14:02:07</TimeOfStarting>
+    <TimeOfEnding>16/01/2025 14:02:07</TimeOfEnding>
+    <TypeOfEnding>SelfCanceled</TypeOfEnding>
+  </Assignment>
+  <Assignment>
+    <Id>10</Id>
+    <CallId>3</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-16T14:02:07</TimeOfStarting>
+    <TimeOfEnding>16/01/2025 14:02:07</TimeOfEnding>
+    <TypeOfEnding>Treated</TypeOfEnding>
+  </Assignment>
+  <Assignment>
+    <Id>11</Id>
+    <CallId>4</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-16T14:02:07</TimeOfStarting>
+    <TimeOfEnding>16/01/2025 14:02:07</TimeOfEnding>
+    <TypeOfEnding>SelfCanceled</TypeOfEnding>
+  </Assignment>
+</ArrayOfAssignment>
