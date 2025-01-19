@@ -660,4 +660,9 @@ internal class CallImplementation : ICall
         =>  from closedCall in listOfCalls
             let call = s_dal.Call.Read(closedCall.Id)
             select (call.Latitude, call.Longitude);
+
+    public IEnumerable<(double, double)> ConvertOpenCallsToCordinates(IEnumerable<OpenCallInList> listOfCalls)
+        =>     from openCall in listOfCalls
+               let call = s_dal.Call.Read(openCall.CallId)
+               select (call.Latitude, call.Longitude);
 }

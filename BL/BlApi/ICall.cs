@@ -83,6 +83,6 @@ public interface ICall : IObservable //Stage 5
 
 
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId);
-
+    public IEnumerable<(double, double)> ConvertOpenCallsToCordinates(IEnumerable<OpenCallInList> listOfCalls);
     public IEnumerable<(double, double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList> listOfCalls);
 }

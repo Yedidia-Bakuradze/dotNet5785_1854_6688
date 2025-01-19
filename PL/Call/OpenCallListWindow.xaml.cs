@@ -106,8 +106,9 @@ public partial class OpenCallListWindow : Window
     private void RefreshList()
     {
         var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+        ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
         List<(double, double)> listOfCordinates = s_bl.Call
-            .GetListOfOpenCallsForVolunteerCordinates(VolunteerId)
+            .ConvertOpenCallsToCordinates(ListOfCalls)
             .ToList<(double,double)>();
 
         if (volunteer.FullCurrentAddress is not null)
@@ -120,7 +121,6 @@ public partial class OpenCallListWindow : Window
         }
         else
             OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
-        ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
     }
     #endregion
 }
