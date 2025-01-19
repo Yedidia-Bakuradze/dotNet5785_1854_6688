@@ -591,45 +591,68 @@ internal class CallImplementation : ICall
         }
 
     }
+
     public void AddCallSendEmail(BO.Call c)
     {
         // Retrieve all volunteers and filter only the active ones
-        var listVolunteer = s_dal.Volunteer.ReadAll()
-            .Where(volunteer => volunteer.IsActive)
+        var activeVolunteers = s_dal.Volunteer.ReadAll()
+            .Where(volunteer => volunteer.IsActive && !string.IsNullOrWhiteSpace(volunteer.Email))
             .ToList();
 
-        // Subject and body of the email
+        // Subject of the email
         string subject = "A new call has opened near your location";
-        string body = $@"
-             Hello,
-             <br>
-             A new call has been opened near your location:
-             <br>
-             <br>
-             For more details, log into the system to view the call details.
-             <br><br>
-             Best regards,<br>
-             The System Team
-             Meir@Yedidia
-             ";
 
         // Iterate over all volunteers
-        foreach (var volunteer in listVolunteer)
+        int emailsSent = 0; // Counter for successful emails
+        foreach (var volunteer in activeVolunteers)
         {
-            // Calculate the distance between the call address and the volunteer's address
-            double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
-                c.CallAddress,
-                volunteer.FullCurrentAddress!,
-                (DO.TypeOfRange)volunteer.RangeType);
-
-            // Check if the distance is less than or equal to the maximum distance the volunteer is willing to cover
-            if (distance <= volunteer.MaxDistanceToCall)
+            try
             {
-                // Send an email to the volunteer
-                Tools.SendEmail(volunteer.Email, subject, body);
+                // Calculate the distance between the call address and the volunteer's address
+                double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
+                    c.CallAddress,
+                    volunteer.FullCurrentAddress!,
+                    (DO.TypeOfRange)volunteer.RangeType);
+
+                // Check if the distance is within the volunteer's range
+                if (distance <= volunteer.MaxDistanceToCall)
+                {
+                    // Generate dynamic HTML body for the email
+                    string body = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif;'>
+                        <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
+                        <p>A new call has been opened near your location:</p>
+                        <ul style='line-height: 1.6;'>
+                            <li><strong>Call ID:</strong> {c.Id}</li>
+                            <li><strong>Type:</strong> {c.TypeOfCall}</li>
+                            <li><strong>Description:</strong> {c.Description}</li>
+                            <li><strong>Start Time:</strong> {c.CallStartTime}</li>
+                            <li><strong>Deadline:</strong> {c.CallDeadLine?.ToString() ?? "N/A"}</li>
+                            <li><strong>Address:</strong> {c.CallAddress}</li>
+                        </ul>
+                        <p>For more details, please log into the system to view the call details.</p>
+                        <br>
+                        <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
+                    </body>
+                    </html>";
+
+                    // Send email
+                    Tools.SendEmail(volunteer.Email, subject, body);
+                    emailsSent++; // Increment the counter
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error for debugging purposes
+                Console.WriteLine($"Failed to send email to {volunteer.Email}. Error: {ex.Message}");
             }
         }
+
+        // Log summary
+        Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
     }
+
 
     public void CancleCallSendEmail(BO.CallInList c)
     {
