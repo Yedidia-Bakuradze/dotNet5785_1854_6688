@@ -1,8 +1,6 @@
 ﻿using PL.Sub_Windows;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-
 namespace PL.Call;
 
 public partial class CallWindow : Window
