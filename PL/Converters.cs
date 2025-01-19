@@ -384,31 +384,31 @@ internal class ConvertTypeOfCallToBackgroundColor : IValueConverter
         switch ((BO.CallType)value)
         {
             case BO.CallType.Undefined:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF10EE"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B0BEC5")); // Light Blue Gray
             case BO.CallType.FlatTire:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FE00EE"));
-
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF8A80")); // Soft Red
             case BO.CallType.BatteryJumpStart:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD180")); // Light Orange
             case BO.CallType.LockedOut:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF59D")); // Pale Yellow
             case BO.CallType.OutOfFuel:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEf412"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C5E1A5")); // Soft Green
             case BO.CallType.CarStuck:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E4f231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#81D4FA")); // Light Blue
             case BO.CallType.ChildLockedInCar:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FEf231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B39DDB")); // Soft Purple
             case BO.CallType.TrafficDirection:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A3f231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#80CBC4")); // Aqua
             case BO.CallType.TowingAssistance:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E1f231"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAB91")); // Coral
             case BO.CallType.MinorRoadRepair:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EEEEE1"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E6EE9C")); // Lemon Yellow
             case BO.CallType.SpecialAssistance:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFAA1"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CE93D8")); // Lavender
             default:
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A13411"));
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CFD8DC")); // Neutral Gray
         }
+
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallType.OutOfFuel;
