@@ -8,7 +8,7 @@
     <Email>yedidia@gmail.com</Email>
     <MaxDistanceToCall>30</MaxDistanceToCall>
     <RangeType>WalkingDistance</RangeType>
-    <IsActive>true</IsActive>
+    <IsActive>false</IsActive>
     <Password>98d8d1ba348d133b221eeab45e8ed241cf8cd968d7916b71a85fd8085450ebac</Password>
     <FullCurrentAddress>Ha Tothan 3 Jerusalem Israel</FullCurrentAddress>
     <Latitude>31.8323803</Latitude>

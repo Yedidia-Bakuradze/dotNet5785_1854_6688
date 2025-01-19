@@ -68,19 +68,21 @@
                         Content="{Binding CallDetailsContent}" Margin="5"/>
         <!--Settings Button-->
         <Border Grid.Column="1" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}">
-            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowHistory"/>
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowHistory"
+                    Content="Calls"/>
         </Border>
         <Border Grid.Column="1" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}">
-            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowSettingsWindow"/>
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Click="OnShowSettingsWindow"
+                    Content="Settings"/>
         </Border>
 
         <!--Select Call Button-->
-        <TextBlock Grid.Column="2" Grid.Row="7" TextWrapping="Wrap" Foreground="#FFA600" Text="{Binding WarrningSelectCallText}"
-                    Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource  ConvertCallInProgressToVisibilityRevereseKey}}"/>
+        <TextBlock Grid.Column="3" Grid.Row="5" TextWrapping="Wrap" Foreground="#FFA600" Text="{Binding WarrningSelectCallText}"/>
 
         <Border Grid.Column="3" Grid.Row="7" Style="{StaticResource ActionBtnBorderStyle}"
                 Visibility="{Binding CurrentVolunteer.CurrentCall,Converter={StaticResource ConvertCallInProgressToVisibilityRevereseKey}}" >
-            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Select a Call" FontSize="20" Click="OnSelectCall"/>
+            <Button Style="{StaticResource ClearBottomBtnBtnStyle}" Content="Select a Call" FontSize="20" Click="OnSelectCall"
+                    IsEnabled="{Binding CurrentVolunteer.IsActive}"/>
         </Border>
 
         <Border Grid.Column="3" Grid.Row="5" Style="{StaticResource ActionBtnBorderStyle}" Background="#FF6262"
