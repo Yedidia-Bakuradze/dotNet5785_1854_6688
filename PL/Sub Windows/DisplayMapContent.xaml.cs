@@ -8,7 +8,7 @@ using System.Windows;
 
 public partial class DisplayMapContent : UserControl
 {
-    private const string GOOGLE_MAPS_API_KEY = "AIzaSyAzbe6J2zmObUxADHW0yfmaJ-9thYaD_mE";
+    private const string GOOGLE_MAPS_API_KEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU";
     public int RangeHtml { get; set; }
     public (double, double) Source { get; set; }
     public (double, double) Dest { get; set; }
