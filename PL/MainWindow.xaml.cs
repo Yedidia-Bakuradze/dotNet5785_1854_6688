@@ -11,8 +11,8 @@ public partial class MainWindow : Window
     {
         //Loads the lobby window instead
         //new VolunteerMapDetailsControl().Show();
-        //new AdminWindow(332461854).Show();
-        //new LobbyScreen().Show();
+        new AdminWindow(332461854).Show();
+        new LobbyScreen().Show();
         new VolunteerLobbyWindow(332461854).Show();
         this.Close();
     }
