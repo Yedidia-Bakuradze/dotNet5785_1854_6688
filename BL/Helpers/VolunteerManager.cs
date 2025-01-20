@@ -6,6 +6,7 @@ using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 
 //Remember: All the method shall be as internal static
@@ -40,7 +41,7 @@ internal static class VolunteerManager
     private static XElement HttpGetXmlReponse(Uri requestUri)
     {
         using HttpClient client = new HttpClient();
-        
+
         //Accepts the GET response
         string httpResponse = client.GetAsync(requestUri.AbsoluteUri)
                         .Result
@@ -51,7 +52,7 @@ internal static class VolunteerManager
         //Try to parse to Xml content value
         XElement root = XElement.Parse(httpResponse).Element("status")
                         ?? throw new BlHttpGetException("Http Exception: Response is unable to be converted to an XML file");
-        
+
         //If the GET response content is not good then the address it coropted
         if (root?.Value != "OK")
         {
@@ -59,6 +60,8 @@ internal static class VolunteerManager
         }
         return XElement.Parse(httpResponse);
     }
+
+
 
     /// <summary>
     /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
