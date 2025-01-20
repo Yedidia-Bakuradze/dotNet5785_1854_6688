@@ -1,7 +1,6 @@
 ﻿using BO;
 using PL.Call;
 using System.Windows;
-
 namespace PL.Admin;
 
 public partial class AdminWindow : Window
