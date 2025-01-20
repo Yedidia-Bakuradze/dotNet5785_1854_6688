@@ -4,16 +4,16 @@ using PL.Volunteer;
 using System.Windows;
 namespace PL;
 
-
+/// <summary>
+/// To login into the system here some credentials:
+/// Id:332461854
+/// Password: yedidiaYY12@!
+/// </summary>
 public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        //Loads the lobby window instead
-        //new VolunteerMapDetailsControl().Show();
-        new AdminWindow(332461854).Show();
         new LobbyScreen().Show();
-        new VolunteerLobbyWindow(332461854).Show();
         this.Close();
     }
 }

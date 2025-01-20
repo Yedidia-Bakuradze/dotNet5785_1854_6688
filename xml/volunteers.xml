@@ -1336,8 +1336,8 @@
     <FullName>Yedidia Bakuradze</FullName>
     <PhoneNumber>0535002312</PhoneNumber>
     <Email>spamtrash840@gmail.com</Email>
-    <MaxDistanceToCall>100</MaxDistanceToCall>
-    <RangeType>DrivingDistance</RangeType>
+    <MaxDistanceToCall>10</MaxDistanceToCall>
+    <RangeType>WalkingDistance</RangeType>
     <IsActive>true</IsActive>
     <Password>98d8d1ba348d133b221eeab45e8ed241cf8cd968d7916b71a85fd8085450ebac</Password>
     <FullCurrentAddress>Karmei HaNadiv, HaTe'ena 10, Kiryat Malachi</FullCurrentAddress>
