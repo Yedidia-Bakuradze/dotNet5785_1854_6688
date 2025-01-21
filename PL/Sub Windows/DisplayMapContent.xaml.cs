@@ -10,6 +10,7 @@ public partial class DisplayMapContent : UserControl
 {
     private const string GOOGLE_MAPS_API_KEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU";
     public int RangeHtml { get; set; }
+    public string MapHTML { get; set; }
     public (double, double) Source { get; set; }
     public (double, double) Dest { get; set; }
     public List<(double, double)> ListOfPoints { get; set; }
@@ -19,43 +20,23 @@ public partial class DisplayMapContent : UserControl
     {
         ListOfPoints = listOfPoints.ToList();
 
-        switch (type)
+        LoadedFunction = type switch
         {
-            case TypeOfMap.Pin:
-                LoadedFunction = "ShowPinLocations";
-                break;
-            case TypeOfMap.Route:
-                LoadedFunction = "ShowRoute";
-                break;
-            case TypeOfMap.MultipleTypeOfRoutes:
-                LoadedFunction = "ShowMultipleRoutes";
-                break;
-            default:
-                LoadedFunction = "ShowMultipleRoutes";
-                break;
-        }
+            TypeOfMap.Pin => "ShowPinLocations",
+            TypeOfMap.Route => "ShowRoute",
+            TypeOfMap.MultipleTypeOfRoutes => "ShowMultipleRoutes",
+            _ => "ShowMultipleRoutes",
+        };
         RangeHtml = range.GetHashCode();
         Source = listOfPoints.FirstOrDefault();
         Type = type;
+        MapHTML = GetHtmlContent();
         InitializeComponent();
-        InitializeWebBrowser();
     }
 
     private string GetHtmlCordinatesList() => string.Join(",", ListOfPoints.Select(point => $"{{lat: {point.Item1}, lng: {point.Item2}}}"));
 
-    private async void InitializeWebBrowser()
-    {
-        try
-        {
-            await webView.EnsureCoreWebView2Async();
-            webView.CoreWebView2.NavigateToString(LoadHtmlForPins());
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"WebView2 initialization error: {ex.Message}");
-        }
-    }
-    private string LoadHtmlForPins() =>
+    private string GetHtmlContent() =>
         @"<!DOCTYPE html>
 <html>
   <head>

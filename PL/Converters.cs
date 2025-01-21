@@ -1,5 +1,10 @@
-﻿using System.Globalization;
+﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+using System.Data;
+using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -412,4 +417,43 @@ internal class ConvertTypeOfCallToBackgroundColor : IValueConverter
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.CallType.OutOfFuel;
+}
+
+
+
+
+
+
+
+
+public class ConvertHtmlToWebView2 : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        if (value is string htmlContent)
+        {
+            var browser = new WebView2();
+            browser.CoreWebView2InitializationCompleted += (s, e) =>
+            {
+                if (e.IsSuccess)
+                {
+                    browser.CoreWebView2.NavigateToString(htmlContent);
+                }
+            };
+
+            // Initialize the WebView2 environment
+            var environment = CoreWebView2Environment.CreateAsync().Result;
+            browser.EnsureCoreWebView2Async(environment);
+
+            return browser;
+        }
+        return null;
+    }
+
+
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }

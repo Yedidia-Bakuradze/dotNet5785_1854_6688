@@ -6,8 +6,9 @@
                 xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
                 xmlns:local="clr-namespace:PL.Sub_Windows"
                 mc:Ignorable="d"
+                DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
                 d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <wv2:WebView2 x:Name="webView" Source="about:blank"/>
+        <ContentControl Content="{Binding MapHTML,Converter={StaticResource ConvertHtmlToWebView2Key}}"/>
     </Grid>
 </UserControl>
