@@ -423,8 +423,22 @@ internal class ConvertTypeOfCallToBackgroundColor : IValueConverter
 
 
 
+public class ConvertBooleanSimulatorStatusToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if ((bool)value)
+        {
+            return Visibility.Visible;
+        }
+        return Visibility.Hidden;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return false;
+    }
 
-
+}
 
 public class ConvertHtmlToWebView2 : IValueConverter
 {

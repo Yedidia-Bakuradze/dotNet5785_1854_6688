@@ -327,11 +327,11 @@
                 
                 <!--TODO: Add a binding to start / stop to have the proper value needed to be displayed-->
                 <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Start Simulator" FontSize="22" Background="Transparent" BorderThickness="0"
-                            Click="OnSimulatorStarted"/>
+                    <Button Content="{Binding SimulatorBtnMsg}" FontSize="22" Background="Transparent" BorderThickness="0"
+                            Click="OnSimulatorStateChanged"/>
                 </Border>
 
-                <Grid Grid.Column="3" Grid.Row="6" >
+                <Grid Grid.Column="3" Grid.Row="6" Visibility="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToVisibilityKey}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -343,7 +343,7 @@
                     </Border>
                     
                     <!--TODO: Add a binding to the speed that been set for the simulator-->
-                    <TextBox Grid.Column="1" Text="3" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Text="{Binding SimulatorSpeedText}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 </Grid>
 

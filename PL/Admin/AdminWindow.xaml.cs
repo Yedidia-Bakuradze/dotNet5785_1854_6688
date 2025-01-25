@@ -20,10 +20,42 @@ public partial class AdminWindow : Window
     private volatile DispatcherOperation? _observerConfigOperation = null;
     private volatile DispatcherOperation? _observerCallCountOperation = null;
 
+    private int simulatorSpeed = 0;
+    private bool isSimulatorRunning = false;
 
     #endregion
 
     #region Dependency Propeties
+    public string SimulatorBtnMsg
+    {
+        get { return (string)GetValue(SimulatorBtnMsgProperty); }
+        set { SetValue(SimulatorBtnMsgProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for SimulatorBtnMsg.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty SimulatorBtnMsgProperty =
+        DependencyProperty.Register("SimulatorBtnMsg", typeof(string), typeof(AdminWindow), new PropertyMetadata("Start Simulator"));
+
+    public string SimulatorSpeedText
+    {
+        get { return (string)GetValue(SimulatorSpeedTextProperty); }
+        set { SetValue(SimulatorSpeedTextProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for SimulatorSpeed.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty SimulatorSpeedTextProperty =
+        DependencyProperty.Register("SimulatorSpeedText", typeof(string), typeof(AdminWindow), new PropertyMetadata("0"));
+
+    public bool IsSimulatorRunning
+    {
+        get { return (bool)GetValue(IsSimulatorRunningProperty); }
+        set { SetValue(IsSimulatorRunningProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IsSimulatorRunning.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IsSimulatorRunningProperty =
+        DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(AdminWindow), new PropertyMetadata(false));
+
     public DateTime CurrentTime
     {
         get { return (DateTime)GetValue(CurrentTimeProperty); }
@@ -221,10 +253,7 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnClockResetAction(object sender, RoutedEventArgs e)
-    {
-        s_bl.Admin.DbReset();
-    }
+    private void OnClockResetAction(object sender, RoutedEventArgs e) => s_bl.Admin.DbReset();
 
     /// <summary>
     /// This method is invoked when the user wants to pop up a screen filled with calls that are expiered
@@ -266,9 +295,49 @@ public partial class AdminWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
-    private void OnSimulatorStarted(object sender, RoutedEventArgs e) => MessageBox.Show("Simulator not implemented");
+    private void OnSimulatorStateChanged(object sender, RoutedEventArgs e)
+    {
+        //Simulator is online, make it offline
+        if (IsSimulatorRunning)
+        {
+            IsSimulatorRunning = false;
+            isSimulatorRunning = false;
+            SimulatorBtnMsg = "Start Simulator";
+        }
+        else
+        {
+            IsSimulatorRunning = true;
+            SimulatorBtnMsg = "Stop Simulator";
+            s_bl.Admin.StopSimulator();
+        }
 
-    private void OnSpeedSet(object sender, RoutedEventArgs e) => MessageBox.Show("Simulator not implemented");
+    }
+    private void OnSpeedSet(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (!Int32.TryParse(SimulatorSpeedText, out simulatorSpeed))
+                throw new Exception($"PL: Unable to update simulator's speed, {SimulatorSpeedText} is not a number");
+            
+            if(!isSimulatorRunning)
+            {
+                isSimulatorRunning = true;
+                MessageBox.Show($"Simulator active (new) with {simulatorSpeed}");
+                s_bl.Admin.StartSimulator(simulatorSpeed);
+            }
+            else
+            {
+                MessageBox.Show($"Simulator active (was already) with {simulatorSpeed}");
+
+                s_bl.Admin.StopSimulator();
+                s_bl.Admin.StartSimulator(simulatorSpeed);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+    }
 
     #endregion
 

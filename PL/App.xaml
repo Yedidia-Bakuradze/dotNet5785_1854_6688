@@ -39,5 +39,6 @@
         <local:ConvertRoleToReadOnly x:Key="ConvertRoleToReadOnlyKey"/>
         <local:ConvertTypeOfCallToBackgroundColor x:Key="ConvertTypeOfCallToBackgroundColorKey"/>
         <local:ConvertHtmlToWebView2  x:Key="ConvertHtmlToWebView2Key"/>
+        <local:ConvertBooleanSimulatorStatusToVisibility  x:Key="ConvertBooleanSimulatorStatusToVisibilityKey"/>
     </Application.Resources>
 </Application>
