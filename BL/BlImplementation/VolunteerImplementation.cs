@@ -33,20 +33,20 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// </summary>
     /// <param name="volunteer"></param>
     /// <exception cref="BlAlreadyExistsException">A</exception>
-    public void AddVolunteer(BO.Volunteer volunteer)
+    public async Task AddVolunteer(BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
         try
         {
             
             //Check logics and formmating
-            if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
+            if (!await Helpers.VolunteerManager.IsVolunteerValid(volunteer))
                 throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
             
 
             (double? lat, double? lng) = (null, null);
             if(volunteer.FullCurrentAddress != null && volunteer.FullCurrentAddress != "")
-                (lat,lng) = Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
+                (lat,lng) = await Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
 
             //Create Dal Volunteer entity
             DO.Volunteer newVolunteer = new DO.Volunteer
@@ -419,7 +419,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <param name="id">The user id which wants to make the update action</param>
     /// <param name="volunteer">The volunteer entity which is need an updated</param>
     /// <param name="hasOldPassword">[Optional] an indicator whether the user has modified his password or not</param>
-    public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
+    public async Task UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
         DO.Volunteer currentVolunteer;
@@ -432,7 +432,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
         
         //Check if logics are correct
-        if (!VolunteerManager.IsVolunteerValid(volunteer, !isPasswordBeenModified))
+        if (! await VolunteerManager.IsVolunteerValid(volunteer, !isPasswordBeenModified))
             throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
 
         lock (AdminManager.BlMutex)
@@ -455,7 +455,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
         //Update the cordinates
         if(volunteer.FullCurrentAddress != null)
-            (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress);
+            (volunteer.Latitude, volunteer.Longitude) =await VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress);
         else
             (volunteer.Latitude, volunteer.Longitude) = (null, null);
         

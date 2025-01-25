@@ -26,7 +26,7 @@ public interface ICall : IObservable //Stage 5
     /// Update the details of a call
     /// </summary>
     /// <param name="call">The updated call object</param>
-    public void UpdateCall(BO.Call call);
+    public Task UpdateCall(BO.Call call);
 
     /// <summary>
     /// Delete a call request
@@ -38,7 +38,7 @@ public interface ICall : IObservable //Stage 5
     /// Add a new call
     /// </summary>
     /// <param name="call">The call object to add</param>
-    public void AddCall(BO.Call call);
+    public Task AddCall(BO.Call call);
 
     /// <summary>
     /// Get a list of closed calls for a specific volunteer

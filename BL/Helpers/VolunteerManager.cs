@@ -2,6 +2,7 @@
 
 using BO;
 using DO;
+using Microsoft.VisualBasic;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -35,16 +36,15 @@ internal static class VolunteerManager
     /// <param name="httpResponse">The string result of the API call</param>
     /// <returns>The root XElement value</returns>
     /// <exception cref="BlHttpGetException">Throws an exception if the Http response was corrupted The response status was not OK</exception>
-    private static XElement HttpGetXmlReponse(Uri requestUri)
+    private static async Task<XElement> HttpGetXmlReponse(Uri requestUri)
     {
         using HttpClient client = new HttpClient();
 
         //Accepts the GET response
-        string httpResponse = client.GetAsync(requestUri.AbsoluteUri)
+        string httpResponse = await client.GetAsync(requestUri.AbsoluteUri)
                         .Result
                         .Content
-                        .ReadAsStringAsync()
-                        .Result;
+                        .ReadAsStringAsync();
 
         //Try to parse to Xml content value
         XElement root = XElement.Parse(httpResponse).Element("status")
@@ -52,9 +52,7 @@ internal static class VolunteerManager
 
         //If the GET response content is not good then the address it coropted
         if (root?.Value != "OK")
-        {
             throw new BlHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
-        }
         return XElement.Parse(httpResponse);
     }
 
@@ -65,14 +63,14 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="streetAddress">The requested street address to convert to cordinates</param>
     /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
-    internal static (double?, double?) GetGeoCordinates(string streetAddress)
+    internal static async Task<(double?, double?)> GetGeoCordinates(string streetAddress)
     {
         //Builds the URL requests
         Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
         
         try
         {
-            XElement res = HttpGetXmlReponse(requestUri);
+            XElement res = await HttpGetXmlReponse(requestUri);
             res = res
                     ?.Element("result")
                     ?.Element("geometry")
@@ -202,14 +200,14 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="streetAddress">The uesr's street address</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    private static bool IsStreetAddressValid(string? streetAddress)
+    private static async Task<bool> IsStreetAddressValid(string? streetAddress)
     {
         //If the user doesn't have a registered address - its ok because its optional
         if (streetAddress == null || streetAddress == "")
             return true;
 
         //If the user has any address - check if it has a valid cordinates
-        (double? a,double?b) = GetGeoCordinates(streetAddress);
+        (double? a,double?b) = await GetGeoCordinates(streetAddress);
         return a != null && b != null;
     }
 
@@ -226,14 +224,14 @@ internal static class VolunteerManager
     /// <param name="volunteer">The Volunteer instance</param>
     /// <param name="isPasswordOk">[Optional] if true the method wont check the hashed password</param>
     /// <returns>a boolean value whether the volunteer is valid or not</returns>
-    internal static bool IsVolunteerValid(BO.Volunteer volunteer, bool isPasswordOk = false)
+    internal static async Task<bool> IsVolunteerValid(BO.Volunteer volunteer, bool isPasswordOk = false)
     =>
             IsVolunteerIdValid(volunteer.Id) &&
             IsValidFullName(volunteer.FullName) &&
             IsValidPhoneNumber(volunteer.PhoneNumber) &&
             IsValidEmailAddress(volunteer.Email) &&
             (isPasswordOk || IsValidPassword(volunteer.Password)) &&
-            IsStreetAddressValid(volunteer.FullCurrentAddress) &&
+            (await IsStreetAddressValid(volunteer.FullCurrentAddress) )&&
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
             
 
@@ -243,10 +241,10 @@ internal static class VolunteerManager
     /// <param name="origin">The departure street</param>
     /// <param name="destanation">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static double CalculatedAirDistance(string origin, string destanation)
+    private static async Task<double> CalculatedAirDistance(string origin, string destanation)
     {
-        (double? lat1, double? lon1) = GetGeoCordinates(origin);
-        (double? lat2, double? lon2) = GetGeoCordinates(destanation);
+        (double? lat1, double? lon1) = await GetGeoCordinates(origin);
+        (double? lat2, double? lon2) = await GetGeoCordinates(destanation);
 
         if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
         {
@@ -273,10 +271,10 @@ internal static class VolunteerManager
     /// <param name="origin">The departure street</param>
     /// <param name="destanation">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static double CalculatedWalkingDistance(string origin, string destanation)
+    private static async Task<double> CalculatedWalkingDistance(string origin, string destanation)
     {
         Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.walking}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
-        XElement root = HttpGetXmlReponse(requestUri);
+        XElement root = await HttpGetXmlReponse(requestUri);
 
         //Issue 13: Fix the possible null value
         return (double)(Int32.Parse
@@ -294,10 +292,10 @@ internal static class VolunteerManager
     /// <param name="origin">The departure street</param>
     /// <param name="destanation">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static double CalculatedDrivingDistance(string origin, string destanation)
+    private static async Task<double> CalculatedDrivingDistance(string origin, string destanation)
     {
         Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.driving}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
-        XElement root = HttpGetXmlReponse(requestUri);
+        XElement root = await HttpGetXmlReponse(requestUri);
 
         //Issue 13: Fix the possible null value
         return (double)(Int32.Parse
@@ -321,9 +319,9 @@ internal static class VolunteerManager
     //Issue 14: Switch from using the addresses to use the cordinates
         => typeOfRange switch
     {
-        DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress) ,
-            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress) ,
-            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress),
+        DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress).Result ,
+            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress).Result ,
+            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress).Result ,
             _ => throw new BO.BlInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 

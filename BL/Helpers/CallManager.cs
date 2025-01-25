@@ -98,7 +98,7 @@ internal static class CallManager
     /// <param name="call">The call to be reviewed</param>
     /// <returns>a boolean value whether the entity is valid or not</returns>
     /// <exception cref="BO.BlInvalidEntityDetails"></exception>
-    internal static bool IsCallValid(BO.Call call)
+    internal static async Task<bool> IsCallValid(BO.Call call)
     {
         try
         {
@@ -107,7 +107,7 @@ internal static class CallManager
                 throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
 
             //Checks if the address is valid (if cordinates exist)
-            (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+            (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
             if (lat == null || lng == null)
                 throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
         }

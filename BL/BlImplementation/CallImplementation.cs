@@ -26,16 +26,16 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="call">The call object containing details to be added.</param>
     /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
-    public void AddCall(BO.Call call)
+    public async Task AddCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
 
         //Check if the call entity is valid or not
-        if (!CallManager.IsCallValid(call))
+        if (!(await CallManager.IsCallValid(call)))
             throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
         
         //Get Call cordinates
-        (double? lat, double? lng) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+        (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
             throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
 
@@ -433,7 +433,12 @@ internal class CallImplementation : ICall
             openCalls = s_dal.Call
                 .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
                 .AsParallel()
-                .Where(call => volunteer.MaxDistanceToCall is null || volunteer.FullCurrentAddress is null || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType) <= volunteer.MaxDistanceToCall)
+                .Where(call
+                => 
+                volunteer.MaxDistanceToCall is null
+                || volunteer.FullCurrentAddress is null
+                || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType) <= volunteer.MaxDistanceToCall
+                )
                 .Select(call => new BO.OpenCallInList
                 {
                     CallId = call.Id,  // ID of the call
@@ -449,15 +454,11 @@ internal class CallImplementation : ICall
         }
         // If a call type filter is provided, filter the list by the specified type.
         if (callType != null)
-        {
             openCalls = openCalls.Where(call => call.TypeOfCall == callType).ToList();
-        }
 
         // If no sorting field is provided, sort the calls by their ID.
         if (sortingField == null)
-        {
             return openCalls.OrderBy(call => call.CallId);
-        }
 
         // Sort the list based on the specified sorting field.
         switch (sortingField)
@@ -566,15 +567,15 @@ internal class CallImplementation : ICall
     /// <param name="call">The new (BO) Call entity with the new values</param>
     /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the Call values are not valid</exception>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
-    public void UpdateCall(BO.Call call)
+    public async Task UpdateCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
 
 
-        if (!CallManager.IsCallValid(call))
+        if (!await CallManager.IsCallValid(call))
             throw new BO.BlInvalidEntityDetails($"BL: Call (Id: {call.Id}) has invalid details");
 
-        (double? lat, double? log) = VolunteerManager.GetGeoCordinates(call.CallAddress);
+        (double? lat, double? log) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
 
         call.Latitude = (double) lat!;
         call.Longitude= (double) log!;

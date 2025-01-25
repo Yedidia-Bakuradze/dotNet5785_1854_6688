@@ -52,7 +52,7 @@ public interface IVolunteer :IObservable //Stage 5
     /// </summary>
     /// <param name="id">The user id which wants to make the update action</param>
     /// <param name="volunteer">The volunteer entity which is need an updated</param>
-    void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true);
+    Task UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true);
 
     /// <summary>
     /// This method accespts an id value, requests from the DAL layer to check if it is allowed to delete the volunteer with the given id value
@@ -71,5 +71,5 @@ public interface IVolunteer :IObservable //Stage 5
     /// If such a volunteer already exists it would handle the thrown excpetion by throwing a new exception to the upper layers
     /// </summary>
     /// <param name="volunteer"></param>
-    void AddVolunteer(BO.Volunteer volunteer);
+    Task AddVolunteer(BO.Volunteer volunteer);
 }
