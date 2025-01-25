@@ -50,14 +50,13 @@ internal class AdminImplementation : IAdmin
     /// <summary>
     /// This method resets the system and the database from the BL to the Dal layer
     /// </summary>
-    public void DbReset()
+    public void DbReset()//Stage 4
     {
-        s_dal.ResetDB();
         VolunteerManager.Observers.NotifyListUpdated();
         CallManager.Observers.NotifyListUpdated();
         //TODO: Should we? AssignmentManager.Observers.NotifyListUpdated();
-        AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.RiskRange = AdminManager.RiskRange;
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ResetDB(); //stage 7
     }
 
     /// <summary>
