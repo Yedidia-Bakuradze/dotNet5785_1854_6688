@@ -27,10 +27,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="angle">The requested degress value</param>
     /// <returns>The radian representation of the given degree</returns>
-    private static double ToRadians(double angle)
-    {
-        return angle * (Math.PI / 180);
-    }
+    private static double ToRadians(double angle) => angle * (Math.PI / 180);
 
     /// <summary>
     /// This method recives an Http response value and converts it to a XElement
@@ -221,10 +218,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="distance">The uesr's max distance</param>
     /// <returns>Boolean value whether its valid or not</returns>
-    private static bool IsMaxDistnaceValid(double? distance)
-    {
-        return distance == null || distance >= 0.0;
-    }
+    private static bool IsMaxDistnaceValid(double? distance) => distance == null || distance >= 0.0;
 
     /// <summary>
     /// This method checks if the volunteer's field values are valid and returns the proper boolean value

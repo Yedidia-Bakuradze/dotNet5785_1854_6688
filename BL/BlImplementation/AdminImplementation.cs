@@ -59,6 +59,8 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public void DbReset()//Stage 4
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         VolunteerManager.Observers.NotifyListUpdated();
         CallManager.Observers.NotifyListUpdated();
         //TODO: Should we? AssignmentManager.Observers.NotifyListUpdated();
@@ -85,6 +87,7 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public void ResetRiskRange()
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
         AdminManager.RiskRange = TimeSpan.Zero;
     }
     /// <summary>
@@ -93,6 +96,7 @@ internal class AdminImplementation : IAdmin
     /// <param name="range">The new risk range value</param>
     public void SetRiskRange(TimeSpan range)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
         AdminManager.RiskRange = range;
     }
 
@@ -103,6 +107,8 @@ internal class AdminImplementation : IAdmin
     /// <exception cref="BO.BlInvalidOperationException">An excption that indicates that there is a forbidden operation</exception>
     public void UpdateClock(TimeUnit timeUnit)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         switch (timeUnit)
         {
             case TimeUnit.Second:
