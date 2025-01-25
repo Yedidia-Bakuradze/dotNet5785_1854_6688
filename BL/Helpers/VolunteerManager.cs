@@ -27,10 +27,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="angle">The requested degress value</param>
     /// <returns>The radian representation of the given degree</returns>
-    private static double ToRadians(double angle)
-    {
-        return angle * (Math.PI / 180);
-    }
+    private static double ToRadians(double angle) => angle * (Math.PI / 180);
 
     /// <summary>
     /// This method recives an Http response value and converts it to a XElement

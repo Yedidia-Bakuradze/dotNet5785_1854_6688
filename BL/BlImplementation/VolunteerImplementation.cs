@@ -41,15 +41,12 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             
             //Check logics and formmating
             if (!Helpers.VolunteerManager.IsVolunteerValid(volunteer))
-            {
                 throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
-            }
+            
 
             (double? lat, double? lng) = (null, null);
             if(volunteer.FullCurrentAddress != null && volunteer.FullCurrentAddress != "")
-            {
                 (lat,lng) = Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
-            }
 
             //Create Dal Volunteer entity
             DO.Volunteer newVolunteer = new DO.Volunteer
@@ -70,8 +67,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 Longitude = lng
             };
 
-            //Add the new entity to the database
-            s_dal.Volunteer.Create(newVolunteer);
+            lock (AdminManager.BlMutex)
+                //Add the new entity to the database
+                s_dal.Volunteer.Create(newVolunteer);
+
             
             //Notifies all observers that a volunteer has been add
             VolunteerManager.Observers.NotifyListUpdated();
@@ -93,21 +92,30 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     public void DeleteVolunteer(int id)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
-
-        //Tries to find such volunteer
-        DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
-            ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
-
-        //Checks if the volunteer is in any records of assignments
-        if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex)
         {
-            throw new BO.BlEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
+            //Tries to find such volunteer
+            volunteer = s_dal.Volunteer.Read(id) 
+                ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
         }
+
+
+        lock (AdminManager.BlMutex)
+        {
+            //Checks if the volunteer is in any records of assignments
+            if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
+                throw new BO.BlEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
+        }
+
 
         //Tries to remove if the volunteer exists
         try
         {
-            s_dal.Volunteer.Delete(id);
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Volunteer.Delete(id);
+            }
 
             //Notifies all observers that a volunteer has been add
             VolunteerManager.Observers.NotifyListUpdated();
@@ -128,21 +136,29 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>An BO.Volunteer entity which contains the requested entity's values and the current in progress call which is taken care of by the volunteer</returns>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-
-        DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
-            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
-
-        DO.Assignment? volunteerAssignment = s_dal.Assignment
-            .ReadAll(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding == null)
-            .LastOrDefault();
+        DO.Volunteer volunteer;
+        DO.Assignment? volunteerAssignment;
+        DO.Call volunteerCall;
         BO.CallInProgress? volunteerCallInProgress = null;
+        lock (AdminManager.BlMutex)
+        {
+            volunteer = s_dal.Volunteer.Read(id)
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
+            volunteerAssignment = s_dal.Assignment
+                .ReadAll(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding == null)
+                .LastOrDefault();
+        }
+
 
         //If there is an assingment - there is a call to create
         if (volunteerAssignment != null)
         {
             //Get the Dal call
-            DO.Call volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
-                ?? throw new BO.BlDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
+            lock (AdminManager.BlMutex)
+            { 
+                volunteerCall = s_dal.Call.Read(call => call.Id == volunteerAssignment.CallId)
+                    ?? throw new BO.BlDoesNotExistException($"BL: UNWANTED: There is not call with id of {volunteerAssignment.CallId}");
+            }
 
             //Calculate the distance
             double distance = -1.0;
@@ -178,27 +194,32 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns></returns>
     public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? filterByActiveStatus, BO.VolunteerInListField? sortByField)
     {
-        // Get filtered or unfiltered enumerable of Volunteers
-        var volunteers = (filterByActiveStatus == null)
-            ? s_dal.Volunteer.ReadAll()
-            : s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive == filterByActiveStatus);
+        IEnumerable<DO.Volunteer> volunteers;
+        IEnumerable<BO.VolunteerInList> volunteerInLists;
+        lock (AdminManager.BlMutex)
+        {
+            // Get filtered or unfiltered enumerable of Volunteers
+            volunteers = (filterByActiveStatus == null)
+                ? s_dal.Volunteer.ReadAll()
+                : s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive == filterByActiveStatus);
 
-        // Convert to VolunteerInList entities
-        var volunteerInLists = from volunteer in volunteers
-                               let currentAssignment = s_dal.Assignment
-                                   .ReadAll(assignemnt => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding == null)
-                                   .OrderBy(ass => ass.Id)
-                                   .LastOrDefault()
-                               let currentCall = currentAssignment == null ? null : s_dal.Call.Read(call => call.Id == currentAssignment.CallId)
-                               select new BO.VolunteerInList
-                               {
-                                   Id = volunteer.Id,
-                                   FullName = volunteer.FullName,
-                                   IsActive = volunteer.IsActive,
-                                   CallId = currentAssignment?.CallId,
-                                   TypeOfCall = currentCall != null ? (BO.CallType)currentCall.Type : BO.CallType.Undefined
-                               };
+            // Convert to VolunteerInList entities
+            volunteerInLists = from volunteer in volunteers
+                                   let currentAssignment = s_dal.Assignment
+                                       .ReadAll(assignemnt => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding == null)
+                                       .OrderBy(ass => ass.Id)
+                                       .LastOrDefault()
+                                   let currentCall = currentAssignment == null ? null : s_dal.Call.Read(call => call.Id == currentAssignment.CallId)
+                                   select new BO.VolunteerInList
+                                   {
+                                       Id = volunteer.Id,
+                                       FullName = volunteer.FullName,
+                                       IsActive = volunteer.IsActive,
+                                       CallId = currentAssignment?.CallId,
+                                       TypeOfCall = currentCall != null ? (BO.CallType)currentCall.Type : BO.CallType.Undefined
+                                   };
 
+        }
         // Sort the enumerable based on the specified field
         if (sortByField != null)
         {
@@ -369,18 +390,20 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>The type of user</returns>
     public string Login(string id, string? password)
     {
+        DO.Volunteer volunteer;
         if (!int.TryParse(id, out int validId))
-        {
             throw new BO.BlInvalidEntityDetails($"BL Error: Invalid id value");
-        }
 
         string? hashedPassword = password is null
             ? null
             : VolunteerManager.GetSHA256HashedPassword(password);
 
-        DO.Volunteer volunteer = s_dal.Volunteer
-            .Read((DO.Volunteer volunteer) => volunteer.Id == validId && volunteer.Password == hashedPassword)
-            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id: {id} doesn't exsits");
+        lock (AdminManager.BlMutex)
+        {
+            volunteer = s_dal.Volunteer
+                .Read((DO.Volunteer volunteer) => volunteer.Id == validId && volunteer.Password == hashedPassword)
+                ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id: {id} doesn't exsits");
+        }
 
         return volunteer.Role.ToString();
     }
@@ -399,22 +422,32 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
+        DO.Volunteer currentVolunteer;
 
         //Check if allowed to modify
-        if (id != volunteer.Id && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
+        lock (AdminManager.BlMutex)
+        {
+            if (id != volunteer.Id && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
+                throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
+        }
         
         //Check if logics are correct
         if (!VolunteerManager.IsVolunteerValid(volunteer, !isPasswordBeenModified))
             throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
 
-        //Get original Volunteer for comparing
-        DO.Volunteer currentVolunteer = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == volunteer.Id)
-            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
+        lock (AdminManager.BlMutex)
+        {
+            //Get original Volunteer for comparing
+            currentVolunteer = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == volunteer.Id)
+                ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
+        }
 
-        //Checks what fields are requested to be modified - The role is modifable by only the manager
-        if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+        lock (AdminManager.BlMutex)
+        {
+            //Checks what fields are requested to be modified - The role is modifable by only the manager
+            if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
+                throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
+        }
 
         //Checks if the user tries to be inactive while running a call
         if(volunteer.IsActive == false && volunteer.CurrentCall is not null)
@@ -422,13 +455,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
         //Update the cordinates
         if(volunteer.FullCurrentAddress != null)
-        {
             (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress);
-        }
         else
-        {
             (volunteer.Latitude, volunteer.Longitude) = (null, null);
-        }
         
         //Create new instance of DO.Volunteer
         DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);
@@ -436,7 +465,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         //Update the entity in Dal
         try
         {
-            s_dal.Volunteer.Update(newVolunteer);
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Volunteer.Update(newVolunteer);
+            }
 
             //Notifies all observers that a volunteer has been changed
             VolunteerManager.Observers.NotifyItemUpdated(newVolunteer.Id);
