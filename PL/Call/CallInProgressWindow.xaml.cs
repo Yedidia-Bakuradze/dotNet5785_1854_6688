@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Threading;
 namespace PL.Call;
 
 public partial class CallInProgressWindow : Window
@@ -11,6 +12,7 @@ public partial class CallInProgressWindow : Window
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
 
     public int VolunteerId { get; set; }
 
@@ -38,16 +40,22 @@ public partial class CallInProgressWindow : Window
     #region Methods
     private void LoadScreen()
     {
-        try
-        {
-            CurrentCallInProgress = s_bl.Volunteer.GetVolunteerDetails(VolunteerId).CurrentCall
-                ?? throw new Exception($"PL: The volunteer {VolunteerId} no longer has a call in progress. Existing Screen");
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            Close();
-        }
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+
+                try
+                {
+                    CurrentCallInProgress = s_bl.Volunteer.GetVolunteerDetails(VolunteerId).CurrentCall
+                        ?? throw new Exception($"PL: The volunteer {VolunteerId} no longer has a call in progress. Existing Screen");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+
+            });
     }
     #endregion
 }

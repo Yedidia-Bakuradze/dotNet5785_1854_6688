@@ -1,6 +1,7 @@
 ﻿using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Call;
 
@@ -16,6 +17,7 @@ public partial class ClosedCallListWindow : Window
 
     #region Regular Properties
     public int VolunteerId { get; set; }
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
     public BO.Volunteer? CurrentVolunteer { get; set; }
 
     #endregion
@@ -82,26 +84,31 @@ public partial class ClosedCallListWindow : Window
     #region Methods
     private void RefereshList()
     {
-        try
-        {
-            CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            Close();
-        }
-        ListOfCalls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, FilterValue, SortField);
-        List<(double, double)> listOfCordinates = s_bl.Call.ConvertClosedCallsIntoCordinates(ListOfCalls).ToList();
-        if(CurrentVolunteer?.FullCurrentAddress is not null)
-        {
-            listOfCordinates.Insert(0, ((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
-            MapView = new DisplayMapContent(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfCordinates);
-        }
-        else
-        {
-            MapView = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfCordinates);
-        }
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+                ListOfCalls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, FilterValue, SortField);
+                List<(double, double)> listOfCordinates = s_bl.Call.ConvertClosedCallsIntoCordinates(ListOfCalls).ToList();
+                if (CurrentVolunteer?.FullCurrentAddress is not null)
+                {
+                    listOfCordinates.Insert(0, ((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+                    MapView = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfCordinates);
+                }
+                else
+                {
+                    MapView = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfCordinates);
+                }
+            });
+
     }
     #endregion
 
