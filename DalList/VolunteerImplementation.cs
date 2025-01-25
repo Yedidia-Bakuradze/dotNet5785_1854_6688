@@ -4,6 +4,7 @@ using DalApi;
 using DO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 internal class VolunteerImplementation : IVolunteer
 {
@@ -12,6 +13,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="newVolunteer">The requested object to add</param>
     /// <exception cref="Exception">Throws an exception if the object already exists in the database</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Volunteer newVolunteer)
     {
         //Since the id is automatically generated, there is not need for checking whether volunteer with such id value exists
@@ -30,6 +32,7 @@ internal class VolunteerImplementation : IVolunteer
     /// If such an volunteer with the proper id hasn't been found - the method will throw and exception and would print out the proper message
     /// </summary>
     /// <param name="id">The requested volunteer's id value</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         Volunteer result = DataSource.Volunteers.Find((volunteer) => volunteer.Id == id)
@@ -40,6 +43,7 @@ internal class VolunteerImplementation : IVolunteer
     /// <summary>
     /// Deletes all the volunteer in the database
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.Volunteers.Clear();
@@ -51,6 +55,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">Requested id value for the volunteer</param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Volunteer? Read(int id)
     {
         try
@@ -73,6 +78,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">A condition function which the entity shall satisfy its condition</param>
     /// <returns>Entity which satisfies the filter function or a null value if no such entity has been found</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
         try
@@ -93,6 +99,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">A filter which returns a boolean value whether the past Volunteer value satisfies the logical condition</param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         return filter == null
@@ -108,6 +115,7 @@ internal class VolunteerImplementation : IVolunteer
     /// If such an volunteer with the proper id hasn't been found - the method will throw and exception and would print out the proper message
     /// </summary>
     /// <param name="newVolunteer">The new volunteer record</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Volunteer newVolunteer)
     {
         Volunteer? res = Read(newVolunteer.Id) 

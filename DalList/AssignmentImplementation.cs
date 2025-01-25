@@ -2,6 +2,7 @@
 namespace Dal;
 using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 
 internal class AssignmentImplementation : IAssignment
 {
@@ -9,6 +10,7 @@ internal class AssignmentImplementation : IAssignment
     /// Adds a new object to the database (The list version)
     /// </summary>
     /// <param name="item">The requested object to add</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Assignment item)
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
@@ -21,6 +23,7 @@ internal class AssignmentImplementation : IAssignment
     /// If such an assignment with the proper id hasn't been found - the method will throw and exception and would print out the proper message
     /// </summary>
     /// <param name="id">The requested assignment's id value</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         Assignment result = DataSource.Assignments.Find((assignment) => assignment.Id == id)
@@ -31,6 +34,7 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Deletes all the assignment in the database
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.Assignments.Clear();
@@ -42,6 +46,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">Requested id value for the assignment</param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(int id)
     {
         try
@@ -64,6 +69,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="filter">A condition function which the entity shall satisfy its condition</param>
     /// <returns>Entity which satisfies the filter function or a null value if no such entity has been found</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         try
@@ -85,6 +91,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="filter">A filter which returns a boolean value whether the past Assignment value satisfies the logical condition</param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         return filter != null
@@ -99,6 +106,7 @@ internal class AssignmentImplementation : IAssignment
     /// If such an assignment with the proper id hasn't been found - the method will throw and exception and would print out the proper message
     /// </summary>
     /// <param name="item">The new assignment record</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Assignment item)
     {
         Assignment? res = Read(item.Id) ??
