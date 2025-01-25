@@ -6,7 +6,6 @@ namespace PL.Call;
 
 public partial class OpenCallWindow : Window
 {
-    private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public OpenCallWindow(int callId,int volunteerId)
     {
         CallId = callId;
@@ -15,8 +14,27 @@ public partial class OpenCallWindow : Window
         InitializeComponent();
     }
 
+    #region Propeties
+    private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public int CallId { get; set; }
     public int VolunteerId { get; set; }
+    #endregion
+
+    #region Events
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Call.AddObserver(ReloadScreen);
+        s_bl.Volunteer.AddObserver(ReloadScreen);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.Call.RemoveObserver(ReloadScreen);
+        s_bl.Volunteer.RemoveObserver(ReloadScreen);
+    }
+    #endregion
+
+    #region Dependecy Propeties
     public BO.Call CurrentCall 
     {
         get => (BO.Call)GetValue(CurrentCallProperty);
@@ -48,7 +66,9 @@ public partial class OpenCallWindow : Window
     public static readonly DependencyProperty MapViewProperty =
         DependencyProperty.Register("MapView", typeof(UserControl), typeof(OpenCallListWindow));
 
-    
+    #endregion
+
+    #region Methods
     private void ReloadScreen()
     {
         try
@@ -74,4 +94,6 @@ public partial class OpenCallWindow : Window
             this.Close();
         }
     }
+    #endregion
+
 }
