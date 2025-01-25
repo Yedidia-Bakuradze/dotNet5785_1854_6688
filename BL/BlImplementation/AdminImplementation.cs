@@ -37,14 +37,21 @@ internal class AdminImplementation : IAdmin
     /// <summary>
     /// This method initializes the system and the database from the BL to the Dal layer
     /// </summary>
+    #region Old DbInit
+    //public void DbInit()
+    //{
+    //    DalTest.Initialization.Do();
+    //    VolunteerManager.Observers.NotifyListUpdated();
+    //    CallManager.Observers.NotifyListUpdated();
+    //    AdminManager.UpdateClock(AdminManager.Now);
+    //    AdminManager.RiskRange = AdminManager.RiskRange;
+    //}
+    #endregion
+    
     public void DbInit()
     {
-        DalTest.Initialization.Do();
-        VolunteerManager.Observers.NotifyListUpdated();
-        CallManager.Observers.NotifyListUpdated();
-        //TODO: Should we? AssignmentManager.Observers.NotifyListUpdated();
-        AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.RiskRange = AdminManager.RiskRange;
+        AdminManager.ThrowOnSimulatorIsRunning();
+        AdminManager.InitializeDB();
     }
 
     /// <summary>

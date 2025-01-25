@@ -177,6 +177,8 @@ internal static class AdminManager //stage 4
         lock (BlMutex) //stage 7
         {
             DalTest.Initialization.Do();
+            VolunteerManager.Observers.NotifyListUpdated();
+            CallManager.Observers.NotifyListUpdated();
             AdminManager.UpdateClock(AdminManager.Now);  //stage 5 - needed since we want the label on Pl to be updated
             AdminManager.RiskRange = AdminManager.RiskRange; // stage 5 - needed for update the PL 
         }
