@@ -1,6 +1,7 @@
 ﻿
 using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 namespace Dal;
 
 internal class CallImplementation : ICall
@@ -10,6 +11,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="newCall">The new Call to be added</param>
     /// <exception cref="DalAlreadyExistsException">an exception will be thrown if the Call already exists in the database</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Call newCall)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
@@ -28,6 +30,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="id">The id of the Call to be removed</param>
     /// <exception cref="DalDoesNotExistException">an Exception will be thrown if the Call doesn't exists</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
@@ -40,6 +43,7 @@ internal class CallImplementation : ICall
     /// <summary>
     /// This method will remove all the Call entities from the XML file database 
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         List<Call> Calls = new();
@@ -52,6 +56,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="id">The requsted id value</param>
     /// <returns>an entity with the value of the past id / if no entity has been found the method will return a null</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(int id)
     {
         try
@@ -73,6 +78,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="filter">The condition for the returned entity</param>
     /// <returns>an entity which satisfies the past condition</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(Func<Call, bool> filter)
     {
         try
@@ -97,6 +103,7 @@ internal class CallImplementation : ICall
     /// <param name="filter">[Optional] a function which selectes the returned entities</param>
     /// <returns>an enumerable of all the entities in the XML file databse / which are satisfing the past filter function</returns>
     /// <exception cref="NotImplementedException"></exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);
@@ -110,6 +117,7 @@ internal class CallImplementation : ICall
     /// the old one who has the same key (Id) and adds the new entity to the end of the XML file
     /// </summary>
     /// <param name="newCall">The new Call entity</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Call newCall)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.callFileName);

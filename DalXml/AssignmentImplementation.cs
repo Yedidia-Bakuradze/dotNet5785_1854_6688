@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 namespace Dal;
 
@@ -9,6 +10,7 @@ public class AssignmentImplementation : IAssignment
     /// Adds a new Assignment entity in the XML database file
     /// </summary>
     /// <param name="newAssignment">The new Assignment instance</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Assignment newAssignment)
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
@@ -23,6 +25,7 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">The Assignment entity id value</param>
     /// <exception cref="DalDoesNotExistException">If entity hasn't been found the method will throw an exception</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
@@ -36,6 +39,7 @@ public class AssignmentImplementation : IAssignment
     /// <summary>
     /// Removes all the elements from the XML tree
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
@@ -50,6 +54,7 @@ public class AssignmentImplementation : IAssignment
     /// <param name="id">Assignment id</param>
     /// <returns>Assignment instance with the proper values</returns>
     /// <exception cref="DalDoesNotExistException">An exception will be thrown if such entity hasn't been found</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(int id)
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);
@@ -66,6 +71,7 @@ public class AssignmentImplementation : IAssignment
     /// <param name="filter">a boolean funciton to validate the return Assignment instance</param>
     /// <returns>Assignment instance which meets the conditions of the filter</returns>
     /// <exception cref="DalDoesNotExistException">An exception will be thrown if such entity hasn't been found</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         try
@@ -87,6 +93,7 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="filter">[Optional] if past, a boolean function requires all the entities to meet its condition in order to return back from the method</param>
     /// <returns>a set of all entities / a set of entities which satisfy the given filter function</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         IEnumerable<XElement> assignments = XMLTools.LoadListFromXMLElement(Config.assignmentFileName).Elements();
@@ -105,6 +112,7 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="newAssignment">a new Assignmet instance</param>
     /// <exception cref="DalDoesNotExistException">an exception thrown when the entity hasn't been found</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Assignment newAssignment)
     {
         XElement data = XMLTools.LoadListFromXMLElement(Config.assignmentFileName);

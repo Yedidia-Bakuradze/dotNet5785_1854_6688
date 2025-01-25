@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using System.Runtime.CompilerServices;
 namespace Dal;
 
 /// <summary>
@@ -13,23 +14,18 @@ namespace Dal;
     private static readonly object lockObj = new object()!;
 
     //private ctor for class's use only
+    [MethodImpl(MethodImplOptions.Synchronized)]
     private DalXml() { }
 
     //Returns the same instance without craeating multiple instances (Singleton)
     public static IDal Instance
     {
+    [MethodImpl(MethodImplOptions.Synchronized)]
         get
         {
             if (instance == null)
             {
-                //Thread safe: Only one thread creates the instance
-                lock (lockObj)
-                {
-                    if (instance == null)
-                    {
-                        instance = new DalXml();
-                    }
-                }
+                instance = new DalXml();
             }
             return instance;
         }
@@ -44,6 +40,7 @@ namespace Dal;
 
     public IConfig Config { get; } = new ConfigImplementation();
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void ResetDB()
     {
         Assignment.DeleteAll();
