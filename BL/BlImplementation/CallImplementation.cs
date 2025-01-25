@@ -3,6 +3,7 @@ using BlApi;
 using BO;
 using Helpers;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 
 internal class CallImplementation : ICall
 {
@@ -466,18 +467,21 @@ internal class CallImplementation : ICall
     /// <returns>Array containing the call count per status</returns>
     public int[] GetTotalCallsByStatus()
     {
-        var groupedCallAndStatuses = s_dal.Call
-                .ReadAll()
-                .GroupBy(
-                    call => CallManager.GetStatus(call.Id),
-                    (key, group) => new { Status = key, Count = group.ToList().Count }
-                    );
+        lock (AdminManager.BlMutex)
+        {
+            var groupedCallAndStatuses = s_dal.Call
+                    .ReadAll()
+                    .GroupBy(
+                        call => CallManager.GetStatus(call.Id),
+                        (key, group) => new { Status = key, Count = group.ToList().Count }
+                        );
 
-        int maxStatusValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
-        int[] statusCount = new int[maxStatusValue + 1];
+            int maxStatusValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
+            int[] statusCount = new int[maxStatusValue + 1];
 
-        groupedCallAndStatuses.ToList().ForEach(item => statusCount[(int)item.Status] = item.Count);
-        return statusCount;
+            groupedCallAndStatuses.ToList().ForEach(item => statusCount[(int)item.Status] = item.Count);
+            return statusCount;
+        }
     }
 
     /// <summary>
@@ -545,14 +549,15 @@ internal class CallImplementation : ICall
         {
             //Lock has been added so the update method wont be done simonteniassly
             //which then would lead to the TakeLast method to take the wrong new object from the end of the enumarable
-            lock (lockObject)
+            int updatedCallId;
+            lock (AdminManager.BlMutex)
             {
                 s_dal.Call.Update(newCall);
-
                 //Notifies all observers that a call has been modified
-                CallManager.Observers.NotifyItemUpdated(s_dal.Call.ReadAll().TakeLast(1).First().Id);
-                CallManager.Observers.NotifyListUpdated();
+                updatedCallId = s_dal.Call.ReadAll().TakeLast(1).First().Id;
             }
+            CallManager.Observers.NotifyItemUpdated(updatedCallId);
+            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -571,20 +576,26 @@ internal class CallImplementation : ICall
     public void CancelAssignement(int VolunteerId, int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
+        DO.Assignment assignment;
 
+        lock (AdminManager.BlMutex)
+        {
+            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+        }
 
-        //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
-        DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
-            ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
-
-        if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
-            throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+        lock (AdminManager.BlMutex)
+        {
+            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+        }
 
         //Check that the call is not ended (Cancled, Expiered or completed)
         if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
             throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
 
-        //Throw exception if access not granted or if there is Dal exception
+        //TOOD: Throw exception if access not granted or if there is Dal exception
 
         //Update the Dal entity with current system time and Closed status
         DO.Assignment newAssignment = assignment with
@@ -595,7 +606,11 @@ internal class CallImplementation : ICall
 
         try
         {
-            s_dal.Assignment.Update(newAssignment);
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Update(newAssignment);
+            }
+
             //Notifies all observers that a call has been added
             CallManager.Observers.NotifyListUpdated();
         }
@@ -608,10 +623,15 @@ internal class CallImplementation : ICall
 
     public void AddCallSendEmail(BO.Call c)
     {
-        // Retrieve all volunteers and filter only the active ones
-        var activeVolunteers = s_dal.Volunteer.ReadAll()
-            .Where(volunteer => volunteer.IsActive && !string.IsNullOrWhiteSpace(volunteer.Email))
-            .ToList();
+        List<DO.Volunteer> activeVolunteers;
+
+        lock (AdminManager.BlMutex)
+        {
+            // Retrieve all volunteers and filter only the active ones
+            activeVolunteers = s_dal.Volunteer.ReadAll()
+                .Where(volunteer => volunteer.IsActive && !string.IsNullOrWhiteSpace(volunteer.Email))
+                .ToList();
+        }
 
         // Subject of the email
         string subject = "A new call has opened near your location";
@@ -670,37 +690,58 @@ internal class CallImplementation : ICall
 
     public void CancleCallSendEmail(BO.CallInList c)
     {
+        List<DO.Assignment> listAss;
+        List<DO.Volunteer> matchingVolunteers;
         string subject = "Your call assignment has been canceled";
         string body = "Hello, your call assignment has been canceled by the manager";
 
-        var listAss = s_dal.Assignment.ReadAll()
-            .Where(a => a.CallId == c.CallId)
-            .ToList();
-        var assignment = listAss.FirstOrDefault();
+        lock (AdminManager.BlMutex)
+        {
+            listAss = s_dal.Assignment.ReadAll()
+                .Where(a => a.CallId == c.CallId)
+                .ToList();
+        }
+        DO.Assignment? assignment = listAss.FirstOrDefault();
 
         // Assumption: s_dal.Volunteer.ReadAll() returns a collection of volunteers
-        var matchingVolunteers = s_dal.Volunteer.ReadAll()
-            .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
-            .ToList();
+        lock (AdminManager.BlMutex)
+        {
+                matchingVolunteers = s_dal.Volunteer.ReadAll()
+                .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
+                .ToList();
+        }
 
-        var volunteer = matchingVolunteers.FirstOrDefault();
+        DO.Volunteer? volunteer = matchingVolunteers.FirstOrDefault();
         Tools.SendEmail(volunteer!.Email, subject, body);
     }
 
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId)
     {
-        return from call in GetOpenCallsForVolunteer(volunteerId,null,null)
-               let currentCall = s_dal.Call.Read(call.CallId)
-               select (currentCall.Latitude, currentCall.Longitude);
+        lock (AdminManager.BlMutex)
+        {
+            return from call in GetOpenCallsForVolunteer(volunteerId,null,null)
+                   let currentCall = s_dal.Call.Read(call.CallId)
+                   select (currentCall.Latitude, currentCall.Longitude);
+        }
     }
 
-    public IEnumerable<(double,double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList>listOfCalls)
-        =>  from closedCall in listOfCalls
+    public IEnumerable<(double, double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList> listOfCalls)
+    {
+        lock (AdminManager.BlMutex)
+        {
+            return from closedCall in listOfCalls
             let call = s_dal.Call.Read(closedCall.Id)
             select (call.Latitude, call.Longitude);
 
+        }
+    }
     public IEnumerable<(double, double)> ConvertOpenCallsToCordinates(IEnumerable<OpenCallInList> listOfCalls)
-        =>     from openCall in listOfCalls
-               let call = s_dal.Call.Read(openCall.CallId)
-               select (call.Latitude, call.Longitude);
+    {
+        lock (AdminManager.BlMutex)
+        {
+            return from openCall in listOfCalls
+            let call = s_dal.Call.Read(openCall.CallId)
+            select (call.Latitude, call.Longitude);
+        }
+    }
 }
