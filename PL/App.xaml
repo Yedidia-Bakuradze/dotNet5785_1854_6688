@@ -40,5 +40,6 @@
         <local:ConvertTypeOfCallToBackgroundColor x:Key="ConvertTypeOfCallToBackgroundColorKey"/>
         <local:ConvertHtmlToWebView2  x:Key="ConvertHtmlToWebView2Key"/>
         <local:ConvertBooleanSimulatorStatusToVisibility  x:Key="ConvertBooleanSimulatorStatusToVisibilityKey"/>
+        <local:ConvertBooleanSimulatorStatusToEnableMode  x:Key="ConvertBooleanSimulatorStatusToEnableModeKey"/>
     </Application.Resources>
 </Application>

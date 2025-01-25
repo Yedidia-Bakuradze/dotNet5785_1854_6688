@@ -191,7 +191,8 @@
                 Grid.Column="2" Grid.ColumnSpan="3"
                 Grid.Row="3" Grid.RowSpan="3"
                 CornerRadius="10"
-                Visibility="{Binding Path=CurrentOperationSelected, Converter={StaticResource ConvertForClockManagerOperationSubScreenModeToVisibilityKey}}">
+                Visibility="{Binding Path=CurrentOperationSelected, Converter={StaticResource ConvertForClockManagerOperationSubScreenModeToVisibilityKey}}"               
+                >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
@@ -216,22 +217,37 @@
                     <Button Content="Add a Second"
                             Background="Transparent"
                             BorderThickness="0"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
                             Click="OnClockForwardOneSecondUpdate"/>
                 </Border>
                 <Border Grid.Column="1" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Add a Minute" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneMinuteUpdate"/>
+                    <Button Content="Add a Minute" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneMinuteUpdate"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
+                            />
                 </Border>
                 <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Add a Hour" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneHourUpdate"/>
+                    <Button Content="Add a Hour" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneHourUpdate"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
+                            
+                            />
                 </Border>
                 <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Add a Day" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneDayUpdate"/>
+                    <Button Content="Add a Day" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneDayUpdate"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
+                            
+                            />
                 </Border>
                 <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Add a Year" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneYearUpdate"/>
+                    <Button Content="Add a Year" Background="Transparent" BorderThickness="0" Click="OnClockForwardOneYearUpdate"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
+                            
+                            />
                 </Border>
                 <Border Grid.Column="3" Grid.Row="6" Style="{StaticResource CriticalBtnBorderStyle}" >
-                    <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"/>
+                    <Button Content="Reset The Clock" Background="Transparent" BorderThickness="0" Click="OnClockResetAction"
+                            IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"
+                            
+                            />
                 </Border>
 
             </Grid>
@@ -268,13 +284,16 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Column="3" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius ="10" Margin="5,0,0,0" Background="#D2D2D2">
-                    <TextBox Text="{Binding CurrentRiskRange}" FontSize="31" Background="Transparent" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentRiskRange}" FontSize="31" Background="Transparent" BorderThickness="0"
+                             HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="{Binding IsSimulatorRunning}"/>
                 </Border>
                 <Border Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
-                    <Button Content="Update Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" Click="OnRiskRagneUpdate"/>
+                    <Button Content="Update Risk Range" FontSize="16" Background="Transparent" BorderThickness="0"
+                            Click="OnRiskRagneUpdate" IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"/>
                 </Border>
                 <Border Grid.Column="5" Grid.ColumnSpan="2" Grid.Row="4" Style="{StaticResource CriticalBtnBorderStyle}" >
-                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0" Click="OnRiskRagneReset"/>
+                    <Button Content="Reset Risk Range" FontSize="16" Background="Transparent" BorderThickness="0"
+                            Click="OnRiskRagneReset" IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"/>
                 </Border>
 
             </Grid>
@@ -318,14 +337,14 @@
                 </Border>
                 <Border Grid.Column="1" Grid.Row="6" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="Initialize Database" FontSize="22" Background="Transparent" BorderThickness="0"
-                            Click="OnSystemInitialize"/>
+                            Click="OnSystemInitialize" IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"/>
                 </Border>
                 <Border Grid.Column="3" Grid.Row="2" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="System Reset" FontSize="22" Background="Transparent" BorderThickness="0"
-                            Click="OnSyetmReset"/>
+                            Click="OnSyetmReset" IsEnabled="{Binding IsSimulatorRunning,Converter={StaticResource ConvertBooleanSimulatorStatusToEnableModeKey}}"/>
                 </Border>
                 
-                <!--TODO: Add a binding to start / stop to have the proper value needed to be displayed-->
+                
                 <Border Grid.Column="3" Grid.Row="4" Style="{StaticResource ActionBtnBorderStyle}" >
                     <Button Content="{Binding SimulatorBtnMsg}" FontSize="22" Background="Transparent" BorderThickness="0"
                             Click="OnSimulatorStateChanged"/>
@@ -342,7 +361,6 @@
                                 Click="OnSpeedSet"/>
                     </Border>
                     
-                    <!--TODO: Add a binding to the speed that been set for the simulator-->
                     <TextBox Grid.Column="1" Text="{Binding SimulatorSpeedText}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 </Grid>
