@@ -534,7 +534,7 @@ internal class CallImplementation : ICall
             call = s_dal.Call.Read((call) => call.Id == callId)
                 ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
             //Check if the call hasn't been taken by someone else
-            callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
+            callAssignment = s_dal.Assignment.ReadAll((assignment) => assignment.CallId == callId).LastOrDefault();
         }
         //Check if call already been taken
         if (callAssignment != null && callAssignment.TypeOfEnding is not null)
@@ -558,7 +558,7 @@ internal class CallImplementation : ICall
         {
             s_dal.Assignment.Create(newAssignment);
         }
-            CallManager.Observers.NotifyListUpdated();
+        CallManager.Observers.NotifyListUpdated();
     }
 
     /// <summary>
