@@ -2,8 +2,10 @@
 using PL.Call;
 using PL.Sub_Windows;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Media.Converters;
+using System.Windows.Threading;
 
 namespace PL.Volunteer;
 
@@ -29,6 +31,8 @@ public partial class VolunteerWindow : Window
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
     public int VolunteerId { get; set; }
     public string? CallStatus { get; set; }
+
+    private volatile DispatcherOperation? _observerOperation = null;
     #endregion
 
     #region Dependency Properties
@@ -60,10 +64,10 @@ public partial class VolunteerWindow : Window
         set => SetValue(CurrentVolunteerProperty, value);
     }
 
-    public BO.UserRole UserRoleIndicator 
+    public BO.UserRole UserRoleIndicator
     {
         get => (BO.UserRole)GetValue(UserRoleIndicatorPropety);
-        set => SetValue(UserRoleIndicatorPropety,value);
+        set => SetValue(UserRoleIndicatorPropety, value);
     }
 
     private static readonly DependencyProperty UserRoleIndicatorPropety =
@@ -73,7 +77,7 @@ public partial class VolunteerWindow : Window
         DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public static readonly DependencyProperty ButtonTextProperty =
-        DependencyProperty.Register("ButtonText",typeof(string),typeof(VolunteerWindow),new PropertyMetadata(null));
+        DependencyProperty.Register("ButtonText", typeof(string), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public static readonly DependencyProperty PasswordVisibilityPropety =
         DependencyProperty.Register("PasswordVisibility", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(null));
@@ -81,15 +85,15 @@ public partial class VolunteerWindow : Window
     public string? NewPassword
     {
         get => (string?)GetValue(NewPasswordProperty);
-        set => SetValue(NewPasswordProperty,value);
+        set => SetValue(NewPasswordProperty, value);
     }
     public static readonly DependencyProperty NewPasswordProperty =
     DependencyProperty.Register("NewPassword", typeof(string), typeof(VolunteerWindow), new PropertyMetadata(null));
 
     public UserControl VolunteerDetailsUserControl
-    {  
+    {
         get => (UserControl)(GetValue(VolunteerDetailsUserControlPropperty));
-        set => SetValue(VolunteerDetailsUserControlPropperty,value);
+        set => SetValue(VolunteerDetailsUserControlPropperty, value);
     }
 
     public static readonly DependencyProperty VolunteerDetailsUserControlPropperty =
@@ -125,7 +129,7 @@ public partial class VolunteerWindow : Window
             {
                 if (PasswordVisibility)
                     CurrentVolunteer.Password = NewPassword;
-                s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer,PasswordVisibility);
+                s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer, PasswordVisibility);
                 MessageBox.Show("Volunteer details updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -134,7 +138,7 @@ public partial class VolunteerWindow : Window
             MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-    
+
     /// <summary>
     /// This method is invoked when the user wants to open the call in progress window to watch its details
     /// </summary>
@@ -142,7 +146,7 @@ public partial class VolunteerWindow : Window
     /// <param name="e"></param>
     private void OnShowCurrentCallInProgress(object sender, RoutedEventArgs e)
     {
-        if(CurrentVolunteer.CurrentCall != null)
+        if (CurrentVolunteer.CurrentCall != null)
             new CallInProgressWindow(CurrentVolunteer.Id).Show();
     }
     #endregion
@@ -159,21 +163,28 @@ public partial class VolunteerWindow : Window
         s_bl.Call.RemoveObserver(RefereshScreen);
     }
     #endregion
+
     #region Methods
     private void RefereshScreen()
     {
-        CurrentVolunteer = (VolunteerId == 0)
-                ? new BO.Volunteer()
-                : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-        CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
-
-        VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
-
-        if(CurrentVolunteer.FullCurrentAddress != "" && CurrentVolunteer.FullCurrentAddress is not null)
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
         {
-            List<(double, double)> listOfPoints = new List<(double, double)>();
-            listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
-            VolunteerMapDetailsUserControl = new DisplayMapContent(TypeOfMap.Pin, CurrentVolunteer.RangeType , listOfPoints);
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                CurrentVolunteer = (VolunteerId == 0)
+                        ? new BO.Volunteer()
+                        : s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                CallStatus = CurrentVolunteer.CurrentCall?.Status.ToString() ?? "";
+
+                VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
+
+                if (CurrentVolunteer.FullCurrentAddress != "" && CurrentVolunteer.FullCurrentAddress is not null)
+                {
+                    List<(double, double)> listOfPoints = new List<(double, double)>();
+                    listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+                    VolunteerMapDetailsUserControl = new DisplayMapContent(TypeOfMap.Pin, CurrentVolunteer.RangeType, listOfPoints);
+                }
+            });
         }
     }
     #endregion

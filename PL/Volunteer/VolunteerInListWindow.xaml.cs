@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PL.Volunteer;
 
@@ -14,13 +15,14 @@ public partial class VolunteerListWindow : Window
 
     #region Regular Propeties
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    private volatile DispatcherOperation? _observerOperation = null;
     #endregion
 
     #region Dependency Properties
     public BO.VolunteerInListField? SortByField
     {
         get => (BO.VolunteerInListField?)GetValue(SortByFieldProperty);
-        set => SetValue(SortByFieldProperty,value);
+        set => SetValue(SortByFieldProperty, value);
     }
     public static readonly DependencyProperty SortByFieldProperty =
         DependencyProperty.Register("SortByField",
@@ -65,7 +67,7 @@ public partial class VolunteerListWindow : Window
         get => (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty);
         set => SetValue(VolunteerListProperty, value);
     }
-    
+
     public static readonly DependencyProperty VolunteerListProperty =
         DependencyProperty.Register("VolunteerList",
             typeof(IEnumerable<BO.VolunteerInList>),
@@ -89,7 +91,7 @@ public partial class VolunteerListWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    
+
     /// <summary>
     /// This method opens the Volunteer's window and show its details for editing
     /// </summary>
@@ -98,7 +100,7 @@ public partial class VolunteerListWindow : Window
     private void OnDoubleTappedVolunteerInList(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (SelectedVolunteer is not null)
-            new VolunteerWindow(SelectedVolunteer.Id,BO.UserRole.Admin).Show();
+            new VolunteerWindow(SelectedVolunteer.Id, BO.UserRole.Admin).Show();
     }
 
     /// <summary>
@@ -160,7 +162,7 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Volunteer.AddObserver(VolunteerListObserver);
-    
+
     /// <summary>
     /// This method is triggered when the user closes the window and it removes the referesher from the VolunteerManager observer
     /// </summary>
@@ -177,15 +179,21 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
     /// </summary>
     private void RefereshVolunteerList()
     {
-        try
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
         {
-            VolunteerList = s_bl.Volunteer.GetFilteredVolunteers(FilterByField, FilterByValue, SortByField);
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    VolunteerList = s_bl.Volunteer.GetFilteredVolunteers(FilterByField, FilterByValue, SortByField);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            });
         }
-        catch(Exception e)
-        {
-            MessageBox.Show(e.Message);
-        }
-        }
+    }
     #endregion
 
 }

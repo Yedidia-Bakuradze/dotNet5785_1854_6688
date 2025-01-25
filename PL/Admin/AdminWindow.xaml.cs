@@ -1,6 +1,7 @@
 ﻿using BO;
 using PL.Call;
 using System.Windows;
+using System.Windows.Threading;
 namespace PL.Admin;
 
 public partial class AdminWindow : Window
@@ -13,7 +14,15 @@ public partial class AdminWindow : Window
         UpdateAllBottomButtonTexts();
     }
 
+    #region Regular Propeties
     public int AdminId { get; set; }
+    private volatile DispatcherOperation? _observerClockOperation = null;
+    private volatile DispatcherOperation? _observerConfigOperation = null;
+    private volatile DispatcherOperation? _observerCallCountOperation = null;
+
+
+    #endregion
+
     #region Dependency Propeties
     public DateTime CurrentTime
     {
@@ -96,7 +105,8 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e) { 
+    private void OnRiskRagneUpdate(object sender, RoutedEventArgs e)
+    {
         s_bl.Admin.SetRiskRange(CurrentRiskRange);
         configObserver();
     }
@@ -106,7 +116,13 @@ public partial class AdminWindow : Window
     /// </summary>
     private void clockObserver()
     {
-        CurrentTime = s_bl.Admin.GetClock();
+        if (_observerClockOperation is null || _observerClockOperation.Status == DispatcherOperationStatus.Completed)
+        {
+            _observerClockOperation = Dispatcher.BeginInvoke(() =>
+            {
+                CurrentTime = s_bl.Admin.GetClock();
+            });
+        }
     }
 
     /// <summary>
@@ -114,8 +130,13 @@ public partial class AdminWindow : Window
     /// </summary>
     private void configObserver()
     {
-        CurrentRiskRange = s_bl.Admin.GetRiskRange();
-
+        if(_observerConfigOperation is null || _observerConfigOperation.Status == DispatcherOperationStatus.Completed)
+        {
+            _observerConfigOperation = Dispatcher.BeginInvoke(() =>
+            {
+                CurrentRiskRange = s_bl.Admin.GetRiskRange();
+            });
+        }
     }
     #endregion
 
@@ -260,12 +281,19 @@ public partial class AdminWindow : Window
     /// </summary>
     private void UpdateAllBottomButtonTexts()
     {
-        ExpieredBtnText = $"Expiered\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Expiered.GetHashCode()]}";
-        OpenBtnText = $"Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Open.GetHashCode()]}";
-        OpenInRiskBtnText = $"Risky & Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.OpenAndRisky.GetHashCode()]}";
-        ClosedBtnText = $"Closed\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Closed.GetHashCode()]}";
-        InProgressBtnText = $"In Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgress.GetHashCode()]}";
-        InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()]}";
+        if (_observerCallCountOperation is null || _observerCallCountOperation.Status == DispatcherOperationStatus.Completed)
+        {
+            _observerCallCountOperation = Dispatcher.BeginInvoke(() =>
+            {
+                ExpieredBtnText = $"Expiered\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Expiered.GetHashCode()]}";
+                OpenBtnText = $"Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Open.GetHashCode()]}";
+                OpenInRiskBtnText = $"Risky & Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.OpenAndRisky.GetHashCode()]}";
+                ClosedBtnText = $"Closed\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Closed.GetHashCode()]}";
+                InProgressBtnText = $"In Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgress.GetHashCode()]}";
+                InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()]}";
+            });
+
+        }
     }
 
     /// <summary>
@@ -306,10 +334,11 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="callStatus"></param>
     private void ShowListOfCalls(CallStatus? callStatus) => new CallInListWindow(AdminId, callStatus).Show();
-    private void OnRiskRagneReset(object sender, RoutedEventArgs e) {
+    private void OnRiskRagneReset(object sender, RoutedEventArgs e)
+    {
         s_bl.Admin.SetRiskRange(TimeSpan.Zero);
         configObserver();
     }
-    
+
     #endregion
 }
