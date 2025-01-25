@@ -36,7 +36,7 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Deletes all Call items.
     /// </summary>
-    [MethodImpl(MethodImplOptions.Synchronized)
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.Calls.Clear();
