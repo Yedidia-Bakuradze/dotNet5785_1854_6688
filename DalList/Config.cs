@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.CompilerServices;
+
 namespace Dal;
 
 internal static class Config
@@ -18,6 +20,7 @@ internal static class Config
     internal static TimeSpan RiskRange { get; set; } = TimeSpan.Zero;
     internal static DateTime Clock { get; set; } = DateTime.Now;
     //Reset all the values
+    [MethodImpl(MethodImplOptions.Synchronized)]
     internal static void Reset()
     {
         s_nextAssignmentId = StartAssignmentId;

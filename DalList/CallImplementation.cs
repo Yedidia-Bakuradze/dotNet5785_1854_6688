@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 internal class CallImplementation : ICall
 {
@@ -9,6 +10,7 @@ internal class CallImplementation : ICall
     /// Creates a new Call item.
     /// </summary>
     /// <param name="item">The Call item to create.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Call item)
     {
         //Since the id is automatically generated, there is not need for checking whether assignment with such id value exists
@@ -22,6 +24,7 @@ internal class CallImplementation : ICall
     /// Deletes a Call item by its id.
     /// </summary>
     /// <param name="id">The id of the Call item to delete.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         //If the item does not exist, an exception will be thrown
@@ -33,6 +36,7 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Deletes all Call items.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)
     public void DeleteAll()
     {
         DataSource.Calls.Clear();
@@ -43,6 +47,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="id">The id of the Call item to read.</param>
     /// <returns>The Call item with the specified id, or null if it does not exist.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(int id)
     {
         try
@@ -66,6 +71,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="filter">A condition function which the entity shall satisfy its condition</param>
     /// <returns>Entity which satisfies the filter function or a null value if no such entity has been found</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(Func<Call, bool> filter)
     {
         try
@@ -87,6 +93,7 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="filter">A filter which returns a boolean value whether the past Call value satisfies the logical condition</param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         return filter == null
@@ -102,6 +109,7 @@ internal class CallImplementation : ICall
     /// Updates a Call item.
     /// </summary>
     /// <param name="item">The Call item to update.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Call item)
     {
             //  If the item does not exist, an exception will be thrown
