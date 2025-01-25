@@ -27,8 +27,10 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
     public void AddCall(BO.Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         //Check if the call entity is valid or not
-        if(!CallManager.IsCallValid(call))
+        if (!CallManager.IsCallValid(call))
             throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
         
         //Get Call cordinates
@@ -58,6 +60,8 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the given ID does not exist in the database.</exception>
     public void DeleteCallRequest(int requestId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         try
         {
             // Check if there are any assignments related to the call
@@ -89,6 +93,8 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
     public void FinishAssignement(int VolunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         // Retrieve the assignment details for the given volunteer and call ID
         DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId)
             ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
@@ -483,6 +489,8 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
     public void SelectCallToDo(int VolunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         //Check if there is such call
         DO.Call call = s_dal.Call.Read((call) => call.Id == callId)
             ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
@@ -520,6 +528,9 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
     public void UpdateCall(BO.Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+
         if (!CallManager.IsCallValid(call))
             throw new BO.BlInvalidEntityDetails($"BL: Call (Id: {call.Id}) has invalid details");
 
@@ -559,6 +570,9 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
     public void CancelAssignement(int VolunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+
         //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
         DO.Assignment assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
             ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
