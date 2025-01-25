@@ -44,7 +44,9 @@ internal class CallImplementation : ICall
         DO.Call newCall = CallManager.ConvertFromBdToD(call);
 
         // Add the new call to the database
-        s_dal.Call.Create(newCall);
+        lock(AdminManager.BlMutex)
+            s_dal.Call.Create(newCall);
+
 
         //Notifies all observers that a call has been added
         CallManager.Observers.NotifyListUpdated();
@@ -60,16 +62,18 @@ internal class CallImplementation : ICall
     {
         try
         {
-            // Check if there are any assignments related to the call
-            if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == requestId).Any(assignment => assignment.VolunteerId != 0))
-                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it has a record with other volunteers");
+            lock (AdminManager.BlMutex)
+            {
+                // Check if there are any assignments related to the call
+                if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == requestId).Any(assignment => assignment.VolunteerId != 0))
+                    throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it has a record with other volunteers");
 
-            if (CallManager.GetStatus(requestId) != CallStatus.Open && CallManager.GetStatus(requestId) != CallStatus.OpenAndRisky)
-                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it's status is not open");
+                if (CallManager.GetStatus(requestId) != CallStatus.Open && CallManager.GetStatus(requestId) != CallStatus.OpenAndRisky)
+                    throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it's status is not open");
 
-            // Attempt to delete the call
-            s_dal.Call.Delete(requestId);
-
+                // Attempt to delete the call
+                s_dal.Call.Delete(requestId);
+            }
             //Notifies all observers that a call has been added
             CallManager.Observers.NotifyListUpdated();
         }
@@ -89,11 +93,15 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
     public void FinishAssignement(int VolunteerId, int callId)
     {
+        DO.Assignment? res;
         // Retrieve the assignment details for the given volunteer and call ID
-        DO.Assignment? res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId)
-            ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
+        lock (AdminManager.BlMutex)
+        {
+            res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId)
+                ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
+        }
 
-        // Check if the assignment already has an ending type or time
+            // Check if the assignment already has an ending type or time
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
             throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
@@ -101,13 +109,16 @@ internal class CallImplementation : ICall
 
         try
         {
-            // Update the assignment with the new ending type and time
-            s_dal.Assignment.Update(res! with
+            lock (AdminManager.BlMutex)
             {
-                TypeOfEnding = DO.TypeOfEnding.Treated,
-                TimeOfEnding = AdminManager.Now
-            });
-            CallManager.Observers.NotifyListUpdated();
+                // Update the assignment with the new ending type and time
+                s_dal.Assignment.Update(res! with
+                {
+                    TypeOfEnding = DO.TypeOfEnding.Treated,
+                    TimeOfEnding = AdminManager.Now
+                });
+            }
+                CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -125,12 +136,16 @@ internal class CallImplementation : ICall
     /// <returns>A sorted and filtered list of closed calls.</returns>
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int VolunteerId, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
     {
+        List<DO.Assignment> res;
+        List<DO.Call> finalRes;
         // Step 1: Fetch all assignments for the given volunteer
-        List<DO.Assignment> res = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId).ToList();
+        lock (AdminManager.BlMutex)
+        {
+            res = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId).ToList();
 
-        // Step 2: Fetch all calls related to the assignments where TypeOfEnding is not null
-        List<DO.Call> finalRes = s_dal.Call.ReadAll(call => res.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null)).ToList();
-
+            // Step 2: Fetch all calls related to the assignments where TypeOfEnding is not null
+            finalRes = s_dal.Call.ReadAll(call => res.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null)).ToList();
+        }
         // Step 3: Filter calls by type if callType is provided
         if (callType != null)
         {
@@ -189,13 +204,17 @@ internal class CallImplementation : ICall
     /// </summary>
     public BO.Call GetDetielsOfCall(int callId)
     {
-        // Fetch the call details from the data layer (DAL) by the given call ID.
-        DO.Call call = s_dal.Call.Read(call => call.Id == callId)
-            ?? throw new BlDoesNotExistException($"BL: Call with id {callId} doesn't exists");
+        List<DO.Assignment> res;
+        DO.Call call;
+        lock (AdminManager.BlMutex)
+        {
+            // Fetch the call details from the data layer (DAL) by the given call ID.
+            call = s_dal.Call.Read(call => call.Id == callId)
+                 ?? throw new BlDoesNotExistException($"BL: Call with id {callId} doesn't exists");
 
-        // Fetch all assignments related to the call ID.
-        List<DO.Assignment> res = s_dal.Assignment.ReadAll(ass => ass.CallId == callId).ToList();
-
+            // Fetch all assignments related to the call ID.
+            res = s_dal.Assignment.ReadAll(ass => ass.CallId == callId).ToList();
+        }
         // If the call does not exist, throw an exception with a relevant message.
         if (call == null)
         {
@@ -237,38 +256,46 @@ internal class CallImplementation : ICall
     /// <returns>An IEnumerable of CallInList objects representing the filtered and sorted list of calls.</returns>
     public IEnumerable<BO.CallInList> GetListOfCalls(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortingField = null, IEnumerable<BO.CallInList>? source = null)
     {
-        // Retrieve all calls and assignments from the database
-        List<DO.Call> calls = s_dal.Call.ReadAll().ToList();
-        List<DO.Assignment> assignments = s_dal.Assignment.ReadAll().ToList();
+        List<DO.Assignment> assignments;
+        List<DO.Call> calls;
+        lock (AdminManager.BlMutex)
+        {
+            // Retrieve all calls and assignments from the database
+            calls = s_dal.Call.ReadAll().ToList();
+            assignments = s_dal.Assignment.ReadAll().ToList();
+        }
+        IEnumerable<BO.CallInList> callsInlist;
+        lock (AdminManager.BlMutex)
+        {
+            // Build the initial list of CallInList objects based on the calls and their assignments
+             callsInlist = source is not null
+                                              ? source
+                                              :
+                                              from call in calls
+                                              let callsAssignments = assignments
+                                              .Where(ass => ass.CallId == call.Id)
+                                              .OrderByDescending(ass => ass.Id)
+                                              .ToList()
+                                              let firstAssignment = callsAssignments.FirstOrDefault()
+                                              select new BO.CallInList
+                                              {
+                                                  Id = firstAssignment?.Id, // Default to 0 if no assignment exists
+                                                  CallId = call.Id,
+                                                  Status = CallManager.GetStatus(call.Id),
+                                                  OpenningTime = call.OpeningTime,
+                                                  LastVolunteerName = firstAssignment != null
+                                                  ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
+                                                  : null,
+                                                  TimeToEnd = call.DeadLine - AdminManager.Now,
+                                                  TypeOfCall = (BO.CallType)call.Type,
+                                                  TimeElapsed = firstAssignment?.TypeOfEnding != null
+                                                  ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
+                                                  : null,
+                                                  TotalAlocations = callsAssignments.Count(),
+                                              };
+        }
 
-        // Build the initial list of CallInList objects based on the calls and their assignments
-        IEnumerable<BO.CallInList> callsInlist = source is not null
-                                                ? source
-                                                :
-                                                from call in calls
-                                                 let callsAssignments = assignments
-                                                     .Where(ass => ass.CallId == call.Id)
-                                                     .OrderByDescending(ass => ass.Id)
-                                                     .ToList()
-                                                 let firstAssignment = callsAssignments.FirstOrDefault()
-                                                 select new BO.CallInList
-                                                 {
-                                                     Id = firstAssignment?.Id, // Default to 0 if no assignment exists
-                                                     CallId = call.Id,
-                                                     Status = CallManager.GetStatus(call.Id),
-                                                     OpenningTime = call.OpeningTime,
-                                                     LastVolunteerName = firstAssignment != null
-                                                         ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
-                                                         : null,
-                                                     TimeToEnd = call.DeadLine - AdminManager.Now,
-                                                     TypeOfCall = (BO.CallType)call.Type,
-                                                     TimeElapsed = firstAssignment?.TypeOfEnding != null
-                                                         ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
-                                                         : null,
-                                                     TotalAlocations = callsAssignments.Count(),
-                                                 };
-
-        // Filtering the list based on the specified filter field and value
+            // Filtering the list based on the specified filter field and value
         if (filterField != null && filterValue != null)
         {
             switch (filterField)
@@ -386,29 +413,33 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlInvalidOperationException">Thrown if an invalid sorting field is provided.</exception>
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int VolunteerId, BO.CallType? callType, BO.OpenCallFields? sortingField)
     {
-        // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
-        DO.Volunteer volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
-            ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
+        DO.Volunteer volunteer;
+        List<BO.OpenCallInList> openCalls;
+        lock (AdminManager.BlMutex)
+        {
+            // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
+            volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
+                    ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
 
 
-        // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
-        List<BO.OpenCallInList> openCalls = s_dal.Call
-            .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
-            .AsParallel()
-            .Where(call => volunteer.MaxDistanceToCall is null || volunteer.FullCurrentAddress is null || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress,call.FullAddressCall,volunteer.RangeType) <= volunteer.MaxDistanceToCall)
-            .Select(call => new BO.OpenCallInList
-            {
-                CallId = call.Id,  // ID of the call
-                CallFullAddress = call.FullAddressCall,  // Full address of the call
-                Description = call.Description,  // Description of the call
-                LastTimeForClosingTheCall = call.DeadLine,  // Deadline for closing the call
-                TypeOfCall = (BO.CallType)call.Type,  // Type of the call
-                OpenningTime = call.OpeningTime,  // Opening time of the call
-                DistanceFromVolunteer = volunteer.FullCurrentAddress is null
-                    ? -1  // If the volunteer's address is unknown, set distance to -1
-                    : VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType)
-            }).ToList();
-
+            // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
+            openCalls = s_dal.Call
+                .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
+                .AsParallel()
+                .Where(call => volunteer.MaxDistanceToCall is null || volunteer.FullCurrentAddress is null || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType) <= volunteer.MaxDistanceToCall)
+                .Select(call => new BO.OpenCallInList
+                {
+                    CallId = call.Id,  // ID of the call
+                    CallFullAddress = call.FullAddressCall,  // Full address of the call
+                    Description = call.Description,  // Description of the call
+                    LastTimeForClosingTheCall = call.DeadLine,  // Deadline for closing the call
+                    TypeOfCall = (BO.CallType)call.Type,  // Type of the call
+                    OpenningTime = call.OpeningTime,  // Opening time of the call
+                    DistanceFromVolunteer = volunteer.FullCurrentAddress is null
+                        ? -1  // If the volunteer's address is unknown, set distance to -1
+                        : VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType)
+                }).ToList();
+        }
         // If a call type filter is provided, filter the list by the specified type.
         if (callType != null)
         {
@@ -461,35 +492,40 @@ internal class CallImplementation : ICall
     public int[] GetTotalCallsByStatus()
     {
         var groupedCallAndStatuses = s_dal.Call
-                .ReadAll()
-                .GroupBy(
-                    call => CallManager.GetStatus(call.Id),
-                    (key, group) => new { Status = key, Count = group.ToList().Count }
-                    );
+                 .ReadAll()
+                 .GroupBy(
+                     call => CallManager.GetStatus(call.Id),
+                     (key, group) => new { Status = key, Count = group.ToList().Count }
+                     );
+
 
         int maxStatusValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
         int[] statusCount = new int[maxStatusValue + 1];
 
         groupedCallAndStatuses.ToList().ForEach(item => statusCount[(int)item.Status] = item.Count);
-        return statusCount;
+        return statusCount;   
     }
 
-    /// <summary>
-    /// This methods assignes a call to a volunteer if the call is free to be alocated
-    /// </summary>
-    /// <param name="VolunteerId">The volunteer which requests a new call</param>
-    /// <param name="callId">The requested call to be assigned</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
+        /// <summary>
+        /// This methods assignes a call to a volunteer if the call is free to be alocated
+        /// </summary>
+        /// <param name="VolunteerId">The volunteer which requests a new call</param>
+        /// <param name="callId">The requested call to be assigned</param>
+        /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
+        /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
     public void SelectCallToDo(int VolunteerId, int callId)
     {
-        //Check if there is such call
-        DO.Call call = s_dal.Call.Read((call) => call.Id == callId)
-            ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
+        DO.Call call;
+        DO.Assignment? callAssignment;
+        lock (AdminManager.BlMutex)
+        {
+            //Check if there is such call
+            call = s_dal.Call.Read((call) => call.Id == callId)
+                ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
 
-        //Check if the call hasn't been taken by someone else
-        DO.Assignment? callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
-
+            //Check if the call hasn't been taken by someone else
+            callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
+        }
         //Check if call already been taken
         if (callAssignment != null && callAssignment.TypeOfEnding is not null)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
@@ -508,8 +544,11 @@ internal class CallImplementation : ICall
             TimeOfStarting = AdminManager.Now,
             TypeOfEnding = null,
         };
-        s_dal.Assignment.Create(newAssignment);
-        CallManager.Observers.NotifyListUpdated();
+        lock (AdminManager.BlMutex)
+        {
+            s_dal.Assignment.Create(newAssignment);
+        }
+            CallManager.Observers.NotifyListUpdated();
     }
 
     /// <summary>
