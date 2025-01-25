@@ -9,36 +9,39 @@ internal static class CallManager
 
     public static void UpdateAllOpenAndExpierdCalls()
     {
-        List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < AdminManager.Now).ToList();
-        List<DO.Assignment> listOfAssignments = s_dal.Assignment.ReadAll().ToList();
+        lock (AdminManager.BlMutex)//stage 7
+        {
+            List<DO.Call> listOfCalls = s_dal.Call.ReadAll((DO.Call call) => call.DeadLine < AdminManager.Now).ToList();
+            List<DO.Assignment> listOfAssignments = s_dal.Assignment.ReadAll().ToList();
 
-        listOfCalls
-            .Where(call => !listOfAssignments.Any(assignment => assignment.CallId == call.Id))
-            .Select(call => call)
-            .ToList()
-            .ForEach(call => s_dal.Assignment.Create(new DO.Assignment
-            {
-                CallId = call.Id,
-                TimeOfStarting = call.OpeningTime,
-                TimeOfEnding = AdminManager.Now,
-                Id = -1,
-                TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
-                VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
-            }
-        ));
+            listOfCalls
+                .Where(call => !listOfAssignments.Any(assignment => assignment.CallId == call.Id))
+                .Select(call => call)
+                .ToList()
+                .ForEach(call => s_dal.Assignment.Create(new DO.Assignment
+                {
+                    CallId = call.Id,
+                    TimeOfStarting = call.OpeningTime,
+                    TimeOfEnding = AdminManager.Now,
+                    Id = -1,
+                    TypeOfEnding = DO.TypeOfEnding.CancellationExpired,
+                    VolunteerId = -1,//The instructions asked us to put NULL here, but the project instructions themselves state that it should not be NULL, so we made it -1 because it makes the most sense for us
+                }
+            ));
 
-        listOfAssignments
-            .Where(assignment => listOfCalls.Any(call => call.Id == assignment.CallId))
-            .Select(assignment => assignment)
-            .ToList()
-            .ForEach((assignment) => s_dal.Assignment.Update(assignment with
-            {
-                TimeOfEnding = AdminManager.Now,
-                TypeOfEnding = DO.TypeOfEnding.CancellationExpired
-            }));
+            listOfAssignments
+                .Where(assignment => listOfCalls.Any(call => call.Id == assignment.CallId))
+                .Select(assignment => assignment)
+                .ToList()
+                .ForEach((assignment) => s_dal.Assignment.Update(assignment with
+                {
+                    TimeOfEnding = AdminManager.Now,
+                    TypeOfEnding = DO.TypeOfEnding.CancellationExpired
+                }));
+
+        }
+
     }
-
-
     /// <summary>
     /// Accepts a Call Id and returns it status based on the CallStatus enum values
     /// </summary>
@@ -47,39 +50,46 @@ internal static class CallManager
     /// <exception cref="DO.DalDoesNotExistException">Throws an exception if such call doesn't exists</exception>
     public static BO.CallStatus GetStatus(int callID)
     {
-        DO.Call res = s_dal.Call.Read(call => call.Id == callID)
+        DO.Call res;
+        DO.Assignment? resAssignments;
+        lock (AdminManager.BlMutex)//stage 7
+        {
+            res = s_dal.Call.Read(call => call.Id == callID)
             ?? throw new DO.DalDoesNotExistException("Call Does not exist");
 
-        DO.Assignment? resAssignments = s_dal.Assignment.ReadAll(ass => ass.CallId == callID).LastOrDefault();
-        
+             resAssignments = s_dal.Assignment.ReadAll(ass => ass.CallId == callID).LastOrDefault();
+        }
         if (res.DeadLine <= AdminManager.Now)
             return BO.CallStatus.Expiered;
 
         if (resAssignments is not null && resAssignments.TypeOfEnding == DO.TypeOfEnding.Treated)
             return BO.CallStatus.Closed;
-
-        if (resAssignments is not null && resAssignments.TypeOfEnding is not null)
+        lock (AdminManager.BlMutex)
         {
-            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
-                ? BO.CallStatus.OpenAndRisky
-                : BO.CallStatus.Open;
-        }
-
-        if(resAssignments is not null && resAssignments.TypeOfEnding is null)
-        {
-            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
-                ? BO.CallStatus.InProgressAndRisky
-                : BO.CallStatus.InProgress;
-        }
-        
-        //If there is not assingment - no one took the call therefor the call is open
-        if(resAssignments is null)
-        {
-            return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
+            if (resAssignments is not null && resAssignments.TypeOfEnding is not null)
+            {
+                return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
                     ? BO.CallStatus.OpenAndRisky
                     : BO.CallStatus.Open;
+            }
+
+
+            if (resAssignments is not null && resAssignments.TypeOfEnding is null)
+            {
+                return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
+                    ? BO.CallStatus.InProgressAndRisky
+                    : BO.CallStatus.InProgress;
+            }
+
+            //If there is not assingment - no one took the call therefor the call is open
+            if (resAssignments is null)
+            {
+                return ((res.DeadLine - AdminManager.Now) <= s_dal.Config.RiskRange)
+                        ? BO.CallStatus.OpenAndRisky
+                        : BO.CallStatus.Open;
+            }
         }
-        throw new Exception("Brahhhh whatsha duing");
+            throw new Exception("Brahhhh whatsha duing");
     }
 
     /// <summary>
