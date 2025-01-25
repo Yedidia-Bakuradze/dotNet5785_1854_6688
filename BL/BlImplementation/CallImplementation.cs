@@ -521,6 +521,7 @@ internal class CallImplementation : ICall
         /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
     public void SelectCallToDo(int VolunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
         DO.Call call;
         DO.Assignment? callAssignment;
         lock (AdminManager.BlMutex)
@@ -528,12 +529,6 @@ internal class CallImplementation : ICall
             //Check if there is such call
             call = s_dal.Call.Read((call) => call.Id == callId)
                 ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
-        AdminManager.ThrowOnSimulatorIsRunning();
-
-        //Check if there is such call
-        DO.Call call = s_dal.Call.Read((call) => call.Id == callId)
-            ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
-
             //Check if the call hasn't been taken by someone else
             callAssignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId);
         }
