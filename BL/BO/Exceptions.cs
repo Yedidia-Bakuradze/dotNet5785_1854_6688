@@ -95,6 +95,7 @@ public class BlForbidenSystemActionExeption : Exception
 /// This exception is thrown when the system tries to make un registered operation
 /// might occure in switch statments when the value is not a valid enum value for that operation
 /// </summary>
+[Serializable]
 public class BlInvalidOperationException : Exception
 {
     public BlInvalidOperationException(string?msg):base(msg){}
@@ -103,7 +104,8 @@ public class BlInvalidOperationException : Exception
 /// <summary>
 /// This exception is thrown when the user's tries to enter a value that cann't be converted to its real value
 /// </summary>
-public class BlInputValueUnConvertableException: Exception
+[Serializable]
+public class BlInputValueUnConvertableException : Exception
 {
     public BlInputValueUnConvertableException(string? msg) : base(msg) {}
 }
@@ -111,8 +113,18 @@ public class BlInputValueUnConvertableException: Exception
 /// <summary>
 /// This exception is thrown when a null value is inserted into a method when he is not welcomeed
 /// </summary>
+[Serializable]
 public class BlUnWantedNullValueException:Exception
 {
     public BlUnWantedNullValueException(string? msg) : base(msg) { }
+}
+
+[Serializable]
+public class BLTemporaryNotAvailableException : Exception
+{
+    public BLTemporaryNotAvailableException(string? msg) : base(msg)
+    {
+        
+    }
 }
 #endregion BL
