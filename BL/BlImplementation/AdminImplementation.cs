@@ -99,7 +99,7 @@ internal class AdminImplementation : IAdmin
         AdminManager.ThrowOnSimulatorIsRunning();
         AdminManager.RiskRange = range;
     }
-    
+
     /// <summary>
     /// This method accepts a TimeUnit and moves forrward the time by one unit of the specified TimeUnit
     /// </summary>
@@ -147,5 +147,12 @@ internal class AdminImplementation : IAdmin
 
         }
     }
+    public void StartSimulator(int interval)  //stage 7
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.Start(interval); //stage 7
+    }
+    public void StopSimulator()
+    => AdminManager.Stop(); //stage 7
 
 }

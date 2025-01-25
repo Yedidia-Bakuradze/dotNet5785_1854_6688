@@ -63,5 +63,14 @@ public interface IAdmin
     /// </summary>
     /// <param name="clockObserver">The action method which needs to be removed</param>
     void RemoveClockObserver(Action clockObserver);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="interval"></param>
+    void StartSimulator(int interval); //stage 7
+    /// <summary>
+    /// 
+    /// </summary>
+    void StopSimulator(); //stage 7
 
 }
