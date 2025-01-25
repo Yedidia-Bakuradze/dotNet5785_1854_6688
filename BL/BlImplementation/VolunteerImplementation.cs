@@ -35,6 +35,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <exception cref="BlAlreadyExistsException">A</exception>
     public void AddVolunteer(BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
         try
         {
             
@@ -91,6 +92,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <param name="id">The requested volunteer's id value</param>
     public void DeleteVolunteer(int id)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         //Tries to find such volunteer
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
             ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
@@ -125,6 +128,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <returns>An BO.Volunteer entity which contains the requested entity's values and the current in progress call which is taken care of by the volunteer</returns>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
+
         DO.Volunteer volunteer = s_dal.Volunteer.Read(id)
             ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with id of {id} doesn't exists");
 
@@ -394,6 +398,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// <param name="hasOldPassword">[Optional] an indicator whether the user has modified his password or not</param>
     public void UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
         //Check if allowed to modify
         if (id != volunteer.Id && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
             throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
