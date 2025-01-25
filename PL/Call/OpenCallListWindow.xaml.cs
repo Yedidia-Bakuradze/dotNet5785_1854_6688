@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Converters;
+using System.Windows.Threading;
 
 namespace PL.Call;
 
@@ -17,6 +18,8 @@ public partial class OpenCallListWindow : Window
 
     #region Regular Propeties
     public int VolunteerId { get; set; }
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
     #endregion
 
     #region Dependecy Propeties
@@ -105,29 +108,35 @@ public partial class OpenCallListWindow : Window
     #region Methods
     private void RefreshList()
     {
-        try
-        {
-            var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-            ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,FilterByValue,SortByField);
-            List<(double, double)> listOfCordinates = s_bl.Call
-                .ConvertOpenCallsToCordinates(ListOfCalls)
-                .ToList<(double,double)>();
-
-            if (volunteer.FullCurrentAddress is not null)
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
             {
-                listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
-                if (listOfCordinates.Count() != 0)
-                    OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType,listOfCordinates);
-                else
-                    OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
-            }
-            else
-                OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
-        }catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            Close();
-        }
+                try
+                {
+                    var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                    ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, FilterByValue, SortByField);
+                    List<(double, double)> listOfCordinates = s_bl.Call
+                        .ConvertOpenCallsToCordinates(ListOfCalls)
+                        .ToList<(double, double)>();
+
+                    if (volunteer.FullCurrentAddress is not null)
+                    {
+                        listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
+                        if (listOfCordinates.Count() != 0)
+                            OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType, listOfCordinates);
+                        else
+                            OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
+                    }
+                    else
+                        OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+            });
+        
     }
     #endregion
 }

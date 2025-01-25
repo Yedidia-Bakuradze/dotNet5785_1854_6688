@@ -1,12 +1,14 @@
 ﻿using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 namespace PL.Call;
 
 public partial class CallWindow : Window
 {
     const string AddMode = "Add Call";
     const string UpdateMode = "Update Call";
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
     public CallWindow(int callId)
     {
         CallId = callId;
@@ -102,19 +104,24 @@ public partial class CallWindow : Window
     #region Method
     private void Referesh()
     {
-        try
-        {
-            CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
-            CallDetailsControler = new CallDetailsControl(CurrentCall);
-            List<(double, double)> listOfPoints = new();
-            listOfPoints.Add((CurrentCall.Latitude, CurrentCall.Longitude));
-            CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin,BO.TypeOfRange.AirDistance,listOfPoints);
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            Close();
-        }
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
+                    CallDetailsControler = new CallDetailsControl(CurrentCall);
+                    List<(double, double)> listOfPoints = new();
+                    listOfPoints.Add((CurrentCall.Latitude, CurrentCall.Longitude));
+                    CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfPoints);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+            });
+        
     }
     #endregion
 }

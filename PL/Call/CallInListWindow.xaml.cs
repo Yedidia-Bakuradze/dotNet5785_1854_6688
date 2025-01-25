@@ -1,11 +1,13 @@
 ﻿using System.Windows;
+using System.Windows.Threading;
 
 namespace PL.Call;
 
 public partial class CallInListWindow : Window
 {
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public CallInListWindow(int userId,BO.CallStatus? requstedCallByStatus = null) {
+    public CallInListWindow(int userId, BO.CallStatus? requstedCallByStatus = null)
+    {
         RequestedSpecialMode = requstedCallByStatus;
         UserId = userId;
         RefreshList();
@@ -14,7 +16,8 @@ public partial class CallInListWindow : Window
 
     #region Regular Propeties
     public int UserId { get; set; }
-    public BO.CallStatus? RequestedSpecialMode{ get; set; }
+    public BO.CallStatus? RequestedSpecialMode { get; set; }
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
     #endregion
     #region Dependecy Propeties
     public BO.CallInList? SelectedCall
@@ -56,11 +59,11 @@ public partial class CallInListWindow : Window
     public IEnumerable<BO.CallInList> ListOfCalls
     {
         get => (IEnumerable<BO.CallInList>)GetValue(ListOfCallsProperty);
-        set => SetValue(ListOfCallsProperty,value);
+        set => SetValue(ListOfCallsProperty, value);
     }
 
     private static DependencyProperty ListOfCallsProperty =
-        DependencyProperty.Register("ListOfCalls", typeof(IEnumerable<BO.CallInList>), typeof(CallInListWindow),new PropertyMetadata(null));
+        DependencyProperty.Register("ListOfCalls", typeof(IEnumerable<BO.CallInList>), typeof(CallInListWindow), new PropertyMetadata(null));
 
 
     #endregion
@@ -91,7 +94,7 @@ public partial class CallInListWindow : Window
                 throw new Exception("PL: The selected call is null");
             s_bl.Call.DeleteCallRequest(SelectedCall.CallId);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
         }
@@ -119,16 +122,21 @@ public partial class CallInListWindow : Window
     #endregion
 
     #region Methods
-    private void RefreshList() => ListOfCalls
-        = s_bl.Call
-        .GetListOfCalls(
-            FilterByField,
-            FilterByValue,
-            SortByField,
-            RequestedSpecialMode is null
-                ? null
-                : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!,null)
-            );
+    private void RefreshList()
+    {
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        {
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                ListOfCalls = s_bl.Call.GetListOfCalls(
+                    FilterByField,
+                    FilterByValue,
+                    SortByField,
+                    RequestedSpecialMode is null
+                        ? null
+                        : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!, null));
+            } );
+        }
+    }
     #endregion
-
 }
