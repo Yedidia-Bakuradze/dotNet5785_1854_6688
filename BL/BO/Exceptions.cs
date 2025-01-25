@@ -122,7 +122,8 @@ public class BlUnWantedNullValueException:Exception
 [Serializable]
 public class BLTemporaryNotAvailableException : Exception
 {
-    public BLTemporaryNotAvailableException(string? msg) : base(msg)
+    public BLTemporaryNotAvailableException() :base("BL Says: The system is running the simulator, any manual modifications are not allowed") { }
+    public BLTemporaryNotAvailableException(string msg) : base(msg)
     {
         
     }
