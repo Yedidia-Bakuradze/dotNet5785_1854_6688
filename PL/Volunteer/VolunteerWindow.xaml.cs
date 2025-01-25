@@ -143,7 +143,7 @@ public partial class VolunteerWindow : Window
     private void OnShowCurrentCallInProgress(object sender, RoutedEventArgs e)
     {
         if(CurrentVolunteer.CurrentCall != null)
-            new CallInProgressWindow(CurrentVolunteer.CurrentCall).Show();
+            new CallInProgressWindow(CurrentVolunteer.Id).Show();
     }
     #endregion
 
