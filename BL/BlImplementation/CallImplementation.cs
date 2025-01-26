@@ -2,8 +2,6 @@
 using BlApi;
 using BO;
 using Helpers;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
 
 internal class CallImplementation : ICall
 {

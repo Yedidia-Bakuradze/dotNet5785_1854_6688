@@ -2,6 +2,7 @@
 
 using BO;
 using DO;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -54,7 +55,7 @@ internal static class VolunteerManager
         return XElement.Parse(httpResponse);
     }
 
-    internal static void SimulatorProcess()
+    internal static void SystemSimulatorVolunteer()
     {
         IEnumerable<DO.Volunteer> ActiveVolunteers;
         lock (AdminManager.BlMutex)
@@ -69,6 +70,36 @@ internal static class VolunteerManager
             if (assignment is not null)
             {
                 //Logics when to cancel and finish an assingment
+                DO.Call call = s_dal.Call.Read(assignment.CallId)
+                    ?? throw new BlUnWantedNullValueException($"BL Says: The call with id of {assignment.CallId} was not found, checkout call id in assignment with ID {assignment.Id}");
+                
+                if(ShouldFinishACall(call,volunteer))
+                {
+                    lock (AdminManager.BlMutex)
+                    {
+                        // Update the assignment with the new ending type and time
+                        s_dal.Assignment.Update(assignment! with
+                        {
+                            TypeOfEnding = DO.TypeOfEnding.Treated,
+                            TimeOfEnding = AdminManager.Now
+                        });
+                    }
+                    CallManager.Observers.NotifyListUpdated();
+                }
+                else
+                {
+                    lock (AdminManager.BlMutex)
+                    {
+                        s_dal.Assignment.Update(assignment with
+                        {
+                            TypeOfEnding = (assignment.VolunteerId != volunteer.Id) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+                            TimeOfEnding = AdminManager.Now,
+                        });
+                    }
+
+                    //Notifies all observers that a call has been added
+                    CallManager.Observers.NotifyListUpdated();
+                }
             }
             else
             {
@@ -444,4 +475,30 @@ internal static class VolunteerManager
         }
     }
 
+    internal static bool ShouldFinishACall(DO.Call call, DO.Volunteer volunteer)
+    {
+        if (call.DeadLine is not null)
+        {
+            TimeSpan remainingTime = (DateTime)call.DeadLine - AdminManager.Now;
+            switch (volunteer.RangeType)
+            {
+                case DO.TypeOfRange.AirDistance:
+                    return (remainingTime + AdminManager.RiskRange).TotalMinutes < 21;
+                case DO.TypeOfRange.DrivingDistance:
+                    return (remainingTime + AdminManager.RiskRange).TotalMinutes < 42;
+                case DO.TypeOfRange.WalkingDistance:
+                    return (remainingTime + AdminManager.RiskRange).TotalMinutes < 50;
+            }
+        }
+        switch (volunteer.RangeType)
+        {
+            case DO.TypeOfRange.AirDistance:
+                return true;
+            case DO.TypeOfRange.DrivingDistance:
+                return false;
+            case DO.TypeOfRange.WalkingDistance:
+                return true;
+        }
+        return true;
+    }
 }
