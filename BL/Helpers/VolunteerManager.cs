@@ -57,90 +57,97 @@ internal static class VolunteerManager
 
     internal static void SystemSimulatorVolunteer()
     {
-        IEnumerable<DO.Volunteer> ActiveVolunteers;
-        lock (AdminManager.BlMutex)
+        try
         {
-            ActiveVolunteers = s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive);
-        }
-
-        foreach (DO.Volunteer volunteer in ActiveVolunteers)
-        {
-            //If has active call
-            DO.Assignment? assignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding is null);
-            if (assignment is not null)
+            IEnumerable<DO.Volunteer> ActiveVolunteers;
+            lock (AdminManager.BlMutex)
             {
-                //Logics when to cancel and finish an assingment
-                DO.Call call = s_dal.Call.Read(assignment.CallId)
-                    ?? throw new BlUnWantedNullValueException($"BL Says: The call with id of {assignment.CallId} was not found, checkout call id in assignment with ID {assignment.Id}");
-                
-                if(ShouldFinishACall(call,volunteer))
+                ActiveVolunteers = s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive);
+            }
+
+            foreach (DO.Volunteer volunteer in ActiveVolunteers)
+            {
+                //If has active call
+                DO.Assignment? assignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding is null);
+                if (assignment is not null)
                 {
-                    lock (AdminManager.BlMutex)
+                    //Logics when to cancel and finish an assingment
+                    DO.Call call = s_dal.Call.Read(assignment.CallId)
+                        ?? throw new BlUnWantedNullValueException($"BL Says: The call with id of {assignment.CallId} was not found, checkout call id in assignment with ID {assignment.Id}");
+                
+                    if(ShouldFinishACall(call,volunteer))
                     {
-                        // Update the assignment with the new ending type and time
-                        s_dal.Assignment.Update(assignment! with
+                        lock (AdminManager.BlMutex)
                         {
-                            TypeOfEnding = DO.TypeOfEnding.Treated,
-                            TimeOfEnding = AdminManager.Now
-                        });
+                            // Update the assignment with the new ending type and time
+                            s_dal.Assignment.Update(assignment! with
+                            {
+                                TypeOfEnding = DO.TypeOfEnding.Treated,
+                                TimeOfEnding = AdminManager.Now
+                            });
+                        }
+                        CallManager.Observers.NotifyListUpdated();
                     }
-                    CallManager.Observers.NotifyListUpdated();
+                    else
+                    {
+                        lock (AdminManager.BlMutex)
+                        {
+                            s_dal.Assignment.Update(assignment with
+                            {
+                                TypeOfEnding = (assignment.VolunteerId != volunteer.Id) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+                                TimeOfEnding = AdminManager.Now,
+                            });
+                        }
+
+                        //Notifies all observers that a call has been added
+                        CallManager.Observers.NotifyListUpdated();
+                    }
                 }
                 else
                 {
-                    lock (AdminManager.BlMutex)
+                    //Roll a number to take a call
+                    if (new Random().Next(0, 10) == 7)
                     {
-                        s_dal.Assignment.Update(assignment with
+                        DO.Call randomCall;
+                        List<DO.Call> openCalls;
+                        lock (AdminManager.BlMutex)
                         {
-                            TypeOfEnding = (assignment.VolunteerId != volunteer.Id) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
-                            TimeOfEnding = AdminManager.Now,
-                        });
-                    }
-
-                    //Notifies all observers that a call has been added
-                    CallManager.Observers.NotifyListUpdated();
-                }
-            }
-            else
-            {
-                //Roll a number to take a call
-                if (new Random().Next(0, 10) == 7)
-                {
-                    DO.Call randomCall;
-                    List<DO.Call> openCalls;
-                    lock (AdminManager.BlMutex)
-                    {
-                        openCalls = (from call in s_dal.Call.ReadAll()
-                                    let status = CallManager.GetStatus(call.Id)
-                                    where status == CallStatus.OpenAndRisky || status == CallStatus.Open
-                                    select call).ToList();
-                    }
-                    //If not enough calls to take
-                    if (openCalls.Count == 0)
-                        return;
+                            openCalls = (from call in s_dal.Call.ReadAll()
+                                        let status = CallManager.GetStatus(call.Id)
+                                        where status == CallStatus.OpenAndRisky || status == CallStatus.Open
+                                        select call).ToList();
+                        }
+                        //If not enough calls to take
+                        if (openCalls.Count == 0)
+                            return;
                     
-                    if (openCalls.Count == 1)
-                        randomCall = openCalls[0];
-                    else
-                        randomCall = openCalls[new Random().Next(0, openCalls.Count - 1)];
+                        if (openCalls.Count == 1)
+                            randomCall = openCalls[0];
+                        else
+                            randomCall = openCalls[new Random().Next(0, openCalls.Count - 1)];
 
-                    DO.Assignment newAssignment = new DO.Assignment
-                    {
-                        Id = -1, //Temp id, the real id is assigned in the Dal layer
-                        CallId = randomCall.Id,
-                        VolunteerId = volunteer.Id,
-                        TimeOfEnding = null,
-                        TimeOfStarting = AdminManager.Now,
-                        TypeOfEnding = null,
-                    };
-                    lock (AdminManager.BlMutex)
-                    {
-                        s_dal.Assignment.Create(newAssignment);
+                        DO.Assignment newAssignment = new DO.Assignment
+                        {
+                            Id = -1, //Temp id, the real id is assigned in the Dal layer
+                            CallId = randomCall.Id,
+                            VolunteerId = volunteer.Id,
+                            TimeOfEnding = null,
+                            TimeOfStarting = AdminManager.Now,
+                            TypeOfEnding = null,
+                        };
+                        lock (AdminManager.BlMutex)
+                        {
+                            s_dal.Assignment.Create(newAssignment);
+                        }
+                        CallManager.Observers.NotifyListUpdated();
                     }
-                    CallManager.Observers.NotifyListUpdated();
-                }
                 
+                }
             }
+
+        }catch(Exception ex)
+        {
+            throw new BlDoesNotExistException(ex.Message);
         }
     }
 

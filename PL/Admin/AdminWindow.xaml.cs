@@ -323,19 +323,22 @@ public partial class AdminWindow : Window
             {
                 isSimulatorRunning = true;
                 MessageBox.Show($"Simulator active (new) with {simulatorSpeed}");
-                s_bl.Admin.StartSimulator(simulatorSpeed);
+                Task.Run(()=> s_bl.Admin.StartSimulator(simulatorSpeed));
             }
             else
             {
                 MessageBox.Show($"Simulator active (was already) with {simulatorSpeed}");
 
                 s_bl.Admin.StopSimulator();
-                s_bl.Admin.StartSimulator(simulatorSpeed);
+                Task.Run(() => s_bl.Admin.StartSimulator(simulatorSpeed));
             }
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            Dispatcher.BeginInvoke(() =>
+            {
+                MessageBox.Show(ex.Message);
+            });
         }
     }
 
