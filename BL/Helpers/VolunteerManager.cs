@@ -2,12 +2,10 @@
 
 using BO;
 using DO;
-using Microsoft.VisualBasic;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
 
 //Remember: All the method shall be as internal static
@@ -18,7 +16,7 @@ internal static class VolunteerManager
     //API Configurations
     static readonly string URI = "https://maps.googleapis.com/maps/api/";
     static readonly string APIKEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU";
-
+    
     private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
 
     internal static ObserverManager Observers = new(); //stage 5 
@@ -56,7 +54,64 @@ internal static class VolunteerManager
         return XElement.Parse(httpResponse);
     }
 
+    internal static void SimulatorProcess()
+    {
+        IEnumerable<DO.Volunteer> ActiveVolunteers;
+        lock (AdminManager.BlMutex)
+        {
+            ActiveVolunteers = s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive);
+        }
 
+        foreach (DO.Volunteer volunteer in ActiveVolunteers)
+        {
+            //If has active call
+            DO.Assignment? assignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding is null);
+            if (assignment is not null)
+            {
+                //Logics when to cancel and finish an assingment
+            }
+            else
+            {
+                //Roll a number to take a call
+                if (new Random().Next(0, 10) == 7)
+                {
+                    DO.Call randomCall;
+                    List<DO.Call> openCalls;
+                    lock (AdminManager.BlMutex)
+                    {
+                        openCalls = (from call in s_dal.Call.ReadAll()
+                                    let status = CallManager.GetStatus(call.Id)
+                                    where status == CallStatus.OpenAndRisky || status == CallStatus.Open
+                                    select call).ToList();
+                    }
+                    //If not enough calls to take
+                    if (openCalls.Count == 0)
+                        return;
+                    
+                    if (openCalls.Count == 1)
+                        randomCall = openCalls[0];
+                    else
+                        randomCall = openCalls[new Random().Next(0, openCalls.Count - 1)];
+
+                    DO.Assignment newAssignment = new DO.Assignment
+                    {
+                        Id = -1, //Temp id, the real id is assigned in the Dal layer
+                        CallId = randomCall.Id,
+                        VolunteerId = volunteer.Id,
+                        TimeOfEnding = null,
+                        TimeOfStarting = AdminManager.Now,
+                        TypeOfEnding = null,
+                    };
+                    lock (AdminManager.BlMutex)
+                    {
+                        s_dal.Assignment.Create(newAssignment);
+                    }
+                    CallManager.Observers.NotifyListUpdated();
+                }
+                
+            }
+        }
+    }
 
     /// <summary>
     /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
@@ -67,7 +122,7 @@ internal static class VolunteerManager
     {
         //Builds the URL requests
         Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
-        
+
         try
         {
             XElement res = await HttpGetXmlReponse(requestUri);
@@ -207,7 +262,7 @@ internal static class VolunteerManager
             return true;
 
         //If the user has any address - check if it has a valid cordinates
-        (double? a,double?b) = await GetGeoCordinates(streetAddress);
+        (double? a, double? b) = await GetGeoCordinates(streetAddress);
         return a != null && b != null;
     }
 
@@ -231,9 +286,9 @@ internal static class VolunteerManager
             IsValidPhoneNumber(volunteer.PhoneNumber) &&
             IsValidEmailAddress(volunteer.Email) &&
             (isPasswordOk || IsValidPassword(volunteer.Password)) &&
-            (await IsStreetAddressValid(volunteer.FullCurrentAddress) )&&
+            (await IsStreetAddressValid(volunteer.FullCurrentAddress)) &&
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
-            
+
 
     /// <summary>
     /// This method calculates the air distance between the given streets
@@ -247,9 +302,7 @@ internal static class VolunteerManager
         (double? lat2, double? lon2) = await GetGeoCordinates(destanation);
 
         if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
-        {
             throw new BO.BlInvalidEntityDetails("BL: One or both of the provided addresses could not be geocoded.");
-        }
 
         double R = 6371; // Radius of the Earth in kilometers
         double dLat = ToRadians((double)(lat2 - lat1));
@@ -300,11 +353,11 @@ internal static class VolunteerManager
         //Issue 13: Fix the possible null value
         return (double)(Int32.Parse
             (root
-                ?.Element("row") 
+                ?.Element("row")
                 ?.Element("element")
                 ?.Element("distance")
                 ?.Element("value").Value.ToString()
-            ))/1000.0;
+            )) / 1000.0;
     }
 
 
@@ -318,10 +371,10 @@ internal static class VolunteerManager
     internal static double CalculateDistanceFromVolunteerToCall(string volunteerAddress, string callAddress, DO.TypeOfRange typeOfRange)
     //Issue 14: Switch from using the addresses to use the cordinates
         => typeOfRange switch
-    {
-        DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress).Result ,
-            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress).Result ,
-            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress).Result ,
+        {
+            DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress).Result,
+            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress).Result,
+            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress).Result,
             _ => throw new BO.BlInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
@@ -358,17 +411,17 @@ internal static class VolunteerManager
         => new DO.Volunteer
         {
             Id = volunteer.Id,
-            Role = (DO.UserRole) volunteer.Role,
+            Role = (DO.UserRole)volunteer.Role,
             FullName = volunteer.FullName,
             PhoneNumber = volunteer.PhoneNumber,
             Email = volunteer.Email,
             MaxDistanceToCall = volunteer.MaxDistanceToCall,
-            RangeType = (DO.TypeOfRange) volunteer.RangeType,
+            RangeType = (DO.TypeOfRange)volunteer.RangeType,
             IsActive = volunteer.IsActive,
-            Password  = volunteer.Password ,
-            FullCurrentAddress  = volunteer.FullCurrentAddress ,
-            Latitude  = volunteer.Latitude ,
-            Longitude  = volunteer.Longitude
+            Password = volunteer.Password,
+            FullCurrentAddress = volunteer.FullCurrentAddress,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude
         };
 
     /// <summary>
@@ -379,15 +432,16 @@ internal static class VolunteerManager
     internal static string GetSHA256HashedPassword(string originalPassword)
     {
         using (SHA256 sha256Hash = SHA256.Create())
-            {
-                //Converts the chars into bytes and hashes them
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
+        {
+            //Converts the chars into bytes and hashes them
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
 
-                //Converts back the hashed bytes into a hex value 
-                StringBuilder builder = new StringBuilder();
-                string hashedPassword = "";
-                bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));    
-                return hashedPassword;
-            }
+            //Converts back the hashed bytes into a hex value 
+            StringBuilder builder = new StringBuilder();
+            string hashedPassword = "";
+            bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));
+            return hashedPassword;
+        }
     }
+
 }
