@@ -65,7 +65,9 @@ internal static class VolunteerManager
             DO.Assignment? assignment;
             lock (AdminManager.BlMutex)
             {
-                ActiveVolunteers = s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive);
+                ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
+                                   where volunteer.IsActive
+                                   select volunteer;
             }
 
             foreach (DO.Volunteer volunteer in ActiveVolunteers)
