@@ -254,7 +254,7 @@ public partial class AdminWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnClockResetAction(object sender, RoutedEventArgs e) => s_bl.Admin.DbReset();
+    private void OnClockResetAction(object sender, RoutedEventArgs e) => s_bl.Admin.UpdateClock(BO.TimeUnit.resetClock);
 
     /// <summary>
     /// This method is invoked when the user wants to pop up a screen filled with calls that are expiered

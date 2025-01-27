@@ -93,7 +93,8 @@ public enum TimeUnit
     Day,
     Week,
     Month,
-    Year
+    Year,
+    resetClock
 }
 
 public enum DistanceType { driving, walking, air }
