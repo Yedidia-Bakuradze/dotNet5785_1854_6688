@@ -227,6 +227,13 @@ internal static class VolunteerManager
     #endregion
 
     #region Geographic & Distance Location
+    internal static bool AreCodinatesValid(params (double?, double?)[] vectors)
+    {
+        foreach (var vec in vectors)
+            if (vec.Item1 is null || vec.Item2 is null)
+                return false;
+        return true;
+    }
 
     /// <summary>
     /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
@@ -269,19 +276,16 @@ internal static class VolunteerManager
     /// <param name="origin">The departure street</param>
     /// <param name="destanation">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static async Task<double> CalculatedAirDistance(string origin, string destanation)
+    private static double CalculatedAirDistance((double?, double?) origin, (double?, double?) destanation)
     {
-        (double? lat1, double? lon1) = await GetGeoCordinates(origin);
-        (double? lat2, double? lon2) = await GetGeoCordinates(destanation);
-
-        if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
-            throw new BO.BlInvalidEntityDetails("BL: One or both of the provided addresses could not be geocoded.");
+        if (origin is (null, null))
+            return 0;
 
         double R = 6371; // Radius of the Earth in kilometers
-        double dLat = ToRadians((double)(lat2 - lat1));
-        double dLon = ToRadians((double)(lon2 - lon1));
-        double lat1Rad = ToRadians((double)lat1);
-        double lat2Rad = ToRadians((double)lat2);
+        double dLat = ToRadians((double)(destanation.Item1 - origin.Item1));
+        double dLon = ToRadians((double)(destanation.Item2 - origin.Item2));
+        double lat1Rad = ToRadians((double)origin.Item1);
+        double lat2Rad = ToRadians((double)destanation.Item1);
 
         double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
                    Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
@@ -292,15 +296,18 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// This method calculates the walking distance between the given streets
+    /// This method calculates the walking distance between the given coordinates
     /// </summary>
-    /// <param name="origin">The departure street</param>
-    /// <param name="destanation">The arrival street</param>
+    /// <param name="origin">The departure coordinates</param>
+    /// <param name="destination">The arrival coordinates</param>
     /// <returns>The distance in KM</returns>
-    private static async Task<double> CalculatedWalkingDistance(string origin, string destanation)
+    private static double CalculatedWalkingDistance((double?, double?) origin, (double?, double?) destination)
     {
-        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.walking}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
-        XElement root = await HttpGetXmlReponse(requestUri);
+        if (origin is (null, null))
+            return 0;
+
+        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.walking}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
+        XElement root = HttpGetXmlReponse(requestUri).Result;
 
         //Issue 13: Fix the possible null value
         return (double)(Int32.Parse
@@ -318,10 +325,13 @@ internal static class VolunteerManager
     /// <param name="origin">The departure street</param>
     /// <param name="destanation">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static async Task<double> CalculatedDrivingDistance(string origin, string destanation)
+    private static double CalculatedDrivingDistance((double?, double?) origin, (double?, double?) destination)
     {
-        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={Uri.EscapeDataString(destanation)},&mode={DistanceType.driving}&origins={Uri.EscapeDataString(origin)}&key={APIKEY}");
-        XElement root = await HttpGetXmlReponse(requestUri);
+        if (origin is (null, null))
+            return 0;
+
+        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.driving}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
+        XElement root = HttpGetXmlReponse(requestUri).Result;
 
         //Issue 13: Fix the possible null value
         return (double)(Int32.Parse
@@ -340,13 +350,12 @@ internal static class VolunteerManager
     /// <param name="callAddress">The call's address</param>
     /// <param name="typeOfRange">The specified range, either Air, Walking or Driving distance</param>
     /// <returns>The distnace in KM calculated as requested</returns>
-    internal static double CalculateDistanceFromVolunteerToCall(string volunteerAddress, string callAddress, DO.TypeOfRange typeOfRange)
-    //Issue 14: Switch from using the addresses to use the cordinates
+    internal static double CalculateDistanceFromVolunteerToCall((double,double) volunteer, (double, double) call, DO.TypeOfRange typeOfRange)
         => typeOfRange switch
         {
-            DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteerAddress, callAddress).Result,
-            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteerAddress, callAddress).Result,
-            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteerAddress, callAddress).Result,
+            DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteer, call),
+            DO.TypeOfRange.AirDistance => CalculatedAirDistance(volunteer, call),
+            DO.TypeOfRange.DrivingDistance => CalculatedDrivingDistance(volunteer, call),
             _ => throw new BO.BlInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
@@ -435,6 +444,7 @@ internal static class VolunteerManager
         }
     }
 
+    [Obsolete]
     internal static bool ShouldFinishACall(DO.Call call, DO.Volunteer volunteer)
     {
         if (call.DeadLine is not null)
@@ -461,6 +471,7 @@ internal static class VolunteerManager
         }
         return true;
     }
+    internal static bool ShouldFinishACall() => new Random().Next(0, 2) == 0;
 
     internal static void AssignCallToVolunteerSimulator(DO.Volunteer volunteer)
     {
@@ -508,7 +519,7 @@ internal static class VolunteerManager
                 ?? throw new BO.BlDoesNotExistException($"BL Says: Call {assignment.CallId} does not exist");
         }
 
-        if (ShouldFinishACall(call, volunteer))
+        if (ShouldFinishACall())
         {
             try
             {

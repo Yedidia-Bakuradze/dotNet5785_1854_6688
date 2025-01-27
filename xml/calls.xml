@@ -60,4 +60,13 @@
     <Description>Information about food distribution schedule</Description>
     <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
+  <Call>
+    <Id>101</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0631703</Latitude>
+    <Longitude>34.768982</Longitude>
+    <OpeningTime>2025-01-28T01:07:45</OpeningTime>
+    <DeadLine>2026-12-02T12:00:00</DeadLine>
+  </Call>
 </ArrayOfCall>
