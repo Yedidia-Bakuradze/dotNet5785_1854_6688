@@ -533,6 +533,14 @@ internal class CallImplementation : ICall
             //Check if the call hasn't been taken by someone else
             callAssignment = s_dal.Assignment.ReadAll((assignment) => assignment.CallId == callId).LastOrDefault();
         }
+        lock (AdminManager.BlMutex)
+        {
+            var existingAssignment =s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
+            if (existingAssignment is not null)
+                throw new BO.BlForbidenSystemActionExeption($"BL Says: Cann't assigned call {callId} to volunteer {VolunteerId} because it has a running call ({existingAssignment.CallId})");
+        
+        }
+
         //Check if call already been taken
         if (callAssignment != null && callAssignment.TypeOfEnding is not null)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");

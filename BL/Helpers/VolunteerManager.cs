@@ -452,39 +452,36 @@ internal static class VolunteerManager
 
     internal static void AssignCallToVolunteerSimulator(DO.Volunteer volunteer)
     {
-        //Roll a number to take a call
-        if (new Random().Next(0, 10) == 7)
+
+        DO.Call randomCall;
+        IEnumerable<DO.Call> openCalls;
+        openCalls = from call in s_dal.Call.ReadAll()
+                        let status = CallManager.GetStatus(call.Id)
+                        where status == CallStatus.OpenAndRisky || status == CallStatus.Open
+                        select call;
+        //If not enough calls to take
+        if (openCalls.Count() == 0)
+            return;
+
+        if (openCalls.Count() == 1)
+            randomCall = openCalls.FirstOrDefault()!;
+        else
+            randomCall = openCalls.ToList()[new Random().Next(0, openCalls.Count() - 1)];
+
+        lock (AdminManager.BlMutex)
         {
-            DO.Call randomCall;
-            IEnumerable<DO.Call> openCalls;
-            openCalls = from call in s_dal.Call.ReadAll()
-                            let status = CallManager.GetStatus(call.Id)
-                            where status == CallStatus.OpenAndRisky || status == CallStatus.Open
-                            select call;
-            //If not enough calls to take
-            if (openCalls.Count() == 0)
-                return;
-
-            if (openCalls.Count() == 1)
-                randomCall = openCalls.FirstOrDefault()!;
-            else
-                randomCall = openCalls.ToList()[new Random().Next(0, openCalls.Count() - 1)];
-
-            lock (AdminManager.BlMutex)
+            s_dal.Assignment.Create(new DO.Assignment
             {
-                s_dal.Assignment.Create(new DO.Assignment
-                {
-                    Id = -1, //Temp id, the real id is assigned in the Dal layer
-                    CallId = randomCall.Id,
-                    VolunteerId = volunteer.Id,
-                    TimeOfEnding = null,
-                    TimeOfStarting = AdminManager.Now,
-                    TypeOfEnding = null,
-                });
-            }
-
-            CallManager.Observers.NotifyListUpdated();
+                Id = -1, //Temp id, the real id is assigned in the Dal layer
+                CallId = randomCall.Id,
+                VolunteerId = volunteer.Id,
+                TimeOfEnding = null,
+                TimeOfStarting = AdminManager.Now,
+                TypeOfEnding = null,
+            });
         }
+
+        CallManager.Observers.NotifyListUpdated();
     }
 
     internal static void FinishOrCancelAssignmentCallToVolunteerSimulator(DO.Volunteer volunteer,DO.Assignment assignment)
