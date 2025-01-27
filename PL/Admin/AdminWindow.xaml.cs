@@ -299,16 +299,16 @@ public partial class AdminWindow : Window
     private void OnSimulatorStateChanged(object sender, RoutedEventArgs e)
     {
         //Simulator is online, make it offline
-        if (IsSimulatorRunning)
-        {
-            IsSimulatorRunning = false;
-            isSimulatorRunning = false;
-            SimulatorBtnMsg = "Start Simulator";
-        }
-        else
+        if (!IsSimulatorRunning)
         {
             IsSimulatorRunning = true;
             SimulatorBtnMsg = "Stop Simulator";
+            s_bl.Admin.StartSimulator(simulatorSpeed);
+        }
+        else
+        {
+            IsSimulatorRunning = false;
+            SimulatorBtnMsg = "Start Simulator";
             s_bl.Admin.StopSimulator();
         }
 
@@ -319,20 +319,7 @@ public partial class AdminWindow : Window
         {
             if (!Int32.TryParse(SimulatorSpeedText, out simulatorSpeed))
                 throw new Exception($"PL: Unable to update simulator's speed, {SimulatorSpeedText} is not a number");
-            
-            if(!isSimulatorRunning)
-            {
-                isSimulatorRunning = true;
-                MessageBox.Show($"Simulator active (new) with {simulatorSpeed}");
-                s_bl.Admin.StartSimulator(simulatorSpeed);
-            }
-            else
-            {
-                MessageBox.Show($"Simulator active (was already) with {simulatorSpeed}");
-
-                s_bl.Admin.StopSimulator();
-                s_bl.Admin.StartSimulator(simulatorSpeed);
-            }
+            MessageBox.Show("Speed is updated");
         }
         catch (Exception ex)
         {

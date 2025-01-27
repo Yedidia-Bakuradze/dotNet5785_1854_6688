@@ -436,9 +436,9 @@ public class ConvertBooleanSimulatorStatusToVisibility : IValueConverter
     {
         if ((bool)value)
         {
-            return Visibility.Visible;
+            return Visibility.Hidden;
         }
-        return Visibility.Hidden;
+        return Visibility.Visible;
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
