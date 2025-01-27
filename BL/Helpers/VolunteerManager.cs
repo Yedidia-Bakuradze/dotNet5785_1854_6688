@@ -14,16 +14,16 @@ using System.Xml.Linq;
 //Remember: All the method shall be as internal static
 //Remember: The class shall be internal static
 internal static class VolunteerManager
-
 {
+    #region Propeties
     //API Configurations
     static readonly string URI = "https://maps.googleapis.com/maps/api/";
     static readonly string APIKEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU";
-    
     private static DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
-
     internal static ObserverManager Observers = new(); //stage 5 
+    #endregion
 
+    #region Help Methods
     /// <summary>
     /// Converts degrees to radian
     /// </summary>
@@ -31,6 +31,29 @@ internal static class VolunteerManager
     /// <returns>The radian representation of the given degree</returns>
     private static double ToRadians(double angle) => angle * (Math.PI / 180);
 
+    /// <summary>
+    /// This method accepts a string value and converts it into a hashed value using SHA256 algorithm
+    /// </summary>
+    /// <param name="originalPassword">The password before hashing</param>
+    /// <returns>The password after hashing</returns>
+    internal static string GetSHA256HashedPassword(string originalPassword)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            //Converts the chars into bytes and hashes them
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
+
+            //Converts back the hashed bytes into a hex value 
+            StringBuilder builder = new StringBuilder();
+            string hashedPassword = "";
+            bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));
+            return hashedPassword;
+        }
+    }
+
+    #endregion
+
+    #region HTTP Request Methods
     /// <summary>
     /// This method recives an Http response value and converts it to a XElement
     /// </summary>
@@ -56,79 +79,9 @@ internal static class VolunteerManager
             throw new BlHttpGetException("Http Exception: The GeoCoding has been failed: Status GET request is not OK");
         return XElement.Parse(httpResponse);
     }
+    #endregion
 
-    internal static void SystemSimulatorVolunteer()
-    {
-        try
-        {
-            IEnumerable<DO.Volunteer> ActiveVolunteers;
-            DO.Assignment? assignment;
-            lock (AdminManager.BlMutex)
-            {
-                ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
-                                   where volunteer.IsActive
-                                   select volunteer;
-            }
-
-            foreach (DO.Volunteer volunteer in ActiveVolunteers)
-            {
-                lock (AdminManager.BlMutex)
-                {
-                    assignment = s_dal.Assignment.Read(assign => assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is not null);
-                }
-                
-                //The volunteer has a call
-                if (assignment is not null)
-                {
-                    FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer,(DO.Assignment)assignment);
-                }
-                else
-                {
-                    AssignCallToVolunteerSimulator(volunteer);
-                }
-            }
-
-        }catch(Exception ex)
-        {
-            throw new BlDoesNotExistException(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
-    /// </summary>
-    /// <param name="streetAddress">The requested street address to convert to cordinates</param>
-    /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
-    internal static async Task<(double?, double?)> GetGeoCordinates(string streetAddress)
-    {
-        //Builds the URL requests
-        Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
-
-        try
-        {
-            XElement res = await HttpGetXmlReponse(requestUri);
-            res = res
-                    ?.Element("result")
-                    ?.Element("geometry")
-                    ?.Element("location")
-                    ?? throw new BlXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
-            return ((double?)res?.Element("lat"), (double?)res?.Element("lng"));
-
-        }
-        catch (BO.BlHttpGetException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return (null, null);
-        }
-        catch (BO.BlXmlElementDoesntExsist ex)
-        {
-            Console.WriteLine(ex.Message);
-            return (null, null);
-        }
-
-
-    }
-
+    #region Volunteer Details Validation Methods
     /// <summary>
     /// This static method checks if the given user id is valid
     /// </summary>
@@ -270,6 +223,44 @@ internal static class VolunteerManager
             (await IsStreetAddressValid(volunteer.FullCurrentAddress)) &&
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
 
+    #endregion
+
+    #region Geographic & Distance Location
+
+    /// <summary>
+    /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
+    /// </summary>
+    /// <param name="streetAddress">The requested street address to convert to cordinates</param>
+    /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
+    internal static async Task<(double?, double?)> GetGeoCordinates(string streetAddress)
+    {
+        //Builds the URL requests
+        Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
+
+        try
+        {
+            XElement res = await HttpGetXmlReponse(requestUri);
+            res = res
+                    ?.Element("result")
+                    ?.Element("geometry")
+                    ?.Element("location")
+                    ?? throw new BlXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
+            return ((double?)res?.Element("lat"), (double?)res?.Element("lng"));
+
+        }
+        catch (BO.BlHttpGetException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return (null, null);
+        }
+        catch (BO.BlXmlElementDoesntExsist ex)
+        {
+            Console.WriteLine(ex.Message);
+            return (null, null);
+        }
+
+
+    }
 
     /// <summary>
     /// This method calculates the air distance between the given streets
@@ -341,7 +332,6 @@ internal static class VolunteerManager
             )) / 1000.0;
     }
 
-
     /// <summary>
     /// This method returns the distance between the volunteer to the call depending on the range type which is requested to be calculated with
     /// </summary>
@@ -365,6 +355,9 @@ internal static class VolunteerManager
     /// <param name="volunteer">The original DO Volunteer variable</param>
     /// <param name="callInProgress">The assosiated call to that volunteer</param>
     /// <returns>a new BO Volunteer variable</returns>
+    #endregion
+
+    #region Convertors
     internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
         => new BO.Volunteer
         {
@@ -405,23 +398,44 @@ internal static class VolunteerManager
             Longitude = volunteer.Longitude
         };
 
-    /// <summary>
-    /// This method accepts a string value and converts it into a hashed value using SHA256 algorithm
-    /// </summary>
-    /// <param name="originalPassword">The password before hashing</param>
-    /// <returns>The password after hashing</returns>
-    internal static string GetSHA256HashedPassword(string originalPassword)
-    {
-        using (SHA256 sha256Hash = SHA256.Create())
-        {
-            //Converts the chars into bytes and hashes them
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(originalPassword));
+    #endregion
 
-            //Converts back the hashed bytes into a hex value 
-            StringBuilder builder = new StringBuilder();
-            string hashedPassword = "";
-            bytes.ToList().ForEach((byte val) => hashedPassword += val.ToString("x2"));
-            return hashedPassword;
+    #region Simulator's Methods
+    internal static void SystemSimulatorVolunteer()
+    {
+        try
+        {
+            IEnumerable<DO.Volunteer> ActiveVolunteers;
+            DO.Assignment? assignment;
+            lock (AdminManager.BlMutex)
+            {
+                ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
+                                   where volunteer.IsActive
+                                   select volunteer;
+            }
+
+            foreach (DO.Volunteer volunteer in ActiveVolunteers)
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    assignment = s_dal.Assignment.Read(assign => assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is not null);
+                }
+
+                //The volunteer has a call
+                if (assignment is not null)
+                {
+                    FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer, (DO.Assignment)assignment);
+                }
+                else
+                {
+                    AssignCallToVolunteerSimulator(volunteer);
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            throw new BlDoesNotExistException(ex.Message);
         }
     }
 
@@ -539,4 +553,6 @@ internal static class VolunteerManager
         }
         
     }
+
+    #endregion
 }

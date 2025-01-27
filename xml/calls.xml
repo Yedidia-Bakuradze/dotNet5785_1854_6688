@@ -3,12 +3,12 @@
   <Call>
     <Id>1</Id>
     <Type>FlatTire</Type>
-    <FullAddressCall>28 Derech Hashalom, Tel Aviv</FullAddressCall>
-    <Latitude>32.0702864</Latitude>
+    <FullAddressCall>27 Derech Hashalom, Tel Aviv</FullAddressCall>
+    <Latitude>32.0702764</Latitude>
     <Longitude>34.80091110000001</Longitude>
-    <OpeningTime>2025-01-21T18:40:45</OpeningTime>
+    <OpeningTime>2024-01-21T18:40:45</OpeningTime>
     <Description>Request for food delivery</Description>
-    <DeadLine>2025-01-29T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
   <Call>
     <Id>2</Id>
@@ -16,9 +16,9 @@
     <FullAddressCall>33 Pinkas St, Tel Aviv</FullAddressCall>
     <Latitude>32.0911246</Latitude>
     <Longitude>34.7878395</Longitude>
-    <OpeningTime>2025-01-13T18:40:45</OpeningTime>
+    <OpeningTime>2024-01-13T18:40:45</OpeningTime>
     <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-07T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
   <Call>
     <Id>3</Id>
@@ -28,7 +28,7 @@
     <Longitude>34.768982</Longitude>
     <OpeningTime>2024-12-27T18:40:45</OpeningTime>
     <Description>Donation of food items</Description>
-    <DeadLine>2027-01-27T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
   <Call>
     <Id>4</Id>
@@ -36,9 +36,9 @@
     <FullAddressCall>26 Yigal Alon St, Tel Aviv</FullAddressCall>
     <Latitude>32.05538</Latitude>
     <Longitude>34.7918923</Longitude>
-    <OpeningTime>2027-01-17T18:40:45</OpeningTime>
+    <OpeningTime>2024-01-17T18:40:45</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-12T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
   <Call>
     <Id>5</Id>
@@ -46,9 +46,9 @@
     <FullAddressCall>47 Derech Hebron, Jerusalem</FullAddressCall>
     <Latitude>31.7647235</Latitude>
     <Longitude>35.2256433</Longitude>
-    <OpeningTime>2027-12-30T18:40:45</OpeningTime>
+    <OpeningTime>2024-12-30T18:40:45</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2027-01-29T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
   <Call>
     <Id>6</Id>
@@ -56,8 +56,8 @@
     <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
     <Latitude>32.0631703</Latitude>
     <Longitude>34.768982</Longitude>
-    <OpeningTime>2025-01-07T18:40:45</OpeningTime>
+    <OpeningTime>2024-01-07T18:40:45</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2027-01-30T18:40:45</DeadLine>
+    <DeadLine>2025-01-27T23:00:45</DeadLine>
   </Call>
 </ArrayOfCall>
