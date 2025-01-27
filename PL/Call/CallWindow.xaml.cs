@@ -83,7 +83,7 @@ public partial class CallWindow : Window
 
                 CurrentCall.CallDeadLine += time;
                 s_bl.Call.AddCall(CurrentCall);
-                s_bl.Call.AddCallSendEmail(CurrentCall);
+                s_bl.Call.AddCallSendEmailAsync(CurrentCall);
             }
             else
                 s_bl.Call.UpdateCall(CurrentCall);

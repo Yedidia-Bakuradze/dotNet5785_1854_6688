@@ -50,17 +50,53 @@ public static class Tools
     /// <param name="toEmail"></param>
     /// <param name="subject"></param>
     /// <param name="body"></param>
-    public static void SendEmail(string toEmail, string subject, string body)
+    //public static void SendEmail(string toEmail, string subject, string body)
+    //{
+    //    try
+    //    {
+    //        using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) 
+    //        {
+
+    //            smtpClient.Credentials = new NetworkCredential("meircrombie@gmail.com", "syby zvun cxab gokx");
+    //            smtpClient.EnableSsl = true; 
+
+
+    //            MailMessage mailMessage = new MailMessage
+    //            {
+    //                From = new MailAddress("meircrombie@gmail.com"),
+    //                Subject = subject,
+    //                Body = body,
+    //                IsBodyHtml = true
+    //            };
+
+    //            mailMessage.To.Add(toEmail);
+
+    //            smtpClient.Send(mailMessage);
+    //            Console.WriteLine($"Email sent successfully to {toEmail}");
+    //        }
+    //    }
+    //    catch (SmtpException smtpEx)
+    //    {
+    //        Console.WriteLine($"SMTP Error: {smtpEx.Message}");
+    //        if (smtpEx.InnerException != null)
+    //        {
+    //            Console.WriteLine($"Inner exception: {smtpEx.InnerException.Message}");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine($"General Error: {ex.Message}");
+    //    }
+    //}
+    public static async Task SendEmail(string toEmail, string subject, string body)
     {
         try
         {
-            using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) 
+            using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
             {
-                
                 smtpClient.Credentials = new NetworkCredential("meircrombie@gmail.com", "syby zvun cxab gokx");
-                smtpClient.EnableSsl = true; 
+                smtpClient.EnableSsl = true;
 
-                
                 MailMessage mailMessage = new MailMessage
                 {
                     From = new MailAddress("meircrombie@gmail.com"),
@@ -71,7 +107,8 @@ public static class Tools
 
                 mailMessage.To.Add(toEmail);
 
-                smtpClient.Send(mailMessage);
+                // Asynchronously send the email
+                await smtpClient.SendMailAsync(mailMessage);
                 Console.WriteLine($"Email sent successfully to {toEmail}");
             }
         }
@@ -88,6 +125,7 @@ public static class Tools
             Console.WriteLine($"General Error: {ex.Message}");
         }
     }
+
 
 }
 
