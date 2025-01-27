@@ -152,7 +152,6 @@ internal class AdminImplementation : IAdmin
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         AdminManager.Start(interval); //stage 7
     }
-    public void StopSimulator()
-    => AdminManager.Stop(); //stage 7
+    public void StopSimulator() => AdminManager.Stop(); //stage 7
 
 }

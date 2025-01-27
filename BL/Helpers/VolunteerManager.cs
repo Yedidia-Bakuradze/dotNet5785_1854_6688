@@ -1,7 +1,9 @@
 ﻿namespace Helpers;
 
 using BO;
+using DalApi;
 using DO;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Cryptography;
@@ -60,6 +62,7 @@ internal static class VolunteerManager
         try
         {
             IEnumerable<DO.Volunteer> ActiveVolunteers;
+            DO.Assignment? assignment;
             lock (AdminManager.BlMutex)
             {
                 ActiveVolunteers = s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive);
@@ -67,81 +70,19 @@ internal static class VolunteerManager
 
             foreach (DO.Volunteer volunteer in ActiveVolunteers)
             {
-                //If has active call
-                DO.Assignment? assignment = s_dal.Assignment.Read(assignment => assignment.VolunteerId == volunteer.Id && assignment.TypeOfEnding is null);
+                lock (AdminManager.BlMutex)
+                {
+                    assignment = s_dal.Assignment.Read(assign => assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is not null);
+                }
+                
+                //The volunteer has a call
                 if (assignment is not null)
                 {
-                    //Logics when to cancel and finish an assingment
-                    DO.Call call = s_dal.Call.Read(assignment.CallId)
-                        ?? throw new BlUnWantedNullValueException($"BL Says: The call with id of {assignment.CallId} was not found, checkout call id in assignment with ID {assignment.Id}");
-                
-                    if(ShouldFinishACall(call,volunteer))
-                    {
-                        lock (AdminManager.BlMutex)
-                        {
-                            // Update the assignment with the new ending type and time
-                            s_dal.Assignment.Update(assignment! with
-                            {
-                                TypeOfEnding = DO.TypeOfEnding.Treated,
-                                TimeOfEnding = AdminManager.Now
-                            });
-                        }
-                        CallManager.Observers.NotifyListUpdated();
-                    }
-                    else
-                    {
-                        lock (AdminManager.BlMutex)
-                        {
-                            s_dal.Assignment.Update(assignment with
-                            {
-                                TypeOfEnding = (assignment.VolunteerId != volunteer.Id) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
-                                TimeOfEnding = AdminManager.Now,
-                            });
-                        }
-
-                        //Notifies all observers that a call has been added
-                        CallManager.Observers.NotifyListUpdated();
-                    }
+                    FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer,(DO.Assignment)assignment);
                 }
                 else
                 {
-                    //Roll a number to take a call
-                    if (new Random().Next(0, 10) == 7)
-                    {
-                        DO.Call randomCall;
-                        List<DO.Call> openCalls;
-                        lock (AdminManager.BlMutex)
-                        {
-                            openCalls = (from call in s_dal.Call.ReadAll()
-                                        let status = CallManager.GetStatus(call.Id)
-                                        where status == CallStatus.OpenAndRisky || status == CallStatus.Open
-                                        select call).ToList();
-                        }
-                        //If not enough calls to take
-                        if (openCalls.Count == 0)
-                            return;
-                    
-                        if (openCalls.Count == 1)
-                            randomCall = openCalls[0];
-                        else
-                            randomCall = openCalls[new Random().Next(0, openCalls.Count - 1)];
-
-                        DO.Assignment newAssignment = new DO.Assignment
-                        {
-                            Id = -1, //Temp id, the real id is assigned in the Dal layer
-                            CallId = randomCall.Id,
-                            VolunteerId = volunteer.Id,
-                            TimeOfEnding = null,
-                            TimeOfStarting = AdminManager.Now,
-                            TypeOfEnding = null,
-                        };
-                        lock (AdminManager.BlMutex)
-                        {
-                            s_dal.Assignment.Create(newAssignment);
-                        }
-                        CallManager.Observers.NotifyListUpdated();
-                    }
-                
+                    AssignCallToVolunteerSimulator(volunteer);
                 }
             }
 
@@ -507,5 +448,96 @@ internal static class VolunteerManager
                 return true;
         }
         return true;
+    }
+
+    internal static void AssignCallToVolunteerSimulator(DO.Volunteer volunteer)
+    {
+        //Roll a number to take a call
+        if (new Random().Next(0, 10) == 7)
+        {
+            DO.Call randomCall;
+            IEnumerable<DO.Call> openCalls;
+            openCalls = from call in s_dal.Call.ReadAll()
+                            let status = CallManager.GetStatus(call.Id)
+                            where status == CallStatus.OpenAndRisky || status == CallStatus.Open
+                            select call;
+            //If not enough calls to take
+            if (openCalls.Count() == 0)
+                return;
+
+            if (openCalls.Count() == 1)
+                randomCall = openCalls.FirstOrDefault()!;
+            else
+                randomCall = openCalls.ToList()[new Random().Next(0, openCalls.Count() - 1)];
+
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Create(new DO.Assignment
+                {
+                    Id = -1, //Temp id, the real id is assigned in the Dal layer
+                    CallId = randomCall.Id,
+                    VolunteerId = volunteer.Id,
+                    TimeOfEnding = null,
+                    TimeOfStarting = AdminManager.Now,
+                    TypeOfEnding = null,
+                });
+            }
+
+            CallManager.Observers.NotifyListUpdated();
+        }
+    }
+
+    internal static void FinishOrCancelAssignmentCallToVolunteerSimulator(DO.Volunteer volunteer,DO.Assignment assignment)
+    {
+        DO.Call call;
+        lock (AdminManager.BlMutex)
+        {
+            if (assignment is null)
+                return;
+
+            call = s_dal.Call.Read(c => c.Id == assignment.CallId)
+                ?? throw new BO.BlDoesNotExistException($"BL Says: Call {assignment.CallId} does not exist");
+        }
+
+        if (ShouldFinishACall(call, volunteer))
+        {
+            try
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    s_dal.Assignment.Update(assignment with
+                    {
+                        TimeOfEnding = AdminManager.Now,
+                        TypeOfEnding = DO.TypeOfEnding.Treated,
+                    });
+                }
+                CallManager.Observers.NotifyListUpdated();
+            }
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {assignment.Id} doesn't exists", ex);
+            }
+        }
+        else
+        {
+            try
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    s_dal.Assignment.Update(assignment with
+                    {
+                        TypeOfEnding = (assignment.VolunteerId != volunteer.Id) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+                        TimeOfEnding = AdminManager.Now,
+                    });
+                }
+
+                CallManager.Observers.NotifyListUpdated();
+            }
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {assignment.Id} doesn't exists", ex);
+            }
+        }
+        
     }
 }

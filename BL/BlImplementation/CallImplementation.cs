@@ -91,10 +91,10 @@ internal class CallImplementation : ICall
     /// Updates the status of an assignment when the call ends.
     /// </summary>
     /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
-    /// <param name="callId">The ID of the call associated with the assignment.</param>
+    /// <param name="assignmentId">The ID of the call associated with the assignment.</param>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
-    public void FinishAssignement(int VolunteerId, int callId)
+    public void FinishAssignement(int VolunteerId, int assignmentId)
     {
         DO.Assignment? res;
         AdminManager.ThrowOnSimulatorIsRunning();
@@ -102,7 +102,7 @@ internal class CallImplementation : ICall
         // Retrieve the assignment details for the given volunteer and call ID
         lock (AdminManager.BlMutex)
         {
-            res = s_dal.Assignment.Read(ass => ass.Id == callId && ass.VolunteerId == VolunteerId)
+            res = s_dal.Assignment.Read(ass => ass.Id == assignmentId && ass.VolunteerId == VolunteerId)
                 ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
         }
 
@@ -123,11 +123,10 @@ internal class CallImplementation : ICall
                     TimeOfEnding = AdminManager.Now
                 });
             }
-                CallManager.Observers.NotifyListUpdated();
+            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            // If the assignment does not exist in the database, throw an exception
             throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
         }
     }

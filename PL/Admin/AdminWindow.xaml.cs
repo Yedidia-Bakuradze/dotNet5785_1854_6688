@@ -208,6 +208,7 @@ public partial class AdminWindow : Window
     private void OnWindowClosed(object sender, EventArgs e)
     {
         MessageBox.Show("The window is closed");
+        s_bl.Admin.StopSimulator();
         s_bl.Admin.RemoveClockObserver(clockObserver);
         s_bl.Admin.RemoveConfigObserver(configObserver);
         s_bl.Call.RemoveObserver(UpdateAllBottomButtonTexts);
@@ -323,22 +324,19 @@ public partial class AdminWindow : Window
             {
                 isSimulatorRunning = true;
                 MessageBox.Show($"Simulator active (new) with {simulatorSpeed}");
-                Task.Run(()=> s_bl.Admin.StartSimulator(simulatorSpeed));
+                s_bl.Admin.StartSimulator(simulatorSpeed);
             }
             else
             {
                 MessageBox.Show($"Simulator active (was already) with {simulatorSpeed}");
 
                 s_bl.Admin.StopSimulator();
-                Task.Run(() => s_bl.Admin.StartSimulator(simulatorSpeed));
+                s_bl.Admin.StartSimulator(simulatorSpeed);
             }
         }
         catch (Exception ex)
         {
-            Dispatcher.BeginInvoke(() =>
-            {
-                MessageBox.Show(ex.Message);
-            });
+           MessageBox.Show(ex.Message);
         }
     }
 
