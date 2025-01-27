@@ -8,7 +8,7 @@
     <Longitude>34.80091110000001</Longitude>
     <OpeningTime>2024-01-21T18:40:45</OpeningTime>
     <Description>Request for food delivery</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
   <Call>
     <Id>2</Id>
@@ -18,7 +18,7 @@
     <Longitude>34.7878395</Longitude>
     <OpeningTime>2024-01-13T18:40:45</OpeningTime>
     <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
   <Call>
     <Id>3</Id>
@@ -28,7 +28,7 @@
     <Longitude>34.768982</Longitude>
     <OpeningTime>2024-12-27T18:40:45</OpeningTime>
     <Description>Donation of food items</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
   <Call>
     <Id>4</Id>
@@ -38,7 +38,7 @@
     <Longitude>34.7918923</Longitude>
     <OpeningTime>2024-01-17T18:40:45</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
   <Call>
     <Id>5</Id>
@@ -48,7 +48,7 @@
     <Longitude>35.2256433</Longitude>
     <OpeningTime>2024-12-30T18:40:45</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
   <Call>
     <Id>6</Id>
@@ -58,6 +58,6 @@
     <Longitude>34.768982</Longitude>
     <OpeningTime>2024-01-07T18:40:45</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-01-27T23:00:45</DeadLine>
+    <DeadLine>2025-01-29T00:00:45</DeadLine>
   </Call>
 </ArrayOfCall>

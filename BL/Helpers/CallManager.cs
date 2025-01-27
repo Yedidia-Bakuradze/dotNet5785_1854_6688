@@ -55,10 +55,11 @@ internal static class CallManager
         lock (AdminManager.BlMutex)//stage 7
         {
             res = s_dal.Call.Read(call => call.Id == callID)
-            ?? throw new DO.DalDoesNotExistException("Call Does not exist");
+                ?? throw new BO.BlDoesNotExistException($"Bl Says: There is no call with ID of {callID}");
 
              resAssignments = s_dal.Assignment.ReadAll(ass => ass.CallId == callID).LastOrDefault();
         }
+
         if (res.DeadLine <= AdminManager.Now)
             return BO.CallStatus.Expiered;
 
@@ -89,7 +90,7 @@ internal static class CallManager
                         : BO.CallStatus.Open;
             }
         }
-            throw new Exception("Brahhhh whatsha duing");
+        throw new Exception("Brahhhh whatsha duing");
     }
 
     /// <summary>

@@ -6,6 +6,7 @@ using DO;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -406,29 +407,24 @@ internal static class VolunteerManager
         try
         {
             IEnumerable<DO.Volunteer> ActiveVolunteers;
-            DO.Assignment? assignment;
-            lock (AdminManager.BlMutex)
-            {
-                ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
-                                   where volunteer.IsActive
-                                   select volunteer;
-            }
+            DO.Assignment? volunteersCurrentCallAssignment;
+            ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
+                                where volunteer.IsActive
+                                select volunteer;
 
             foreach (DO.Volunteer volunteer in ActiveVolunteers)
             {
                 lock (AdminManager.BlMutex)
                 {
-                    assignment = s_dal.Assignment.Read(assign => assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is not null);
-                }
+                    volunteersCurrentCallAssignment = (from assign in s_dal.Assignment.ReadAll()
+                                                    where assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is null
+                                                    orderby assign.Id descending
+                                                    select assign).FirstOrDefault();
 
-                //The volunteer has a call
-                if (assignment is not null)
-                {
-                    FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer, (DO.Assignment)assignment);
-                }
-                else
-                {
-                    AssignCallToVolunteerSimulator(volunteer);
+                    if (volunteersCurrentCallAssignment is not null && volunteersCurrentCallAssignment?.TypeOfEnding is null)
+                        FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer, volunteersCurrentCallAssignment!);
+                    else
+                        AssignCallToVolunteerSimulator(volunteer);
                 }
             }
 
