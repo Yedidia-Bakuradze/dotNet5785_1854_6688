@@ -163,7 +163,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             //Calculate the distance
             double distance = -1.0;
             if (volunteer.FullCurrentAddress != null)
-                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress!, volunteerCall.FullAddressCall, volunteer.RangeType);
+                distance = VolunteerManager.CalculateDistanceFromVolunteerToCall((volunteer.Latitude, volunteer.Longitude), (volunteerCall.Latitude, volunteerCall.Longitude),volunteer.RangeType);
 
             //Create the CallInProgress intance for the Volunteer's field
             volunteerCallInProgress = new BO.CallInProgress

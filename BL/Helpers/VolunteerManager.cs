@@ -350,7 +350,7 @@ internal static class VolunteerManager
     /// <param name="callAddress">The call's address</param>
     /// <param name="typeOfRange">The specified range, either Air, Walking or Driving distance</param>
     /// <returns>The distnace in KM calculated as requested</returns>
-    internal static double CalculateDistanceFromVolunteerToCall((double,double) volunteer, (double, double) call, DO.TypeOfRange typeOfRange)
+    internal static double CalculateDistanceFromVolunteerToCall((double?,double?) volunteer, (double?, double?) call, DO.TypeOfRange typeOfRange)
         => typeOfRange switch
         {
             DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteer, call),

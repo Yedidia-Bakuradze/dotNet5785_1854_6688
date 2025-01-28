@@ -74,6 +74,7 @@ public partial class OpenCallWindow : Window
     private void ReloadScreen()
     {
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        {
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
                 try
@@ -99,6 +100,7 @@ public partial class OpenCallWindow : Window
                     this.Close();
                 }
             });
+        }
         
     }
     #endregion
