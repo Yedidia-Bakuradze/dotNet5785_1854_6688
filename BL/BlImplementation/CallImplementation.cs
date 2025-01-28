@@ -55,27 +55,24 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Deletes a call request by its request ID.
     /// </summary>
-    /// <param name="requestId">The ID of the call request to delete.</param>
+    /// <param name="callId">The ID of the call request to delete.</param>
     /// <exception cref="BO.BlAlreadyExistsException">Thrown if there are assignments related to the call that prevent deletion.</exception>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the given ID does not exist in the database.</exception>
-    public void DeleteCallRequest(int requestId)
+    public void DeleteCallRequest(int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
 
+        //Throw an exception if call is not allowed to be deleted
+        CallManager.VerifyCallDeletionAttempt(callId);
+        
         try
         {
+            // Attempt to delete the call
             lock (AdminManager.BlMutex)
-            {
-                // Check if there are any assignments related to the call
-                if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == requestId).Any(assignment => assignment.VolunteerId != 0))
-                    throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it has a record with other volunteers");
-
-                if (CallManager.GetStatus(requestId) != CallStatus.Open && CallManager.GetStatus(requestId) != CallStatus.OpenAndRisky)
-                    throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {requestId} since it's status is not open");
-
-                // Attempt to delete the call
-                s_dal.Call.Delete(requestId);
+            { 
+                s_dal.Call.Delete(callId);
             }
+            
             //Notifies all observers that a call has been added
             CallManager.Observers.NotifyListUpdated();
         }

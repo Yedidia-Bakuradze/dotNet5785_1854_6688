@@ -164,6 +164,17 @@ internal static class CallManager
         });
     }
 
+    internal static void VerifyCallDeletionAttempt(int callId)
+    {
+        lock (AdminManager.BlMutex)
+        {
+            // Check if there are any assignments related to the call
+            if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == callId).Any(assignment => assignment.VolunteerId != 0))
+                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {callId} since it has a record with other volunteers");
+        }
 
+        if (CallManager.GetStatus(callId) != CallStatus.Open && CallManager.GetStatus(callId) != CallStatus.OpenAndRisky)
+            throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {callId} since it's status is not open");
+    }
 
 }
