@@ -1,11 +1,11 @@
 ﻿namespace BlImplementation;
 
 using BO;
-using DO;
+using BlApi;
 using Helpers;
 using System;
 
-internal class VolunteerImplementation : BlApi.IVolunteer
+internal class VolunteerImplementation : IVolunteer
 {
     // The implemention of the function in the observer 
     #region Stage 5
@@ -33,53 +33,49 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     /// </summary>
     /// <param name="volunteer"></param>
     /// <exception cref="BlAlreadyExistsException">A</exception>
-    public async Task AddVolunteer(BO.Volunteer volunteer)
+    public void AddVolunteer(BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
+        
+        //Check logics and formmating
+        if (!VolunteerManager.IsVolunteerValid(volunteer))
+            throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
+
+
         try
         {
-            
-            //Check logics and formmating
-            if (!await Helpers.VolunteerManager.IsVolunteerValid(volunteer))
-                throw new BO.BlInvalidEntityDetails($"BL Error: volunteer {volunteer.Id} fields are invalid");
-            
-
-            (double? lat, double? lng) = (null, null);
-            if(volunteer.FullCurrentAddress != null && volunteer.FullCurrentAddress != "")
-                (lat,lng) = await Helpers.VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress!);
-
-            //Create Dal Volunteer entity
-            DO.Volunteer newVolunteer = new DO.Volunteer
-            {
-                Id = volunteer.Id,
-                Role = (DO.UserRole)Enum.Parse(typeof(DO.UserRole), volunteer.Role.ToString()),
-                FullName = volunteer.FullName,
-                PhoneNumber = volunteer.PhoneNumber,
-                Email = volunteer.Email,
-                MaxDistanceToCall = volunteer.MaxDistanceToCall,
-                RangeType = (DO.TypeOfRange)Enum.Parse(typeof(DO.TypeOfRange), volunteer.RangeType.ToString()),
-                IsActive = volunteer.IsActive,
-                Password = volunteer.Password == null
+            //Add the new entity to the database
+            lock (AdminManager.BlMutex)
+                s_dal.Volunteer.Create(new DO.Volunteer
+                {
+                    Id = volunteer.Id,
+                    Role = (DO.UserRole)Enum.Parse(typeof(DO.UserRole), volunteer.Role.ToString()),
+                    FullName = volunteer.FullName,
+                    PhoneNumber = volunteer.PhoneNumber,
+                    Email = volunteer.Email,
+                    MaxDistanceToCall = volunteer.MaxDistanceToCall,
+                    RangeType = (DO.TypeOfRange)Enum.Parse(typeof(DO.TypeOfRange), volunteer.RangeType.ToString()),
+                    IsActive = volunteer.IsActive,
+                    Password = volunteer.Password == null
                         ? null
                         : VolunteerManager.GetSHA256HashedPassword(volunteer.Password),
-                FullCurrentAddress = volunteer.FullCurrentAddress,
-                Latitude = lat,
-                Longitude = lng
-            };
-
-            lock (AdminManager.BlMutex)
-                //Add the new entity to the database
-                s_dal.Volunteer.Create(newVolunteer);
+                    FullCurrentAddress = volunteer.FullCurrentAddress,
+                    Latitude = null,
+                    Longitude = null
+                });
 
             
-            //Notifies all observers that a volunteer has been add
-            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalAlreadyExistsException ex)
         {
-            //Throw new BL excpetion to the upper layers
-            throw new BO.BlAlreadyExistsException($"BL-DAL: Such object already exists in the database", ex);
+            throw new BO.BlAlreadyExistsException($"Bl Says: Such object already exists in the database", ex);
         }
+
+        //Updates the cordinates of the volunteer async
+        _ = VolunteerManager.UpdateVolunteerCordinates(volunteer.Id, volunteer.FullCurrentAddress, true);
+        
+        //Notifies all observers that a volunteer has been add
+        VolunteerManager.Observers.NotifyListUpdated();
     }
 
     /// <summary>

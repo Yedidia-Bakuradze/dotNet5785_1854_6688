@@ -158,11 +158,8 @@ internal static class CallManager
             });
         }
 
-        _ = Task.Run(() =>
-        {
-            Observers.NotifyItemUpdated(callId);
-            Observers.NotifyListUpdated();
-        });
+        Observers.NotifyItemUpdated(callId);
+        Observers.NotifyListUpdated();
     }
 
     internal static void VerifyCallDeletionAttempt(int callId)

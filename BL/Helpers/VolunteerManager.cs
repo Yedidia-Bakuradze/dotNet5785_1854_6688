@@ -82,7 +82,7 @@ internal static class VolunteerManager
     }
     #endregion
 
-    #region Volunteer Details Validation Methods
+    #region Volunteer Logic Methods
     /// <summary>
     /// This static method checks if the given user id is valid
     /// </summary>
@@ -214,15 +214,53 @@ internal static class VolunteerManager
     /// <param name="volunteer">The Volunteer instance</param>
     /// <param name="isPasswordOk">[Optional] if true the method wont check the hashed password</param>
     /// <returns>a boolean value whether the volunteer is valid or not</returns>
-    internal static async Task<bool> IsVolunteerValid(BO.Volunteer volunteer, bool isPasswordOk = false)
+    internal static bool IsVolunteerValid(BO.Volunteer volunteer, bool isPasswordOk = false)
     =>
             IsVolunteerIdValid(volunteer.Id) &&
             IsValidFullName(volunteer.FullName) &&
             IsValidPhoneNumber(volunteer.PhoneNumber) &&
             IsValidEmailAddress(volunteer.Email) &&
             (isPasswordOk || IsValidPassword(volunteer.Password)) &&
-            (await IsStreetAddressValid(volunteer.FullCurrentAddress)) &&
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
+
+
+    internal static async Task UpdateVolunteerCordinates(int volunteerId,string? address,bool isNewVolunteer)
+    {
+        if (address is null || address == "")
+            return;
+
+        (double?, double?) coridnates = await VolunteerManager.GetGeoCordinates(address);
+
+        if (!CordinatesValidator(coridnates))
+        {
+            if (isNewVolunteer)
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    s_dal.Volunteer.Delete(volunteerId);
+                }
+                Observers.NotifyItemUpdated(volunteerId);
+                Observers.NotifyListUpdated();
+            }
+            throw new BlInvalidCordinatesConversionException(address);
+
+        }
+
+        lock (AdminManager.BlMutex)
+        {
+            DO.Volunteer volunteer = s_dal.Volunteer.Read(volunteerId)
+                ?? throw new BlDoesNotExistException($"Bl Says: Call with ID {volunteerId} does not exist");
+
+            s_dal.Volunteer.Update(volunteer with
+            {
+                Latitude = (double)coridnates.Item1!,
+                Longitude = (double)coridnates.Item2!,
+            });
+        }
+
+        Observers.NotifyItemUpdated(volunteerId);
+        Observers.NotifyListUpdated();
+    }
 
     #endregion
 

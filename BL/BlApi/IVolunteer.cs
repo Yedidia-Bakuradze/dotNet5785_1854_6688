@@ -71,5 +71,5 @@ public interface IVolunteer :IObservable //Stage 5
     /// If such a volunteer already exists it would handle the thrown excpetion by throwing a new exception to the upper layers
     /// </summary>
     /// <param name="volunteer"></param>
-    Task AddVolunteer(BO.Volunteer volunteer);
+    void AddVolunteer(BO.Volunteer volunteer);
 }
