@@ -1,7 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
-using DO;
 using Helpers;
 
 internal class CallImplementation : ICall
@@ -711,8 +710,7 @@ internal class CallImplementation : ICall
     //    // Log summary
     //    Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
     //}
-    public async Task AddCallSendEmailAsync(BO.Call c)
-    public void AddCallSendEmail(BO.Call call)
+    public async Task AddCallSendEmailAsync(BO.Call call)
     {
         List<DO.Volunteer> activeVolunteers;
 
@@ -748,35 +746,18 @@ internal class CallImplementation : ICall
                     <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
                     <p>A new call has been opened near your location:</p>
                     <ul style='line-height: 1.6;'>
-                        <li><strong>Call ID:</strong> {c.Id}</li>
-                        <li><strong>Type:</strong> {c.TypeOfCall}</li>
-                        <li><strong>Description:</strong> {c.Description}</li>
-                        <li><strong>Start Time:</strong> {c.CallStartTime}</li>
-                        <li><strong>Deadline:</strong> {c.CallDeadLine?.ToString() ?? "N/A"}</li>
-                        <li><strong>Address:</strong> {c.CallAddress}</li>
+                        <li><strong>Call ID:</strong> {call.Id}</li>
+                        <li><strong>Type:</strong> {call.TypeOfCall}</li>
+                        <li><strong>Description:</strong> {call.Description}</li>
+                        <li><strong>Start Time:</strong> {call.CallStartTime}</li>
+                        <li><strong>Deadline:</strong> {call.CallDeadLine?.ToString() ?? "N/A"}</li>
+                        <li><strong>Address:</strong> {call.CallAddress}</li>
                     </ul>
                     <p>For more details, please log into the system to view the call details.</p>
                     <br>
                     <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
                 </body>
                 </html>";
-                    <html>
-                    <body style='font-family: Arial, sans-serif;'>
-                        <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
-                        <p>A new call has been opened near your location:</p>
-                        <ul style='line-height: 1.6;'>
-                            <li><strong>Call ID:</strong> {call.Id}</li>
-                            <li><strong>Type:</strong> {call.TypeOfCall}</li>
-                            <li><strong>Description:</strong> {call.Description}</li>
-                            <li><strong>Start Time:</strong> {call.CallStartTime}</li>
-                            <li><strong>Deadline:</strong> {call.CallDeadLine?.ToString() ?? "N/A"}</li>
-                            <li><strong>Address:</strong> {call.CallAddress}</li>
-                        </ul>
-                        <p>For more details, please log into the system to view the call details.</p>
-                        <br>
-                        <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
-                    </body>
-                    </html>";
 
                     // Send email
                     await Tools.SendEmail(volunteer.Email, subject, body);
@@ -793,7 +774,6 @@ internal class CallImplementation : ICall
         // Log summary
         Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
     }
-
 
     //public void CancleCallSendEmail(BO.CallInList c)
     //{
