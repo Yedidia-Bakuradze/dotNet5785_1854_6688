@@ -733,8 +733,8 @@ internal class CallImplementation : ICall
             {
                 // Calculate the distance between the call address and the volunteer's address
                 double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
-                    c.FullAddressCall,
-                    volunteer.FullCurrentAddress!,
+                    (volunteer.Latitude,volunteer.Longitude),
+                    (c.Latitude, c.Longitude),
                     (DO.TypeOfRange)volunteer.RangeType);
 
                 // Check if the distance is within the volunteer's range
