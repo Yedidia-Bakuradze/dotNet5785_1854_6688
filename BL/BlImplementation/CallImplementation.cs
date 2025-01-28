@@ -646,6 +646,72 @@ internal class CallImplementation : ICall
 
     }
 
+    //public void AddCallSendEmail(BO.Call c)
+    //{
+    //    List<DO.Volunteer> activeVolunteers;
+
+    //    lock (AdminManager.BlMutex)
+    //    {
+    //        // Retrieve all volunteers and filter only the active ones
+    //        activeVolunteers = s_dal.Volunteer.ReadAll()
+    //            .Where(volunteer => volunteer.IsActive && !string.IsNullOrWhiteSpace(volunteer.Email))
+    //            .ToList();
+    //    }
+
+    //    // Subject of the email
+    //    string subject = "A new call has opened near your location";
+
+    //    // Iterate over all volunteers
+    //    int emailsSent = 0; // Counter for successful emails
+    //    foreach (var volunteer in activeVolunteers)
+    //    {
+    //        try
+    //        {
+    //            // Calculate the distance between the call address and the volunteer's address
+    //            double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
+    //                c.CallAddress,
+    //                volunteer.FullCurrentAddress!,
+    //                (DO.TypeOfRange)volunteer.RangeType);
+
+    //            // Check if the distance is within the volunteer's range
+    //            if (distance <= volunteer.MaxDistanceToCall)
+    //            {
+    //                // Generate dynamic HTML body for the email
+    //                string body = $@"
+    //                <html>
+    //                <body style='font-family: Arial, sans-serif;'>
+    //                    <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
+    //                    <p>A new call has been opened near your location:</p>
+    //                    <ul style='line-height: 1.6;'>
+    //                        <li><strong>Call ID:</strong> {c.Id}</li>
+    //                        <li><strong>Type:</strong> {c.TypeOfCall}</li>
+    //                        <li><strong>Description:</strong> {c.Description}</li>
+    //                        <li><strong>Start Time:</strong> {c.CallStartTime}</li>
+    //                        <li><strong>Deadline:</strong> {c.CallDeadLine?.ToString() ?? "N/A"}</li>
+    //                        <li><strong>Address:</strong> {c.CallAddress}</li>
+    //                    </ul>
+    //                    <p>For more details, please log into the system to view the call details.</p>
+    //                    <br>
+    //                    <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
+    //                </body>
+    //                </html>";
+
+    //                // Send email
+    //                Tools.SendEmail(volunteer.Email, subject, body);
+    //                emailsSent++; // Increment the counter
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            // Log the error for debugging purposes
+    //            Console.WriteLine($"Failed to send email to {volunteer.Email}. Error: {ex.Message}");
+    //        }
+    //    }
+
+    //    // Log summary
+    //    Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
+    //}
+    public async Task AddCallSendEmailAsync(BO.Call c)
     public void AddCallSendEmail(BO.Call call)
     {
         List<DO.Volunteer> activeVolunteers;
@@ -677,6 +743,23 @@ internal class CallImplementation : ICall
                 {
                     // Generate dynamic HTML body for the email
                     string body = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
+                    <p>A new call has been opened near your location:</p>
+                    <ul style='line-height: 1.6;'>
+                        <li><strong>Call ID:</strong> {c.Id}</li>
+                        <li><strong>Type:</strong> {c.TypeOfCall}</li>
+                        <li><strong>Description:</strong> {c.Description}</li>
+                        <li><strong>Start Time:</strong> {c.CallStartTime}</li>
+                        <li><strong>Deadline:</strong> {c.CallDeadLine?.ToString() ?? "N/A"}</li>
+                        <li><strong>Address:</strong> {c.CallAddress}</li>
+                    </ul>
+                    <p>For more details, please log into the system to view the call details.</p>
+                    <br>
+                    <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
+                </body>
+                </html>";
                     <html>
                     <body style='font-family: Arial, sans-serif;'>
                         <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
@@ -696,7 +779,7 @@ internal class CallImplementation : ICall
                     </html>";
 
                     // Send email
-                    Tools.SendEmail(volunteer.Email, subject, body);
+                    await Tools.SendEmail(volunteer.Email, subject, body);
                     emailsSent++; // Increment the counter
                 }
             }
@@ -712,7 +795,33 @@ internal class CallImplementation : ICall
     }
 
 
-    public void CancleCallSendEmail(BO.CallInList c)
+    //public void CancleCallSendEmail(BO.CallInList c)
+    //{
+    //    List<DO.Assignment> listAss;
+    //    List<DO.Volunteer> matchingVolunteers;
+    //    string subject = "Your call assignment has been canceled";
+    //    string body = "Hello, your call assignment has been canceled by the manager";
+
+    //    lock (AdminManager.BlMutex)
+    //    {
+    //        listAss = s_dal.Assignment.ReadAll()
+    //            .Where(a => a.CallId == c.CallId)
+    //            .ToList();
+    //    }
+    //    DO.Assignment? assignment = listAss.FirstOrDefault();
+
+    //    // Assumption: s_dal.Volunteer.ReadAll() returns a collection of volunteers
+    //    lock (AdminManager.BlMutex)
+    //    {
+    //            matchingVolunteers = s_dal.Volunteer.ReadAll()
+    //            .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
+    //            .ToList();
+    //    }
+
+    //    DO.Volunteer? volunteer = matchingVolunteers.FirstOrDefault();
+    //    Tools.SendEmail(volunteer!.Email, subject, body);
+    //}
+    public async Task CancleCallSendEmailAsync(BO.CallInList c)
     {
         List<DO.Assignment> listAss;
         List<DO.Volunteer> matchingVolunteers;
@@ -731,12 +840,26 @@ internal class CallImplementation : ICall
         lock (AdminManager.BlMutex)
         {
             matchingVolunteers = s_dal.Volunteer.ReadAll()
+                .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
+                .ToList();
+            matchingVolunteers = s_dal.Volunteer.ReadAll()
             .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
             .ToList();
         }
 
         DO.Volunteer? volunteer = matchingVolunteers.FirstOrDefault();
-        Tools.SendEmail(volunteer!.Email, subject, body);
+        if (volunteer != null)
+        {
+            try
+            {
+                await Tools.SendEmail(volunteer.Email, subject, body);
+                Console.WriteLine($"Cancellation email sent to {volunteer.Email}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send cancellation email to {volunteer.Email}. Error: {ex.Message}");
+            }
+        }
     }
 
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId)

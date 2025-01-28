@@ -138,8 +138,15 @@ internal class AdminImplementation : IAdmin
                     break;
                 }
             case TimeUnit.Year:
-                AdminManager.UpdateClock(AdminManager.Now.AddYears(1));
-                break;
+                {
+                    AdminManager.UpdateClock(AdminManager.Now.AddYears(1));
+                    break;
+                }
+            case TimeUnit.resetClock:
+                {
+                    AdminManager.UpdateClock(DateTime.Now);
+                    break;
+                }
             default:
                 {
                     throw new BO.BlInvalidOperationException($"BL: System tries to update the BL clock with unknown type of TimeUnit");

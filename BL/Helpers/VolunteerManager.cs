@@ -490,7 +490,10 @@ internal static class VolunteerManager
             randomCall = openCalls.FirstOrDefault()!;
         else
             randomCall = openCalls.ToList()[new Random().Next(0, openCalls.Count() - 1)];
-
+        if(randomCall == null)
+        {
+            return;
+        }
         lock (AdminManager.BlMutex)
         {
             s_dal.Assignment.Create(new DO.Assignment
