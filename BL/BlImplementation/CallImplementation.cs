@@ -176,112 +176,8 @@ internal class CallImplementation : ICall
         // Return the populated BO.Call object containing all relevant details.
         return boCall;
     }
-    #endregion
-
-    #region Assignment Create & Close
-
-    /// <summary>
-    /// Updates the status of an assignment when the call ends.
-    /// </summary>
-    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
-    /// <param name="assignmentId">The ID of the call associated with the assignment.</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
-    public void FinishAssignement(int VolunteerId, int assignmentId)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-
-        //Throws an exception if the assignment is unfinishble
-        CallManager.VerifyAssignmentFinishAttept(VolunteerId,assignmentId, out DO.Assignment res);
-        
-        try
-        {
-            // Update the assignment with the new ending type and time
-            lock (AdminManager.BlMutex)
-            {
-                s_dal.Assignment.Update(res with
-                {
-                    TypeOfEnding = DO.TypeOfEnding.Treated,
-                    TimeOfEnding = AdminManager.Now
-                });
-            }
-
-            CallManager.Observers.NotifyListUpdated();
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
-        }
-    }
-    
-    /// <summary>
-    /// This methods assignes a call to a volunteer if the call is free to be alocated
-    /// </summary>
-    /// <param name="VolunteerId">The volunteer which requests a new call</param>
-    /// <param name="callId">The requested call to be assigned</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
-    public void SelectCallToDo(int VolunteerId, int callId)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-
-        //Throws an exception if the call-volunteer allocation is not allowed
-        CallManager.VerifyAssignmentAllocationAttempt(VolunteerId,callId);
-
-        //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
-        lock (AdminManager.BlMutex)
-        {
-            s_dal.Assignment.Create(new DO.Assignment
-            {
-                Id = -1, //Temp id, the real id is assigned in the Dal layer
-                CallId = callId,
-                VolunteerId = VolunteerId,
-                TimeOfEnding = null,
-                TimeOfStarting = AdminManager.Now,
-                TypeOfEnding = null,
-            });
-        }
-        CallManager.Observers.NotifyListUpdated();
-    }
-
-    /// <summary>
-    /// This method updates the Call status with the past callId
-    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
-    /// </summary>
-    /// <param name="VolunteerId">The volunteer which requests the modification</param>
-    /// <param name="callId">The call if of the Call which is needed to be updated</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
-    public void CancelAssignement(int VolunteerId, int callId)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-
-        //Throws an exception if the assignment canceltion is not allowed
-        CallManager.VerifyAssignmentCancelAttempt(VolunteerId, callId,out DO.Assignment assignment);
-
-        try
-        {
-            //Update the Dal entity with current system time and Closed status
-            lock (AdminManager.BlMutex)
-            {
-                s_dal.Assignment.Update(assignment with
-                {
-                    TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
-                    TimeOfEnding = AdminManager.Now,
-                });
-            }
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"Bl Says: {ex.Message}");
-        }
-
-        //Notifies all observers that a call has been added
-        CallManager.Observers.NotifyListUpdated();
-    }
-
-    #endregion
-
+   
+    #region Get Calls
     /// <summary>
     /// Retrieves a list of closed calls assigned to a specific volunteer, with optional filtering and sorting.
     /// </summary>
@@ -355,7 +251,6 @@ internal class CallImplementation : ICall
         return closedCalls;
     }
 
-
     /// <summary>
     /// Retrieves a list of calls with optional filtering and sorting based on specified fields.
     /// </summary>
@@ -380,7 +275,7 @@ internal class CallImplementation : ICall
             callsInlist = source is not null
                                              ? source
                                              :
-                                             from call in calls
+                                             (from call in calls
                                              let callsAssignments = assignments
                                              .Where(ass => ass.CallId == call.Id)
                                              .OrderByDescending(ass => ass.Id)
@@ -401,7 +296,7 @@ internal class CallImplementation : ICall
                                                  ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
                                                  : null,
                                                  TotalAlocations = callsAssignments.Count(),
-                                             };
+                                             }).ToList();
         }
 
         // Filtering the list based on the specified filter field and value
@@ -600,7 +495,115 @@ internal class CallImplementation : ICall
         }
     }
 
+    #endregion
+    
+    #endregion
 
+    #region Assignment Create & Close
+
+    /// <summary>
+    /// Updates the status of an assignment when the call ends.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
+    /// <param name="assignmentId">The ID of the call associated with the assignment.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
+    public void FinishAssignement(int VolunteerId, int assignmentId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+        //Throws an exception if the assignment is unfinishble
+        CallManager.VerifyAssignmentFinishAttept(VolunteerId,assignmentId, out DO.Assignment res);
+        
+        try
+        {
+            // Update the assignment with the new ending type and time
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Update(res with
+                {
+                    TypeOfEnding = DO.TypeOfEnding.Treated,
+                    TimeOfEnding = AdminManager.Now
+                });
+            }
+
+            CallManager.Observers.NotifyListUpdated();
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
+        }
+    }
+    
+    /// <summary>
+    /// This methods assignes a call to a volunteer if the call is free to be alocated
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests a new call</param>
+    /// <param name="callId">The requested call to be assigned</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
+    public void SelectCallToDo(int VolunteerId, int callId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+        //Throws an exception if the call-volunteer allocation is not allowed
+        CallManager.VerifyAssignmentAllocationAttempt(VolunteerId,callId);
+
+        //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
+        lock (AdminManager.BlMutex)
+        {
+            s_dal.Assignment.Create(new DO.Assignment
+            {
+                Id = -1, //Temp id, the real id is assigned in the Dal layer
+                CallId = callId,
+                VolunteerId = VolunteerId,
+                TimeOfEnding = null,
+                TimeOfStarting = AdminManager.Now,
+                TypeOfEnding = null,
+            });
+        }
+        CallManager.Observers.NotifyListUpdated();
+    }
+
+    /// <summary>
+    /// This method updates the Call status with the past callId
+    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests the modification</param>
+    /// <param name="callId">The call if of the Call which is needed to be updated</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
+    public void CancelAssignement(int VolunteerId, int callId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+        //Throws an exception if the assignment canceltion is not allowed
+        CallManager.VerifyAssignmentCancelAttempt(VolunteerId, callId,out DO.Assignment assignment);
+
+        try
+        {
+            //Update the Dal entity with current system time and Closed status
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Update(assignment with
+                {
+                    TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+                    TimeOfEnding = AdminManager.Now,
+                });
+            }
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Bl Says: {ex.Message}");
+        }
+
+        //Notifies all observers that a call has been added
+        CallManager.Observers.NotifyListUpdated();
+    }
+
+    #endregion
+
+    #region Email System
     //public void AddCallSendEmail(BO.Call c)
     //{
     //    List<DO.Volunteer> activeVolunteers;
@@ -816,9 +819,10 @@ internal class CallImplementation : ICall
             }
         }
     }
+    #endregion
 
+    #region Convertors
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId) => ConvertOpenCallsToCordinates(GetOpenCallsForVolunteer(volunteerId, null, null));
-
     public IEnumerable<(double, double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList> listOfCalls)
     {
         lock (AdminManager.BlMutex)
@@ -840,4 +844,5 @@ internal class CallImplementation : ICall
                     select (call.Latitude, call.Longitude)) as IEnumerable<(double, double)>;
         }
     }
+    #endregion
 }
