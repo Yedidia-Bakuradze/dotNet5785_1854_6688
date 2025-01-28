@@ -1,5 +1,6 @@
 ﻿using BO;
 using DalApi;
+using DO;
 using System.Net.Http.Headers;
 namespace Helpers;
 
@@ -177,4 +178,22 @@ internal static class CallManager
             throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {callId} since it's status is not open");
     }
 
+    #region Assignment Logic Methods
+    internal static void VerifyAssignmentFinishAttept(int VolunteerId, int aassignmentId, out DO.Assignment res)
+    {
+        // Retrieve the assignment details for the given volunteer and call ID
+        lock (AdminManager.BlMutex)
+        {
+            res = s_dal.Assignment.Read(ass => ass.Id == aassignmentId && ass.VolunteerId == VolunteerId)
+                ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
+        }
+
+        // Check if the assignment already has an ending type or time
+        if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
+            throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
+        
+
+    }
+
+    #endregion
 }
