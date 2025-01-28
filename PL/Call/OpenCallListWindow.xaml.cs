@@ -12,6 +12,7 @@ public partial class OpenCallListWindow : Window
     public OpenCallListWindow(int volunteerId)
     {
         VolunteerId = volunteerId;
+        ListOfCalls = null;
         RefreshList();
         InitializeComponent();
     }
@@ -76,13 +77,13 @@ public partial class OpenCallListWindow : Window
     private void OnShowCallWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) => new CallWindow(SelectedCall!.CallId).Show();
     private void OnWindowClosed(object sender, EventArgs e)
     {
-        s_bl.Call.RemoveObserver(RefreshList);
-        s_bl.Volunteer.AddObserver(RefreshList);
+        s_bl.Call.RemoveObserver(Observer);
+        s_bl.Volunteer.AddObserver(Observer);
     }
     private void OnWindowLoaded(object sender, RoutedEventArgs e)
     {
-        s_bl.Call.AddObserver(RefreshList);
-        s_bl.Volunteer.AddObserver(RefreshList);
+        s_bl.Call.AddObserver(Observer);
+        s_bl.Volunteer.AddObserver(Observer);
     }
     private void OnFilterSet(object sender, RoutedEventArgs e) => RefreshList();
     private void OnSortingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) => RefreshList();
@@ -106,18 +107,27 @@ public partial class OpenCallListWindow : Window
     #endregion
 
     #region Methods
-    private void RefreshList()
+    private void Observer() => RefreshList();
+    private async Task RefreshList()
     {
+        var _volunteerId = VolunteerId;
+        var _filterByValue = FilterByValue;
+        var _sortByField = SortByField;
+
+        var calls = await Task.Run(()=>s_bl.Call.GetOpenCallsForVolunteer(_volunteerId, _filterByValue, _sortByField));
+        var _listOfCordinates = await Task.Run(() =>
+            s_bl.Call
+                        .ConvertOpenCallsToCordinates(calls)
+                        .ToList<(double, double)>());
+
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
                 try
                 {
                     var volunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-                    ListOfCalls = s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, FilterByValue, SortByField);
-                    List<(double, double)> listOfCordinates = s_bl.Call
-                        .ConvertOpenCallsToCordinates(ListOfCalls)
-                        .ToList<(double, double)>();
+                    ListOfCalls = calls;
+                    List<(double, double)> listOfCordinates = _listOfCordinates;
 
                     if (volunteer.FullCurrentAddress is not null)
                     {

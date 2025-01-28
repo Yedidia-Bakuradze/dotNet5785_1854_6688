@@ -31,7 +31,7 @@ internal class CallImplementation : ICall
         //Check if the call entity is valid or not
         if (!(await CallManager.IsCallValid(call)))
             throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
-        
+
         //Get Call cordinates
         (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
         if (lat == null || lng == null)
@@ -39,13 +39,13 @@ internal class CallImplementation : ICall
 
         //Cordinates are updated
         call.Latitude = (double)lat!;
-        call.Longitude= (double)lng!;
+        call.Longitude = (double)lng!;
 
         //Create new Dal entity
         DO.Call newCall = CallManager.ConvertFromBdToD(call);
 
         // Add the new call to the database
-        lock(AdminManager.BlMutex)
+        lock (AdminManager.BlMutex)
             s_dal.Call.Create(newCall);
 
         AddCallSendEmailAsync(newCall);
@@ -106,7 +106,7 @@ internal class CallImplementation : ICall
                 ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
         }
 
-            // Check if the assignment already has an ending type or time
+        // Check if the assignment already has an ending type or time
         if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
         {
             throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
@@ -164,7 +164,7 @@ internal class CallImplementation : ICall
             CallAddress = call.FullAddressCall,
             CallStartTime = call.OpeningTime,
             EnteryTime = res.FirstOrDefault(ass => ass.CallId == call.Id).TimeOfStarting, // Access the start time from the corresponding assignment
-            ClosingTime = (DateTime) res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
+            ClosingTime = (DateTime)res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
             TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
         }).ToList();
 
@@ -272,42 +272,42 @@ internal class CallImplementation : ICall
         lock (AdminManager.BlMutex)
         {
             // Build the initial list of CallInList objects based on the calls and their assignments
-             callsInlist = source is not null
-                                              ? source
-                                              :
-                                              from call in calls
-                                              let callsAssignments = assignments
-                                              .Where(ass => ass.CallId == call.Id)
-                                              .OrderByDescending(ass => ass.Id)
-                                              .ToList()
-                                              let firstAssignment = callsAssignments.FirstOrDefault()
-                                              select new BO.CallInList
-                                              {
-                                                  Id = firstAssignment?.Id, // Default to 0 if no assignment exists
-                                                  CallId = call.Id,
-                                                  Status = CallManager.GetStatus(call.Id),
-                                                  OpenningTime = call.OpeningTime,
-                                                  LastVolunteerName = firstAssignment != null
-                                                  ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
-                                                  : null,
-                                                  TimeToEnd = call.DeadLine - AdminManager.Now,
-                                                  TypeOfCall = (BO.CallType)call.Type,
-                                                  TimeElapsed = firstAssignment?.TypeOfEnding != null
-                                                  ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
-                                                  : null,
-                                                  TotalAlocations = callsAssignments.Count(),
-                                              };
+            callsInlist = source is not null
+                                             ? source
+                                             :
+                                             from call in calls
+                                             let callsAssignments = assignments
+                                             .Where(ass => ass.CallId == call.Id)
+                                             .OrderByDescending(ass => ass.Id)
+                                             .ToList()
+                                             let firstAssignment = callsAssignments.FirstOrDefault()
+                                             select new BO.CallInList
+                                             {
+                                                 Id = firstAssignment?.Id, // Default to 0 if no assignment exists
+                                                 CallId = call.Id,
+                                                 Status = CallManager.GetStatus(call.Id),
+                                                 OpenningTime = call.OpeningTime,
+                                                 LastVolunteerName = firstAssignment != null
+                                                 ? s_dal.Volunteer.Read(vol => vol.Id == firstAssignment.VolunteerId)?.FullName
+                                                 : null,
+                                                 TimeToEnd = call.DeadLine - AdminManager.Now,
+                                                 TypeOfCall = (BO.CallType)call.Type,
+                                                 TimeElapsed = firstAssignment?.TypeOfEnding != null
+                                                 ? firstAssignment.TimeOfEnding - firstAssignment.TimeOfStarting
+                                                 : null,
+                                                 TotalAlocations = callsAssignments.Count(),
+                                             };
         }
 
-            // Filtering the list based on the specified filter field and value
+        // Filtering the list based on the specified filter field and value
         if (filterField != null && filterValue != null)
         {
             switch (filterField)
             {
                 case BO.CallInListFields.Id:
                     callsInlist = (IEnumerable<CallInList>)(from call in callsInlist
-                                  where call.Id == Convert.ToInt32(filterValue)
-                                  select call).ToList();
+                                                            where call.Id == Convert.ToInt32(filterValue)
+                                                            select call).ToList();
                     break;
                 case BO.CallInListFields.CallId:
                     callsInlist = from call in callsInlist
@@ -351,7 +351,7 @@ internal class CallImplementation : ICall
                     break;
                 case null:
                     throw new BO.BlInvalidOperationException($"Bl: Filter value is null");
-                    
+
             }
         }
 
@@ -418,73 +418,55 @@ internal class CallImplementation : ICall
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int VolunteerId, BO.CallType? callType, BO.OpenCallFields? sortingField)
     {
         DO.Volunteer volunteer;
-        List<BO.OpenCallInList> openCalls;
+        IEnumerable<BO.OpenCallInList> openCalls;
         lock (AdminManager.BlMutex)
         {
             // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
             volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
                     ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
-
-
-            // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
-            openCalls = s_dal.Call
-                .ReadAll(call => (CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky))
-                .AsParallel()
-                .Where(call
-                => 
-                volunteer.MaxDistanceToCall is null
-                || volunteer.FullCurrentAddress is null
-                || VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType) <= volunteer.MaxDistanceToCall
-                )
-                .Select(call => new BO.OpenCallInList
-                {
-                    CallId = call.Id,  // ID of the call
-                    CallFullAddress = call.FullAddressCall,  // Full address of the call
-                    Description = call.Description,  // Description of the call
-                    LastTimeForClosingTheCall = call.DeadLine,  // Deadline for closing the call
-                    TypeOfCall = (BO.CallType)call.Type,  // Type of the call
-                    OpenningTime = call.OpeningTime,  // Opening time of the call
-                    DistanceFromVolunteer = volunteer.FullCurrentAddress is null
-                        ? -1  // If the volunteer's address is unknown, set distance to -1
-                        : VolunteerManager.CalculateDistanceFromVolunteerToCall(volunteer.FullCurrentAddress, call.FullAddressCall, volunteer.RangeType)
-                }).ToList();
         }
+
+        // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
+        openCalls = from call in s_dal.Call.ReadAll()
+                    where CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky
+                    && (
+                        volunteer.MaxDistanceToCall is null
+                        || volunteer.FullCurrentAddress is null
+                        || VolunteerManager.CalculateDistanceFromVolunteerToCall((volunteer.Latitude, volunteer.Longitude), (call.Latitude, call.Longitude), volunteer.RangeType) <= volunteer.MaxDistanceToCall
+                    )
+                    select new BO.OpenCallInList
+                    {
+                        CallId = call.Id,  // ID of the call
+                        CallFullAddress = call.FullAddressCall,  // Full address of the call
+                        Description = call.Description,  // Description of the call
+                        LastTimeForClosingTheCall = call.DeadLine,  // Deadline for closing the call
+                        TypeOfCall = (BO.CallType)call.Type,  // Type of the call
+                        OpenningTime = call.OpeningTime,  // Opening time of the call
+                        DistanceFromVolunteer = volunteer.FullCurrentAddress is null
+                             ? -1  // If the volunteer's address is unknown, set distance to -1
+                             : VolunteerManager.CalculateDistanceFromVolunteerToCall((volunteer.Latitude, volunteer.Longitude), (call.Latitude, call.Longitude), volunteer.RangeType)
+                    };
+        
         // If a call type filter is provided, filter the list by the specified type.
         if (callType != null)
-            openCalls = openCalls.Where(call => call.TypeOfCall == callType).ToList();
+            openCalls = openCalls.Where(call => call.TypeOfCall == callType);
 
         // If no sorting field is provided, sort the calls by their ID.
         if (sortingField == null)
             return openCalls.OrderBy(call => call.CallId);
 
         // Sort the list based on the specified sorting field.
-        switch (sortingField)
+        openCalls = sortingField switch
         {
-            case BO.OpenCallFields.CallId:
-                openCalls = openCalls.OrderBy(call => call.CallId).ToList();
-                break;
-            case BO.OpenCallFields.TypeOfCall:
-                openCalls = openCalls.OrderBy(call => call.TypeOfCall).ToList();
-                break;
-            case BO.OpenCallFields.Description:
-                openCalls = openCalls.OrderBy(call => call.Description).ToList();
-                break;
-            case BO.OpenCallFields.CallFullAddress:
-                openCalls = openCalls.OrderBy(call => call.CallFullAddress).ToList();
-                break;
-            case BO.OpenCallFields.OpenningTime:
-                openCalls = openCalls.OrderBy(call => call.OpenningTime).ToList();
-                break;
-            case BO.OpenCallFields.LastTimeForClosingTheCall:
-                openCalls = openCalls.OrderBy(call => call.LastTimeForClosingTheCall).ToList();
-                break;
-            case BO.OpenCallFields.DistanceFromVolunteer:
-                openCalls = openCalls.OrderBy(call => call.DistanceFromVolunteer).ToList();
-                break;
-            default:
-                // Throw an exception if the sorting field is invalid.
-                throw new BO.BlInvalidOperationException("BL: Invalid sorting filterField");
-        }
+            BO.OpenCallFields.CallId => openCalls.OrderBy(call => call.CallId),
+            BO.OpenCallFields.TypeOfCall => openCalls.OrderBy(call => call.TypeOfCall),
+            BO.OpenCallFields.Description => openCalls.OrderBy(call => call.Description),
+            BO.OpenCallFields.CallFullAddress => openCalls.OrderBy(call => call.CallFullAddress),
+            BO.OpenCallFields.OpenningTime => openCalls.OrderBy(call => call.OpenningTime),
+            BO.OpenCallFields.LastTimeForClosingTheCall => openCalls.OrderBy(call => call.LastTimeForClosingTheCall),
+            BO.OpenCallFields.DistanceFromVolunteer => openCalls.OrderBy(call => call.DistanceFromVolunteer),
+            _ => throw new BO.BlInvalidOperationException("BL: Invalid sorting filterField"),// Throw an exception if the sorting field is invalid.
+        };
 
         // Return the sorted list of open calls.
         return openCalls;
@@ -513,13 +495,13 @@ internal class CallImplementation : ICall
         }
     }
 
-        /// <summary>
-        /// This methods assignes a call to a volunteer if the call is free to be alocated
-        /// </summary>
-        /// <param name="VolunteerId">The volunteer which requests a new call</param>
-        /// <param name="callId">The requested call to be assigned</param>
-        /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
-        /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
+    /// <summary>
+    /// This methods assignes a call to a volunteer if the call is free to be alocated
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests a new call</param>
+    /// <param name="callId">The requested call to be assigned</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
     public void SelectCallToDo(int VolunteerId, int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
@@ -535,10 +517,10 @@ internal class CallImplementation : ICall
         }
         lock (AdminManager.BlMutex)
         {
-            var existingAssignment =s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
+            var existingAssignment = s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
             if (existingAssignment is not null)
                 throw new BO.BlForbidenSystemActionExeption($"BL Says: Cann't assigned call {callId} to volunteer {VolunteerId} because it has a running call ({existingAssignment.CallId})");
-        
+
         }
 
         //Check if call already been taken
@@ -582,8 +564,8 @@ internal class CallImplementation : ICall
 
         (double? lat, double? log) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
 
-        call.Latitude = (double) lat!;
-        call.Longitude= (double) log!;
+        call.Latitude = (double)lat!;
+        call.Longitude = (double)log!;
 
         DO.Call newCall = CallManager.ConvertFromBdToD(call);
 
@@ -794,7 +776,6 @@ internal class CallImplementation : ICall
         Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
     }
 
-
     //public void CancleCallSendEmail(BO.CallInList c)
     //{
     //    List<DO.Assignment> listAss;
@@ -842,6 +823,9 @@ internal class CallImplementation : ICall
             matchingVolunteers = s_dal.Volunteer.ReadAll()
                 .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
                 .ToList();
+            matchingVolunteers = s_dal.Volunteer.ReadAll()
+            .Where(v => v.Id == assignment!.VolunteerId) // Filter by ID
+            .ToList();
         }
 
         DO.Volunteer? volunteer = matchingVolunteers.FirstOrDefault();
@@ -863,7 +847,7 @@ internal class CallImplementation : ICall
     {
         lock (AdminManager.BlMutex)
         {
-            return from call in GetOpenCallsForVolunteer(volunteerId,null,null)
+            return from call in GetOpenCallsForVolunteer(volunteerId, null, null)
                    let currentCall = s_dal.Call.Read(call.CallId)
                    select (currentCall.Latitude, currentCall.Longitude);
         }
@@ -874,8 +858,8 @@ internal class CallImplementation : ICall
         lock (AdminManager.BlMutex)
         {
             return from closedCall in listOfCalls
-            let call = s_dal.Call.Read(closedCall.Id)
-            select (call.Latitude, call.Longitude);
+                   let call = s_dal.Call.Read(closedCall.Id)
+                   select (call.Latitude, call.Longitude);
 
         }
     }
@@ -884,8 +868,8 @@ internal class CallImplementation : ICall
         lock (AdminManager.BlMutex)
         {
             return from openCall in listOfCalls
-            let call = s_dal.Call.Read(openCall.CallId)
-            select (call.Latitude, call.Longitude);
+                   let call = s_dal.Call.Read(openCall.CallId)
+                   select (call.Latitude, call.Longitude);
         }
     }
 }

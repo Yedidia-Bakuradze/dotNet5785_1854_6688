@@ -10,7 +10,7 @@ public partial class VolunteerListWindow : Window
     public VolunteerListWindow()
     {
         InitializeComponent();
-        VolunteerListObserver();
+        RefereshVolunteerList();
     }
 
     #region Regular Propeties
@@ -74,13 +74,6 @@ public partial class VolunteerListWindow : Window
             typeof(VolunteerListWindow),
             new PropertyMetadata(null));
 
-    #endregion
-
-    #region Observers
-    /// <summary>
-    /// This method sets the current list of volunteers to get the filtered / unfiltered volunteers by the select call type
-    /// </summary>
-    private void VolunteerListObserver() => RefereshVolunteerList();
     #endregion
 
     #region Events
@@ -161,15 +154,22 @@ $"Delete User: {SelectedVolunteer?.Id} Request", MessageBoxButton.YesNo);
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnWindowLoaded(object sender, RoutedEventArgs e) => s_bl.Volunteer.AddObserver(VolunteerListObserver);
-
+    private void OnWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Volunteer.AddObserver(RefereshVolunteerList);
+        s_bl.Call.AddObserver(RefereshVolunteerList);
+    }
     /// <summary>
     /// This method is triggered when the user closes the window and it removes the referesher from the VolunteerManager observer
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnWindowClosed(object sender, EventArgs e) => s_bl.Volunteer.RemoveObserver(VolunteerListObserver);
-    #endregion
+    private void OnWindowClosed(object sender, EventArgs e)
+    {
+        s_bl.Volunteer.RemoveObserver(RefereshVolunteerList);
+        s_bl.Call.RemoveObserver(RefereshVolunteerList);
+    }
+   #endregion
 
     #endregion
 

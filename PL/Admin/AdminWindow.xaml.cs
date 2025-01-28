@@ -342,12 +342,13 @@ public partial class AdminWindow : Window
         {
             _observerCallCountOperation = Dispatcher.BeginInvoke(() =>
             {
-                ExpieredBtnText = $"Expiered\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Expiered.GetHashCode()]}";
-                OpenBtnText = $"Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Open.GetHashCode()]}";
-                OpenInRiskBtnText = $"Risky & Open\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.OpenAndRisky.GetHashCode()]}";
-                ClosedBtnText = $"Closed\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.Closed.GetHashCode()]}";
-                InProgressBtnText = $"In Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgress.GetHashCode()]}";
-                InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {s_bl.Call.GetTotalCallsByStatus()[CallStatus.InProgressAndRisky.GetHashCode()]}";
+                var totalCallsByStatus = s_bl.Call.GetTotalCallsByStatus();
+                ExpieredBtnText = $"Expiered\nCount: {totalCallsByStatus[CallStatus.Expiered.GetHashCode()]}";
+                OpenBtnText = $"Open\nCount: {totalCallsByStatus[CallStatus.Open.GetHashCode()]}";
+                OpenInRiskBtnText = $"Risky & Open\nCount: {totalCallsByStatus[CallStatus.OpenAndRisky.GetHashCode()]}";
+                ClosedBtnText = $"Closed\nCount: {totalCallsByStatus[CallStatus.Closed.GetHashCode()]}";
+                InProgressBtnText = $"In Progress\nCount: {totalCallsByStatus[CallStatus.InProgress.GetHashCode()]}";
+                InProgressInRiskBtnText = $"Risky &\nIn Progress\nCount: {totalCallsByStatus[CallStatus.InProgressAndRisky.GetHashCode()]}";
             });
 
         }
