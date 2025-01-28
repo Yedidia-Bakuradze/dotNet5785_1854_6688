@@ -807,8 +807,7 @@ internal class CallImplementation : ICall
         List<DO.Assignment> listAss;
         List<DO.Volunteer> matchingVolunteers;
         string subject = "Your call assignment has been canceled";
-        string body = "Hello, your call assignment has been canceled by the manager";
-
+        
         lock (AdminManager.BlMutex)
         {
             listAss = s_dal.Assignment.ReadAll()
@@ -829,6 +828,25 @@ internal class CallImplementation : ICall
         }
 
         DO.Volunteer? volunteer = matchingVolunteers.FirstOrDefault();
+        string body = $@"
+    <html>
+    <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>
+        <div style='background-color: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>
+            <h3 style='color: #4CAF50;'>Hello {volunteer.FullName},</h3>
+            <p>We regret to inform you that the assignment you were associated with has been canceled. Below are the details of the canceled assignment:</p>
+            <ul style='line-height: 1.6; list-style-type: none; padding: 0;'>
+                <li><strong>Call ID:</strong> {c.Id}</li>
+                <li><strong>Type:</strong> {c.TypeOfCall}</li>
+                <li><strong>Start Time:</strong> {c.OpenningTime}</li>
+                <li><strong>Deadline:</strong> {c.TimeToEnd?.ToString() ?? "N/A"}</li>
+                <li><strong>TotalAlocations:</strong> {c.TotalAlocations}</li>
+            </ul>
+            <p>If you have any questions or need further assistance, please feel free to contact us.</p>
+            <br>
+            <p>Best regards,<br>The System Team<br>Meir@Yedidia</p>
+        </div>
+    </body>
+    </html>";
         if (volunteer != null)
         {
             try
