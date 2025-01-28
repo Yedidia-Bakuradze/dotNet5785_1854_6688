@@ -34,14 +34,14 @@
         /// Set: Every time the address has been updated, the Latitude value would be updated as well
         /// NFD - Not For Displayment
         /// </summary>
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
 
         /// <summary>
         /// Get: From DO.Call
         /// Set: Every time the address has been updated, the Longitude value would be updated as well
         /// NFD - Not For Displayment
         /// </summary>
-        public double Longitude{ get; set; }
+        public double? Longitude{ get; set; }
 
         /// <summary>
         /// Get: From DO.Call

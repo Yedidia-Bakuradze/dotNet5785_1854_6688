@@ -17,8 +17,8 @@ public record Call
     int Id,
     CallType Type,
     string FullAddressCall,
-    double Latitude,
-    double Longitude,
+    double? Latitude,
+    double? Longitude,
     DateTime OpeningTime,
     string? Description = null,
     DateTime? DeadLine = null
