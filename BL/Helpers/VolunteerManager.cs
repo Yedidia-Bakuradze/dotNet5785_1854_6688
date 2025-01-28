@@ -227,19 +227,16 @@ internal static class VolunteerManager
     #endregion
 
     #region Geographic & Distance Location
-    internal static bool AreCodinatesValid(params (double?, double?)[] vectors)
-    {
-        foreach (var vec in vectors)
-            if (vec.Item1 is null || vec.Item2 is null)
-                return false;
-        return true;
-    }
+
+    internal static bool CordinatesValidator(params (double?, double?)[] vectors) => !vectors.Any(val => val.Item1 is null || val.Item2 is null);
+
 
     /// <summary>
     /// This method returns a tuple containing the cordinates (latitude, logitude) of a given street address if exsists, otherwise it would return tuple of null values
     /// </summary>
-    /// <param name="streetAddress">The requested street address to convert to cordinates</param>
-    /// <returns>Tuple containing the cordinates (latitude, logitude), if the address is not valid it would return tuple of null values</returns>
+    /// <param name="streetAddress"></param>
+    /// <returns></returns>
+    /// <exception cref="BlXmlElementDoesntExsist"></exception>
     internal static async Task<(double?, double?)> GetGeoCordinates(string streetAddress)
     {
         //Builds the URL requests
@@ -274,18 +271,18 @@ internal static class VolunteerManager
     /// This method calculates the air distance between the given streets
     /// </summary>
     /// <param name="origin">The departure street</param>
-    /// <param name="destanation">The arrival street</param>
+    /// <param name="destination">The arrival street</param>
     /// <returns>The distance in KM</returns>
-    private static double CalculatedAirDistance((double?, double?) origin, (double?, double?) destanation)
+    private static double CalculatedAirDistance((double?, double?) origin, (double?, double?) destination)
     {
-        if (origin is (null, null))
+        if (!CordinatesValidator(origin, destination))
             return 0;
 
         double R = 6371; // Radius of the Earth in kilometers
-        double dLat = ToRadians((double)(destanation.Item1 - origin.Item1));
-        double dLon = ToRadians((double)(destanation.Item2 - origin.Item2));
-        double lat1Rad = ToRadians((double)origin.Item1);
-        double lat2Rad = ToRadians((double)destanation.Item1);
+        double dLat = ToRadians((double)(destination.Item1 - origin.Item1)!);
+        double dLon = ToRadians((double)(destination.Item2 - origin.Item2)!);
+        double lat1Rad = ToRadians((double)origin.Item1!);
+        double lat2Rad = ToRadians((double)destination.Item1!);
 
         double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
                    Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
@@ -303,7 +300,7 @@ internal static class VolunteerManager
     /// <returns>The distance in KM</returns>
     private static double CalculatedWalkingDistance((double?, double?) origin, (double?, double?) destination)
     {
-        if (origin is (null, null))
+        if (!CordinatesValidator(origin, destination))
             return 0;
 
         Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.walking}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
@@ -327,7 +324,7 @@ internal static class VolunteerManager
     /// <returns>The distance in KM</returns>
     private static double CalculatedDrivingDistance((double?, double?) origin, (double?, double?) destination)
     {
-        if (origin is (null, null))
+        if (!CordinatesValidator(origin, destination))
             return 0;
 
         Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.driving}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
@@ -350,7 +347,7 @@ internal static class VolunteerManager
     /// <param name="callAddress">The call's address</param>
     /// <param name="typeOfRange">The specified range, either Air, Walking or Driving distance</param>
     /// <returns>The distnace in KM calculated as requested</returns>
-    internal static double CalculateDistanceFromVolunteerToCall((double?,double?) volunteer, (double?, double?) call, DO.TypeOfRange typeOfRange)
+    internal static double CalculateDistanceFromVolunteerToCall((double?, double?) volunteer, (double?, double?) call, DO.TypeOfRange typeOfRange)
         => typeOfRange switch
         {
             DO.TypeOfRange.WalkingDistance => CalculatedWalkingDistance(volunteer, call),
@@ -359,15 +356,17 @@ internal static class VolunteerManager
             _ => throw new BO.BlInvalidDistanceCalculationException("BL: Invalid type of distance calculation has been requested")
         };
 
+
+    #endregion
+
+    #region Convertors
+
     /// <summary>
     /// This method converts from DO version of Volunteer to its BO version
     /// </summary>
     /// <param name="volunteer">The original DO Volunteer variable</param>
     /// <param name="callInProgress">The assosiated call to that volunteer</param>
     /// <returns>a new BO Volunteer variable</returns>
-    #endregion
-
-    #region Convertors
     internal static BO.Volunteer ConvertDoVolunteerToBoVolunteer(DO.Volunteer volunteer, BO.CallInProgress? callInProgress)
         => new BO.Volunteer
         {
@@ -418,17 +417,17 @@ internal static class VolunteerManager
             IEnumerable<DO.Volunteer> ActiveVolunteers;
             DO.Assignment? volunteersCurrentCallAssignment;
             ActiveVolunteers = from volunteer in s_dal.Volunteer.ReadAll()
-                                where volunteer.IsActive
-                                select volunteer;
+                               where volunteer.IsActive
+                               select volunteer;
 
             foreach (DO.Volunteer volunteer in ActiveVolunteers)
             {
                 lock (AdminManager.BlMutex)
                 {
                     volunteersCurrentCallAssignment = (from assign in s_dal.Assignment.ReadAll()
-                                                    where assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is null
-                                                    orderby assign.Id descending
-                                                    select assign).FirstOrDefault();
+                                                       where assign.VolunteerId == volunteer.Id && assign.TypeOfEnding is null
+                                                       orderby assign.Id descending
+                                                       select assign).FirstOrDefault();
 
                     if (volunteersCurrentCallAssignment is not null && volunteersCurrentCallAssignment?.TypeOfEnding is null)
                         FinishOrCancelAssignmentCallToVolunteerSimulator(volunteer, volunteersCurrentCallAssignment!);
@@ -479,9 +478,9 @@ internal static class VolunteerManager
         DO.Call randomCall;
         IEnumerable<DO.Call> openCalls;
         openCalls = from call in s_dal.Call.ReadAll()
-                        let status = CallManager.GetStatus(call.Id)
-                        where status == CallStatus.OpenAndRisky || status == CallStatus.Open
-                        select call;
+                    let status = CallManager.GetStatus(call.Id)
+                    where status == CallStatus.OpenAndRisky || status == CallStatus.Open
+                    select call;
         //If not enough calls to take
         if (openCalls.Count() == 0)
             return;
@@ -490,7 +489,7 @@ internal static class VolunteerManager
             randomCall = openCalls.FirstOrDefault()!;
         else
             randomCall = openCalls.ToList()[new Random().Next(0, openCalls.Count() - 1)];
-        if(randomCall == null)
+        if (randomCall == null)
         {
             return;
         }
@@ -510,7 +509,7 @@ internal static class VolunteerManager
         CallManager.Observers.NotifyListUpdated();
     }
 
-    internal static void FinishOrCancelAssignmentCallToVolunteerSimulator(DO.Volunteer volunteer,DO.Assignment assignment)
+    internal static void FinishOrCancelAssignmentCallToVolunteerSimulator(DO.Volunteer volunteer, DO.Assignment assignment)
     {
         DO.Call call;
         lock (AdminManager.BlMutex)
@@ -561,7 +560,7 @@ internal static class VolunteerManager
                 throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {assignment.Id} doesn't exists", ex);
             }
         }
-        
+
     }
 
     #endregion
