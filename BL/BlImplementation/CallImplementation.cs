@@ -255,49 +255,29 @@ internal class CallImplementation : ICall
     public void CancelAssignement(int VolunteerId, int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
-        DO.Assignment assignment;
 
-        lock (AdminManager.BlMutex)
-        {
-            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
-            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
-                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
-        }
-
-        lock (AdminManager.BlMutex)
-        {
-            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
-                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
-        }
-
-        //Check that the call is not ended (Cancled, Expiered or completed)
-        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
-
-        //TOOD: Throw exception if access not granted or if there is Dal exception
-
-        //Update the Dal entity with current system time and Closed status
-        DO.Assignment newAssignment = assignment with
-        {
-            TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
-            TimeOfEnding = AdminManager.Now,
-        };
+        //Throws an exception if the assignment canceltion is not allowed
+        CallManager.VerifyAssignmentCancelAttempt(VolunteerId, callId,out DO.Assignment assignment);
 
         try
         {
+            //Update the Dal entity with current system time and Closed status
             lock (AdminManager.BlMutex)
             {
-                s_dal.Assignment.Update(newAssignment);
+                s_dal.Assignment.Update(assignment with
+                {
+                    TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+                    TimeOfEnding = AdminManager.Now,
+                });
             }
-
-            //Notifies all observers that a call has been added
-            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
+            throw new BO.BlDoesNotExistException($"Bl Says: {ex.Message}");
         }
 
+        //Notifies all observers that a call has been added
+        CallManager.Observers.NotifyListUpdated();
     }
 
     #endregion

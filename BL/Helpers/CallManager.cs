@@ -223,5 +223,28 @@ internal static class CallManager
         if (call.DeadLine - AdminManager.Now <= TimeSpan.Zero)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
     }
+    
+    internal static void VerifyAssignmentCancelAttempt(int VolunteerId, int callId,out DO.Assignment assignment)
+    {
+
+        lock (AdminManager.BlMutex)
+        {
+            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+        }
+
+        lock (AdminManager.BlMutex)
+        {
+            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+        }
+
+        //Check that the call is not ended (Cancled, Expiered or completed)
+        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+
+        //TOOD: Throw exception if access not granted or if there is Dal exception
+    }
     #endregion
 }
