@@ -1,4 +1,5 @@
-﻿using DalApi;
+﻿using BO;
+using DalApi;
 using System.Net.Http.Headers;
 namespace Helpers;
 
@@ -99,25 +100,11 @@ internal static class CallManager
     /// <param name="call">The call to be reviewed</param>
     /// <returns>a boolean value whether the entity is valid or not</returns>
     /// <exception cref="BO.BlInvalidEntityDetails"></exception>
-    internal static async Task<bool> IsCallValid(BO.Call call)
+    internal static void IsCallValid(BO.Call call)
     {
-        try
-        {
-            //Check if the times are valid
-            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < AdminManager.Now)
-                throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
-
-            //Checks if the address is valid (if cordinates exist)
-            (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
-            if (lat == null || lng == null)
-                throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
-        }
-        catch(BO.BlInvalidEntityDetails ex)
-        {
-            Console.WriteLine(ex.Message);
-            return false;
-        }
-        return true;
+        //Check if the times are valid
+        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < AdminManager.Now)
+            throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
     }
     
     /// <summary>
@@ -132,10 +119,51 @@ internal static class CallManager
             Id = call.Id,
             Type = (DO.CallType)call.TypeOfCall,
             FullAddressCall = call.CallAddress,
-            Latitude = call.Latitude,
-            Longitude = call.Longitude,
+            Latitude = null,
+            Longitude = null,
             OpeningTime = AdminManager.Now,
             Description = call.Description,
             DeadLine = call.CallDeadLine
         };
+
+    internal static async Task UpdateCallCordinates(int callId, string address, bool isNewCall)
+    {
+        (double?,double?) coridnates = await VolunteerManager.GetGeoCordinates(address);
+
+        if (!VolunteerManager.CordinatesValidator(coridnates))
+        {
+            if (isNewCall)
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    s_dal.Call.Delete(callId);
+                }
+                Observers.NotifyItemUpdated(callId);
+                Observers.NotifyListUpdated();
+            }
+            throw new BlInvalidCordinatesConversionException(address);
+
+        }
+        
+        lock (AdminManager.BlMutex)
+        {
+            DO.Call call = s_dal.Call.Read(callId)
+                ?? throw new BlDoesNotExistException($"Bl Says: Call with ID {callId} does not exist");
+
+            s_dal.Call.Update(call with
+            {
+                Latitude = (double)coridnates.Item1!,
+                Longitude = (double)coridnates.Item2!,
+            });
+        }
+
+        _ = Task.Run(() =>
+        {
+            Observers.NotifyItemUpdated(callId);
+            Observers.NotifyListUpdated();
+        });
+    }
+
+
+
 }

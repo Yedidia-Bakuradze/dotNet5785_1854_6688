@@ -38,7 +38,7 @@ public interface ICall : IObservable //Stage 5
     /// Add a new call
     /// </summary>
     /// <param name="call">The call object to add</param>
-    public Task AddCall(BO.Call call);
+    public void AddCall(BO.Call call);
 
     /// <summary>
     /// Get a list of closed calls for a specific volunteer

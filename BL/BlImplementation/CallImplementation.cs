@@ -24,33 +24,32 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="call">The call object containing details to be added.</param>
     /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the call's times are invalid or the address is not a real location.</exception>
-    public async Task AddCall(BO.Call call)
+    public void AddCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
 
-        //Check if the call entity is valid or not
-        if (!(await CallManager.IsCallValid(call)))
-            throw new BO.BlInvalidEntityDetails($"BL: The call entity (Id: {call.Id}) doesn't contain valid values.");
-
-        //Get Call cordinates
-        (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
-        if (lat == null || lng == null)
-            throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
-
-        //Cordinates are updated
-        call.Latitude = (double)lat!;
-        call.Longitude = (double)lng!;
+        CallManager.IsCallValid(call);
 
         //Create new Dal entity
-        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+        DO.Call? newCall = CallManager.ConvertFromBdToD(call);
 
         // Add the new call to the database
         lock (AdminManager.BlMutex)
+        {
             s_dal.Call.Create(newCall);
+            newCall = s_dal.Call.ReadAll().LastOrDefault() 
+                ?? throw new BlUnWantedNullValueException($"Bl Says: The new created call hasn't been found");
+        }
 
-        AddCallSendEmailAsync(newCall);
+        //Updates the cordinates later
+        _ = CallManager.UpdateCallCordinates(newCall.Id,newCall.FullAddressCall,true);
+        
+        //Sends the email notification
+        _ = AddCallSendEmailAsync(newCall);
+        
         //Notifies all observers that a call has been added
         CallManager.Observers.NotifyListUpdated();
+        CallManager.Observers.NotifyItemUpdated(newCall.Id);
     }
 
     /// <summary>
