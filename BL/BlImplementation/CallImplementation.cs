@@ -2,6 +2,7 @@
 using BlApi;
 using BO;
 using Helpers;
+using System.Diagnostics.CodeAnalysis;
 
 internal class CallImplementation : ICall
 {
@@ -19,6 +20,9 @@ internal class CallImplementation : ICall
 
     private object lockObject = new();
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
+
+    #region CRUD
+
     /// <summary>
     /// Adds a new call to the system after validating its details.
     /// </summary>
@@ -84,109 +88,45 @@ internal class CallImplementation : ICall
     }
 
     /// <summary>
-    /// Updates the status of an assignment when the call ends.
+    /// This method updates the DO Call with the past BO Call field values
     /// </summary>
-    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
-    /// <param name="assignmentId">The ID of the call associated with the assignment.</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
-    public void FinishAssignement(int VolunteerId, int assignmentId)
+    /// <param name="call">The new (BO) Call entity with the new values</param>
+    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the Call values are not valid</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
+    public void UpdateCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
+        DO.Call updatedCall;
 
-        //Throws an exception if the assignment is unfinishble
-        CallManager.VerifyAssignmentFinishAttept(VolunteerId,assignmentId, out DO.Assignment res);
+        //Throws an exception if the values are invalid
+        CallManager.IsCallValid(call);
+
+        //Convert values to DO entity
+        DO.Call newCall = CallManager.ConvertFromBdToD(call);
+
         
         try
         {
-            // Update the assignment with the new ending type and time
             lock (AdminManager.BlMutex)
             {
-                s_dal.Assignment.Update(res with
-                {
-                    TypeOfEnding = DO.TypeOfEnding.Treated,
-                    TimeOfEnding = AdminManager.Now
-                });
+                s_dal.Call.Update(newCall);
+                updatedCall = s_dal.Call.ReadAll().LastOrDefault()
+                    ?? throw new BlUnWantedNullValueException($"Bl Says: Can't read old call {call.Id} after modification");
             }
 
-            CallManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
-        }
-    }
-
-    /// <summary>
-    /// Retrieves a list of closed calls assigned to a specific volunteer, with optional filtering and sorting.
-    /// </summary>
-    /// <param name="VolunteerId">The ID of the volunteer.</param>
-    /// <param name="callType">Optional filter for the type of call.</param>
-    /// <param name="parameter">Optional filterField for sorting the resulting list.</param>
-    /// <returns>A sorted and filtered list of closed calls.</returns>
-    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int VolunteerId, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
-    {
-        List<DO.Assignment> res;
-        List<DO.Call> finalRes;
-        // Step 1: Fetch all assignments for the given volunteer
-        lock (AdminManager.BlMutex)
-        {
-            res = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId).ToList();
-
-            // Step 2: Fetch all calls related to the assignments where TypeOfEnding is not null
-            finalRes = s_dal.Call.ReadAll(call => res.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null)).ToList();
-        }
-        // Step 3: Filter calls by type if callType is provided
-        if (callType != null)
-        {
-            finalRes = finalRes.Where(call => call.Type == (DO.CallType)callType).ToList();
+            throw new BO.BlDoesNotExistException($"BL: Call with Id: {newCall.Id} doesn't exists");
         }
 
-        // Step 4: Create a list of ClosedCallInList objects
-        List<BO.ClosedCallInList> closedCalls = finalRes.Select(call => new BO.ClosedCallInList
-        {
-            Id = call.Id,
-            TypeOfCall = (BO.CallType)call.Type,
-            CallAddress = call.FullAddressCall,
-            CallStartTime = call.OpeningTime,
-            EnteryTime = res.FirstOrDefault(ass => ass.CallId == call.Id).TimeOfStarting, // Access the start time from the corresponding assignment
-            ClosingTime = (DateTime)res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
-            TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
-        }).ToList();
+        CallManager.Observers.NotifyItemUpdated(updatedCall.Id);
+        CallManager.Observers.NotifyListUpdated();
 
-        // Step 5: Sort the list based on the specified filterField
-        if (parameter != null)
-        {
-            switch (parameter)
-            {
-                case BO.ClosedCallInListFields.Id:
-                    closedCalls = closedCalls.OrderBy(call => call.Id).ToList();
-                    break;
-                case BO.ClosedCallInListFields.TypeOfCall:
-                    closedCalls = closedCalls.OrderBy(call => call.TypeOfCall).ToList();
-                    break;
-                case BO.ClosedCallInListFields.CallAddress:
-                    closedCalls = closedCalls.OrderBy(call => call.CallAddress).ToList();
-                    break;
-                case BO.ClosedCallInListFields.CallStartTime:
-                    closedCalls = closedCalls.OrderBy(call => call.CallStartTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.EnteryTime:
-                    closedCalls = closedCalls.OrderBy(call => call.EnteryTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.ClosingTime:
-                    closedCalls = closedCalls.OrderBy(call => call.ClosingTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.TypeOfClosedCall:
-                    closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
-                    break;
-                default:
-                    throw new BO.BlInvalidOperationException("Invalid sorting filterField");
-            }
-        }
+        //Start calculating the new cordinates
+        _ = CallManager.UpdateCallCordinates(updatedCall.Id,call.CallAddress,false);
 
-        // Step 6: Return the final list
-        return closedCalls;
+        //TODO: Should call the email system again?
     }
 
     /// <summary>
@@ -236,6 +176,115 @@ internal class CallImplementation : ICall
         // Return the populated BO.Call object containing all relevant details.
         return boCall;
     }
+    #endregion
+
+    /// <summary>
+    /// Updates the status of an assignment when the call ends.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer associated with the assignment.</param>
+    /// <param name="assignmentId">The ID of the call associated with the assignment.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown if the assignment has already been ended or is not allowed to be updated.</exception>
+    public void FinishAssignement(int VolunteerId, int assignmentId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+        //Throws an exception if the assignment is unfinishble
+        CallManager.VerifyAssignmentFinishAttept(VolunteerId,assignmentId, out DO.Assignment res);
+        
+        try
+        {
+            // Update the assignment with the new ending type and time
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Update(res with
+                {
+                    TypeOfEnding = DO.TypeOfEnding.Treated,
+                    TimeOfEnding = AdminManager.Now
+                });
+            }
+
+            CallManager.Observers.NotifyListUpdated();
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a list of closed calls assigned to a specific volunteer, with optional filtering and sorting.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer.</param>
+    /// <param name="callType">Optional filter for the type of call.</param>
+    /// <param name="parameter">Optional filterField for sorting the resulting list.</param>
+    /// <returns>A sorted and filtered list of closed calls.</returns>
+    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int VolunteerId, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
+    {
+        List<DO.Assignment> res;
+        IEnumerable<DO.Call> finalRes;
+
+        // Step 1: Fetch all assignments for the given volunteer
+        lock (AdminManager.BlMutex)
+        {
+            res = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId).ToList();
+
+            // Step 2: Fetch all calls related to the assignments where TypeOfEnding is not null
+            finalRes = s_dal.Call.ReadAll(call => res.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null));
+        }
+
+        finalRes = callType is not null
+            ? finalRes.Where(call => call.Type == (DO.CallType)callType)
+            : finalRes;
+
+
+        // Step 4: Create a list of ClosedCallInList objects
+        List<BO.ClosedCallInList> closedCalls = finalRes.Select(call => new BO.ClosedCallInList
+        {
+            Id = call.Id,
+            TypeOfCall = (BO.CallType)call.Type,
+            CallAddress = call.FullAddressCall,
+            CallStartTime = call.OpeningTime,
+            EnteryTime = res.FirstOrDefault(ass => ass.CallId == call.Id).TimeOfStarting, // Access the start time from the corresponding assignment
+            ClosingTime = (DateTime)res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
+            TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
+        }).ToList();
+
+        // Step 5: Sort the list based on the specified filterField
+        if (parameter != null)
+        {
+            switch (parameter)
+            {
+                case BO.ClosedCallInListFields.Id:
+                    closedCalls = closedCalls.OrderBy(call => call.Id).ToList();
+                    break;
+                case BO.ClosedCallInListFields.TypeOfCall:
+                    closedCalls = closedCalls.OrderBy(call => call.TypeOfCall).ToList();
+                    break;
+                case BO.ClosedCallInListFields.CallAddress:
+                    closedCalls = closedCalls.OrderBy(call => call.CallAddress).ToList();
+                    break;
+                case BO.ClosedCallInListFields.CallStartTime:
+                    closedCalls = closedCalls.OrderBy(call => call.CallStartTime).ToList();
+                    break;
+                case BO.ClosedCallInListFields.EnteryTime:
+                    closedCalls = closedCalls.OrderBy(call => call.EnteryTime).ToList();
+                    break;
+                case BO.ClosedCallInListFields.ClosingTime:
+                    closedCalls = closedCalls.OrderBy(call => call.ClosingTime).ToList();
+                    break;
+                case BO.ClosedCallInListFields.TypeOfClosedCall:
+                    closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
+                    break;
+                default:
+                    throw new BO.BlInvalidOperationException("Invalid sorting filterField");
+            }
+        }
+
+        // Step 6: Return the final list
+        return closedCalls;
+    }
+
 
     /// <summary>
     /// Retrieves a list of calls with optional filtering and sorting based on specified fields.
@@ -534,46 +583,6 @@ internal class CallImplementation : ICall
         CallManager.Observers.NotifyListUpdated();
     }
 
-    /// <summary>
-    /// This method updates the DO Call with the past BO Call field values
-    /// </summary>
-    /// <param name="call">The new (BO) Call entity with the new values</param>
-    /// <exception cref="BO.BlInvalidEntityDetails">Thrown if the Call values are not valid</exception>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown if such call doesn't exist</exception>
-    public async Task UpdateCall(BO.Call call)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-
-
-        if (!await CallManager.IsCallValid(call))
-            throw new BO.BlInvalidEntityDetails($"BL: Call (Id: {call.Id}) has invalid details");
-
-        (double? lat, double? log) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
-
-        call.Latitude = (double)lat!;
-        call.Longitude = (double)log!;
-
-        DO.Call newCall = CallManager.ConvertFromBdToD(call);
-
-        try
-        {
-            //Lock has been added so the update method wont be done simonteniassly
-            //which then would lead to the TakeLast method to take the wrong new object from the end of the enumarable
-            int updatedCallId;
-            lock (AdminManager.BlMutex)
-            {
-                s_dal.Call.Update(newCall);
-                //Notifies all observers that a call has been modified
-                updatedCallId = s_dal.Call.ReadAll().TakeLast(1).First().Id;
-            }
-            CallManager.Observers.NotifyItemUpdated(updatedCallId);
-            CallManager.Observers.NotifyListUpdated();
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"BL: Call with Id: {newCall.Id} doesn't exists");
-        }
-    }
 
     /// <summary>
     /// This method updates the Call status with the past callId
@@ -847,23 +856,16 @@ internal class CallImplementation : ICall
         }
     }
 
-    public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId)
-    {
-        lock (AdminManager.BlMutex)
-        {
-            return from call in GetOpenCallsForVolunteer(volunteerId, null, null)
-                   let currentCall = s_dal.Call.Read(call.CallId)
-                   select (currentCall.Latitude, currentCall.Longitude);
-        }
-    }
+    public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId) => ConvertOpenCallsToCordinates(GetOpenCallsForVolunteer(volunteerId, null, null));
 
     public IEnumerable<(double, double)> ConvertClosedCallsIntoCordinates(IEnumerable<ClosedCallInList> listOfCalls)
     {
         lock (AdminManager.BlMutex)
         {
-            return from closedCall in listOfCalls
-                   let call = s_dal.Call.Read(closedCall.Id)
-                   select (call.Latitude, call.Longitude);
+            return (from closedCall in listOfCalls
+                    let call = s_dal.Call.Read(closedCall.Id)
+                    where (call.Latitude, call.Longitude) is not (null, null)
+                    select (call.Latitude, call.Longitude)) as IEnumerable<(double, double)>;
 
         }
     }
@@ -871,9 +873,10 @@ internal class CallImplementation : ICall
     {
         lock (AdminManager.BlMutex)
         {
-            return from openCall in listOfCalls
+            return (from openCall in listOfCalls
                    let call = s_dal.Call.Read(openCall.CallId)
-                   select (call.Latitude, call.Longitude);
+                   where (call.Latitude,call.Longitude) is not (null,null)
+                    select (call.Latitude, call.Longitude)) as IEnumerable<(double, double)>;
         }
     }
 }

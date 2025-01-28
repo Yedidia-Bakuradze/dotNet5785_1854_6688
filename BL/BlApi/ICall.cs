@@ -26,7 +26,7 @@ public interface ICall : IObservable //Stage 5
     /// Update the details of a call
     /// </summary>
     /// <param name="call">The updated call object</param>
-    public Task UpdateCall(BO.Call call);
+    public void UpdateCall(BO.Call call);
 
     /// <summary>
     /// Delete a call request
