@@ -130,20 +130,23 @@ public partial class VolunteerLobbyWindow : Window
     private void OnShowSettingsWindow(object sender, RoutedEventArgs e) => new VolunteerWindow(VolunteerId, BO.UserRole.Admin).Show();
     private void Window_Closed(object sender, EventArgs e)
     {
-        s_bl.Volunteer.RemoveObserver(RefershWindowDetails);
-        s_bl.Call.RemoveObserver(RefershWindowDetails);
+        s_bl.Volunteer.RemoveObserver(Observer);
+        s_bl.Call.RemoveObserver(Observer);
     }
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        s_bl.Volunteer.AddObserver(RefershWindowDetails);
-        s_bl.Call.AddObserver(RefershWindowDetails);
+        s_bl.Volunteer.AddObserver(Observer);
+        s_bl.Call.AddObserver(Observer);
     }
     private void OnShowHistory(object sender, RoutedEventArgs e) => new ClosedCallListWindow(VolunteerId).Show();
     #endregion
 
     #region Methods
-    private void RefershWindowDetails()
+    private void Observer() => RefershWindowDetails();
+    private async Task RefershWindowDetails()
     {
+        var count = await Task.Run(()=> s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count());
+
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
         {
             _observerOperation = Dispatcher.BeginInvoke(() =>
@@ -167,7 +170,7 @@ public partial class VolunteerLobbyWindow : Window
                     RouteMap = null;
                     CallDetailsContent = null;
                     WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-                    DescriptionText = $"Currently there are {s_bl.Call.GetOpenCallsForVolunteer(VolunteerId,null,null).Count()} calls open Would you like to take one?";
+                    DescriptionText = $"Currently there are {count} calls open Would you like to take one?";
                 }
             });
         }
