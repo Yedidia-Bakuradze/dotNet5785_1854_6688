@@ -48,7 +48,7 @@ internal class CallImplementation : ICall
         lock(AdminManager.BlMutex)
             s_dal.Call.Create(newCall);
 
-
+        AddCallSendEmailAsync(newCall);
         //Notifies all observers that a call has been added
         CallManager.Observers.NotifyListUpdated();
     }
@@ -728,7 +728,7 @@ internal class CallImplementation : ICall
     //    // Log summary
     //    Console.WriteLine($"Email notifications sent: {emailsSent}/{activeVolunteers.Count}");
     //}
-    public async Task AddCallSendEmailAsync(BO.Call c)
+    public async Task AddCallSendEmailAsync(DO.Call c)
     {
         List<DO.Volunteer> activeVolunteers;
 
@@ -751,7 +751,7 @@ internal class CallImplementation : ICall
             {
                 // Calculate the distance between the call address and the volunteer's address
                 double distance = VolunteerManager.CalculateDistanceFromVolunteerToCall(
-                    c.CallAddress,
+                    c.FullAddressCall,
                     volunteer.FullCurrentAddress!,
                     (DO.TypeOfRange)volunteer.RangeType);
 
@@ -766,11 +766,11 @@ internal class CallImplementation : ICall
                     <p>A new call has been opened near your location:</p>
                     <ul style='line-height: 1.6;'>
                         <li><strong>Call ID:</strong> {c.Id}</li>
-                        <li><strong>Type:</strong> {c.TypeOfCall}</li>
+                        <li><strong>Type:</strong> {c.Type}</li>
                         <li><strong>Description:</strong> {c.Description}</li>
-                        <li><strong>Start Time:</strong> {c.CallStartTime}</li>
-                        <li><strong>Deadline:</strong> {c.CallDeadLine?.ToString() ?? "N/A"}</li>
-                        <li><strong>Address:</strong> {c.CallAddress}</li>
+                        <li><strong>Start Time:</strong> {c.OpeningTime}</li>
+                        <li><strong>Deadline:</strong> {c.DeadLine?.ToString() ?? "N/A"}</li>
+                        <li><strong>Address:</strong> {c.FullAddressCall}</li>
                     </ul>
                     <p>For more details, please log into the system to view the call details.</p>
                     <br>

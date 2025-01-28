@@ -79,7 +79,7 @@ public interface ICall : IObservable //Stage 5
 
 
     public Task CancleCallSendEmailAsync(BO.CallInList c);
-    public Task AddCallSendEmailAsync(BO.Call c);
+    public Task AddCallSendEmailAsync(DO.Call c);
 
 
     public IEnumerable<(double, double)> GetListOfOpenCallsForVolunteerCordinates(int volunteerId);
