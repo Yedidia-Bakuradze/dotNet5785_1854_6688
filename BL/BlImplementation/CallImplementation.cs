@@ -178,6 +178,8 @@ internal class CallImplementation : ICall
     }
     #endregion
 
+    #region Assignment Create & Close
+
     /// <summary>
     /// Updates the status of an assignment when the call ends.
     /// </summary>
@@ -211,6 +213,94 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Bl: Assignment does not exist", ex);
         }
     }
+    
+    /// <summary>
+    /// This methods assignes a call to a volunteer if the call is free to be alocated
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests a new call</param>
+    /// <param name="callId">The requested call to be assigned</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
+    public void SelectCallToDo(int VolunteerId, int callId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+
+        //Throws an exception if the call-volunteer allocation is not allowed
+        CallManager.VerifyAssignmentAllocationAttempt(VolunteerId,callId);
+
+        //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
+        lock (AdminManager.BlMutex)
+        {
+            s_dal.Assignment.Create(new DO.Assignment
+            {
+                Id = -1, //Temp id, the real id is assigned in the Dal layer
+                CallId = callId,
+                VolunteerId = VolunteerId,
+                TimeOfEnding = null,
+                TimeOfStarting = AdminManager.Now,
+                TypeOfEnding = null,
+            });
+        }
+        CallManager.Observers.NotifyListUpdated();
+    }
+
+    /// <summary>
+    /// This method updates the Call status with the past callId
+    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
+    /// </summary>
+    /// <param name="VolunteerId">The volunteer which requests the modification</param>
+    /// <param name="callId">The call if of the Call which is needed to be updated</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
+    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
+    public void CancelAssignement(int VolunteerId, int callId)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
+        DO.Assignment assignment;
+
+        lock (AdminManager.BlMutex)
+        {
+            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+        }
+
+        lock (AdminManager.BlMutex)
+        {
+            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+        }
+
+        //Check that the call is not ended (Cancled, Expiered or completed)
+        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+
+        //TOOD: Throw exception if access not granted or if there is Dal exception
+
+        //Update the Dal entity with current system time and Closed status
+        DO.Assignment newAssignment = assignment with
+        {
+            TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
+            TimeOfEnding = AdminManager.Now,
+        };
+
+        try
+        {
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Assignment.Update(newAssignment);
+            }
+
+            //Notifies all observers that a call has been added
+            CallManager.Observers.NotifyListUpdated();
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
+        }
+
+    }
+
+    #endregion
 
     /// <summary>
     /// Retrieves a list of closed calls assigned to a specific volunteer, with optional filtering and sorting.
@@ -530,115 +620,6 @@ internal class CallImplementation : ICall
         }
     }
 
-    /// <summary>
-    /// This methods assignes a call to a volunteer if the call is free to be alocated
-    /// </summary>
-    /// <param name="VolunteerId">The volunteer which requests a new call</param>
-    /// <param name="callId">The requested call to be assigned</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown when there is not such a call</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the action is forbidden due to the call being taken or finished</exception>
-    public void SelectCallToDo(int VolunteerId, int callId)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-        DO.Call call;
-        DO.Assignment? callAssignment;
-        lock (AdminManager.BlMutex)
-        {
-            //Check if there is such call
-            call = s_dal.Call.Read((call) => call.Id == callId)
-                ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
-            //Check if the call hasn't been taken by someone else
-            callAssignment = s_dal.Assignment.ReadAll((assignment) => assignment.CallId == callId).LastOrDefault();
-        }
-        lock (AdminManager.BlMutex)
-        {
-            var existingAssignment = s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
-            if (existingAssignment is not null)
-                throw new BO.BlForbidenSystemActionExeption($"BL Says: Cann't assigned call {callId} to volunteer {VolunteerId} because it has a running call ({existingAssignment.CallId})");
-
-        }
-
-        //Check if call already been taken
-        if (callAssignment != null && callAssignment.TypeOfEnding is not null)
-            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
-
-        //Check if there is time to complete the call
-        if (call.DeadLine - AdminManager.Now <= TimeSpan.Zero)
-            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
-
-        //Create DO Assignment entity with current clock time, and starting time and the CallType shall be null (?)
-        DO.Assignment newAssignment = new DO.Assignment
-        {
-            Id = -1, //Temp id, the real id is assigned in the Dal layer
-            CallId = callId,
-            VolunteerId = VolunteerId,
-            TimeOfEnding = null,
-            TimeOfStarting = AdminManager.Now,
-            TypeOfEnding = null,
-        };
-        lock (AdminManager.BlMutex)
-        {
-            s_dal.Assignment.Create(newAssignment);
-        }
-        CallManager.Observers.NotifyListUpdated();
-    }
-
-
-    /// <summary>
-    /// This method updates the Call status with the past callId
-    /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
-    /// </summary>
-    /// <param name="VolunteerId">The volunteer which requests the modification</param>
-    /// <param name="callId">The call if of the Call which is needed to be updated</param>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
-    /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
-    public void CancelAssignement(int VolunteerId, int callId)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-        DO.Assignment assignment;
-
-        lock (AdminManager.BlMutex)
-        {
-            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
-            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
-                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
-        }
-
-        lock (AdminManager.BlMutex)
-        {
-            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
-                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
-        }
-
-        //Check that the call is not ended (Cancled, Expiered or completed)
-        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
-
-        //TOOD: Throw exception if access not granted or if there is Dal exception
-
-        //Update the Dal entity with current system time and Closed status
-        DO.Assignment newAssignment = assignment with
-        {
-            TypeOfEnding = (assignment.VolunteerId != VolunteerId) ? DO.TypeOfEnding.AdminCanceled : DO.TypeOfEnding.SelfCanceled,
-            TimeOfEnding = AdminManager.Now,
-        };
-
-        try
-        {
-            lock (AdminManager.BlMutex)
-            {
-                s_dal.Assignment.Update(newAssignment);
-            }
-
-            //Notifies all observers that a call has been added
-            CallManager.Observers.NotifyListUpdated();
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"BL: Assignment with Id: {newAssignment.Id} doesn't exists", ex);
-        }
-
-    }
 
     //public void AddCallSendEmail(BO.Call c)
     //{
