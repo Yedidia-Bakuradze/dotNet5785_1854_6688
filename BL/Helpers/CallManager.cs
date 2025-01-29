@@ -1,4 +1,6 @@
-﻿using DalApi;
+﻿using BO;
+using DalApi;
+using DO;
 using System.Net.Http.Headers;
 namespace Helpers;
 
@@ -99,25 +101,11 @@ internal static class CallManager
     /// <param name="call">The call to be reviewed</param>
     /// <returns>a boolean value whether the entity is valid or not</returns>
     /// <exception cref="BO.BlInvalidEntityDetails"></exception>
-    internal static async Task<bool> IsCallValid(BO.Call call)
+    internal static void IsCallValid(BO.Call call)
     {
-        try
-        {
-            //Check if the times are valid
-            if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < AdminManager.Now)
-                throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
-
-            //Checks if the address is valid (if cordinates exist)
-            (double? lat, double? lng) = await VolunteerManager.GetGeoCordinates(call.CallAddress);
-            if (lat == null || lng == null)
-                throw new BO.BlInvalidEntityDetails($"BL: The given call address ({call.CallAddress}) is not a real address");
-        }
-        catch(BO.BlInvalidEntityDetails ex)
-        {
-            Console.WriteLine(ex.Message);
-            return false;
-        }
-        return true;
+        //Check if the times are valid
+        if (call.CallStartTime > call.CallDeadLine || call.CallDeadLine < AdminManager.Now)
+            throw new BO.BlInvalidEntityDetails("BL: The deadline of the call cannot be before the start time of the call");
     }
     
     /// <summary>
@@ -132,10 +120,128 @@ internal static class CallManager
             Id = call.Id,
             Type = (DO.CallType)call.TypeOfCall,
             FullAddressCall = call.CallAddress,
-            Latitude = call.Latitude,
-            Longitude = call.Longitude,
+            Latitude = null,
+            Longitude = null,
             OpeningTime = AdminManager.Now,
             Description = call.Description,
             DeadLine = call.CallDeadLine
         };
+
+    internal static async Task UpdateCallCordinates(int callId, string address, bool isNewCall)
+    {
+        (double?,double?) coridnates = await VolunteerManager.GetGeoCordinates(address);
+
+        if (!VolunteerManager.CordinatesValidator(coridnates))
+        {
+            if (isNewCall)
+            {
+                lock (AdminManager.BlMutex)
+                {
+                    s_dal.Call.Delete(callId);
+                }
+                Observers.NotifyItemUpdated(callId);
+                Observers.NotifyListUpdated();
+            }
+            throw new BlInvalidCordinatesConversionException(address);
+
+        }
+        
+        lock (AdminManager.BlMutex)
+        {
+            DO.Call call = s_dal.Call.Read(callId)
+                ?? throw new BlDoesNotExistException($"Bl Says: Call with ID {callId} does not exist");
+
+            s_dal.Call.Update(call with
+            {
+                Latitude = (double)coridnates.Item1!,
+                Longitude = (double)coridnates.Item2!,
+            });
+        }
+
+        Observers.NotifyItemUpdated(callId);
+        Observers.NotifyListUpdated();
+    }
+
+    internal static void VerifyCallDeletionAttempt(int callId)
+    {
+        lock (AdminManager.BlMutex)
+        {
+            // Check if there are any assignments related to the call
+            if (s_dal.Assignment.ReadAll(assignment => assignment.CallId == callId).Any(assignment => assignment.VolunteerId != 0))
+                throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {callId} since it has a record with other volunteers");
+        }
+
+        if (CallManager.GetStatus(callId) != CallStatus.Open && CallManager.GetStatus(callId) != CallStatus.OpenAndRisky)
+            throw new BlForbidenSystemActionExeption($"BL: Unable to delete call {callId} since it's status is not open");
+    }
+
+    #region Assignment Logic Methods
+    internal static void VerifyAssignmentFinishAttept(int VolunteerId, int aassignmentId, out DO.Assignment res)
+    {
+        // Retrieve the assignment details for the given volunteer and call ID
+        lock (AdminManager.BlMutex)
+        {
+            res = s_dal.Assignment.Read(ass => ass.Id == aassignmentId && ass.VolunteerId == VolunteerId)
+                ?? throw new BO.BlDoesNotExistException("BL : Assignment does not exist");
+        }
+
+        // Check if the assignment already has an ending type or time
+        if (res?.TypeOfEnding != null || res?.TimeOfEnding != null)
+            throw new BO.BlForbidenSystemActionExeption("BL: Can't update the assignment");
+        
+
+    }
+
+    internal static void VerifyAssignmentAllocationAttempt(int VolunteerId, int callId)
+    {
+        DO.Call call;
+        DO.Assignment? callAssignment;
+        lock (AdminManager.BlMutex)
+        {
+            //Check if there is such call
+            call = s_dal.Call.Read((call) => call.Id == callId)
+                ?? throw new BO.BlDoesNotExistException($"Bl: Call with Id: {callId} doesn't exists");
+            //Check if the call hasn't been taken by someone else
+            callAssignment = s_dal.Assignment.ReadAll((assignment) => assignment.CallId == callId).LastOrDefault();
+        }
+        lock (AdminManager.BlMutex)
+        {
+            var existingAssignment = s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
+            if (existingAssignment is not null)
+                throw new BO.BlForbidenSystemActionExeption($"BL Says: Cann't assigned call {callId} to volunteer {VolunteerId} because it has a running call ({existingAssignment.CallId})");
+
+        }
+
+        //Check if call already been taken
+        if (callAssignment != null && callAssignment.TypeOfEnding is not null)
+            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
+
+        //Check if there is time to complete the call
+        if (call.DeadLine - AdminManager.Now <= TimeSpan.Zero)
+            throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
+    }
+    
+    internal static void VerifyAssignmentCancelAttempt(int VolunteerId, int callId,out DO.Assignment assignment)
+    {
+
+        lock (AdminManager.BlMutex)
+        {
+            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
+                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+        }
+
+        lock (AdminManager.BlMutex)
+        {
+            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
+                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+        }
+
+        //Check that the call is not ended (Cancled, Expiered or completed)
+        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+
+        //TOOD: Throw exception if access not granted or if there is Dal exception
+    }
+    #endregion
 }

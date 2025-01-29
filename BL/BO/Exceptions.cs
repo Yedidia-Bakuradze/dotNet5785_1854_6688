@@ -128,4 +128,10 @@ public class BLTemporaryNotAvailableException : Exception
         
     }
 }
+
+[Serializable]
+public class BlInvalidCordinatesConversionException : Exception
+{
+    public BlInvalidCordinatesConversionException(string? street) : base($"Bl Says: Street address {street} does not exists"){}
+}
 #endregion BL

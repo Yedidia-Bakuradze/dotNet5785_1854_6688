@@ -891,8 +891,8 @@ Type Of Ending: {TypeOfEnding}
                                     throw new DalDoesNotExistException($"The Call instance with ID of {id} hasn't been found");
                             CallType Type = result.Type;
                             string FullAddressCall = result.FullAddressCall;
-                            double Latitude = result.Latitude;
-                            double Longitude = result.Longitude;
+                            double Latitude = result.Latitude ?? 100;
+                            double Longitude = result.Longitude ?? 100;
                             DateTime OpeningTime = result.OpeningTime;
                             string? Description = result.Description;
                             DateTime? DeadLine = result.DeadLine;
