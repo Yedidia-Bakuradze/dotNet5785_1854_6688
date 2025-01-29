@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <Id>1</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>Ha tothan 3 jerusalem israel</FullAddressCall>
-    <Latitude>31.8323803</Latitude>
-    <Longitude>35.2411291</Longitude>
-    <OpeningTime>2025-01-27T23:02:02</OpeningTime>
-    <Description>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</Description>
-    <DeadLine>3000-01-01T00:00:00</DeadLine>
-  </Call>
-  <Call>
     <Id>2</Id>
     <Type>CarStuck</Type>
     <FullAddressCall>Ha tothan 3 jerusalem israel</FullAddressCall>
@@ -18,6 +8,16 @@
     <Longitude>35.2411291</Longitude>
     <OpeningTime>2025-01-27T23:02:02</OpeningTime>
     <Description>gggggggggggggg</Description>
+    <DeadLine>3000-01-01T00:00:00</DeadLine>
+  </Call>
+  <Call>
+    <Id>1</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>Dizengoff 208, Tel Aviv-Jaffa</FullAddressCall>
+    <Latitude>32.087033</Latitude>
+    <Longitude>34.7751619</Longitude>
+    <OpeningTime>2025-01-27T23:02:02</OpeningTime>
+    <Description>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</Description>
     <DeadLine>3000-01-01T00:00:00</DeadLine>
   </Call>
 </ArrayOfCall>

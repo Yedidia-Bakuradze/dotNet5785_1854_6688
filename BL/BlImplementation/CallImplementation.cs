@@ -428,13 +428,17 @@ internal class CallImplementation : ICall
 
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         openCalls = from call in s_dal.Call.ReadAll()
-                    where CallManager.GetStatus(call.Id) == BO.CallStatus.Open || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky
+                    where
+                    (CallManager.GetStatus(call.Id) == BO.CallStatus.Open
+                    || CallManager.GetStatus(call.Id) == BO.CallStatus.OpenAndRisky
+                    )
                     && (
                         volunteer.MaxDistanceToCall is null
                         || volunteer.FullCurrentAddress is null
                         || VolunteerManager.CalculateDistanceFromVolunteerToCall((volunteer.Latitude, volunteer.Longitude), (call.Latitude, call.Longitude), volunteer.RangeType) <= volunteer.MaxDistanceToCall
                     )
                     select new BO.OpenCallInList
+                    
                     {
                         CallId = call.Id,  // ID of the call
                         CallFullAddress = call.FullAddressCall,  // Full address of the call
@@ -841,7 +845,7 @@ internal class CallImplementation : ICall
             return (from openCall in listOfCalls
                    let call = s_dal.Call.Read(openCall.CallId)
                    where (call.Latitude,call.Longitude) is not (null,null)
-                    select (call.Latitude, call.Longitude)) as IEnumerable<(double, double)>;
+                    select ((double)call.Latitude!, (double)call.Longitude!));
         }
     }
     #endregion

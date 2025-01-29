@@ -1,4 +1,5 @@
-﻿using PL.Sub_Windows;
+﻿using BO;
+using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Converters;
@@ -107,18 +108,15 @@ public partial class OpenCallListWindow : Window
     #endregion
 
     #region Methods
-    private void Observer() => RefreshList();
+    private void Observer() => _ = RefreshList();
     private async Task RefreshList()
     {
         var _volunteerId = VolunteerId;
         var _filterByValue = FilterByValue;
         var _sortByField = SortByField;
 
-        var calls = await Task.Run(()=>s_bl.Call.GetOpenCallsForVolunteer(_volunteerId, _filterByValue, _sortByField));
-        var _listOfCordinates = await Task.Run(() =>
-            s_bl.Call
-                        .ConvertOpenCallsToCordinates(calls)
-                        .ToList<(double, double)>());
+        IEnumerable<OpenCallInList> calls = await Task.Run(()=> s_bl.Call.GetOpenCallsForVolunteer(_volunteerId, _filterByValue, _sortByField));
+        var _listOfCordinates = await Task.Run(() => s_bl.Call.ConvertOpenCallsToCordinates(calls).ToList());
 
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             _observerOperation = Dispatcher.BeginInvoke(() =>

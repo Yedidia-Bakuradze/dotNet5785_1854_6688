@@ -25,14 +25,14 @@ public partial class OpenCallWindow : Window
     #region Events
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        s_bl.Call.AddObserver(ReloadScreen);
-        s_bl.Volunteer.AddObserver(ReloadScreen);
+        s_bl.Call.AddObserver(Observer);
+        s_bl.Volunteer.AddObserver(Observer);
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
-        s_bl.Call.RemoveObserver(ReloadScreen);
-        s_bl.Volunteer.RemoveObserver(ReloadScreen);
+        s_bl.Call.RemoveObserver(Observer);
+        s_bl.Volunteer.RemoveObserver(Observer);
     }
     #endregion
 
@@ -71,19 +71,29 @@ public partial class OpenCallWindow : Window
     #endregion
 
     #region Methods
-    private void ReloadScreen()
+    private void Observer() => ReloadScreen();
+    private async void ReloadScreen()
     {
-        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        try
+        {
+            CurrentCall = await Task.Run(()=> s_bl.Call.GetDetielsOfCall(CallId));
+            CurrentVolunteer = await Task.Run(() => s_bl.Volunteer.GetVolunteerDetails(VolunteerId));
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            Close();
+        }
+
+        if ((CurrentCall.Latitude, CurrentCall.Longitude) is not (null,null) && (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed))
         {
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
-                try
-                {
-                    CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
-                    CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+
                     List<(double, double)> listOfCordinates = new();
-                    listOfCordinates.Add((CurrentCall.Latitude, CurrentCall.Longitude));
-                    if (CurrentVolunteer.FullCurrentAddress is not null)
+                    listOfCordinates.Add(((double)CurrentCall.Latitude!, (double)CurrentCall.Longitude!));
+
+                    if ((CurrentVolunteer.Latitude,CurrentVolunteer.Longitude) is not (null,null))
                     {
                         listOfCordinates.Insert(0, ((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
                         MapView = new DisplayMapContent(TypeOfMap.MultipleTypeOfRoutes, BO.TypeOfRange.WalkingDistance, listOfCordinates);
@@ -93,12 +103,6 @@ public partial class OpenCallWindow : Window
                         MapView = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.WalkingDistance, listOfCordinates);
                     }
 
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    this.Close();
-                }
             });
         }
         

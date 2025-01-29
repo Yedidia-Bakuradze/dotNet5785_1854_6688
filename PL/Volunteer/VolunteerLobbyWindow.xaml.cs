@@ -11,23 +11,15 @@ public partial class VolunteerLobbyWindow : Window
     public VolunteerLobbyWindow(int volunteerId)
     {
         VolunteerId = volunteerId;
-        try
-        {
-            RefershWindowDetails();
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            this.Close();
-        }
+        Observer();
         InitializeComponent();
     }
 
     #region Dependecy Propeties
-    public BO.Volunteer CurrentVolunteer 
+    public BO.Volunteer CurrentVolunteer
     {
         get => (BO.Volunteer)GetValue(CurrentVolunteerProperty);
-        set => SetValue(CurrentVolunteerProperty,value);
+        set => SetValue(CurrentVolunteerProperty, value);
     }
 
     private static readonly DependencyProperty CurrentVolunteerProperty
@@ -109,9 +101,9 @@ public partial class VolunteerLobbyWindow : Window
     {
         try
         {
-            s_bl.Call.CancelAssignement(VolunteerId,CurrentVolunteer.CurrentCall!.CallId);
+            s_bl.Call.CancelAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.CallId);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
         }
@@ -142,37 +134,45 @@ public partial class VolunteerLobbyWindow : Window
     #endregion
 
     #region Methods
-    private void Observer() => RefershWindowDetails();
+    private void Observer() => _ = RefershWindowDetails();
     private async Task RefershWindowDetails()
     {
-        var count = await Task.Run(()=> s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count());
-
-        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        try
         {
-            _observerOperation = Dispatcher.BeginInvoke(() =>
-            {
-                CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
-                HeaderText = $"Welcome {CurrentVolunteer.FullName}";
-                if(CurrentVolunteer.CurrentCall is not null)
-                {
+            var count = await Task.Run(() => s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count());
 
-                    CallDetails = $"Route: {CurrentVolunteer.RangeType}\nETA: 31 Minutes";
-                    List<(double, double)> listOfCorinates = new();
-                    if(CurrentVolunteer.FullName is not null)
-                        listOfCorinates.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
-                    var call = s_bl.Call.GetDetielsOfCall(CurrentVolunteer.CurrentCall.CallId);
-                    listOfCorinates.Add((call.Latitude,call.Longitude));
-                    RouteMap = new DisplayMapContent(TypeOfMap.Route,CurrentVolunteer.RangeType,listOfCorinates);
-                    CallDetailsContent = new CallDetailsControl(call);
-                }
-                else
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _observerOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    RouteMap = null;
-                    CallDetailsContent = null;
-                    WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-                    DescriptionText = $"Currently there are {count} calls open Would you like to take one?";
-                }
-            });
+                    CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                    HeaderText = $"Welcome {CurrentVolunteer.FullName}";
+                    if (CurrentVolunteer.CurrentCall is not null)
+                    {
+
+                        CallDetails = $"Route: {CurrentVolunteer.RangeType}\nETA: 31 Minutes";
+                        List<(double, double)> listOfCorinates = new();
+                        if (CurrentVolunteer.FullName is not null)
+                            listOfCorinates.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+                        var call = s_bl.Call.GetDetielsOfCall(CurrentVolunteer.CurrentCall.CallId);
+                        listOfCorinates.Add(((double)call.Latitude!, (double)call.Longitude!));
+                        RouteMap = new DisplayMapContent(TypeOfMap.Route, CurrentVolunteer.RangeType, listOfCorinates);
+                        CallDetailsContent = new CallDetailsControl(call);
+                    }
+                    else
+                    {
+                        RouteMap = null;
+                        CallDetailsContent = null;
+                        WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
+                        DescriptionText = $"Currently there are {count} calls open Would you like to take one?";
+                    }
+                });
+            }
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            Close();
         }
     }
 

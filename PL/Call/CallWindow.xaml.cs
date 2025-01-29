@@ -1,6 +1,7 @@
 ﻿using PL.Sub_Windows;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Converters;
 using System.Windows.Threading;
 namespace PL.Call;
 
@@ -97,29 +98,31 @@ public partial class CallWindow : Window
 
 
     }
-    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Referesh);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Referesh);
+    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Observer);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Observer);
     #endregion
 
     #region Method
-    private void Referesh()
+    private void Observer() => _ = Referesh();
+    private async Task Referesh()
     {
-        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        try
+        {
+            CurrentCall = await Task.Run(() => s_bl.Call.GetDetielsOfCall(CallId));
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            Close();
+        }
+
+        if ((CurrentCall.Latitude, CurrentCall.Longitude) is not (null,null) && (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed))
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
-                try
-                {
-                    CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
-                    CallDetailsControler = new CallDetailsControl(CurrentCall);
-                    List<(double, double)> listOfPoints = new();
-                    listOfPoints.Add((CurrentCall.Latitude, CurrentCall.Longitude));
-                    CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfPoints);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    Close();
-                }
+                CallDetailsControler = new CallDetailsControl(CurrentCall);
+                List<(double, double)> listOfPoints = new();
+                listOfPoints.Add(((double)CurrentCall.Latitude!, (double)CurrentCall.Longitude!));
+                CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfPoints);
             });
         
     }
