@@ -4,6 +4,7 @@ using BO;
 using BlApi;
 using Helpers;
 using System;
+using DO;
 
 internal class VolunteerImplementation : IVolunteer
 {
@@ -84,42 +85,30 @@ internal class VolunteerImplementation : IVolunteer
     /// If the action is now allowed it would throw an exception to the upper layer
     /// If the volunteer hasn't been found it would handler the thrown exception by throwing a new one to the upper layer
     /// </summary>
-    /// <param name="id">The requested volunteer's id value</param>
-    public void DeleteVolunteer(int id)
+    /// <param name="volunteerId">The requested volunteer's id value</param>
+    public void DeleteVolunteer(int volunteerId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
-        DO.Volunteer volunteer;
-        lock (AdminManager.BlMutex)
-        {
-            //Tries to find such volunteer
-            volunteer = s_dal.Volunteer.Read(id) 
-                ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {id}");
-        }
 
+        //Throws an exception if volunteer cant be deleted
+        VolunteerManager.VertifyVolunteerDeletionAttempt(volunteerId);
 
-        lock (AdminManager.BlMutex)
-        {
-            //Checks if the volunteer is in any records of assignments
-            if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == id) != null)
-                throw new BO.BlEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {id} due to that it has references in other assignment records");
-        }
-
-
-        //Tries to remove if the volunteer exists
         try
         {
+            //Tries to remove if the volunteer exists
             lock (AdminManager.BlMutex)
             {
-                s_dal.Volunteer.Delete(id);
+                s_dal.Volunteer.Delete(volunteerId);
             }
 
-            //Notifies all observers that a volunteer has been add
-            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"BL-Dal: Volunteer {id} doesn't exists", ex);
+            throw new BO.BlDoesNotExistException($"BL-Dal: Volunteer {volunteerId} doesn't exists", ex);
         }
+
+        //Notifies all observers that a volunteer has been add
+        VolunteerManager.Observers.NotifyListUpdated();
 
     }
 

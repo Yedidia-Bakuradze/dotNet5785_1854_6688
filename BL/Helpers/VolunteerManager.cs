@@ -262,6 +262,25 @@ internal static class VolunteerManager
         Observers.NotifyListUpdated();
     }
 
+    internal static void VertifyVolunteerDeletionAttempt(int volunteerId)
+    {
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex)
+        {
+            //Tries to find such volunteer
+            volunteer = s_dal.Volunteer.Read(volunteerId)
+                ?? throw new BO.BlDoesNotExistException($"BL: Error while tyring to remove the volunteer {volunteerId}");
+        }
+
+
+        lock (AdminManager.BlMutex)
+        {
+            //Checks if the volunteer is in any records of assignments
+            if (s_dal.Assignment.Read((DO.Assignment assignment) => assignment.VolunteerId == volunteerId) != null)
+                throw new BO.BlEntityRecordIsNotEmpty($"BL: Unable to remove the volunteer {volunteerId} due to that it has references in other assignment records");
+        }
+    }
+
     #endregion
 
     #region Geographic & Distance Location
