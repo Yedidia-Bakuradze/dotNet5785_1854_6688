@@ -12,8 +12,8 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        new LobbyScreen().Show();
-        //new AdminWindow(332461854).Show();
+        //new LobbyScreen().Show();
+        new AdminWindow(332461854).Show();
         //new VolunteerLobbyWindow(332461854).Show();
         this.Close();
     }
