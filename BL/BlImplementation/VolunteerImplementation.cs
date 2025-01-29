@@ -189,7 +189,7 @@ internal class VolunteerImplementation : IVolunteer
                 : s_dal.Volunteer.ReadAll(volunteer => volunteer.IsActive == filterByActiveStatus);
 
             // Convert to VolunteerInList entities
-            volunteerInLists = from volunteer in volunteers
+            volunteerInLists = (from volunteer in volunteers
                                    let currentAssignment = s_dal.Assignment
                                        .ReadAll(assignemnt => assignemnt.VolunteerId == volunteer.Id && assignemnt.TimeOfEnding == null)
                                        .OrderBy(ass => ass.Id)
@@ -202,29 +202,23 @@ internal class VolunteerImplementation : IVolunteer
                                        IsActive = volunteer.IsActive,
                                        CallId = currentAssignment?.CallId,
                                        TypeOfCall = currentCall != null ? (BO.CallType)currentCall.Type : BO.CallType.Undefined
-                                   };
+                                   }).ToList();
 
         }
         // Sort the enumerable based on the specified field
-        if (sortByField != null)
+        volunteerInLists = sortByField switch
         {
-            volunteerInLists = sortByField switch
-            {
-                BO.VolunteerInListField.Id => volunteerInLists.OrderBy(volunteer => volunteer.Id),
-                BO.VolunteerInListField.FullName => volunteerInLists.OrderBy(volunteer => volunteer.FullName),
-                BO.VolunteerInListField.IsActive => volunteerInLists.OrderBy(volunteer => volunteer.IsActive),
-                BO.VolunteerInListField.TotalCallsDoneByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsDoneByVolunteer),
-                BO.VolunteerInListField.TotalCallsCancelByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsCancelByVolunteer),
-                BO.VolunteerInListField.TotalCallsExpiredByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsExpiredByVolunteer),
-                BO.VolunteerInListField.CallId => volunteerInLists.OrderBy(volunteer => volunteer.CallId),
-                BO.VolunteerInListField.TypeOfCall => volunteerInLists.OrderBy(volunteer => volunteer.TypeOfCall),
-                _ => throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}")
-            };
-        }
-        else
-        {
-            volunteerInLists = volunteerInLists.OrderBy(volunteer => volunteer.Id);
-        }
+            null => volunteerInLists = volunteerInLists.OrderBy(volunteer => volunteer.Id),
+            BO.VolunteerInListField.Id => volunteerInLists.OrderBy(volunteer => volunteer.Id),
+            BO.VolunteerInListField.FullName => volunteerInLists.OrderBy(volunteer => volunteer.FullName),
+            BO.VolunteerInListField.IsActive => volunteerInLists.OrderBy(volunteer => volunteer.IsActive),
+            BO.VolunteerInListField.TotalCallsDoneByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsDoneByVolunteer),
+            BO.VolunteerInListField.TotalCallsCancelByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsCancelByVolunteer),
+            BO.VolunteerInListField.TotalCallsExpiredByVolunteer => volunteerInLists.OrderBy(volunteer => volunteer.TotalCallsExpiredByVolunteer),
+            BO.VolunteerInListField.CallId => volunteerInLists.OrderBy(volunteer => volunteer.CallId),
+            BO.VolunteerInListField.TypeOfCall => volunteerInLists.OrderBy(volunteer => volunteer.TypeOfCall),
+            _ => throw new BO.BlInvalidOperationException($"BL: Aren't able to order by the field {sortByField}")
+        };
 
         return volunteerInLists;
     }
