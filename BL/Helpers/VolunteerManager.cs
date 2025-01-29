@@ -281,6 +281,38 @@ internal static class VolunteerManager
         }
     }
 
+    internal static void VerifyVolunteerModificationAttempt(BO.Volunteer modifiedVolunteer,int id, bool isPasswordBeenModified)
+    {
+        DO.Volunteer volunteerToModify;
+        DO.Volunteer volunteerActor;
+
+        //Check if allowed to modify
+        lock (AdminManager.BlMutex)
+        {
+            //Get original Volunteer for comparing
+            volunteerToModify = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == modifiedVolunteer.Id)
+            ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with Id {modifiedVolunteer.Id} doesn't exsits");
+
+            volunteerActor = s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id)
+                ?? throw new BO.BlForbidenSystemActionExeption($"Bl Says: there is not volunteer with ID {id}");
+        }
+
+        //Check if actor volunteer is allowed to modify the modify volunteer
+        if (id != modifiedVolunteer.Id && volunteerActor.Role != DO.UserRole.Admin)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {modifiedVolunteer.Id} values");
+
+        //Check if logics are correct
+        if (!VolunteerManager.IsVolunteerValid(modifiedVolunteer, !isPasswordBeenModified))
+            throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {modifiedVolunteer.Id}) are invalid");
+
+        //Checks what fields are requested to be modified - The role is modifable by only the manager
+        if (modifiedVolunteer.Role != (BO.UserRole)volunteerToModify.Role && volunteerActor.Role != DO.UserRole.Admin)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {modifiedVolunteer.Id})");
+
+        //Checks if the user tries to be inactive while running a call
+        if (modifiedVolunteer.IsActive == false && modifiedVolunteer.CurrentCall is not null)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Volunteer cannot deactivate while having an active call, please close the current call and try again");
+    }
     #endregion
 
     #region Geographic & Distance Location
@@ -460,8 +492,8 @@ internal static class VolunteerManager
             IsActive = volunteer.IsActive,
             Password = volunteer.Password,
             FullCurrentAddress = volunteer.FullCurrentAddress,
-            Latitude = volunteer.Latitude,
-            Longitude = volunteer.Longitude
+            Latitude = null,
+            Longitude = null
         };
 
     #endregion

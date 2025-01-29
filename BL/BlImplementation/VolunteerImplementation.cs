@@ -24,6 +24,8 @@ internal class VolunteerImplementation : IVolunteer
     //The contract which we will make all the action with when using the Dal layer
     private readonly DalApi.IDal s_dal = DalApi.Factory.Get;
 
+    #region CRUD
+
     /// <summary>
     /// This method accepts a well defiend BO.Volunteer variabel which is needed to be added to the dataabse
     /// It would check its logics again (like in the update action)
@@ -169,7 +171,50 @@ internal class VolunteerImplementation : IVolunteer
         //Create the BO Volunteer
         return VolunteerManager.ConvertDoVolunteerToBoVolunteer(volunteer, volunteerCallInProgress);
     }
+   
+    /// <summary>
+    /// This method updates the corisponding Volunteer entity from DO 
+    /// It checks if the given id field is assosiated with a manager or with the updated volunteer person
+    /// It checks if the new fields (id, address) are valid
+    /// It requests the volunteer from the DO and compares what field been modified and check if the fields are modifiable by the user which makes the action (Role is modifable by the manager only)
+    /// It would create a DO.Volunteer entity out of the given volunteer variable and will request an Update action from the DAL layer
+    /// If such user doesn't exist the exception would be handled in the logical layer and it will throw an exception to the upper layer
+    /// </summary>
+    /// <param name="modifierVolunteerId">The user id which wants to make the update action</param>
+    /// <param name="modifiedVolunteer">The volunteer entity which is need an updated</param>
+    /// <param name="hasOldPassword">[Optional] an indicator whether the user has modified his password or not</param>
+    public void UpdateVolunteerDetails(int modifierVolunteerId, BO.Volunteer modifiedVolunteer, bool isPasswordBeenModified = true)
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();
 
+        //Throws an exception if the volunteer can't be modified
+        VolunteerManager.VerifyVolunteerModificationAttempt(modifiedVolunteer,modifierVolunteerId,isPasswordBeenModified);
+
+        //Create new instance of DO.Volunteer
+        DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(modifiedVolunteer);
+
+        //Update the entity in Dal
+        try
+        {
+            lock (AdminManager.BlMutex)
+            {
+                s_dal.Volunteer.Update(newVolunteer);
+            }
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Bl: The volunteer Id: {modifiedVolunteer.Id} doesn't exists", ex);
+        }
+
+        //Updates the volunteer's cordinates async
+        _ = VolunteerManager.UpdateVolunteerCordinates(newVolunteer.Id, newVolunteer.FullCurrentAddress,false);
+
+        //Notifies all observers that a volunteer has been changed
+        VolunteerManager.Observers.NotifyItemUpdated(newVolunteer.Id);
+        VolunteerManager.Observers.NotifyListUpdated();
+    }
+
+    #region Get Volunteers
     /// <summary>
     /// This method returns an enumarable of VolunteerInList entities.
     /// The enumerable can be filtered and unfiltered, sorted and unsorted depending on the past parameters
@@ -359,6 +404,9 @@ internal class VolunteerImplementation : IVolunteer
 
         return volunteers;
     }
+    
+    #endregion
+    #endregion
 
     /// <summary>
     /// Logs into an account using the past id (Email address) and password
@@ -387,77 +435,5 @@ internal class VolunteerImplementation : IVolunteer
         return volunteer.Role.ToString();
     }
 
-    /// <summary>
-    /// This method updates the corisponding Volunteer entity from DO 
-    /// It checks if the given id field is assosiated with a manager or with the updated volunteer person
-    /// It checks if the new fields (id, address) are valid
-    /// It requests the volunteer from the DO and compares what field been modified and check if the fields are modifiable by the user which makes the action (Role is modifable by the manager only)
-    /// It would create a DO.Volunteer entity out of the given volunteer variable and will request an Update action from the DAL layer
-    /// If such user doesn't exist the exception would be handled in the logical layer and it will throw an exception to the upper layer
-    /// </summary>
-    /// <param name="id">The user id which wants to make the update action</param>
-    /// <param name="volunteer">The volunteer entity which is need an updated</param>
-    /// <param name="hasOldPassword">[Optional] an indicator whether the user has modified his password or not</param>
-    public async Task UpdateVolunteerDetails(int id, BO.Volunteer volunteer, bool isPasswordBeenModified = true)
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();
-        DO.Volunteer currentVolunteer;
-
-        //Check if allowed to modify
-        lock (AdminManager.BlMutex)
-        {
-            if (id != volunteer.Id && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-                throw new BO.BlForbidenSystemActionExeption($"BL: Un granted access volunteer (Id:{id}) tries to modify the volunteer Id: {volunteer.Id} values");
-        }
-        
-        //Check if logics are correct
-        if (! await VolunteerManager.IsVolunteerValid(volunteer, !isPasswordBeenModified))
-            throw new BO.BlInvalidEntityDetails($"BL: volunteer's fields (Id: {volunteer.Id}) are invalid");
-
-        lock (AdminManager.BlMutex)
-        {
-            //Get original Volunteer for comparing
-            currentVolunteer = s_dal.Volunteer.Read((DO.Volunteer oldVolunteer) => oldVolunteer.Id == volunteer.Id)
-                ?? throw new BO.BlDoesNotExistException($"BL: Volunteer with Id {volunteer.Id} doesn't exsits");
-        }
-
-        lock (AdminManager.BlMutex)
-        {
-            //Checks what fields are requested to be modified - The role is modifable by only the manager
-            if (volunteer.Role != (BO.UserRole) currentVolunteer.Role && s_dal.Volunteer.Read((DO.Volunteer volunteer) => volunteer.Id == id && volunteer.Role == DO.UserRole.Admin) == null)
-                throw new BO.BlForbidenSystemActionExeption($"BL: Non-admin volunteer (Id: {id}) attemts to modify volunteer's Role (Id: {volunteer.Id})");
-        }
-
-        //Checks if the user tries to be inactive while running a call
-        if(volunteer.IsActive == false && volunteer.CurrentCall is not null)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Volunteer cannot deactivate while having an active call, please close the current call and try again");
-
-        //Update the cordinates
-        if(volunteer.FullCurrentAddress != null)
-            (volunteer.Latitude, volunteer.Longitude) =await VolunteerManager.GetGeoCordinates(volunteer.FullCurrentAddress);
-        else
-            (volunteer.Latitude, volunteer.Longitude) = (null, null);
-        
-        //Create new instance of DO.Volunteer
-        DO.Volunteer newVolunteer = VolunteerManager.ConvertBoVolunteerToDoVolunteer(volunteer);
-
-        //Update the entity in Dal
-        try
-        {
-            lock (AdminManager.BlMutex)
-            {
-                s_dal.Volunteer.Update(newVolunteer);
-            }
-
-            //Notifies all observers that a volunteer has been changed
-            VolunteerManager.Observers.NotifyItemUpdated(newVolunteer.Id);
-            VolunteerManager.Observers.NotifyListUpdated();
-
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"Bl: The volunteer Id: {volunteer.Id} doesn't exists", ex);
-        }
-    }
 }
 
