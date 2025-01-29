@@ -99,17 +99,17 @@ public partial class CallWindow : Window
 
 
     }
-    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.AddObserver(Observer);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Observer);
+    private void Window_Closed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(Observer);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(Observer);
     #endregion
 
     #region Method
     private void Observer() => Referesh();
-    private void Referesh()
+    private async Task Referesh()
     {
         try
         {
-            CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
+            CurrentCall = await Task.Run(()=> s_bl.Call.GetDetielsOfCall(CallId));
         }
         catch (Exception ex)
         {
