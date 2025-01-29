@@ -63,7 +63,8 @@ public partial class CallWindow : Window
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public int CallId { get; set; }
+    public int CallId { get;
+        set; }
     public string HourSet { get; set; } = "";
     #endregion
 
@@ -89,7 +90,7 @@ public partial class CallWindow : Window
             else
                 s_bl.Call.UpdateCall(CurrentCall);
             MessageBox.Show($@"Call Has been {ButtonText} Succecfully");
-
+            Close();
         }
         catch(Exception ex)
         {
@@ -103,12 +104,12 @@ public partial class CallWindow : Window
     #endregion
 
     #region Method
-    private void Observer() => _ = Referesh();
-    private async Task Referesh()
+    private void Observer() => Referesh();
+    private void Referesh()
     {
         try
         {
-            CurrentCall = await Task.Run(() => s_bl.Call.GetDetielsOfCall(CallId));
+            CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
         }
         catch (Exception ex)
         {

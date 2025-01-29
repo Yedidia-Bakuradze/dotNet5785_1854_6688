@@ -3,8 +3,6 @@
   <Call>
     <Id>2</Id>
     <Type>CarStuck</Type>
-    <Id>1</Id>
-    <Type>BatteryJumpStart</Type>
     <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
     <Latitude>32.0713059</Latitude>
     <Longitude>34.7755696</Longitude>
@@ -791,12 +789,6 @@
     <OpeningTime>2025-01-27T23:02:02</OpeningTime>
     <Description>gggggggggggggg</Description>
     <DeadLine>3000-01-01T00:00:00</DeadLine>
-    <FullAddressCall>36 Dizengoff Square, Tel Aviv</FullAddressCall>
-    <Latitude>32.0746924</Latitude>
-    <Longitude>34.777208</Longitude>
-    <OpeningTime>2025-01-05T22:44:38</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-01T22:44:38</DeadLine>
   </Call>
   <Call>
     <Id>80</Id>
@@ -907,14 +899,6 @@
     <OpeningTime>2025-01-27T23:02:02</OpeningTime>
     <Description>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</Description>
     <DeadLine>3000-01-01T00:00:00</DeadLine>
-    <Id>90</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>50 Gaza St, Jerusalem</FullAddressCall>
-    <Latitude>31.771597</Latitude>
-    <Longitude>35.2123937</Longitude>
-    <OpeningTime>2025-01-17T22:44:38</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-10T22:44:38</DeadLine>
   </Call>
   <Call>
     <Id>91</Id>
@@ -1025,5 +1009,33 @@
     <OpeningTime>2025-01-28T22:44:38</OpeningTime>
     <Description>ssssssssssssss</Description>
     <DeadLine>2300-01-01T00:00:00</DeadLine>
+  </Call>
+  <Call>
+    <Id>111</Id>
+    <Type>SpecialAssistance</Type>
+    <FullAddressCall>Saifan 1, Tverya</FullAddressCall>
+    <Latitude xsi:nil="true" />
+    <Longitude xsi:nil="true" />
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <Description>Saifan 16, Tverya</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>112</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>Saifan 16, Tverya</FullAddressCall>
+    <Latitude>32.7993162</Latitude>
+    <Longitude>35.5215692</Longitude>
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>113</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>Saifan 16, Tverya</FullAddressCall>
+    <Latitude>32.7993162</Latitude>
+    <Longitude>35.5215692</Longitude>
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <DeadLine xsi:nil="true" />
   </Call>
 </ArrayOfCall>

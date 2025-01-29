@@ -124,7 +124,7 @@ internal class CallImplementation : ICall
         CallManager.Observers.NotifyListUpdated();
 
         //Start calculating the new cordinates
-        _ = CallManager.UpdateCallCordinates(updatedCall.Id,call.CallAddress,false);
+        CallManager.UpdateCallCordinates(updatedCall.Id,call.CallAddress,false);
 
         //TODO: Should call the email system again?
     }
