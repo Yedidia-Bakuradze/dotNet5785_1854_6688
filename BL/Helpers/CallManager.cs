@@ -206,7 +206,7 @@ internal static class CallManager
         }
         lock (AdminManager.BlMutex)
         {
-            var existingAssignment = s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is not null);
+            var existingAssignment = s_dal.Assignment.Read(assing => assing.VolunteerId == VolunteerId && assing.TypeOfEnding is null);
             if (existingAssignment is not null)
                 throw new BO.BlForbidenSystemActionExeption($"BL Says: Cann't assigned call {callId} to volunteer {VolunteerId} because it has a running call ({existingAssignment.CallId})");
 
