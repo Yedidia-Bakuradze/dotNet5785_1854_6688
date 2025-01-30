@@ -224,7 +224,7 @@ internal static class VolunteerManager
             IsMaxDistnaceValid(volunteer.MaxDistanceToCall);
 
 
-    internal static async Task UpdateVolunteerCordinates(int volunteerId,string? address,bool isNewVolunteer)
+    internal static async Task UpdateVolunteerCordinates(int volunteerId, string? address, bool isNewVolunteer)
     {
         if (address is null || address == "")
             return;
@@ -281,7 +281,7 @@ internal static class VolunteerManager
         }
     }
 
-    internal static void VerifyVolunteerModificationAttempt(BO.Volunteer modifiedVolunteer,int id, bool isPasswordBeenModified)
+    internal static void VerifyVolunteerModificationAttempt(BO.Volunteer modifiedVolunteer, int id, bool isPasswordBeenModified)
     {
         DO.Volunteer volunteerToModify;
         DO.Volunteer volunteerActor;
@@ -334,13 +334,15 @@ internal static class VolunteerManager
         try
         {
             XElement res = await HttpGetXmlReponse(requestUri);
-            res = res
-                    ?.Element("result")
-                    ?.Element("geometry")
-                    ?.Element("location")
-                    ?? throw new BlXmlElementDoesntExsist("BL: There is not result->geometry->location tag in the given Http GET response");
-            return ((double?)res?.Element("lat"), (double?)res?.Element("lng"));
-
+            XElement result = res?
+                            .Elements("result")
+                            .FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address"))
+                            ?.Element("geometry")
+                            ?.Element("location")
+                            ?? throw new BlInvalidCordinatesConversionException($"Bl Says: Cann't calcaulate cordinates for {streetAddress}");
+            
+            var resCord = ((double)res.Element("lat")!, (double)res.Element("lng")!);
+            return resCord;
         }
         catch (BO.BlHttpGetException ex)
         {

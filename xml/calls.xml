@@ -1056,4 +1056,14 @@
     <OpeningTime>2025-01-28T22:44:38</OpeningTime>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>124</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>Saifan 2, Tverya</FullAddressCall>
+    <Latitude xsi:nil="true" />
+    <Longitude xsi:nil="true" />
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <Description>asdasdas</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

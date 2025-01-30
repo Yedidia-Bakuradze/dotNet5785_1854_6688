@@ -85,11 +85,10 @@ public partial class CallWindow : Window
 
                 CurrentCall.CallDeadLine += time;
                 s_bl.Call.AddCall(CurrentCall);
-                
+                Close();
             }
             else
                 s_bl.Call.UpdateCall(CurrentCall);
-            Close();
             MessageBox.Show($@"Call Has been {ButtonText} Succecfully");
         }
         catch(Exception ex)

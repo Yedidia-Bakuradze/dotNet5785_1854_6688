@@ -600,4 +600,12 @@
     <TimeOfEnding>28/01/2025 22:44:38</TimeOfEnding>
     <TypeOfEnding>CancellationExpired</TypeOfEnding>
   </Assignment>
+  <Assignment>
+    <Id>76</Id>
+    <CallId>18</CallId>
+    <VolunteerId>332461854</VolunteerId>
+    <TimeOfStarting>2025-01-28T22:44:38</TimeOfStarting>
+    <TimeOfEnding />
+    <TypeOfEnding />
+  </Assignment>
 </ArrayOfAssignment>
