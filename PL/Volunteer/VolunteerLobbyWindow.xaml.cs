@@ -139,13 +139,40 @@ public partial class VolunteerLobbyWindow : Window
     {
         try
         {
-            var count = await Task.Run(() => s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count());
+            var count = await Task.Run(() => {
+                try
+                {
+                    return s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count();
+                }
+                catch(Exception ex)
+                {
+                    return -1;
+                }
+            });
+
+            //Indicates that an exception been thrown
+            if(count == -1)
+            {
+                MessageBox.Show($"The Volunteer is not found {VolunteerId}");
+                Close();
+                return;
+            }
+
 
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             {
                 _observerOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                    try
+                    {
+                        CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        Close();
+                    }
+
                     HeaderText = $"Welcome {CurrentVolunteer.FullName}";
                     if (CurrentVolunteer.CurrentCall is not null)
                     {

@@ -417,14 +417,16 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlInvalidOperationException">Thrown if an invalid sorting field is provided.</exception>
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int VolunteerId, BO.CallType? callType, BO.OpenCallFields? sortingField)
     {
-        DO.Volunteer volunteer;
+        DO.Volunteer? volunteer;
         IEnumerable<BO.OpenCallInList> openCalls;
         lock (AdminManager.BlMutex)
         {
             // Retrieve the volunteer details. Throw an exception if the volunteer does not exist.
-            volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId)
-                    ?? throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
+            volunteer = s_dal.Volunteer.Read(vol => vol.Id == VolunteerId);
         }
+
+        if (volunteer is null)
+            throw new BO.BlDoesNotExistException($"Bl: Volunteer (Id: {VolunteerId} doesn't exist)");
 
         // Retrieve all open or risky calls and map them to BO.OpenCallInList objects.
         openCalls = from call in s_dal.Call.ReadAll()
