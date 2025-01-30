@@ -336,7 +336,7 @@ internal static class VolunteerManager
             XElement res = await HttpGetXmlReponse(requestUri);
             XElement result = res
                             ?.Elements("result")
-                            ?.FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address"))
+                            ?.FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address" || t.Value == "locality"))
                             ?.Element("geometry")
                             ?.Element("location")
                             ?? throw new BlInvalidCordinatesConversionException($"Bl Says: Cann't calcaulate cordinates for {streetAddress}");

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <Id>2</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>Herzl St 52, Bat Yam Israel</FullAddressCall>
-    <Latitude xsi:nil="true" />
-    <Longitude xsi:nil="true" />
-    <OpeningTime>2025-01-30T22:39:50</OpeningTime>
-    <Description>Test Call</Description>
-    <DeadLine xsi:nil="true" />
-  </Call>
-  <Call>
     <Id>3</Id>
     <Type>ChildLockedInCar</Type>
     <FullAddressCall>Ha Tothan 3 Jerusalem israel</FullAddressCall>

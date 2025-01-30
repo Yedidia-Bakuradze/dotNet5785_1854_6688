@@ -178,7 +178,7 @@ public partial class VolunteerWindow : Window
 
                 VolunteerDetailsUserControl = new VolunteerDetailsControl(CurrentVolunteer);
 
-                if (CurrentVolunteer.FullCurrentAddress != "" && CurrentVolunteer.FullCurrentAddress is not null)
+                if ((CurrentVolunteer.Latitude, CurrentVolunteer.Longitude) is not (null,null))
                 {
                     List<(double, double)> listOfPoints = new List<(double, double)>();
                     listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
