@@ -2,6 +2,7 @@
 using BlApi;
 using BO;
 using Helpers;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 internal class CallImplementation : ICall
@@ -187,34 +188,34 @@ internal class CallImplementation : ICall
     /// <returns>A sorted and filtered list of closed calls.</returns>
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int VolunteerId, BO.CallType? callType, BO.ClosedCallInListFields? parameter)
     {
-        List<DO.Assignment> res;
-        IEnumerable<DO.Call> finalRes;
+        IEnumerable<DO.Assignment> assignments;
+        IEnumerable<DO.Call> closedCalls;
 
         // Step 1: Fetch all assignments for the given volunteer
         lock (AdminManager.BlMutex)
         {
-            res = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId).ToList();
-
-            // Step 2: Fetch all calls related to the assignments where TypeOfEnding is not null
-            finalRes = s_dal.Call.ReadAll(call => res.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null));
+            assignments = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId);
+            closedCalls = s_dal.Call.ReadAll(call => assignments.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null));
         }
 
-        finalRes = callType is not null
-            ? finalRes.Where(call => call.Type == (DO.CallType)callType)
-            : finalRes;
-
+        closedCalls = callType is not null
+            ? closedCalls.Where(call => call.Type == (DO.CallType)callType)
+            : closedCalls;
 
         // Step 4: Create a list of ClosedCallInList objects
-        List<BO.ClosedCallInList> closedCalls = finalRes.Select(call => new BO.ClosedCallInList
-        {
-            Id = call.Id,
-            TypeOfCall = (BO.CallType)call.Type,
-            CallAddress = call.FullAddressCall,
-            CallStartTime = call.OpeningTime,
-            EnteryTime = res.FirstOrDefault(ass => ass.CallId == call.Id).TimeOfStarting, // Access the start time from the corresponding assignment
-            ClosingTime = (DateTime)res.Find(ass => ass.CallId == call.Id)!.TimeOfEnding!, // Access the ending time from the corresponding assignment
-            TypeOfClosedCall = (BO.TypeOfEndingCall)(res.Find(ass => ass.CallId == call.Id))?.TypeOfEnding!// Default to Unknown if TypeOfEnding is null
-        }).ToList();
+        IEnumerable<BO.ClosedCallInList> result = from assign in assignments
+                                               let call = closedCalls.Where(call => call.Id == assign.CallId).FirstOrDefault()
+                                               where call is not null
+                                               select new BO.ClosedCallInList
+                                               {
+                                                   Id = call.Id,
+                                                   TypeOfCall = (BO.CallType)call.Type,
+                                                   CallAddress = call.FullAddressCall,
+                                                   CallStartTime = call.OpeningTime,
+                                                   EnteryTime = assign.TimeOfStarting, // Access the start time from the corresponding assignment
+                                                   ClosingTime = (DateTime)assign.TimeOfEnding!, // Access the ending time from the corresponding assignment
+                                                   TypeOfClosedCall = (BO.TypeOfEndingCall)assign.TypeOfEnding! // Default to Unknown if TypeOfEnding is null
+                                               };
 
         // Step 5: Sort the list based on the specified filterField
         if (parameter != null)
@@ -222,25 +223,25 @@ internal class CallImplementation : ICall
             switch (parameter)
             {
                 case BO.ClosedCallInListFields.Id:
-                    closedCalls = closedCalls.OrderBy(call => call.Id).ToList();
+                    result = result.OrderBy(call => call.Id).ToList();
                     break;
                 case BO.ClosedCallInListFields.TypeOfCall:
-                    closedCalls = closedCalls.OrderBy(call => call.TypeOfCall).ToList();
+                    result = result.OrderBy(call => call.TypeOfCall).ToList();
                     break;
                 case BO.ClosedCallInListFields.CallAddress:
-                    closedCalls = closedCalls.OrderBy(call => call.CallAddress).ToList();
+                    result = result.OrderBy(call => call.CallAddress).ToList();
                     break;
                 case BO.ClosedCallInListFields.CallStartTime:
-                    closedCalls = closedCalls.OrderBy(call => call.CallStartTime).ToList();
+                    result = result.OrderBy(call => call.CallStartTime).ToList();
                     break;
                 case BO.ClosedCallInListFields.EnteryTime:
-                    closedCalls = closedCalls.OrderBy(call => call.EnteryTime).ToList();
+                    result = result.OrderBy(call => call.EnteryTime).ToList();
                     break;
                 case BO.ClosedCallInListFields.ClosingTime:
-                    closedCalls = closedCalls.OrderBy(call => call.ClosingTime).ToList();
+                    result = result.OrderBy(call => call.ClosingTime).ToList();
                     break;
                 case BO.ClosedCallInListFields.TypeOfClosedCall:
-                    closedCalls = closedCalls.OrderBy(call => call.TypeOfClosedCall).ToList();
+                    result = result.OrderBy(call => call.TypeOfClosedCall).ToList();
                     break;
                 default:
                     throw new BO.BlInvalidOperationException("Invalid sorting filterField");
@@ -248,7 +249,7 @@ internal class CallImplementation : ICall
         }
 
         // Step 6: Return the final list
-        return closedCalls;
+        return result;
     }
 
     /// <summary>
@@ -836,8 +837,7 @@ internal class CallImplementation : ICall
             return (from closedCall in listOfCalls
                     let call = s_dal.Call.Read(closedCall.Id)
                     where (call.Latitude, call.Longitude) is not (null, null)
-                    select (call.Latitude, call.Longitude)) as IEnumerable<(double, double)>;
-
+                    select ((double)call.Latitude!, (double)call.Longitude!)).ToList();
         }
     }
     public IEnumerable<(double, double)> ConvertOpenCallsToCordinates(IEnumerable<OpenCallInList> listOfCalls)
