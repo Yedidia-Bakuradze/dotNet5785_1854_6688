@@ -1038,4 +1038,22 @@
     <OpeningTime>2025-01-28T22:44:38</OpeningTime>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>114</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>HaTothan 3 jerusalem israel</FullAddressCall>
+    <Latitude>31.8323803</Latitude>
+    <Longitude>35.2411291</Longitude>
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>118</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>Saifan 16, Tverya</FullAddressCall>
+    <Latitude>32.7993162</Latitude>
+    <Longitude>35.5215692</Longitude>
+    <OpeningTime>2025-01-28T22:44:38</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

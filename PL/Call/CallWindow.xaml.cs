@@ -89,8 +89,8 @@ public partial class CallWindow : Window
             }
             else
                 s_bl.Call.UpdateCall(CurrentCall);
-            MessageBox.Show($@"Call Has been {ButtonText} Succecfully");
             Close();
+            MessageBox.Show($@"Call Has been {ButtonText} Succecfully");
         }
         catch(Exception ex)
         {
@@ -100,16 +100,16 @@ public partial class CallWindow : Window
 
     }
     private void Window_Closed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(Observer);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(Observer);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Observer);
     #endregion
 
     #region Method
     private void Observer() => Referesh();
-    private async Task Referesh()
+    private void Referesh()
     {
         try
         {
-            CurrentCall = await Task.Run(()=> s_bl.Call.GetDetielsOfCall(CallId));
+            CurrentCall = s_bl.Call.GetDetielsOfCall(CallId);
         }
         catch (Exception ex)
         {
