@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.Call"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         mc:Ignorable="d"
-        Title="OpenCallWindow" Height="450" Width="800"
+        Title="Open Call Window" Height="450" Width="800"
         Loaded="Window_Loaded"
         Closed="Window_Closed"
         >
@@ -44,10 +44,12 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" >
                 <TextBlock Text="Call Description:" VerticalAlignment="Top" FontSize="16"/>
                 <TextBlock Text="{Binding CurrentCall.Description}" TextWrapping="Wrap" FontSize="16"
-                           Margin="5,0,0,0" Foreground="White"/>
+                           Margin="15,0,0,0" Foreground="White"/>
             </StackPanel>
 
         </Grid>
-            <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding MapView}"/>
+        <Grid Grid.Row="2" Grid.Column="2" >
+            <ContentControl Content="{Binding MapView}"/>
+        </Grid>
     </Grid>
 </Window>
