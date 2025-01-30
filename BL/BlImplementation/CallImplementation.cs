@@ -46,7 +46,7 @@ internal class CallImplementation : ICall
         }
 
         //Updates the cordinates later
-        Task.Run(() => CallManager.UpdateCallCordinates(newCall.Id, newCall.FullAddressCall, true));
+        CallManager.UpdateCallCordinates(newCall.Id, newCall.FullAddressCall, true);
         
         //Sends the email notification
         AddCallSendEmailAsync(newCall);

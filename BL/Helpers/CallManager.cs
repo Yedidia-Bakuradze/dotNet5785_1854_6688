@@ -129,7 +129,7 @@ internal static class CallManager
 
     internal static async Task UpdateCallCordinates(int callId, string address, bool isNewCall)
     {
-        (double?,double?) coridnates = await VolunteerManager.GetGeoCordinates(address);
+        (double,double) coridnates = await VolunteerManager.GetGeoCordinates(address);
 
         if (!VolunteerManager.CordinatesValidator(coridnates))
         {

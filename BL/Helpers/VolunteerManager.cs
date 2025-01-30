@@ -326,33 +326,27 @@ internal static class VolunteerManager
     /// <param name="streetAddress"></param>
     /// <returns></returns>
     /// <exception cref="BlXmlElementDoesntExsist"></exception>
-    internal static async Task<(double?, double?)> GetGeoCordinates(string streetAddress)
+    internal static async Task<(double, double)> GetGeoCordinates(string streetAddress)
     {
         //Builds the URL requests
-        Uri requestUri = new Uri(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
+        Uri requestUri = new(URI + "geocode/" + FileFormat.xml.ToString() + $"?address={Uri.EscapeDataString(streetAddress)}" + $",+CA&key={APIKEY}");
 
         try
         {
             XElement res = await HttpGetXmlReponse(requestUri);
-            XElement result = res?
-                            .Elements("result")
-                            .FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address"))
+            XElement result = res
+                            ?.Elements("result")
+                            ?.FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address"))
                             ?.Element("geometry")
                             ?.Element("location")
                             ?? throw new BlInvalidCordinatesConversionException($"Bl Says: Cann't calcaulate cordinates for {streetAddress}");
             
-            var resCord = ((double)res.Element("lat")!, (double)res.Element("lng")!);
+            (double,double) resCord = ((double)result.Element("lat")!, (double)result.Element("lng")!);
             return resCord;
         }
-        catch (BO.BlHttpGetException ex)
+        catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
-            return (null, null);
-        }
-        catch (BO.BlXmlElementDoesntExsist ex)
-        {
-            Console.WriteLine(ex.Message);
-            return (null, null);
+            throw new BlInvalidCordinatesConversionException(ex.Message);
         }
 
 
