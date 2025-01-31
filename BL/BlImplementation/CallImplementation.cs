@@ -194,7 +194,7 @@ internal class CallImplementation : ICall
         // Step 1: Fetch all assignments for the given volunteer
         lock (AdminManager.BlMutex)
         {
-            assignments = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId);
+            assignments = s_dal.Assignment.ReadAll(ass => ass.VolunteerId == VolunteerId && ass.TypeOfEnding is not null);
             closedCalls = s_dal.Call.ReadAll(call => assignments.Any(ass => ass.CallId == call.Id && ass.TypeOfEnding != null));
         }
 
@@ -220,32 +220,17 @@ internal class CallImplementation : ICall
         // Step 5: Sort the list based on the specified filterField
         if (parameter != null)
         {
-            switch (parameter)
+            result = parameter switch
             {
-                case BO.ClosedCallInListFields.Id:
-                    result = result.OrderBy(call => call.Id).ToList();
-                    break;
-                case BO.ClosedCallInListFields.TypeOfCall:
-                    result = result.OrderBy(call => call.TypeOfCall).ToList();
-                    break;
-                case BO.ClosedCallInListFields.CallAddress:
-                    result = result.OrderBy(call => call.CallAddress).ToList();
-                    break;
-                case BO.ClosedCallInListFields.CallStartTime:
-                    result = result.OrderBy(call => call.CallStartTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.EnteryTime:
-                    result = result.OrderBy(call => call.EnteryTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.ClosingTime:
-                    result = result.OrderBy(call => call.ClosingTime).ToList();
-                    break;
-                case BO.ClosedCallInListFields.TypeOfClosedCall:
-                    result = result.OrderBy(call => call.TypeOfClosedCall).ToList();
-                    break;
-                default:
-                    throw new BO.BlInvalidOperationException("Invalid sorting filterField");
-            }
+                BO.ClosedCallInListFields.Id => result.OrderBy(call => call.Id),
+                BO.ClosedCallInListFields.TypeOfCall => result.OrderBy(call => call.TypeOfCall),
+                BO.ClosedCallInListFields.CallAddress => result.OrderBy(call => call.CallAddress),
+                BO.ClosedCallInListFields.CallStartTime => result.OrderBy(call => call.CallStartTime),
+                BO.ClosedCallInListFields.EnteryTime => result.OrderBy(call => call.EnteryTime),
+                BO.ClosedCallInListFields.ClosingTime => result.OrderBy(call => call.ClosingTime),
+                BO.ClosedCallInListFields.TypeOfClosedCall => result.OrderBy(call => call.TypeOfClosedCall),
+                _ => throw new BO.BlInvalidOperationException("Invalid sorting filterField"),
+            };
         }
 
         // Step 6: Return the final list
