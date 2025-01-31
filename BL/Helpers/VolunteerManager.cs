@@ -334,12 +334,20 @@ internal static class VolunteerManager
         try
         {
             XElement res = await HttpGetXmlReponse(requestUri);
-            XElement result = res
-                            ?.Elements("result")
-                            ?.FirstOrDefault(r => r.Elements("type").Any(t => t.Value == "street_address" || t.Value == "locality"))
+            if (res?.Element("status")?.Value != "OK")
+                throw new BlHttpGetException($"Bl Says: Couldn't fetch locations data from server for street address: {streetAddress}");
+
+            XElement resultTag = res
+                ?.Elements("result")
+                ?.FirstOrDefault(tag => tag
+                        ?.Element("geometry")
+                        ?.Element("location") is not null
+                )
+                ?? throw new BlInvalidCordinatesConversionException($"Bl Says: Status OK but no proper tag has been found");
+
+            XElement result = resultTag
                             ?.Element("geometry")
-                            ?.Element("location")
-                            ?? throw new BlInvalidCordinatesConversionException($"Bl Says: Cann't calcaulate cordinates for {streetAddress}");
+                            ?.Element("location")!;
             
             (double,double) resCord = ((double)result.Element("lat")!, (double)result.Element("lng")!);
             return resCord;

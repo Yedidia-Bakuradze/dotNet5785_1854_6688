@@ -213,7 +213,7 @@ internal static class CallManager
         }
 
         //Check if call already been taken
-        if (callAssignment != null && callAssignment.TypeOfEnding is not null)
+        if (callAssignment != null && callAssignment.TypeOfEnding is null)
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already taken by other volunteer (Id: {callAssignment.VolunteerId})");
 
         //Check if there is time to complete the call

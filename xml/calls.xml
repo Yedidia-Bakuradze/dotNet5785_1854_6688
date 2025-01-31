@@ -1,2 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <Id>1</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>Arlozorov St 38, Bat Yam</FullAddressCall>
+    <Latitude>32.0256132</Latitude>
+    <Longitude>34.7440758</Longitude>
+    <OpeningTime>2025-01-31T00:01:56</OpeningTime>
+    <Description>Test Call</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
+  <Call>
+    <Id>5</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>Herzl St 38, Haifa Israel</FullAddressCall>
+    <Latitude>32.8090748</Latitude>
+    <Longitude>34.9991937</Longitude>
+    <OpeningTime>2025-01-31T00:01:56</OpeningTime>
+    <Description>Test Try Out Case</Description>
+    <DeadLine>2067-02-12T12:34:00</DeadLine>
+  </Call>
+  <Call>
+    <Id>6</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>Hana Rovina 16, Hertsliya</FullAddressCall>
+    <Latitude>32.189417</Latitude>
+    <Longitude>34.807133</Longitude>
+    <OpeningTime>2025-01-31T00:01:56</OpeningTime>
+    <Description>Second Call</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
+</ArrayOfCall>
