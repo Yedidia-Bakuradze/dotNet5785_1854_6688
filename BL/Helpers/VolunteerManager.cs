@@ -396,17 +396,23 @@ internal static class VolunteerManager
         if (!CordinatesValidator(origin, destination))
             return 0;
 
-        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?&origins={origin.Item1},{origin.Item2}&destinations={destination.Item1},{destination.Item2}&mode={DistanceType.walking}&key={APIKEY}");
+        Uri requestUri = new($"{URI}distancematrix/{FileFormat.xml}?&origins={origin.Item1},{origin.Item2}&destinations={destination.Item1},{destination.Item2}&mode={DistanceType.walking}&key={APIKEY}");
         XElement root = HttpGetXmlReponse(requestUri).Result;
 
-        //Issue 13: Fix the possible null value
-        return (double)(Int32.Parse
+        //Check request status
+        if (root?.Element("status")?.Value != "OK")
+            throw new BlHttpGetException($"Bl Says: Error when fetching distance data from the server");
+
+
+        if (!double.TryParse
             (root
                 ?.Element("row")
                 ?.Element("element")
                 ?.Element("distance")
-                ?.Element("value").Value.ToString()
-            )) / 1000.0;
+                ?.Element("value")
+                ?.Value.ToString(), out double res))
+            throw new BlInvalidDistanceCalculationException($"Bl Says: Distance fetched OK but no valid data has been found");
+        return res / 1000.0;
     }
 
     /// <summary>
@@ -420,17 +426,23 @@ internal static class VolunteerManager
         if (!CordinatesValidator(origin, destination))
             return 0;
 
-        Uri requestUri = new Uri($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.driving}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
+        Uri requestUri = new($"{URI}distancematrix/{FileFormat.xml}?destinations={destination.Item1},{destination.Item2}&mode={DistanceType.driving}&origins={origin.Item1},{origin.Item2}&key={APIKEY}");
         XElement root = HttpGetXmlReponse(requestUri).Result;
 
-        //Issue 13: Fix the possible null value
-        return (double)(Int32.Parse
+        //Check request status
+        if (root?.Element("status")?.Value != "OK")
+            throw new BlHttpGetException($"Bl Says: Error when fetching distance data from the server");
+
+
+        if (!double.TryParse
             (root
                 ?.Element("row")
                 ?.Element("element")
                 ?.Element("distance")
-                ?.Element("value").Value.ToString()
-            )) / 1000.0;
+                ?.Element("value")
+                ?.Value.ToString(), out double res))
+            throw new BlInvalidDistanceCalculationException($"Bl Says: Distance fetched OK but no valid data has been found");
+        return res / 1000.0;
     }
 
     /// <summary>
