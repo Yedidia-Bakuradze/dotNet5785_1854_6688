@@ -562,15 +562,15 @@ internal class CallImplementation : ICall
     /// The operation is allowed only if the call is opened and the volunteer which requests this modification is the assigned volunteer to that call
     /// </summary>
     /// <param name="VolunteerId">The volunteer which requests the modification</param>
-    /// <param name="callId">The call if of the Call which is needed to be updated</param>
+    /// <param name="assignmentId">The call if of the Call which is needed to be updated</param>
     /// <exception cref="BO.BlDoesNotExistException">Thrown when the assignment doesn't exists</exception>
     /// <exception cref="BO.BlForbidenSystemActionExeption">Thrown when the opration is forbidden due to restriction and access level of the volunteer</exception>
-    public void CancelAssignement(int VolunteerId, int callId)
+    public void CancelAssignement(int VolunteerId, int assignmentId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();
 
         //Throws an exception if the assignment canceltion is not allowed
-        CallManager.VerifyAssignmentCancelAttempt(VolunteerId, callId,out DO.Assignment assignment);
+        CallManager.VerifyAssignmentCancelAttempt(VolunteerId, assignmentId,out DO.Assignment assignment);
 
         try
         {
@@ -591,6 +591,7 @@ internal class CallImplementation : ICall
 
         //Notifies all observers that a call has been added
         CallManager.Observers.NotifyListUpdated();
+        CallManager.Observers.NotifyItemUpdated(assignmentId);
     }
 
     #endregion

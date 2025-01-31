@@ -101,7 +101,7 @@ public partial class VolunteerLobbyWindow : Window
     {
         try
         {
-            s_bl.Call.CancelAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.CallId);
+            s_bl.Call.CancelAssignement(VolunteerId, CurrentVolunteer.CurrentCall!.Id);
         }
         catch (Exception ex)
         {

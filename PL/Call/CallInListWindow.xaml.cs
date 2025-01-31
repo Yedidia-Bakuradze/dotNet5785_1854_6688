@@ -78,7 +78,9 @@ public partial class CallInListWindow : Window
             if (SelectedCall is null)
                 throw new Exception("PL: The selected call is null");
             s_bl.Call.CancleCallSendEmailAsync(SelectedCall);
-            s_bl.Call.CancelAssignement(UserId, SelectedCall!.CallId);
+            
+            if(SelectedCall?.Id is not null)
+                s_bl.Call.CancelAssignement(UserId, (int)SelectedCall.Id);
         }
         catch (Exception ex)
         {

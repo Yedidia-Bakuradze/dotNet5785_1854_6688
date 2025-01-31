@@ -221,27 +221,37 @@ internal static class CallManager
             throw new BO.BlForbidenSystemActionExeption($"Bl: Call {callId} already expired");
     }
     
-    internal static void VerifyAssignmentCancelAttempt(int VolunteerId, int callId,out DO.Assignment assignment)
+    internal static void VerifyAssignmentCancelAttempt(int VolunteerId, int assignmentId,out DO.Assignment assignment)
     {
-
+        DO.Assignment? tmp;
+        DO.Volunteer? assosiatedVolunteer;
         lock (AdminManager.BlMutex)
         {
-            //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
-            assignment = s_dal.Assignment.Read((assignment) => assignment.CallId == callId)
-                ?? throw new BO.BlDoesNotExistException($"BL: Call (Id: {callId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+            tmp = s_dal.Assignment.Read(assignmentId);
         }
 
+        //Check access (if the user which wants to change the call status is the same uesr which assigned to that call)
+        if(tmp is null)
+            throw new BO.BlDoesNotExistException($"BL: Assignment (Id: {assignmentId}) for Volunteer (Id: {VolunteerId}) doesn't exists");
+        
         lock (AdminManager.BlMutex)
         {
-            if (assignment.VolunteerId != VolunteerId && (BO.UserRole)s_dal.Volunteer.Read(VolunteerId)!.Role! != BO.UserRole.Admin)
-                throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {assignment.CallId})");
+            assosiatedVolunteer = s_dal.Volunteer.Read(VolunteerId);
         }
+        
+        //Check if there is such as user
+        if (assosiatedVolunteer is null)
+            throw new BlDoesNotExistException($"Bl Says: No volunteer with ID {VolunteerId} has been found");
+        
+        //Throw exception if access not granted
+        if (tmp.VolunteerId != VolunteerId && (BO.UserRole)assosiatedVolunteer.Role is not BO.UserRole.Admin)
+            throw new BO.BlForbidenSystemActionExeption($"BL: The volunteer (Id: {VolunteerId}) is not allowed to modify Call assinged to different volunteer (Id: {tmp.CallId})");
 
         //Check that the call is not ended (Cancled, Expiered or completed)
-        if (assignment.TypeOfEnding != null || assignment.TypeOfEnding == DO.TypeOfEnding.Treated)
-            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {assignment.TypeOfEnding}, by volunteer Id: {assignment.VolunteerId})");
+        if (tmp.TypeOfEnding == DO.TypeOfEnding.Treated)
+            throw new BO.BlForbidenSystemActionExeption($"BL: Unable to modify the call. Alrady ended with status of: {tmp.TypeOfEnding}, by volunteer Id: {tmp.VolunteerId})");
 
-        //TOOD: Throw exception if access not granted or if there is Dal exception
+        assignment = tmp;
     }
     #endregion
 }
