@@ -191,7 +191,7 @@ public partial class VolunteerWindow : Window
                     VolunteerMapDetailsUserControl = new DisplayMapContent(TypeOfMap.Pin, CurrentVolunteer.RangeType, listOfPoints);
                 }
                 if (CurrentVolunteer is not null && CurrentVolunteer.Latitude is null && VolunteerId is not 0)
-                    MessageBox.Show("NOTE: That your addrss is null, please change it");
+                    MessageBox.Show("NOTE: That your address is not valid, please change it");
             });
         }
 

@@ -63,8 +63,7 @@ public partial class CallWindow : Window
 
     #region Regular Propeties
     private static BlApi.IBl s_bl = BlApi.Factory.Get();
-    public int CallId { get;
-        set; }
+    public int CallId { get;set; }
     public string HourSet { get; set; } = "";
     #endregion
 
@@ -99,7 +98,7 @@ public partial class CallWindow : Window
 
     }
     private void Window_Closed(object sender, EventArgs e) => s_bl.Call.RemoveObserver(Observer);
-    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.RemoveObserver(Observer);
+    private void Window_Loaded(object sender, RoutedEventArgs e) => s_bl.Call.AddObserver(Observer);
     #endregion
 
     #region Method
@@ -116,13 +115,17 @@ public partial class CallWindow : Window
             Close();
         }
 
-        if ((CurrentCall.Latitude, CurrentCall.Longitude) is not (null,null) && (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed))
+        if ((_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed))
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
-                CallDetailsControler = new CallDetailsControl(CurrentCall);
-                List<(double, double)> listOfPoints = new();
-                listOfPoints.Add(((double)CurrentCall.Latitude!, (double)CurrentCall.Longitude!));
-                CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfPoints);
+                if (CurrentCall is not null && CurrentCall.Latitude is null && CallId is not -1)
+                    MessageBox.Show("NOTE: That your address is not valid, please change it");
+                if(CurrentCall is not null && CurrentCall.Latitude is not null)
+                {
+                    CallDetailsControler = new CallDetailsControl(CurrentCall);
+                    List<(double, double)> listOfPoints = [((double)CurrentCall.Latitude!, (double)CurrentCall.Longitude!)];
+                    CallMapDetailsControler = new DisplayMapContent(TypeOfMap.Pin, BO.TypeOfRange.AirDistance, listOfPoints);
+                }
             });
         
     }

@@ -1330,4 +1330,17 @@
     <Latitude>31.7840593</Latitude>
     <Longitude>35.2237081</Longitude>
   </Volunteer>
+  <Volunteer>
+    <Id>332461854</Id>
+    <Role>Admin</Role>
+    <FullName>Yedidia Bakuradze</FullName>
+    <PhoneNumber>0535002312</PhoneNumber>
+    <Email>yedidia@gmail.com</Email>
+    <MaxDistanceToCall>12</MaxDistanceToCall>
+    <RangeType>AirDistance</RangeType>
+    <IsActive>false</IsActive>
+    <FullCurrentAddress>Ha Tothan 3 Jerusalem israel</FullCurrentAddress>
+    <Latitude>31.8323803</Latitude>
+    <Longitude>35.2411291</Longitude>
+  </Volunteer>
 </ArrayOfVolunteer>
