@@ -321,6 +321,14 @@
     <TypeOfEnding>CancellationExpired</TypeOfEnding>
   </Assignment>
   <Assignment>
+    <Id>36</Id>
+    <CallId>56</CallId>
+    <VolunteerId>360225643</VolunteerId>
+    <TimeOfStarting>2025-01-12T00:27:01</TimeOfStarting>
+    <TimeOfEnding>11/03/2025 00:27:01</TimeOfEnding>
+    <TypeOfEnding>Treated</TypeOfEnding>
+  </Assignment>
+  <Assignment>
     <Id>37</Id>
     <CallId>57</CallId>
     <VolunteerId>343223152</VolunteerId>

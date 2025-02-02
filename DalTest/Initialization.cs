@@ -371,7 +371,7 @@ static public class Initialization
                 ? (TimeSpan)(currentCall.DeadLine - start)
                 : s_dal!.Config!.Clock.AddDays(31) - start;
 
-            DateTime end = start.AddDays(s_rand.Next(0, delta.Days));
+            DateTime end = start.AddDays(s_rand.Next(0, delta.Days*3));
 
             //Creates the assignment object - the id is generated in the CRUD's create method so there is no need to provide one here 
             Assignment newAssignment = new()
@@ -409,8 +409,8 @@ static public class Initialization
             int deltaDays = (s_dal.Config!.Clock - start).Days;
             int position = s_rand.Next(0, s_addresses.Length - 1);
             DateTime end = (i < 30 && i >= 20)
-                ? start.AddDays(s_rand.Next(1, deltaDays)) // Expired
-                : start.AddDays(s_rand.Next(deltaDays, 31)); // Still open
+                ? start.AddDays(s_rand.Next(1, deltaDays*3)) // Expired
+                : start.AddDays(s_rand.Next(deltaDays, 93)); // Still open
 
             //New call instance
             Call newCall = new Call

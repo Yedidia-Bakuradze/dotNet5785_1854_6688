@@ -93,12 +93,12 @@
                 <!--Call Start Time-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Call Start Time:" FontSize="11" Foreground="White"/>
-                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentCall.CallStartTime}" IsReadOnly="True"/>
+                    <TextBox HorizontalAlignment="Left" Text="{}" IsReadOnly="True"/>
                 </StackPanel>
                 <!--Call Deadline-->
                 <StackPanel HorizontalAlignment="Left">
                     <Label Content="Call Deadline:" FontSize="11" Foreground="White"/>
-                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentCall.CallDeadLine}"/>
+                    <TextBox HorizontalAlignment="Left" Text="{Binding CurrentTime}"/>
                 </StackPanel>
                 <!--Status-->
                 <StackPanel HorizontalAlignment="Left">
