@@ -16,10 +16,13 @@ public partial class CallWindow : Window
         if(callId == -1)
         {
             CurrentCall = new BO.Call();
+
             ButtonText = AddMode;
+            CurrentTime = DateTime.Now.ToString();
         }
         else
         {
+            CurrentTime = CurrentCall.CallStartTime.ToString();
             Referesh();
             ButtonText = UpdateMode;
         }
@@ -59,6 +62,14 @@ public partial class CallWindow : Window
     }
     private static readonly DependencyProperty CallMapDetailsControlerProperty =
         DependencyProperty.Register("CallMapDetailsControler", typeof(UserControl), typeof(CallWindow));
+    public string CurrentTime
+    {
+        get => (string)GetValue(CurrentTimeProperty);
+        set => SetValue(CurrentTimeProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentTimeProperty =
+        DependencyProperty.Register("CurrentTime", typeof(string), typeof(CallWindow));
     #endregion
 
     #region Regular Propeties
@@ -75,7 +86,7 @@ public partial class CallWindow : Window
         {
             if (ButtonText == AddMode)
             {
-
+                
 
                 if (!TimeSpan.TryParse(HourSet, out TimeSpan time))
                     if (HourSet == "")
