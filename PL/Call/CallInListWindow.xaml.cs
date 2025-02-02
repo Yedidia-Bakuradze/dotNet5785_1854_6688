@@ -128,16 +128,26 @@ public partial class CallInListWindow : Window
     {
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
         {
-            _observerOperation = Dispatcher.BeginInvoke(() =>
+            _observerOperation = Dispatcher.BeginInvoke(async () =>
             {
-                ListOfCalls = s_bl.Call.GetListOfCalls(
-                    FilterByField,
-                    FilterByValue,
-                    SortByField,
-                    RequestedSpecialMode is null
+                var _FilterByField = FilterByField;
+                var _FilterByValue = FilterByValue;
+                var _SortByField = SortByField;
+                var _RequestedSpecialMode = RequestedSpecialMode is null
                         ? null
-                        : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!, null));
-            } );
+                        : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!, null);
+
+                var calls = await Task.Run(()=> s_bl.Call.GetListOfCalls(
+                    _FilterByField,
+                    _FilterByValue,
+                    _SortByField,
+                    _RequestedSpecialMode is null
+                        ? null
+                        : s_bl.Call.GetListOfCalls(BO.CallInListFields.Status, RequestedSpecialMode!, null)
+                        ));
+                ListOfCalls = calls;
+            } 
+            );
         }
     }
     #endregion

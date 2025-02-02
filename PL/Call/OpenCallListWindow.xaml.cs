@@ -131,8 +131,8 @@ public partial class OpenCallListWindow : Window
                     if ((volunteer.Latitude, volunteer.Longitude) is not (null,null))
                     {
                         listOfCordinates.Insert(0, ((double)volunteer.Latitude!, (double)volunteer.Longitude!));
-                        if (listOfCordinates.Count() != 0)
-                            OpenCallsMap = new DisplayMapContent(TypeOfMap.Route, volunteer.RangeType, listOfCordinates);
+                        if (listOfCordinates.Count != 0)
+                            OpenCallsMap = new DisplayMapContent(TypeOfMap.MultipleTypeOfRoutes, volunteer.RangeType, listOfCordinates);
                         else
                             OpenCallsMap = new DisplayMapContent(TypeOfMap.Pin, volunteer.RangeType, listOfCordinates);
                     }

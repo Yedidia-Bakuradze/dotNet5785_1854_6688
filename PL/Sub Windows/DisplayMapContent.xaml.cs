@@ -77,13 +77,31 @@ public partial class DisplayMapContent : UserControl
     </style>
   </head>
   <body>
-    <div id='infoPanel'>
-    </div>
-    <div id='map'></div>
+    <div id=""infoPanel"" class=""collapsed""></div>
+    <button id=""toggleButton"" class=""collapsed"" onclick=""toggleInfoPanel()"">→</button>
+    <div id=""map""></div>
 
     <!--Route Calculation-->
     <script>
-     let map;
+       
+          // Add this new function at the start of your script section
+      function toggleInfoPanel() {
+        const infoPanel = document.getElementById('infoPanel');
+        const toggleButton = document.getElementById('toggleButton');
+        
+        infoPanel.classList.toggle('collapsed');
+        toggleButton.classList.toggle('collapsed');
+        
+        // Update button text
+        if (toggleButton.textContent === '←') {
+          toggleButton.textContent = '→';
+        } else {
+          toggleButton.textContent = '←';
+        }
+      }
+    
+
+        let map;
       let directionsService;
       let directionsRenderer;
 
@@ -97,7 +115,7 @@ public partial class DisplayMapContent : UserControl
         return colors;
       }
 
-        function ShowRoute(mode = "+RangeHtml+@") {
+        function ShowRoute(mode = " + RangeHtml+@") {
         // Define multiple coordinates with names
         const locations = ["+GetHtmlCordinatesList()+@"]
 
@@ -225,8 +243,10 @@ directionsService.route(request, (result, status) => {
       }
 
 
-function ShowMultipleRoutes() {
-        const locations = ["+GetHtmlCordinatesList()+@"];
+        function ShowMultipleRoutes() {
+        const locations = [
+"+GetHtmlCordinatesList()+@"
+        ];
 
         // Initialize map
         map = new google.maps.Map(document.getElementById(""map""), {
@@ -241,122 +261,133 @@ function ShowMultipleRoutes() {
           fullscreenControl: false,
         });
 
-        // Colors for different modes
-        const routeColors = {
-          air: ""#4169E1"", // Royal Blue
-          driving: ""#228B22"", // Forest Green
-          walking: ""#8B4513"", // Saddle Brown
-        };
-        // Calculate air distance
-        const R = 6371; // Earth's radius in km
-        const lat1 = (locations[0].lat * Math.PI) / 180;
-        const lat2 = (locations[1].lat * Math.PI) / 180;
-        const dLat = ((locations[1].lat - locations[0].lat) * Math.PI) / 180;
-        const dLon = ((locations[1].lng - locations[0].lng) * Math.PI) / 180;
+        directionsService = new google.maps.DirectionsService();
 
-        const a =
-          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(lat1) *
-            Math.cos(lat2) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const airDistance = R * c;
-
-        // Draw air route
-        const flightPath = new google.maps.Polyline({
-          path: [locations[0], locations[1]],
-          geodesic: true,
-          strokeColor: routeColors.air,
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
-        });
-        flightPath.setMap(map);
+        // Generate unique colors for each destination
+        const baseColors = generateColors(locations.length - 1);
 
         // Add markers
         locations.forEach((location, index) => {
           new google.maps.Marker({
             position: location,
             map: map,
-            label: index === 0 ? ""S"" : ""D"",
+            label: index === 0 ? ""S"" : `D${index}`,
           });
         });
 
-        // Calculate driving and walking routes
-        directionsService = new google.maps.DirectionsService();
+        // Process each destination
+        for (let i = 1; i < locations.length; i++) {
+          const currentDestination = locations[i];
+          const currentColor = baseColors[i - 1];
 
-        // Driving route
-        const drivingRenderer = new google.maps.DirectionsRenderer({
-          map: map,
-          suppressMarkers: true,
-          polylineOptions: {
-            strokeColor: routeColors.driving,
-            strokeWeight: 4,
-          },
-        });
+          // Create route renderers for this destination
+          const routeRenderers = {
+            air: new google.maps.Polyline({
+              geodesic: true,
+              strokeColor: currentColor,
+              strokeOpacity: 1.0,
+              strokeWeight: 2,
+              map: map,
+            }),
+            driving: new google.maps.DirectionsRenderer({
+              suppressMarkers: true,
+              polylineOptions: {
+                strokeColor: adjustColor(currentColor, -20),
+                strokeWeight: 4,
+              },
+              map: map,
+            }),
+            walking: new google.maps.DirectionsRenderer({
+              suppressMarkers: true,
+              polylineOptions: {
+                strokeColor: adjustColor(currentColor, 20),
+                strokeWeight: 4,
+              },
+              map: map,
+            }),
+          };
 
-        // Walking route
-        const walkingRenderer = new google.maps.DirectionsRenderer({
-          map: map,
-          suppressMarkers: true,
-          polylineOptions: {
-            strokeColor: routeColors.walking,
-            strokeWeight: 4,
-          },
-        });
+          // Draw air route
+          const R = 6371; // Earth's radius in km
+          const lat1 = (locations[0].lat * Math.PI) / 180;
+          const lat2 = (currentDestination.lat * Math.PI) / 180;
+          const dLat =
+            ((currentDestination.lat - locations[0].lat) * Math.PI) / 180;
+          const dLon =
+            ((currentDestination.lng - locations[0].lng) * Math.PI) / 180;
 
-        // Request driving route
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1) *
+              Math.cos(lat2) *
+              Math.sin(dLon / 2) *
+              Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const airDistance = R * c;
+
+          // Set air route path
+          routeRenderers.air.setPath([locations[0], currentDestination]);
+
+          // Calculate driving route
+          calculateRoute(
+            locations[0],
+            currentDestination,
+            ""DRIVING"",
+            routeRenderers.driving,
+            adjustColor(currentColor, -20)
+          );
+
+          // Calculate walking route
+          calculateRoute(
+            locations[0],
+            currentDestination,
+            ""WALKING"",
+            routeRenderers.walking,
+            adjustColor(currentColor, 20)
+          );
+        }
+      }
+
+      function calculateRoute(origin, destination, mode, renderer, color) {
         directionsService.route(
           {
-            origin: locations[0],
-            destination: locations[1],
-            travelMode: google.maps.TravelMode.DRIVING,
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode[mode],
           },
           (result, status) => {
             if (status === ""OK"") {
-              drivingRenderer.setDirections(result);
-              const drivingDistance = result.routes[0].legs[0].distance.text;
-              const drivingDuration = result.routes[0].legs[0].duration.text;
-
-              document.getElementById(
-                ""infoPanel""
-              ).innerHTML += `<div style=""color:${routeColors.driving}"">
-          Driving Distance: ${drivingDistance}<br>
-          Duration: ${drivingDuration}
-         </div><br>`;
+              renderer.setDirections(result);
+              const distance = result.routes[0].legs[0].distance.text;
+              const duration = result.routes[0].legs[0].duration.text;
             }
           }
         );
+      }
 
-        // Request walking route
-        directionsService.route(
-          {
-            origin: locations[0],
-            destination: locations[1],
-            travelMode: google.maps.TravelMode.WALKING,
-          },
-          (result, status) => {
-            if (status === ""OK"") {
-              walkingRenderer.setDirections(result);
-              const walkingDistance = result.routes[0].legs[0].distance.text;
-              const walkingDuration = result.routes[0].legs[0].duration.text;
+      function adjustColor(hslColor, amount) {
+        const match = hslColor.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+        if (match) {
+          const h = match[1];
+          const s = match[2];
+          const l = Math.min(100, Math.max(0, parseInt(match[3]) + amount));
+          return `hsl(${h}, ${s}%, ${l}%)`;
+        }
+        return hslColor;
+      }
 
-              document.getElementById(
-                ""infoPanel""
-              ).innerHTML += `<div style=""color:${routeColors.walking}"">
-          Walking Distance: ${walkingDistance}<br>
-          Duration: ${walkingDuration}
-         </div><br>`;
-            }
-          }
-        );
-
-        // Add air distance to info panel
-        document.getElementById(""infoPanel"").innerHTML = `<div style=""color:${
-          routeColors.air
-        }"">
-      Air Distance: ${airDistance.toFixed(2)} km
-     </div><br>`;
+      function appendRouteInfo(destIndex, mode, color, distance, duration) {
+        const targetDiv =
+          document.getElementById(""infoPanel"").children[destIndex - 1];
+        if (targetDiv) {
+          targetDiv.innerHTML += `
+            <div style=""color:${color}"">
+              ${
+                mode.charAt(0).toUpperCase() + mode.slice(1)
+              } Distance: ${distance}<br>
+              Duration: ${duration}
+            </div>`;
+        }
       }
     </script>
     <script
