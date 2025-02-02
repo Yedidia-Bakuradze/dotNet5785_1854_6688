@@ -40,7 +40,7 @@ internal static class CallManager
                     TimeOfEnding = AdminManager.Now,
                     TypeOfEnding = DO.TypeOfEnding.CancellationExpired
                 }));
-
+            CallManager.Observers.NotifyListUpdated();
         }
 
     }
