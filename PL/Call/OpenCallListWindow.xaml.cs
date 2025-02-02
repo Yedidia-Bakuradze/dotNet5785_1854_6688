@@ -103,6 +103,7 @@ public partial class OpenCallListWindow : Window
     {
         FilterByValue = null;
         SortByField = null;
+        RefreshList();
     }
 
     #endregion

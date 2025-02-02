@@ -379,10 +379,11 @@ internal class ConvertRoleToColor : IValueConverter
 }
 internal class ConvertRoleToReadOnly : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (BO.UserRole)value == BO.UserRole.Admin;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (BO.UserRole)value == BO.UserRole.Volunteer;
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Volunteer;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => BO.UserRole.Admin;
 }
+
 internal class ConvertTypeOfCallToBackgroundColor : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
