@@ -1,4 +1,5 @@
 ﻿using BO;
+using DO;
 using PL.Call;
 using PL.Sub_Windows;
 using System.Windows;
@@ -16,6 +17,9 @@ public partial class VolunteerWindow : Window
 {
     public VolunteerWindow(int id, BO.UserRole windowRole)
     {
+        if(id !=0)
+            s_bl.Volunteer.AddObserver(id, RefereshScreen);
+
         VolunteerId = id;
         UserRoleIndicator = windowRole;
         ButtonText = id == 0
@@ -124,6 +128,7 @@ public partial class VolunteerWindow : Window
             {
                 s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
                 MessageBox.Show("Volunteer added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
             }
             else if (ButtonText == "Update Volunteer")
             {
@@ -159,6 +164,8 @@ public partial class VolunteerWindow : Window
 
     private void Window_Closed(object sender, EventArgs e)
     {
+        if (VolunteerId != 0)
+            s_bl.Volunteer.RemoveObserver(CurrentVolunteer.Id, RefereshScreen);
         s_bl.Volunteer.RemoveObserver(RefereshScreen);
         s_bl.Call.RemoveObserver(RefereshScreen);
     }
@@ -180,12 +187,14 @@ public partial class VolunteerWindow : Window
 
                 if ((CurrentVolunteer.Latitude, CurrentVolunteer.Longitude) is not (null,null))
                 {
-                    List<(double, double)> listOfPoints = new List<(double, double)>();
-                    listOfPoints.Add(((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!));
+                    List<(double, double)> listOfPoints = [((double)CurrentVolunteer.Latitude!, (double)CurrentVolunteer.Longitude!)];
                     VolunteerMapDetailsUserControl = new DisplayMapContent(TypeOfMap.Pin, CurrentVolunteer.RangeType, listOfPoints);
                 }
+                if (CurrentVolunteer is not null && CurrentVolunteer.Latitude is null && VolunteerId is not 0)
+                    MessageBox.Show("NOTE: That your addrss is null, please change it");
             });
         }
+
     }
     #endregion
 
