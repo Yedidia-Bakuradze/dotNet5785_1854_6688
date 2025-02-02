@@ -3,592 +3,592 @@
   <Call>
     <Id>1</Id>
     <Type>FlatTire</Type>
-    <FullAddressCall>29 Namir Rd, Tel Aviv</FullAddressCall>
-    <Latitude>32.081776</Latitude>
-    <Longitude>34.7940383</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-03T00:27:01</OpeningTime>
     <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
+    <DeadLine>2025-03-11T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>2</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>39 Jaffa St, Jerusalem</FullAddressCall>
-    <Latitude>31.7818041</Latitude>
-    <Longitude>35.2199263</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-06T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>3</Id>
-    <Type>BatteryJumpStart</Type>
-    <FullAddressCall>12 Gordon St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0824454</Latitude>
-    <Longitude>34.7696267</Longitude>
-    <OpeningTime>2025-01-23T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>4</Id>
-    <Type>TowingAssistance</Type>
+    <Type>LockedOut</Type>
     <FullAddressCall>6 King George St, Tel Aviv</FullAddressCall>
     <Latitude>32.0704183</Latitude>
     <Longitude>34.7718028</Longitude>
-    <OpeningTime>2025-01-04T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-24T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-03-08T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>3</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>5 Allenby St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0735939</Latitude>
+    <Longitude>34.76603619999999</Longitude>
+    <OpeningTime>2025-01-22T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-02-11T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>4</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>6 King George St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0704183</Latitude>
+    <Longitude>34.7718028</Longitude>
+    <OpeningTime>2025-01-21T00:27:01</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
+    <DeadLine>2025-02-22T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>5</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>42 Ben Yehuda St, Jerusalem</FullAddressCall>
-    <Latitude>31.7809509</Latitude>
-    <Longitude>35.2144516</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
+    <Type>CarStuck</Type>
+    <FullAddressCall>29 Namir Rd, Tel Aviv</FullAddressCall>
+    <Latitude>32.081776</Latitude>
+    <Longitude>34.7940383</Longitude>
+    <OpeningTime>2025-01-11T00:27:01</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
+    <DeadLine>2025-04-13T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>6</Id>
     <Type>BatteryJumpStart</Type>
-    <FullAddressCall>56 HaRav Shmuel Baruch St, Jerusalem</FullAddressCall>
-    <Latitude>31.786309</Latitude>
-    <Longitude>35.207501</Longitude>
-    <OpeningTime>2025-01-20T11:05:22</OpeningTime>
+    <FullAddressCall>23 Kaplan St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0740448</Latitude>
+    <Longitude>34.7867818</Longitude>
+    <OpeningTime>2025-01-26T00:27:01</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-14T11:05:22</DeadLine>
+    <DeadLine>2025-02-16T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>7</Id>
     <Type>Undefined</Type>
-    <FullAddressCall>4 Ibn Gabirol St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0717615</Latitude>
-    <Longitude>34.7820896</Longitude>
-    <OpeningTime>2025-01-12T11:05:22</OpeningTime>
+    <FullAddressCall>49 HaPalmach St, Jerusalem</FullAddressCall>
+    <Latitude>31.7648161</Latitude>
+    <Longitude>35.2086231</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
     <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
+    <DeadLine>2025-03-23T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>8</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>28 Derech Hashalom, Tel Aviv</FullAddressCall>
-    <Latitude>32.0702864</Latitude>
-    <Longitude>34.80091110000001</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>9</Id>
-    <Type>BatteryJumpStart</Type>
-    <FullAddressCall>16 Nahalat Binyamin St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0678115</Latitude>
-    <Longitude>34.7700182</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-14T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>10</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>16 Nahalat Binyamin St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0678115</Latitude>
-    <Longitude>34.7700182</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-13T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>11</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>23 Kaplan St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0740448</Latitude>
-    <Longitude>34.7867818</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>12</Id>
-    <Type>Undefined</Type>
+    <Type>ChildLockedInCar</Type>
     <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
     <Latitude>32.0713059</Latitude>
     <Longitude>34.7755696</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-04-12T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>9</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0596808</Latitude>
+    <Longitude>34.769547</Longitude>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-04-08T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>10</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0937031</Latitude>
+    <Longitude>34.7897246</Longitude>
+    <OpeningTime>2025-01-20T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-04-18T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>11</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>8 Jabotinsky St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0826326</Latitude>
+    <Longitude>34.8040512</Longitude>
+    <OpeningTime>2025-01-09T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-02-19T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>12</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>52 HaRav Kook St, Jerusalem</FullAddressCall>
+    <Latitude>31.7836425</Latitude>
+    <Longitude>35.2208625</Longitude>
+    <OpeningTime>2025-01-12T00:27:01</OpeningTime>
     <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
+    <DeadLine>2025-02-03T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>13</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>34 Nordau Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0922064</Latitude>
-    <Longitude>34.7764528</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
+    <Type>LockedOut</Type>
+    <FullAddressCall>35 Ben Gurion Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0848172</Latitude>
+    <Longitude>34.7733411</Longitude>
+    <OpeningTime>2025-01-03T00:27:01</OpeningTime>
     <Description>Donation of food items</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
+    <DeadLine>2025-02-12T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>14</Id>
     <Type>CarStuck</Type>
-    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
-    <Latitude>31.768319</Latitude>
-    <Longitude>35.21371</Longitude>
-    <OpeningTime>2025-01-24T11:05:22</OpeningTime>
+    <FullAddressCall>38 Haneviim St, Jerusalem</FullAddressCall>
+    <Latitude>31.7840593</Latitude>
+    <Longitude>35.2237081</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
+    <DeadLine>2025-03-26T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>15</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0596808</Latitude>
-    <Longitude>34.769547</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
+    <Type>LockedOut</Type>
+    <FullAddressCall>40 King David St, Jerusalem</FullAddressCall>
+    <Latitude>31.772227</Latitude>
+    <Longitude>35.2225549</Longitude>
+    <OpeningTime>2025-01-15T00:27:01</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-24T11:05:22</DeadLine>
+    <DeadLine>2025-02-21T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>16</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>53 HaNeviim St, Jerusalem</FullAddressCall>
-    <Latitude>31.7842721</Latitude>
-    <Longitude>35.2183468</Longitude>
-    <OpeningTime>2025-01-25T11:05:22</OpeningTime>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>19 Shabazi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0620528</Latitude>
+    <Longitude>34.7645904</Longitude>
+    <OpeningTime>2025-01-14T00:27:01</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-14T11:05:22</DeadLine>
+    <DeadLine>2025-02-17T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>17</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>36 Dizengoff Square, Tel Aviv</FullAddressCall>
-    <Latitude>32.0746924</Latitude>
-    <Longitude>34.777208</Longitude>
-    <OpeningTime>2025-01-10T11:05:22</OpeningTime>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0631703</Latitude>
+    <Longitude>34.768982</Longitude>
+    <OpeningTime>2025-01-08T00:27:01</OpeningTime>
     <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
+    <DeadLine>2025-03-30T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>18</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>33 Pinkas St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0911246</Latitude>
-    <Longitude>34.7878395</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>45 Keren Hayesod St, Jerusalem</FullAddressCall>
+    <Latitude>31.7720844</Latitude>
+    <Longitude>35.222138</Longitude>
+    <OpeningTime>2025-01-20T00:27:01</OpeningTime>
     <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-11T11:05:22</DeadLine>
+    <DeadLine>2025-03-06T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>19</Id>
     <Type>TrafficDirection</Type>
-    <FullAddressCall>4 Ibn Gabirol St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0717615</Latitude>
-    <Longitude>34.7820896</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
+    <FullAddressCall>50 Gaza St, Jerusalem</FullAddressCall>
+    <Latitude>31.771597</Latitude>
+    <Longitude>35.2123937</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
     <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
+    <DeadLine>2025-03-28T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>20</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>40 King David St, Jerusalem</FullAddressCall>
-    <Latitude>31.772227</Latitude>
-    <Longitude>35.2225549</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>41 Agron St, Jerusalem</FullAddressCall>
+    <Latitude>31.7776993</Latitude>
+    <Longitude>35.2217815</Longitude>
+    <OpeningTime>2025-01-28T00:27:01</OpeningTime>
     <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
+    <DeadLine>2025-02-20T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>21</Id>
-    <Type>BatteryJumpStart</Type>
+    <Type>FlatTire</Type>
     <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
     <Latitude>32.0693901</Latitude>
     <Longitude>34.7644323</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-15T00:27:01</OpeningTime>
     <Description>Request for food delivery</Description>
-    <DeadLine>2025-01-19T11:05:22</DeadLine>
+    <DeadLine>2025-02-10T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>22</Id>
     <Type>BatteryJumpStart</Type>
-    <FullAddressCall>12 Gordon St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0824454</Latitude>
-    <Longitude>34.7696267</Longitude>
-    <OpeningTime>2025-01-05T11:05:22</OpeningTime>
+    <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0713059</Latitude>
+    <Longitude>34.7755696</Longitude>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
     <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-01-27T11:05:22</DeadLine>
+    <DeadLine>2025-02-14T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>23</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0937031</Latitude>
-    <Longitude>34.7897246</Longitude>
-    <OpeningTime>2025-01-10T11:05:22</OpeningTime>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>29 Namir Rd, Tel Aviv</FullAddressCall>
+    <Latitude>32.081776</Latitude>
+    <Longitude>34.7940383</Longitude>
+    <OpeningTime>2025-01-18T00:27:01</OpeningTime>
     <Description>Donation of food items</Description>
-    <DeadLine>2025-01-18T11:05:22</DeadLine>
+    <DeadLine>2025-02-06T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>24</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>2 Herzl St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0633922</Latitude>
-    <Longitude>34.7697593</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-01-29T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>25</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0845697</Latitude>
-    <Longitude>34.789916</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-01-27T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>26</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>9 Arlozorov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0876283</Latitude>
-    <Longitude>34.7726748</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-01-31T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>27</Id>
-    <Type>TrafficDirection</Type>
-    <FullAddressCall>37 Rabin Square, Tel Aviv</FullAddressCall>
-    <Latitude>32.0804846</Latitude>
-    <Longitude>34.7806198</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-01-29T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>28</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0937031</Latitude>
-    <Longitude>34.7897246</Longitude>
-    <OpeningTime>2025-01-24T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-01-25T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>29</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>2 Herzl St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0633922</Latitude>
-    <Longitude>34.7697593</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-01-23T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>30</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>16 Nahalat Binyamin St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0678115</Latitude>
-    <Longitude>34.7700182</Longitude>
-    <OpeningTime>2025-01-21T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-01-22T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>31</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>10 Bograshov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0774401</Latitude>
-    <Longitude>34.7686239</Longitude>
-    <OpeningTime>2025-01-25T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>32</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>47 Derech Hebron, Jerusalem</FullAddressCall>
-    <Latitude>31.7647235</Latitude>
-    <Longitude>35.2256433</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>33</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>17 Lilienblum St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0621853</Latitude>
-    <Longitude>34.7695263</Longitude>
-    <OpeningTime>2025-01-09T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>34</Id>
-    <Type>TrafficDirection</Type>
-    <FullAddressCall>56 HaRav Shmuel Baruch St, Jerusalem</FullAddressCall>
-    <Latitude>31.786309</Latitude>
-    <Longitude>35.207501</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-25T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>35</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>14 Basel St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0900797</Latitude>
-    <Longitude>34.7769711</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>36</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
-    <Latitude>31.7625537</Latitude>
-    <Longitude>35.2181137</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-12T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>37</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>38 Haneviim St, Jerusalem</FullAddressCall>
-    <Latitude>31.7840593</Latitude>
-    <Longitude>35.2237081</Longitude>
-    <OpeningTime>2025-01-25T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-19T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>38</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>12 Gordon St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0824454</Latitude>
-    <Longitude>34.7696267</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-19T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>39</Id>
-    <Type>TrafficDirection</Type>
-    <FullAddressCall>31 Shaul Hamelech Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0774985</Latitude>
-    <Longitude>34.7891321</Longitude>
-    <OpeningTime>2025-01-05T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>40</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>5 Allenby St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0735939</Latitude>
-    <Longitude>34.76603619999999</Longitude>
-    <OpeningTime>2025-01-14T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>41</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>25 Carlebach St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0682887</Latitude>
-    <Longitude>34.7829257</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-06T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>42</Id>
-    <Type>TrafficDirection</Type>
-    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0845697</Latitude>
-    <Longitude>34.789916</Longitude>
-    <OpeningTime>2025-01-26T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-16T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>43</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>43 Hillel St, Jerusalem</FullAddressCall>
-    <Latitude>31.7795006</Latitude>
-    <Longitude>35.2210645</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-19T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>44</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0596808</Latitude>
-    <Longitude>34.769547</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-14T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>45</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>35 Ben Gurion Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0848172</Latitude>
-    <Longitude>34.7733411</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>46</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>10 Bograshov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0774401</Latitude>
-    <Longitude>34.7686239</Longitude>
-    <OpeningTime>2025-01-19T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>47</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>40 King David St, Jerusalem</FullAddressCall>
-    <Latitude>31.772227</Latitude>
-    <Longitude>35.2225549</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>48</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>35 Ben Gurion Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0848172</Latitude>
-    <Longitude>34.7733411</Longitude>
-    <OpeningTime>2025-01-03T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>49</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0631703</Latitude>
-    <Longitude>34.768982</Longitude>
-    <OpeningTime>2025-01-21T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-06T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>50</Id>
-    <Type>CarStuck</Type>
+    <Type>LockedOut</Type>
     <FullAddressCall>7 Ben Yehuda St, Tel Aviv</FullAddressCall>
     <Latitude>32.073845</Latitude>
     <Longitude>34.7680766</Longitude>
-    <OpeningTime>2025-01-09T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-06T11:05:22</DeadLine>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-02-03T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>51</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>39 Jaffa St, Jerusalem</FullAddressCall>
-    <Latitude>31.7818041</Latitude>
-    <Longitude>35.2199263</Longitude>
-    <OpeningTime>2025-01-19T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
+    <Id>25</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
+    <Latitude>31.7625537</Latitude>
+    <Longitude>35.2181137</Longitude>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-02-07T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>52</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>52 HaRav Kook St, Jerusalem</FullAddressCall>
-    <Latitude>31.7836425</Latitude>
-    <Longitude>35.2208625</Longitude>
-    <OpeningTime>2025-01-10T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
+    <Id>26</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>41 Agron St, Jerusalem</FullAddressCall>
+    <Latitude>31.7776993</Latitude>
+    <Longitude>35.2217815</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-01-12T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>53</Id>
+    <Id>27</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>12 Gordon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0824454</Latitude>
+    <Longitude>34.7696267</Longitude>
+    <OpeningTime>2025-01-27T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-02-06T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>28</Id>
     <Type>TowingAssistance</Type>
     <FullAddressCall>57 HaRav Uziel St, Jerusalem</FullAddressCall>
     <Latitude>31.7682148</Latitude>
     <Longitude>35.1862849</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-02-08T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>54</Id>
-    <Type>CarStuck</Type>
+    <Id>29</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>44 Shlomzion Hamalka St, Jerusalem</FullAddressCall>
+    <Latitude>31.7589424</Latitude>
+    <Longitude>35.2225216</Longitude>
+    <OpeningTime>2025-01-08T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-02-21T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>30</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0596808</Latitude>
+    <Longitude>34.769547</Longitude>
+    <OpeningTime>2025-01-22T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-01-27T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>31</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0631703</Latitude>
+    <Longitude>34.768982</Longitude>
+    <OpeningTime>2025-01-05T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-03-31T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>32</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-16T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-02-21T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>33</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>56 HaRav Shmuel Baruch St, Jerusalem</FullAddressCall>
+    <Latitude>31.786309</Latitude>
+    <Longitude>35.207501</Longitude>
+    <OpeningTime>2025-01-16T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-04-15T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>34</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>5 Allenby St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0735939</Latitude>
+    <Longitude>34.76603619999999</Longitude>
+    <OpeningTime>2025-01-12T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-02-26T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>35</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0631703</Latitude>
+    <Longitude>34.768982</Longitude>
+    <OpeningTime>2025-01-09T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-02-28T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>36</Id>
+    <Type>ChildLockedInCar</Type>
     <FullAddressCall>38 Haneviim St, Jerusalem</FullAddressCall>
     <Latitude>31.7840593</Latitude>
     <Longitude>35.2237081</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-02-15T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>37</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>39 Jaffa St, Jerusalem</FullAddressCall>
+    <Latitude>31.7818041</Latitude>
+    <Longitude>35.2199263</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-04-27T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>38</Id>
+    <Type>BatteryJumpStart</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-16T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-04-01T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>39</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>2 Herzl St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0633922</Latitude>
+    <Longitude>34.7697593</Longitude>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-03-02T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>40</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0693901</Latitude>
+    <Longitude>34.7644323</Longitude>
+    <OpeningTime>2025-01-12T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-04-12T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>41</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-05T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-02-04T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>42</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>27 HaMasger St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0641254</Latitude>
+    <Longitude>34.7856299</Longitude>
+    <OpeningTime>2025-01-09T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-03-23T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>43</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
+    <Latitude>31.7625537</Latitude>
+    <Longitude>35.2181137</Longitude>
+    <OpeningTime>2025-01-10T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-02-11T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>44</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>10 Bograshov St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0774401</Latitude>
+    <Longitude>34.7686239</Longitude>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
+    <DeadLine>2025-03-10T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>45</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>43 Hillel St, Jerusalem</FullAddressCall>
+    <Latitude>31.7795006</Latitude>
+    <Longitude>35.2210645</Longitude>
+    <OpeningTime>2025-01-26T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-03-13T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>46</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0631703</Latitude>
+    <Longitude>34.768982</Longitude>
+    <OpeningTime>2025-01-13T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-02-19T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>47</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>4 Ibn Gabirol St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0717615</Latitude>
+    <Longitude>34.7820896</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-02-21T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>48</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>47 Derech Hebron, Jerusalem</FullAddressCall>
+    <Latitude>31.7647235</Latitude>
+    <Longitude>35.2256433</Longitude>
+    <OpeningTime>2025-01-19T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-03-28T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>49</Id>
+    <Type>BatteryJumpStart</Type>
+    <FullAddressCall>35 Ben Gurion Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0848172</Latitude>
+    <Longitude>34.7733411</Longitude>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-03-08T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>50</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0693901</Latitude>
+    <Longitude>34.7644323</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-04-12T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>51</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0596808</Latitude>
+    <Longitude>34.769547</Longitude>
+    <OpeningTime>2025-01-27T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-02-14T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>52</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-12T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-02-26T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>53</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>55 HaRav Herzog St, Jerusalem</FullAddressCall>
+    <Latitude>31.76713269999999</Latitude>
+    <Longitude>35.2049358</Longitude>
+    <OpeningTime>2025-01-18T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-03-23T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>54</Id>
+    <Type>FlatTire</Type>
+    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0845697</Latitude>
+    <Longitude>34.789916</Longitude>
+    <OpeningTime>2025-01-10T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-04-06T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>55</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>11 Frishman St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0800026</Latitude>
-    <Longitude>34.7690543</Longitude>
-    <OpeningTime>2025-01-12T11:05:22</OpeningTime>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>28 Derech Hashalom, Tel Aviv</FullAddressCall>
+    <Latitude>32.0702864</Latitude>
+    <Longitude>34.80091110000001</Longitude>
+    <OpeningTime>2025-01-13T00:27:01</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
+    <DeadLine>2025-04-07T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>56</Id>
     <Type>CarStuck</Type>
-    <FullAddressCall>56 HaRav Shmuel Baruch St, Jerusalem</FullAddressCall>
-    <Latitude>31.786309</Latitude>
-    <Longitude>35.207501</Longitude>
-    <OpeningTime>2025-01-02T11:05:22</OpeningTime>
+    <FullAddressCall>37 Rabin Square, Tel Aviv</FullAddressCall>
+    <Latitude>32.0804846</Latitude>
+    <Longitude>34.7806198</Longitude>
+    <OpeningTime>2025-01-09T00:27:01</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
+    <DeadLine>2025-04-11T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>57</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0845697</Latitude>
-    <Longitude>34.789916</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
+    <Type>FlatTire</Type>
+    <FullAddressCall>33 Pinkas St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0911246</Latitude>
+    <Longitude>34.7878395</Longitude>
+    <OpeningTime>2025-01-06T00:27:01</OpeningTime>
     <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
+    <DeadLine>2025-02-20T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>58</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>21 Levinsky St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0596808</Latitude>
-    <Longitude>34.769547</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0937031</Latitude>
+    <Longitude>34.7897246</Longitude>
+    <OpeningTime>2025-01-16T00:27:01</OpeningTime>
     <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
+    <DeadLine>2025-02-05T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>59</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>15 Yehuda Halevi St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0614968</Latitude>
-    <Longitude>34.7694594</Longitude>
-    <OpeningTime>2025-01-19T11:05:22</OpeningTime>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>53 HaNeviim St, Jerusalem</FullAddressCall>
+    <Latitude>31.7842721</Latitude>
+    <Longitude>35.2183468</Longitude>
+    <OpeningTime>2025-01-20T00:27:01</OpeningTime>
     <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
+    <DeadLine>2025-03-06T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>60</Id>
@@ -596,239 +596,239 @@
     <FullAddressCall>6 King George St, Tel Aviv</FullAddressCall>
     <Latitude>32.0704183</Latitude>
     <Longitude>34.7718028</Longitude>
-    <OpeningTime>2025-01-10T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-06T00:27:01</OpeningTime>
     <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
+    <DeadLine>2025-03-01T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>61</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0713059</Latitude>
-    <Longitude>34.7755696</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>48 Derech Beit Lehem, Jerusalem</FullAddressCall>
+    <Latitude>31.7613369</Latitude>
+    <Longitude>35.2225398</Longitude>
+    <OpeningTime>2025-01-15T00:27:01</OpeningTime>
     <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-05T11:05:22</DeadLine>
+    <DeadLine>2025-03-26T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>62</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>26 Yigal Alon St, Tel Aviv</FullAddressCall>
-    <Latitude>32.05538</Latitude>
-    <Longitude>34.7918923</Longitude>
-    <OpeningTime>2025-01-02T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>63</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>43 Hillel St, Jerusalem</FullAddressCall>
-    <Latitude>31.7795006</Latitude>
-    <Longitude>35.2210645</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-25T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>64</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>11 Frishman St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0800026</Latitude>
-    <Longitude>34.7690543</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>65</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>5 Allenby St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0735939</Latitude>
-    <Longitude>34.76603619999999</Longitude>
-    <OpeningTime>2025-01-05T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>66</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>57 HaRav Uziel St, Jerusalem</FullAddressCall>
-    <Latitude>31.7682148</Latitude>
-    <Longitude>35.1862849</Longitude>
-    <OpeningTime>2025-01-16T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-15T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>67</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>55 HaRav Herzog St, Jerusalem</FullAddressCall>
-    <Latitude>31.76713269999999</Latitude>
-    <Longitude>35.2049358</Longitude>
-    <OpeningTime>2025-01-02T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>68</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>43 Hillel St, Jerusalem</FullAddressCall>
-    <Latitude>31.7795006</Latitude>
-    <Longitude>35.2210645</Longitude>
-    <OpeningTime>2025-01-14T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-11T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>69</Id>
-    <Type>ChildLockedInCar</Type>
-    <FullAddressCall>51 HaNasi St, Jerusalem</FullAddressCall>
-    <Latitude>31.7706183</Latitude>
-    <Longitude>35.2147285</Longitude>
-    <OpeningTime>2025-01-11T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>70</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>10 Bograshov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0774401</Latitude>
-    <Longitude>34.7686239</Longitude>
-    <OpeningTime>2025-01-24T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>71</Id>
     <Type>BatteryJumpStart</Type>
-    <FullAddressCall>39 Jaffa St, Jerusalem</FullAddressCall>
-    <Latitude>31.7818041</Latitude>
-    <Longitude>35.2199263</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-17T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>72</Id>
-    <Type>BatteryJumpStart</Type>
-    <FullAddressCall>2 Herzl St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0633922</Latitude>
-    <Longitude>34.7697593</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>73</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>9 Arlozorov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0876283</Latitude>
-    <Longitude>34.7726748</Longitude>
-    <OpeningTime>2025-01-02T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>74</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0845697</Latitude>
-    <Longitude>34.789916</Longitude>
-    <OpeningTime>2025-01-11T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>75</Id>
-    <Type>MinorRoadRepair</Type>
     <FullAddressCall>47 Derech Hebron, Jerusalem</FullAddressCall>
     <Latitude>31.7647235</Latitude>
     <Longitude>35.2256433</Longitude>
-    <OpeningTime>2025-01-23T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
+    <OpeningTime>2025-01-22T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-04-16T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>76</Id>
-    <Type>BatteryJumpStart</Type>
-    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
-    <Latitude>31.7625537</Latitude>
-    <Longitude>35.2181137</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
+    <Id>63</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>22 Menachem Begin Rd, Tel Aviv</FullAddressCall>
+    <Latitude>32.092415</Latitude>
+    <Longitude>34.829074</Longitude>
+    <OpeningTime>2025-01-13T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-02-28T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>77</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>20 Florentin St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0561926</Latitude>
-    <Longitude>34.7688602</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
+    <Id>64</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>16 Nahalat Binyamin St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0678115</Latitude>
+    <Longitude>34.7700182</Longitude>
+    <OpeningTime>2025-01-06T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-04-01T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>78</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
-    <Latitude>31.7625537</Latitude>
-    <Longitude>35.2181137</Longitude>
-    <OpeningTime>2025-01-27T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-05T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>79</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>9 Arlozorov St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0876283</Latitude>
-    <Longitude>34.7726748</Longitude>
-    <OpeningTime>2025-01-24T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-15T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>80</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>7 Ben Yehuda St, Tel Aviv</FullAddressCall>
-    <Latitude>32.073845</Latitude>
-    <Longitude>34.7680766</Longitude>
-    <OpeningTime>2025-01-02T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>81</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>39 Jaffa St, Jerusalem</FullAddressCall>
-    <Latitude>31.7818041</Latitude>
-    <Longitude>35.2199263</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-12T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>82</Id>
+    <Id>65</Id>
     <Type>OutOfFuel</Type>
     <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
     <Latitude>32.0693901</Latitude>
     <Longitude>34.7644323</Longitude>
-    <OpeningTime>2025-01-08T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-26T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-03-23T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>66</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>46 Emek Refaim St, Jerusalem</FullAddressCall>
+    <Latitude>31.7625537</Latitude>
+    <Longitude>35.2181137</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-02-18T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>67</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>49 HaPalmach St, Jerusalem</FullAddressCall>
+    <Latitude>31.7648161</Latitude>
+    <Longitude>35.2086231</Longitude>
+    <OpeningTime>2025-01-22T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-04-21T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>68</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>40 King David St, Jerusalem</FullAddressCall>
+    <Latitude>31.772227</Latitude>
+    <Longitude>35.2225549</Longitude>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-04-04T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>69</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>27 HaMasger St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0641254</Latitude>
+    <Longitude>34.7856299</Longitude>
+    <OpeningTime>2025-01-12T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-03-24T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>70</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0713059</Latitude>
+    <Longitude>34.7755696</Longitude>
+    <OpeningTime>2025-01-20T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-03-20T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>71</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>29 Namir Rd, Tel Aviv</FullAddressCall>
+    <Latitude>32.081776</Latitude>
+    <Longitude>34.7940383</Longitude>
+    <OpeningTime>2025-01-26T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-04-06T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>72</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0845697</Latitude>
+    <Longitude>34.789916</Longitude>
+    <OpeningTime>2025-01-08T00:27:01</OpeningTime>
     <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
+    <DeadLine>2025-03-07T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>73</Id>
+    <Type>BatteryJumpStart</Type>
+    <FullAddressCall>42 Ben Yehuda St, Jerusalem</FullAddressCall>
+    <Latitude>31.7809509</Latitude>
+    <Longitude>35.2144516</Longitude>
+    <OpeningTime>2025-01-13T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-02-25T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>74</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0937031</Latitude>
+    <Longitude>34.7897246</Longitude>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-04-02T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>75</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>32 Yehuda Maccabi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0937031</Latitude>
+    <Longitude>34.7897246</Longitude>
+    <OpeningTime>2025-01-06T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-04-03T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>76</Id>
+    <Type>BatteryJumpStart</Type>
+    <FullAddressCall>31 Shaul Hamelech Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0774985</Latitude>
+    <Longitude>34.7891321</Longitude>
+    <OpeningTime>2025-01-15T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-02-03T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>77</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>2 Herzl St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0633922</Latitude>
+    <Longitude>34.7697593</Longitude>
+    <OpeningTime>2025-01-05T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-03-19T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>78</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>30 Weizmann St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0845697</Latitude>
+    <Longitude>34.789916</Longitude>
+    <OpeningTime>2025-01-08T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-03-11T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>79</Id>
+    <Type>LockedOut</Type>
+    <FullAddressCall>48 Derech Beit Lehem, Jerusalem</FullAddressCall>
+    <Latitude>31.7613369</Latitude>
+    <Longitude>35.2225398</Longitude>
+    <OpeningTime>2025-01-18T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-02-07T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>80</Id>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0693901</Latitude>
+    <Longitude>34.7644323</Longitude>
+    <OpeningTime>2025-01-13T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-04-14T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>81</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>47 Derech Hebron, Jerusalem</FullAddressCall>
+    <Latitude>31.7647235</Latitude>
+    <Longitude>35.2256433</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-03-07T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>82</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>42 Ben Yehuda St, Jerusalem</FullAddressCall>
+    <Latitude>31.7809509</Latitude>
+    <Longitude>35.2144516</Longitude>
+    <OpeningTime>2025-01-03T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-03-21T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>83</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>8 Jabotinsky St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0826326</Latitude>
-    <Longitude>34.8040512</Longitude>
-    <OpeningTime>2025-01-24T11:05:22</OpeningTime>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>27 HaMasger St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0641254</Latitude>
+    <Longitude>34.7856299</Longitude>
+    <OpeningTime>2025-01-23T00:27:01</OpeningTime>
     <Description>Donation of food items</Description>
-    <DeadLine>2025-02-03T11:05:22</DeadLine>
+    <DeadLine>2025-04-05T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>84</Id>
@@ -836,208 +836,168 @@
     <FullAddressCall>8 Jabotinsky St, Tel Aviv</FullAddressCall>
     <Latitude>32.0826326</Latitude>
     <Longitude>34.8040512</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-05T00:27:01</OpeningTime>
     <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
+    <DeadLine>2025-03-11T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>85</Id>
     <Type>LockedOut</Type>
-    <FullAddressCall>1 Rothschild Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0631703</Latitude>
-    <Longitude>34.768982</Longitude>
-    <OpeningTime>2025-01-10T11:05:22</OpeningTime>
-    <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>86</Id>
-    <Type>TrafficDirection</Type>
-    <FullAddressCall>50 Gaza St, Jerusalem</FullAddressCall>
-    <Latitude>31.771597</Latitude>
-    <Longitude>35.2123937</Longitude>
-    <OpeningTime>2025-01-03T11:05:22</OpeningTime>
-    <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-02T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>87</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>27 HaMasger St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0641254</Latitude>
-    <Longitude>34.7856299</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-12T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>88</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>45 Keren Hayesod St, Jerusalem</FullAddressCall>
-    <Latitude>31.7720844</Latitude>
-    <Longitude>35.222138</Longitude>
-    <OpeningTime>2025-01-15T11:05:22</OpeningTime>
-    <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-11T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>89</Id>
-    <Type>MinorRoadRepair</Type>
-    <FullAddressCall>13 Hayarkon St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0693901</Latitude>
-    <Longitude>34.7644323</Longitude>
-    <OpeningTime>2025-01-05T11:05:22</OpeningTime>
-    <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-04T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>90</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>24 Hahashmonaim St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0713059</Latitude>
-    <Longitude>34.7755696</Longitude>
-    <OpeningTime>2025-01-06T11:05:22</OpeningTime>
-    <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-05T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>91</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>15 Yehuda Halevi St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0614968</Latitude>
-    <Longitude>34.7694594</Longitude>
-    <OpeningTime>2025-01-09T11:05:22</OpeningTime>
-    <Description>Request for food delivery</Description>
-    <DeadLine>2025-02-08T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>92</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>34 Nordau Blvd, Tel Aviv</FullAddressCall>
-    <Latitude>32.0922064</Latitude>
-    <Longitude>34.7764528</Longitude>
-    <OpeningTime>2025-01-06T11:05:22</OpeningTime>
-    <Description>Inquiry about volunteering opportunities</Description>
-    <DeadLine>2025-02-05T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>93</Id>
-    <Type>Undefined</Type>
-    <FullAddressCall>51 HaNasi St, Jerusalem</FullAddressCall>
-    <Latitude>31.7706183</Latitude>
-    <Longitude>35.2147285</Longitude>
-    <OpeningTime>2025-01-18T11:05:22</OpeningTime>
-    <Description>Donation of food items</Description>
-    <DeadLine>2025-02-17T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>94</Id>
-    <Type>TowingAssistance</Type>
     <FullAddressCall>33 Pinkas St, Tel Aviv</FullAddressCall>
     <Latitude>32.0911246</Latitude>
     <Longitude>34.7878395</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
-    <Description>Request for emergency food assistance</Description>
-    <DeadLine>2025-02-10T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>95</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>27 HaMasger St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0641254</Latitude>
-    <Longitude>34.7856299</Longitude>
-    <OpeningTime>2025-01-17T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-17T00:27:01</OpeningTime>
     <Description>Follow-up on previous food request</Description>
-    <DeadLine>2025-02-09T11:05:22</DeadLine>
+    <DeadLine>2025-02-26T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>96</Id>
-    <Type>TowingAssistance</Type>
-    <FullAddressCall>11 Frishman St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0800026</Latitude>
-    <Longitude>34.7690543</Longitude>
-    <OpeningTime>2025-01-13T11:05:22</OpeningTime>
+    <Id>86</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>36 Dizengoff Square, Tel Aviv</FullAddressCall>
+    <Latitude>32.0746924</Latitude>
+    <Longitude>34.777208</Longitude>
+    <OpeningTime>2025-01-27T00:27:01</OpeningTime>
     <Description>Information about food distribution schedule</Description>
-    <DeadLine>2025-02-06T11:05:22</DeadLine>
+    <DeadLine>2025-04-15T00:27:01</DeadLine>
   </Call>
   <Call>
-    <Id>97</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>57 HaRav Uziel St, Jerusalem</FullAddressCall>
-    <Latitude>31.7682148</Latitude>
-    <Longitude>35.1862849</Longitude>
-    <OpeningTime>2025-01-26T11:05:22</OpeningTime>
-    <Description>Request for special dietary needs</Description>
-    <DeadLine>2025-02-07T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>98</Id>
+    <Id>87</Id>
     <Type>ChildLockedInCar</Type>
     <FullAddressCall>33 Pinkas St, Tel Aviv</FullAddressCall>
     <Latitude>32.0911246</Latitude>
     <Longitude>34.7878395</Longitude>
-    <OpeningTime>2025-01-20T11:05:22</OpeningTime>
+    <OpeningTime>2025-01-21T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-03-13T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>88</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>52 HaRav Kook St, Jerusalem</FullAddressCall>
+    <Latitude>31.7836425</Latitude>
+    <Longitude>35.2208625</Longitude>
+    <OpeningTime>2025-01-14T00:27:01</OpeningTime>
     <Description>Report of missing food delivery</Description>
-    <DeadLine>2025-02-13T11:05:22</DeadLine>
+    <DeadLine>2025-02-10T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>89</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>57 HaRav Uziel St, Jerusalem</FullAddressCall>
+    <Latitude>31.7682148</Latitude>
+    <Longitude>35.1862849</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
+    <Description>Request for additional food supplies</Description>
+    <DeadLine>2025-04-03T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>90</Id>
+    <Type>CarStuck</Type>
+    <FullAddressCall>15 Yehuda Halevi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0614968</Latitude>
+    <Longitude>34.7694594</Longitude>
+    <OpeningTime>2025-01-25T00:27:01</OpeningTime>
+    <Description>Feedback on food quality and service</Description>
+    <DeadLine>2025-02-13T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>91</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-10T00:27:01</OpeningTime>
+    <Description>Request for food delivery</Description>
+    <DeadLine>2025-03-20T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>92</Id>
+    <Type>Undefined</Type>
+    <FullAddressCall>15 Yehuda Halevi St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0614968</Latitude>
+    <Longitude>34.7694594</Longitude>
+    <OpeningTime>2025-01-20T00:27:01</OpeningTime>
+    <Description>Inquiry about volunteering opportunities</Description>
+    <DeadLine>2025-03-14T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>93</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>26 Yigal Alon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.05538</Latitude>
+    <Longitude>34.7918923</Longitude>
+    <OpeningTime>2025-01-26T00:27:01</OpeningTime>
+    <Description>Donation of food items</Description>
+    <DeadLine>2025-04-28T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>94</Id>
+    <Type>TrafficDirection</Type>
+    <FullAddressCall>31 Shaul Hamelech Blvd, Tel Aviv</FullAddressCall>
+    <Latitude>32.0774985</Latitude>
+    <Longitude>34.7891321</Longitude>
+    <OpeningTime>2025-01-09T00:27:01</OpeningTime>
+    <Description>Request for emergency food assistance</Description>
+    <DeadLine>2025-04-10T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>95</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>25 Carlebach St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0682887</Latitude>
+    <Longitude>34.7829257</Longitude>
+    <OpeningTime>2025-01-28T00:27:01</OpeningTime>
+    <Description>Follow-up on previous food request</Description>
+    <DeadLine>2025-03-23T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>96</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>54 HaTzvi St, Jerusalem</FullAddressCall>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpeningTime>2025-01-16T00:27:01</OpeningTime>
+    <Description>Information about food distribution schedule</Description>
+    <DeadLine>2025-02-15T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>97</Id>
+    <Type>BatteryJumpStart</Type>
+    <FullAddressCall>8 Jabotinsky St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0826326</Latitude>
+    <Longitude>34.8040512</Longitude>
+    <OpeningTime>2025-01-07T00:27:01</OpeningTime>
+    <Description>Request for special dietary needs</Description>
+    <DeadLine>2025-02-26T00:27:01</DeadLine>
+  </Call>
+  <Call>
+    <Id>98</Id>
+    <Type>MinorRoadRepair</Type>
+    <FullAddressCall>12 Gordon St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0824454</Latitude>
+    <Longitude>34.7696267</Longitude>
+    <OpeningTime>2025-01-08T00:27:01</OpeningTime>
+    <Description>Report of missing food delivery</Description>
+    <DeadLine>2025-03-14T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>99</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>5 Allenby St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0735939</Latitude>
-    <Longitude>34.76603619999999</Longitude>
-    <OpeningTime>2025-01-22T11:05:22</OpeningTime>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>16 Nahalat Binyamin St, Tel Aviv</FullAddressCall>
+    <Latitude>32.0678115</Latitude>
+    <Longitude>34.7700182</Longitude>
+    <OpeningTime>2025-01-04T00:27:01</OpeningTime>
     <Description>Request for additional food supplies</Description>
-    <DeadLine>2025-02-21T11:05:22</DeadLine>
+    <DeadLine>2025-02-08T00:27:01</DeadLine>
   </Call>
   <Call>
     <Id>100</Id>
-    <Type>CarStuck</Type>
-    <FullAddressCall>14 Basel St, Tel Aviv</FullAddressCall>
-    <Latitude>32.0900797</Latitude>
-    <Longitude>34.7769711</Longitude>
-    <OpeningTime>2025-01-12T11:05:22</OpeningTime>
+    <Type>ChildLockedInCar</Type>
+    <FullAddressCall>56 HaRav Shmuel Baruch St, Jerusalem</FullAddressCall>
+    <Latitude>31.786309</Latitude>
+    <Longitude>35.207501</Longitude>
+    <OpeningTime>2025-01-19T00:27:01</OpeningTime>
     <Description>Feedback on food quality and service</Description>
-    <DeadLine>2025-02-05T11:05:22</DeadLine>
-  </Call>
-  <Call>
-    <Id>101</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>eeee</FullAddressCall>
-    <Latitude>36.778261</Latitude>
-    <Longitude>-119.4179324</Longitude>
-    <OpeningTime>2025-02-02T11:05:22</OpeningTime>
-    <Description>eeeeee</Description>
-    <DeadLine>2030-01-01T00:00:00</DeadLine>
-  </Call>
-  <Call>
-    <Id>102</Id>
-    <Type>FlatTire</Type>
-    <FullAddressCall>3h2g3</FullAddressCall>
-    <Latitude>36.778261</Latitude>
-    <Longitude>-119.4179324</Longitude>
-    <OpeningTime>2025-02-02T11:05:22</OpeningTime>
-    <Description>222222222</Description>
-    <DeadLine>3000-01-01T00:00:00</DeadLine>
-  </Call>
-  <Call>
-    <Id>104</Id>
-    <Type>OutOfFuel</Type>
-    <FullAddressCall>fdsgvbhznkl</FullAddressCall>
-    <Latitude>36.778261</Latitude>
-    <Longitude>-119.4179324</Longitude>
-    <OpeningTime>2025-02-02T23:22:39</OpeningTime>
-    <Description>2qdgfhjkdsl</Description>
-    <DeadLine>2029-01-01T00:00:00</DeadLine>
-  </Call>
-  <Call>
-    <Id>105</Id>
-    <Type>LockedOut</Type>
-    <FullAddressCall>aaaaaaaaaaaaaaaaaaaaaaaaaa</FullAddressCall>
-    <Latitude xsi:nil="true" />
-    <Longitude xsi:nil="true" />
-    <OpeningTime>2025-02-02T23:22:39</OpeningTime>
-    <Description>sddddddddddddddddd</Description>
-    <DeadLine>2029-01-01T00:00:00</DeadLine>
+    <DeadLine>2025-04-07T00:27:01</DeadLine>
   </Call>
 </ArrayOfCall>
