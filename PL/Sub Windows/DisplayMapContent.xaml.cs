@@ -8,32 +8,36 @@ using System.Windows;
 
 public partial class DisplayMapContent : UserControl
 {
-    private const string GOOGLE_MAPS_API_KEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU";
-    public int RangeHtml { get; set; }
-    public string MapHTML { get; set; }
-    public (double, double) Source { get; set; }
-    public (double, double) Dest { get; set; }
-    public List<(double, double)> ListOfPoints { get; set; }
-    public string LoadedFunction { get; set; }
-    public TypeOfMap Type { get; set; }
+    private const string GOOGLE_MAPS_API_KEY = "AIzaSyDhFsDBvWYHUmKJ-aenR3jXGOV2USDKteU"; // Google Maps API key
+    public int RangeHtml { get; set; } // Range value for HTML content
+    public string MapHTML { get; set; } // HTML content for the map
+    public (double, double) Source { get; set; } // Coordinates for the source location
+    public (double, double) Dest { get; set; } // Coordinates for the destination location
+    public List<(double, double)> ListOfPoints { get; set; } // List of coordinates (points) to display on the map
+    public string LoadedFunction { get; set; } // Loaded function for map interaction (show pin, route, or multiple routes)
+    public TypeOfMap Type { get; set; } // Type of map (e.g., pin, route, multiple routes)
+
+    // Constructor that sets up the map display based on provided parameters
     public DisplayMapContent(TypeOfMap type, BO.TypeOfRange range, IEnumerable<(double, double)> listOfPoints)
     {
-        ListOfPoints = listOfPoints.ToList();
+        ListOfPoints = listOfPoints.ToList(); // Convert the list of points into a list
 
+        // Set the appropriate map function based on the type of map
         LoadedFunction = type switch
         {
-            TypeOfMap.Pin => "ShowPinLocations",
-            TypeOfMap.Route => "ShowRoute",
-            TypeOfMap.MultipleTypeOfRoutes => "ShowMultipleRoutes",
-            _ => "ShowMultipleRoutes",
+            TypeOfMap.Pin => "ShowPinLocations", // Show pins on the map
+            TypeOfMap.Route => "ShowRoute", // Show a route on the map
+            TypeOfMap.MultipleTypeOfRoutes => "ShowMultipleRoutes", // Show multiple routes on the map
+            _ => "ShowMultipleRoutes", // Default to showing multiple routes
         };
-        RangeHtml = range.GetHashCode();
-        Source = listOfPoints.FirstOrDefault();
-        Type = type;
-        MapHTML = GetHtmlContent();
-        InitializeComponent();
+        RangeHtml = range.GetHashCode(); // Get the hash code of the range type
+        Source = listOfPoints.FirstOrDefault(); // Set the source to the first point in the list
+        Type = type; // Set the map type
+        MapHTML = GetHtmlContent(); // Generate the HTML content for the map
+        InitializeComponent(); // Initialize the component
     }
 
+    // Method to generate the list of coordinates as a string
     private string GetHtmlCordinatesList() => string.Join(",", ListOfPoints.Select(point => $"{{lat: {point.Item1}, lng: {point.Item2}}}"));
 
     private string GetHtmlContent() =>
