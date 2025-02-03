@@ -22,8 +22,8 @@ public partial class CallWindow : Window
         }
         else
         {
-            CurrentTime = CurrentCall.CallStartTime.ToString();
             Referesh();
+            CurrentTime = CurrentCall.CallStartTime.ToString();
             ButtonText = UpdateMode;
         }
         InitializeComponent();
@@ -123,7 +123,8 @@ public partial class CallWindow : Window
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
-            Close();
+            if(_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() => Close());
         }
 
         if ((_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed))

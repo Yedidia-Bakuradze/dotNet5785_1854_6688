@@ -1,5 +1,6 @@
 ﻿using BO;
 using PL.Call;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 namespace PL.Admin;
@@ -20,7 +21,7 @@ public partial class AdminWindow : Window
     private volatile DispatcherOperation? _observerConfigOperation = null;
     private volatile DispatcherOperation? _observerCallCountOperation = null;
 
-    private int simulatorSpeed = 0;
+    private int simulatorSpeed = 5;
     private bool isSimulatorRunning = false;
 
     #endregion
@@ -44,7 +45,7 @@ public partial class AdminWindow : Window
 
     // Using a DependencyProperty as the backing store for SimulatorSpeed.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty SimulatorSpeedTextProperty =
-        DependencyProperty.Register("SimulatorSpeedText", typeof(string), typeof(AdminWindow), new PropertyMetadata("0"));
+        DependencyProperty.Register("SimulatorSpeedText", typeof(string), typeof(AdminWindow), new PropertyMetadata("5"));
 
     public bool IsSimulatorRunning
     {
@@ -209,6 +210,7 @@ public partial class AdminWindow : Window
     {
         MessageBox.Show("The window is closed");
         s_bl.Admin.StopSimulator();
+        while (!IsThreadPoolIdle(TimeSpan.FromSeconds(5))) ;
         s_bl.Admin.RemoveClockObserver(clockObserver);
         s_bl.Admin.RemoveConfigObserver(configObserver);
         s_bl.Call.RemoveObserver(UpdateAllBottomButtonTexts);
@@ -296,20 +298,64 @@ public partial class AdminWindow : Window
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
+
+    public static (int workerThreads, int completionPortThreads) GetActiveThreads()
+    {
+        ThreadPool.GetMaxThreads(out int maxWorkerThreads, out int maxCompletionPortThreads);
+        ThreadPool.GetAvailableThreads(out int availableWorkerThreads, out int availableCompletionPortThreads);
+
+        int activeWorkerThreads = maxWorkerThreads - availableWorkerThreads;
+        int activeCompletionPortThreads = maxCompletionPortThreads - availableCompletionPortThreads;
+
+        return (activeWorkerThreads, activeCompletionPortThreads);
+    }
+
+    public static bool IsThreadPoolIdle(TimeSpan timeout)
+    {
+        var sw = Stopwatch.StartNew();
+        var lastCount = GetActiveThreads();
+
+        while (sw.Elapsed < timeout)
+        {
+            Thread.Sleep(100); // Check every 100ms
+            var currentCount = GetActiveThreads();
+
+            // If we see no active threads (except potentially the main thread)
+            if (currentCount.workerThreads <= 1 && currentCount.completionPortThreads == 0)
+            {
+                // Double check after a brief pause to ensure stability
+                Thread.Sleep(200);
+                currentCount = GetActiveThreads();
+                if (currentCount.workerThreads <= 1 && currentCount.completionPortThreads == 0)
+                {
+                    return true;
+                }
+            }
+
+            lastCount = currentCount;
+        }
+
+        return false;
+    }
+
+
+
     private void OnSimulatorStateChanged(object sender, RoutedEventArgs e)
     {
-        //Simulator is online, make it offline
         if (!IsSimulatorRunning)
         {
+            //Simulator is offline, make it online
             IsSimulatorRunning = true;
             SimulatorBtnMsg = "Stop Simulator";
             s_bl.Admin.StartSimulator(simulatorSpeed);
         }
         else
         {
+            //Simulator is online, make it offline
+            s_bl.Admin.StopSimulator();
+            while (!IsThreadPoolIdle(TimeSpan.FromSeconds(5)));
             IsSimulatorRunning = false;
             SimulatorBtnMsg = "Start Simulator";
-            s_bl.Admin.StopSimulator();
         }
 
     }
