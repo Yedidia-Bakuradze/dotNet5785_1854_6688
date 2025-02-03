@@ -1,10 +1,7 @@
 ﻿namespace Helpers;
-
 using BO;
-using DalApi;
 using DO;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -231,17 +228,21 @@ internal static class VolunteerManager
 
         (double?, double?) coridnates = await VolunteerManager.GetGeoCordinates(address);
 
-        if (!CordinatesValidator(coridnates))
+        if (!CordinatesValidator(coridnates) || (coridnates.Item1, coridnates.Item2) == (36.778261, -119.4179324))
         {
             if (isNewVolunteer)
             {
-                lock (AdminManager.BlMutex)
+                DO.Volunteer volunteer = s_dal.Volunteer.Read(volunteerId)
+                    ?? throw new BlDoesNotExistException($"Bl Says: Call with ID {volunteerId} does not exist");
+
+                s_dal.Volunteer.Update(volunteer with
                 {
-                    s_dal.Volunteer.Delete(volunteerId);
-                }
-                Observers.NotifyItemUpdated(volunteerId);
-                Observers.NotifyListUpdated();
+                    FullCurrentAddress = "Invalid Address",
+                    Latitude = null,
+                    Longitude = null,
+                });
             }
+            Observers.NotifyItemUpdated(volunteerId);
             throw new BlInvalidCordinatesConversionException(address);
 
         }
@@ -348,8 +349,8 @@ internal static class VolunteerManager
             XElement result = resultTag
                             ?.Element("geometry")
                             ?.Element("location")!;
-            
-            (double,double) resCord = ((double)result.Element("lat")!, (double)result.Element("lng")!);
+
+            (double, double) resCord = ((double)result.Element("lat")!, (double)result.Element("lng")!);
             return resCord;
         }
         catch (Exception ex)

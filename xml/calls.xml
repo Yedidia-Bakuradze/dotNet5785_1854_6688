@@ -1000,4 +1000,14 @@
     <Description>Feedback on food quality and service</Description>
     <DeadLine>2025-04-07T00:27:01</DeadLine>
   </Call>
+  <Call>
+    <Id>105</Id>
+    <Type>OutOfFuel</Type>
+    <FullAddressCall>Ha Tothan 4 jerusalem</FullAddressCall>
+    <Latitude>31.832451</Latitude>
+    <Longitude>35.241346</Longitude>
+    <OpeningTime>2025-02-21T17:36:48</OpeningTime>
+    <Description>afdS</Description>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

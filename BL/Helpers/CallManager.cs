@@ -131,13 +131,23 @@ internal static class CallManager
     {
         (double,double) coridnates = await VolunteerManager.GetGeoCordinates(address);
 
-        if (!VolunteerManager.CordinatesValidator(coridnates))
+        //The value of (36.778261, -119.4179324) is a default location in the middle of nowhere which Google returns as a coridate for no place
+        if (!VolunteerManager.CordinatesValidator(coridnates) || (coridnates.Item1, coridnates.Item2) == (36.778261, -119.4179324))
         {
             if (isNewCall)
             {
                 lock (AdminManager.BlMutex)
                 {
-                    s_dal.Call.Delete(callId);
+                    //If the call details
+                    DO.Call call = s_dal.Call.Read(callId)
+                        ?? throw new BlDoesNotExistException($"Bl Says: Call with ID {callId} does not exist");
+
+                    s_dal.Call.Update(call with
+                    {
+                        FullAddressCall = "Invalid Address",
+                        Latitude = null,
+                        Longitude = null,
+                    });
                 }
                 Observers.NotifyItemUpdated(callId);
                 Observers.NotifyListUpdated();
