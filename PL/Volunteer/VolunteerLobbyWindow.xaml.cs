@@ -8,14 +8,18 @@ namespace PL.Volunteer;
 public partial class VolunteerLobbyWindow : Window
 {
     private readonly static BlApi.IBl s_bl = BlApi.Factory.Get();
+
+    // Constructor initializes the window with a given volunteer ID
     public VolunteerLobbyWindow(int volunteerId)
     {
         VolunteerId = volunteerId;
-        Observer();
+        Observer(); // Start observing updates
         InitializeComponent();
     }
 
-    #region Dependecy Propeties
+    #region Dependency Properties
+
+    // Holds the current volunteer's data
     public BO.Volunteer CurrentVolunteer
     {
         get => (BO.Volunteer)GetValue(CurrentVolunteerProperty);
@@ -25,29 +29,27 @@ public partial class VolunteerLobbyWindow : Window
     private static readonly DependencyProperty CurrentVolunteerProperty
         = DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerLobbyWindow));
 
-
-
+    // UserControl for displaying call details
     public UserControl CallDetailsContent
     {
         get { return (UserControl)GetValue(CallDetailsContentProperty); }
         set { SetValue(CallDetailsContentProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for CallDetailsContent.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CallDetailsContentProperty =
         DependencyProperty.Register("CallDetailsContent", typeof(UserControl), typeof(VolunteerLobbyWindow));
 
-
+    // UserControl for displaying the route map
     public UserControl RouteMap
     {
         get { return (UserControl)GetValue(RouteMapProperty); }
         set { SetValue(RouteMapProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for RouteMap.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty RouteMapProperty =
         DependencyProperty.Register("RouteMap", typeof(UserControl), typeof(VolunteerLobbyWindow));
 
+    // Holds the main description text
     public string DescriptionText
     {
         get => (string)GetValue(DescriptionTextProperty);
@@ -57,6 +59,7 @@ public partial class VolunteerLobbyWindow : Window
     private static readonly DependencyProperty DescriptionTextProperty
         = DependencyProperty.Register("DescriptionText", typeof(string), typeof(VolunteerLobbyWindow));
 
+    // Holds the warning text for selecting a call
     public string WarrningSelectCallText
     {
         get => (string)GetValue(WarrningSelectCallTextProperty);
@@ -66,6 +69,7 @@ public partial class VolunteerLobbyWindow : Window
     private static readonly DependencyProperty WarrningSelectCallTextProperty
         = DependencyProperty.Register("WarrningSelectCallText", typeof(string), typeof(VolunteerLobbyWindow));
 
+    // Header text displayed in the window
     public string HeaderText
     {
         get => (string)GetValue(HeaderTextProperty);
@@ -75,28 +79,29 @@ public partial class VolunteerLobbyWindow : Window
     private static readonly DependencyProperty HeaderTextProperty
         = DependencyProperty.Register("HeaderText", typeof(string), typeof(VolunteerLobbyWindow));
 
-
-
+    // Holds details about the current call
     public string CallDetails
     {
         get { return (string)GetValue(CallDetailsProperty); }
         set { SetValue(CallDetailsProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for CallDetails.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CallDetailsProperty =
         DependencyProperty.Register("CallDetails", typeof(string), typeof(VolunteerLobbyWindow));
 
-
     #endregion
 
-    #region Regular Propeties
+    #region Regular Properties
     public int VolunteerId { get; set; }
     private volatile DispatcherOperation? _observerOperation = null;
     #endregion
 
     #region Events
+
+    // Opens a window to select a call
     private void OnSelectCall(object sender, RoutedEventArgs e) => new OpenCallListWindow(VolunteerId).Show();
+
+    // Cancels the current assigned call
     private void OnCancelCall(object sender, RoutedEventArgs e)
     {
         try
@@ -108,6 +113,8 @@ public partial class VolunteerLobbyWindow : Window
             MessageBox.Show(ex.Message);
         }
     }
+
+    // Marks the current call as finished
     private void OnFinishCall(object sender, RoutedEventArgs e)
     {
         try
@@ -119,22 +126,34 @@ public partial class VolunteerLobbyWindow : Window
             MessageBox.Show(ex.Message);
         }
     }
+
+    // Opens the settings window
     private void OnShowSettingsWindow(object sender, RoutedEventArgs e) => new VolunteerWindow(VolunteerId, BO.UserRole.Admin).Show();
+
+    // Removes observers when the window is closed
     private void Window_Closed(object sender, EventArgs e)
     {
         s_bl.Volunteer.RemoveObserver(Observer);
         s_bl.Call.RemoveObserver(Observer);
     }
+
+    // Adds observers when the window is loaded
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         s_bl.Volunteer.AddObserver(Observer);
         s_bl.Call.AddObserver(Observer);
     }
+
+    // Opens a window displaying call history
     private void OnShowHistory(object sender, RoutedEventArgs e) => new ClosedCallListWindow(VolunteerId).Show();
+
     #endregion
 
     #region Methods
+
     private void Observer() => _ = RefershWindowDetails();
+
+    // Refreshes window details asynchronously
     private async Task RefershWindowDetails()
     {
         try
@@ -144,21 +163,20 @@ public partial class VolunteerLobbyWindow : Window
                 {
                     return s_bl.Call.GetOpenCallsForVolunteer(VolunteerId, null, null).Count();
                 }
-                catch(Exception ex)
+                catch (Exception)
                 {
                     return -1;
                 }
             });
 
-            //Indicates that an exception been thrown
-            if(count == -1)
+            if (count == -1) // Error handling if the volunteer is not found
             {
                 MessageBox.Show($"The Volunteer is not found {VolunteerId}");
                 Close();
                 return;
             }
 
-
+            // Ensures only one dispatcher operation is running at a time
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             {
                 _observerOperation = Dispatcher.BeginInvoke(() =>
@@ -167,7 +185,7 @@ public partial class VolunteerLobbyWindow : Window
                     {
                         CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(VolunteerId);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                         Close();
@@ -176,7 +194,6 @@ public partial class VolunteerLobbyWindow : Window
                     HeaderText = $"Welcome {CurrentVolunteer.FullName}";
                     if (CurrentVolunteer.CurrentCall is not null)
                     {
-
                         CallDetails = $"Route: {CurrentVolunteer.RangeType}\nETA: 31 Minutes";
                         List<(double, double)> listOfCorinates = new();
                         if (CurrentVolunteer.FullName is not null)
@@ -190,19 +207,17 @@ public partial class VolunteerLobbyWindow : Window
                     {
                         RouteMap = null;
                         CallDetailsContent = null;
-                        WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls   Please activate this user in the settings to select a call";
-                        DescriptionText = $"Currently there are {count} calls open Would you like to take one?";
+                        WarrningSelectCallText = CurrentVolunteer.IsActive ? "" : "Only online volunteers can take calls. Please activate this user in the settings to select a call.";
+                        DescriptionText = $"Currently there are {count} calls open. Would you like to take one?";
                     }
                 });
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
             Close();
         }
     }
-
     #endregion
-
 }
