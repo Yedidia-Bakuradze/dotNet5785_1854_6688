@@ -359,6 +359,11 @@ public partial class AdminWindow : Window
         }
 
     }
+    /// <summary>
+    /// The speed of the simulater is set by the admin here
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnSpeedSet(object sender, RoutedEventArgs e)
     {
         try
