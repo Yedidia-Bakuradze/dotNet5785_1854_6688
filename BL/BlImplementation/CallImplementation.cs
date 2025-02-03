@@ -597,6 +597,7 @@ internal class CallImplementation : ICall
     #endregion
 
     #region Email System
+    //Sync email system
     //public void AddCallSendEmail(BO.Call c)
     //{
     //    List<DO.Volunteer> activeVolunteers;
