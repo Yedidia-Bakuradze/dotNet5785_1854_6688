@@ -402,7 +402,7 @@ static public class Initialization
     /// </summary>
     private static void createCalls()
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
         {
             Console.WriteLine($"Call Number {i + 1} has been created!");
             DateTime start = s_dal!.Config!.Clock.AddDays(s_rand.Next(-31, -5));
@@ -461,7 +461,7 @@ static public class Initialization
     private static void createVolunteers()
     {
 
-        for (int i = 0; i < 95; i++)
+        for (int i = 0; i < 15; i++)
         {
             Console.WriteLine($"Volunteer Number {i + 1} has been created!");
             Volunteer newVolunteer = new Volunteer
