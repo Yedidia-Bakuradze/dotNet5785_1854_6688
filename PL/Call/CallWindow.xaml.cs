@@ -127,6 +127,7 @@ public partial class CallWindow : Window
                 CurrentCall.CallDeadLine += time;
 
                 // Add the call using the business logic layer
+                s_bl.Call.RemoveObserver(Observer);
                 s_bl.Call.AddCall(CurrentCall);
                 Close(); // Close the window after adding the call
             }
