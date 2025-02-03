@@ -299,6 +299,10 @@ public partial class AdminWindow : Window
     /// <param name="e"></param>
     private void OnClosedCallsRequestClick(object sender, RoutedEventArgs e) => ShowListOfCalls(CallStatus.Closed);
 
+    /// <summary>
+    /// Returns the active threads in the threadpool
+    /// </summary>
+    /// <returns></returns>
     public static (int workerThreads, int completionPortThreads) GetActiveThreads()
     {
         ThreadPool.GetMaxThreads(out int maxWorkerThreads, out int maxCompletionPortThreads);
@@ -309,7 +313,12 @@ public partial class AdminWindow : Window
 
         return (activeWorkerThreads, activeCompletionPortThreads);
     }
-
+    
+    /// <summary>
+    /// Returns if no thread is currently woriking besides the main thread
+    /// </summary>
+    /// <param name="timeout"></param>
+    /// <returns></returns>
     public static bool IsThreadPoolIdle(TimeSpan timeout)
     {
         var sw = Stopwatch.StartNew();
@@ -338,8 +347,11 @@ public partial class AdminWindow : Window
         return false;
     }
 
-
-
+    /// <summary>
+    /// Starts/Stops the simualtor
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnSimulatorStateChanged(object sender, RoutedEventArgs e)
     {
         if (!IsSimulatorRunning)
