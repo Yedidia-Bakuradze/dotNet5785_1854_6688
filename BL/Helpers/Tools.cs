@@ -45,11 +45,12 @@ public static class Tools
         return msg;
     }
     /// <summary>
-    /// 
+    /// I kept the synchronous function because it is the original implementation.  
+    /// The function below is the same, but it works asynchronously.
     /// </summary>
-    /// <param name="toEmail"></param>
-    /// <param name="subject"></param>
-    /// <param name="body"></param>
+    /// <param name="toEmail">Recipient's email address</param>
+    /// <param name="subject">Email subject</param>
+    /// <param name="body">Email body</param>
     //public static void SendEmail(string toEmail, string subject, string body)
     //{
     //    try
