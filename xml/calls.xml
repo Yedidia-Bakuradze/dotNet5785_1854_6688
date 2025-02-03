@@ -1010,4 +1010,13 @@
     <Description>afdS</Description>
     <DeadLine xsi:nil="true" />
   </Call>
+  <Call>
+    <Id>106</Id>
+    <Type>TowingAssistance</Type>
+    <FullAddressCall>Ha tothan 3 jerusalem</FullAddressCall>
+    <Latitude>31.8323803</Latitude>
+    <Longitude>35.2411291</Longitude>
+    <OpeningTime>2025-02-22T16:52:48</OpeningTime>
+    <DeadLine xsi:nil="true" />
+  </Call>
 </ArrayOfCall>

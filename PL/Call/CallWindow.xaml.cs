@@ -28,9 +28,9 @@ public partial class CallWindow : Window
         }
         else
         {
-            CurrentTime = CurrentCall.CallStartTime.ToString(); // Set the existing call time
-            Referesh(); // Refresh the call details for update mode
-            ButtonText = UpdateMode; // Button text will be "Update Call"
+            Referesh();
+            CurrentTime = CurrentCall.CallStartTime.ToString();
+            ButtonText = UpdateMode;
         }
         InitializeComponent(); // Initialize the components
     }
@@ -169,7 +169,8 @@ public partial class CallWindow : Window
         {
             // Show an error message if an exception occurs
             MessageBox.Show(ex.Message);
-            Close(); // Close the window if there was an error
+            if(_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() => Close());
         }
 
         // If the operation is completed or hasn't started, refresh the UI

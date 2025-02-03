@@ -194,21 +194,9 @@ internal static class AdminManager //stage 4
     {
         var oldClock = s_dal.Config.Clock; //stage 4
         s_dal.Config.Clock = newClock; //stage 4
-
-        //TO_DO:
-        //Add calls here to any logic method that should be called periodically,
-        //after each clock update
-        //for example, Periodic students' updates:
-        //Go through all students to update properties that are affected by the clock update
-        //(students becomes not active after 5 years etc.)
-
-        //StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
         if (_periodicTask is null || _periodicTask.IsCompleted) //stage 7
             _periodicTask = Task.Run(() => CallManager.UpdateAllOpenAndExpierdCalls());
-        //etc ...
-
-        //Calling all the observers of clock update
-        ClockUpdatedObservers?.Invoke(); //prepared for stage 5
+        ClockUpdatedObservers?.Invoke();
     }
     #endregion Stage 4
 
@@ -271,15 +259,8 @@ internal static class AdminManager //stage 4
         while (!s_stop)
         {
             UpdateClock(Now.AddMinutes(s_interval));
-
-            //TO_DO:
-            //Add calls here to any logic simulation that was required in stage 7
-            //for example: course registration simulation
             if (_simulateTask is null || _simulateTask.IsCompleted)//stage 7
                 _simulateTask = Task.Run(() => VolunteerManager.SystemSimulatorVolunteer());
-
-            //etc...
-
             try
             {
                 Thread.Sleep(1000); // 1 second
